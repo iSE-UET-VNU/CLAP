@@ -1,3 +1,6 @@
+import os
+
+
 def readFeatureOrderFile(file_name):
     file = open(file_name)
     feature_oder = file.readlines()
@@ -43,6 +46,8 @@ def generateVariants(feature_file, model_file, t_wise):
     print(configurations)
 
     print(feature_order)
+    if not os.path.exists('config_files'):
+        os.makedirs('config_files')
     for i in range(0, len(configurations) - 1):
         config_file = "config_files/product_" + str(t_wise) + "_" + str(i) + ".config"
         writeConfigurationFile(feature_order, configurations[i], config_file)
