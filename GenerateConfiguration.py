@@ -1,54 +1,45 @@
+import csv
 import os
+import re
+from collections import defaultdict
+from pathlib import Path
+
+from FileManager import get_model_config_dir, get_outer_dir
+from Helpers import get_logger
+
+logger = get_logger(__name__)
 
 
-def readFeatureOrderFile(file_name):
-    file = open(file_name)
-    feature_oder = file.readlines()
-    for i in range(0, len(feature_oder)):
-        feature_oder[i] = feature_oder[i].replace("\n", "")
-    return feature_oder
+def read_sampling_file(file_path):
+    with open(file_path, "r") as input_file:
+        csv_reader = csv.reader(input_file, delimiter=';')
+        next(csv_reader)
+        configurations = defaultdict(dict)
+        for row in csv_reader:
+            label = re.sub("[\[\]\* ]", '', row[0])
+            for i, feature_selection in enumerate(row[1:-1]):
+                configurations[i][label] = bool(feature_selection == "X")
+    return configurations.values()
 
-def readSamplingFile(file_name, feature_order):
-    file = open(file_name, "r")
-    contents = file.readlines()
 
-    feature_seclection = []
-    #sort contents according to feature_order
-    for f in feature_order:
-        for item in contents:
-            if f in item:
-                feature_seclection.append(item.replace("\n","").split(";"))
-                break
+def write_configuration_to_file(configuration, output_file_path):
+    lines = []
+    for feature, is_enabled in configuration.items():
+        # comment all disabled features
+        line = ("" if is_enabled else "#") + feature
+        lines.append(line)
+    with open(output_file_path, "w+") as output_file:
+        output_file.write("\n".join(lines))
 
-    configurations = []
-    for j in range(1, len(feature_seclection[0])):
-        c = []
-        for i in range(0, len(feature_order)):
-            if feature_seclection[i][j] == 'X':
-                c.append(1)
-            else:
-                c.append(0)
-        configurations.append(c)
 
-    return (configurations)
-
-def writeConfigurationFile(feature_names, config, config_file_name):
-    file = open(config_file_name, "w+")
-
-    for f in feature_names:
-        index = feature_names.index(f)
-        if(config[index] == 1):
-            file.write(f + "\n")
-
-def generateVariants(feature_file, model_file, t_wise):
-    feature_order = readFeatureOrderFile(feature_file)
-    configurations = readSamplingFile( model_file, feature_order)
-    print(configurations)
-
-    print(feature_order)
-    if not os.path.exists('config_files'):
-        os.makedirs('config_files')
-    for i in range(0, len(configurations) - 1):
-        config_file = "config_files/product_" + str(t_wise) + "_" + str(i) + ".config"
-        writeConfigurationFile(feature_order, configurations[i], config_file)
-
+def generate_variants(sampling_output_file_path):
+    logger.info(f"Generating configurations from sampling csv file [{sampling_output_file_path}]")
+    config_dir = get_model_config_dir(get_outer_dir(sampling_output_file_path))
+    sampling_file_name = Path(sampling_output_file_path).resolve().stem.replace(".", "_")
+    configurations = read_sampling_file(sampling_output_file_path)
+    config_output_paths = []
+    for i, config in enumerate(configurations):
+        config_output_path = os.path.join(config_dir, f"{sampling_file_name}_{str(i).zfill(3)}.features")
+        write_configuration_to_file(config, config_output_path)
+        config_output_paths.append(config_output_path)
+    return config_output_paths
