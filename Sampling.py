@@ -7,7 +7,7 @@ logger = get_logger(__name__)
 
 
 def get_sampling_file_path(output_log):
-    return re.search("(?<=Wrote result to )[^\n]+", output_log).group()
+    return re.search("(?<=Wrote result to )[^\r\n]+", output_log).group()
 
 
 def sampling(model_file_path, t_wise):

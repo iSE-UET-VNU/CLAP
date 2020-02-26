@@ -16,7 +16,7 @@ def compile_by_config(config_file_path):
     plugin_path = get_plugin_path(plugin_name)
     logger.info(f"Compiling code with config file [{config_file_path}]")
     project_dir = get_outer_dir(config_file_path, step=2)
-    config_name = os.path.basename(config_file_path).split(".", 1)[0]
+    config_name = get_file_name(config_file_path)
     output_dir = get_variant_dir(project_dir, config_name)
     output_log = execute_shell_command(f'java -jar {plugin_path}', extra_args=[
         {"--expression": config_file_path},
