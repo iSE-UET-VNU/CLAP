@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 PLUGIN_DIR = os.path.abspath("plugins")
@@ -30,8 +31,8 @@ def get_model_config_dir(project_dir):
     return config_dir
 
 
-def get_variant_dir(project_dir):
-    variant_dir = os.path.join(project_dir, VARIANT_FOLDER_NAME)
+def get_variant_dir(project_dir, config_name):
+    variant_dir = os.path.join(project_dir, VARIANT_FOLDER_NAME, config_name)
     mkdir_if_not_exist(variant_dir)
     return variant_dir
 
@@ -47,3 +48,7 @@ def get_outer_dir(current_path, step=1):
     for _ in range(step):
         current_dir = current_dir.parent
     return current_dir
+
+
+def move_file(source, target):
+    shutil.move(source, target)
