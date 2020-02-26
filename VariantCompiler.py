@@ -1,7 +1,8 @@
 import os
 import re
 
-from FileManager import get_plugin_path, get_variant_dir, get_outer_dir, get_feature_source_code_dir, move_file
+from FileManager import get_plugin_path, get_variant_dir, get_outer_dir, get_feature_source_code_dir, move_file, \
+    get_file_name
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)

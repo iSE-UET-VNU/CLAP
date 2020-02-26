@@ -8,7 +8,7 @@ from FileManager import get_model_file_path, get_project_dir
 BASE_DIR = "projects"
 
 if __name__ == "__main__":
-    project_name = "GPL-Test"
+    project_name = "HelloWorld-FH-Java-Test"
     project_dir = get_project_dir(project_name)
     model_file_path = get_model_file_path(project_dir)
     feature_order_file_path = Model.generate_feature_order_file(model_file_path)
