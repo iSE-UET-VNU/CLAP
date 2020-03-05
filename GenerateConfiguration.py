@@ -1,10 +1,8 @@
 import csv
-import os
 import re
 from collections import defaultdict, OrderedDict
-from pathlib import Path
 
-from FileManager import get_model_config_dir, get_outer_dir, get_file_name
+from FileManager import get_model_config_dir, get_outer_dir, get_file_name, join_path
 from Helpers import get_logger
 import Model
 
@@ -43,7 +41,7 @@ def generate_variants(feature_order_file_path, sampling_output_file_path):
     configurations = get_configurations_from_sampling_file(ordered_features, sampling_output_file_path)
     config_output_paths = []
     for i, config in enumerate(configurations):
-        config_output_path = os.path.join(config_dir, f"{sampling_file_name}_{str(i).zfill(3)}.features")
+        config_output_path = join_path(config_dir, f"{sampling_file_name}_{str(i).zfill(3)}.features")
         write_configuration_to_file(config, config_output_path)
         config_output_paths.append(config_output_path)
     return config_output_paths

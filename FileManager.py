@@ -25,8 +25,10 @@ def get_model_file_path(project_dir):
         raise FileNotFoundError(f"Can't find model file from [{model_file_path}]")
     return model_file_path
 
+
 def get_project_dir(project_name):
     return os.path.join(PROJECT_DIR, project_name)
+
 
 def get_model_config_dir(project_dir):
     config_dir = os.path.join(project_dir, CONFIG_FOLDER_NAME)
@@ -56,5 +58,18 @@ def get_outer_dir(current_path, step=1):
 def move_file(source, target):
     shutil.move(source, target)
 
+
+def split_path(file_path):
+    return file_path.rsplit("/", 1)
+
+
 def get_file_name(file_path):
     return os.path.basename(file_path).rsplit(".", 1)[0]
+
+
+def join_path(path1, path2):
+    return os.path.join(path1, path2)
+
+
+def is_path_exist(path):
+    return os.path.exists(path)

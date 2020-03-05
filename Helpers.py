@@ -14,7 +14,7 @@ def execute_shell_command(command, extra_args=None):
         for args in extra_args:
             assert isinstance(args, dict), """Input Argument must be passed as dict={"name":"value"}"""
             arg_name = list(args.keys())[0]
-            arg_val = args.get(arg_name)
+            arg_val = args.get(arg_name, "")
             command += f" {arg_name} {arg_val}"
     output = subprocess.run(command, shell=True, capture_output=True)
     return output.stdout.decode("utf-8")
