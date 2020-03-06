@@ -17,4 +17,4 @@ def execute_shell_command(command, extra_args=None):
             arg_val = args.get(arg_name, "")
             command += f" {arg_name} {arg_val}"
     output = subprocess.run(command, shell=True, capture_output=True)
-    return output.stdout.decode("utf-8")
+    return output.stdout.decode("utf-8").strip()

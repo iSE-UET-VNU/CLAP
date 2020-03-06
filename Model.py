@@ -1,4 +1,4 @@
-from FileManager import get_plugin_path, get_outer_dir, join_path
+from FileManager import get_plugin_path, get_outer_dir, join_path, get_file_name
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -8,7 +8,7 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
 def generate_feature_order_file(model_file_path):
-    logger.info(f"Generating Feature Order file from model file [{model_file_path}]")
+    logger.info(f"Generating Feature Order file from model file [{get_file_name(model_file_path)}]")
     output_feature_order_path = join_path(get_outer_dir(model_file_path), "features.order")
     execute_shell_command(f'java -jar {PLUGIN_PATH} ', extra_args=[
         {"--feature_model": model_file_path},

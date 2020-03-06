@@ -34,7 +34,7 @@ def write_configuration_to_file(configuration, output_file_path):
 
 
 def generate_variants(feature_order_file_path, sampling_output_file_path):
-    logger.info(f"Generating configurations from sampling csv file [{sampling_output_file_path}]")
+    logger.info(f"Generating configurations from sampling csv file [{get_file_name(sampling_output_file_path)}]")
     config_dir = get_model_config_dir(get_outer_dir(sampling_output_file_path))
     sampling_file_name = get_file_name(sampling_output_file_path).replace(".", "_")
     ordered_features = Model.read_feature_order_file(feature_order_file_path)

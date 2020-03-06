@@ -3,5 +3,7 @@
 **/configs
 **/variants
 **/mutation_result
+**/mutated_projects
+.DS_Store
 *.order
 *.csv

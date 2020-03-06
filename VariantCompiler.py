@@ -14,9 +14,8 @@ def get_sampling_file_path(stdout):
     return re.search("(?<=Wrote result to )[^\n]+", stdout).group()
 
 
-def compile_by_config(config_file_path):
-    logger.info(f"Compiling code with config file [{config_file_path}]")
-    project_dir = get_outer_dir(config_file_path, step=2)
+def compile_by_config(config_file_path, project_dir):
+    logger.info(f"Compiling [{get_file_name(project_dir)}] source code with config file [{get_file_name(config_file_path)}]")
     config_name = get_file_name(config_file_path)
     output_dir = get_variant_dir(project_dir, config_name)
     output_log = execute_shell_command(f'java -jar {PLUGIN_PATH}', extra_args=[
