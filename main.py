@@ -19,14 +19,15 @@ if __name__ == "__main__":
 
     # sampling configurations
     sampling_output_file_path = Sampling.sampling(model_file_path, t_wise=2)
-    config_output_paths = GenerateConfiguration.generate_variants(feature_order_file_path, sampling_output_file_path)
+    config_output_paths = GenerateConfiguration.generate_configs(feature_order_file_path, sampling_output_file_path)
 
     # compile original feature's source code
     for config_path in config_output_paths:
         VariantCompiler.compile_by_config(config_path, project_dir)
 
-    # generate mutants and inject them to features
-    mutated_project_dirs = Mutant.generate_mutants(project_dir)
+    # generate mutants and inject them to "optional" features
+    optional_feature_names = GenerateConfiguration.get_optional_feature_names(sampling_output_file_path)
+    mutated_project_dirs = Mutant.generate_mutants(project_dir, optional_feature_names)
 
     # compile mutated feature's source code
     for config_path in config_output_paths:

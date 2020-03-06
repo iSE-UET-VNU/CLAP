@@ -28,7 +28,6 @@ def get_all_mutant_paths(mutation_result_dir):
                                        {"-mindepth": 4},
                                        {"-type": "f"},
                                        {"-name": "*.java"},
-                                       # {"|": "wc -l"}
                                    ])
     return output.split("\n")
 
@@ -37,13 +36,14 @@ def count_mutants(mutant_paths):
     return len(mutant_paths)
 
 
-def make_mutants(current_project_dir):
+def make_mutants(current_project_dir, optional_feature_names):
     projects_dir, project_name = split_path(current_project_dir)
-    execute_shell_command(f'java -Dmujava_home={projects_dir} -cp {PLUGIN_PATH} mujava.cli.genmutes',
-                          extra_args=[
-                              {"-all": ""},
-                              {project_name: ""},
-                          ])
+    execute_shell_command(
+        f'java -Dmujava_home={projects_dir} -Dallowed_features={",".join(optional_feature_names)} -cp {PLUGIN_PATH} mujava.cli.genmutes',
+        extra_args=[
+            {"-all": ""},
+            {project_name: ""},
+        ])
     mutation_result_dir = get_mutation_result_dir(current_project_dir)
     mutant_paths = get_all_mutant_paths(mutation_result_dir)
     mutant_count = count_mutants(mutant_paths)
@@ -51,10 +51,10 @@ def make_mutants(current_project_dir):
     return mutant_paths
 
 
-def generate_mutants(project_dir):
+def generate_mutants(project_dir, optional_feature_names):
     logger.info(f"Mutating features [{get_file_name(project_dir)}]")
     assign_current_project_as_new_session(project_dir)
-    mutant_paths = make_mutants(project_dir)
+    mutant_paths = make_mutants(project_dir, optional_feature_names)
     mutated_project_dirs = inject_mutants(project_dir, mutant_paths)
     return mutated_project_dirs
 
@@ -78,7 +78,7 @@ def inject_mutants(project_dir, mutant_paths):
             current_feature_dir = join_path(features_dir, feature_name)
             current_mutated_feature_dir = join_path(current_mutated_features_dir, feature_name)
 
-            if feature_name in package.split(".")[0]:
+            if feature_name == package.split(".")[0]:
                 copy_dir(current_feature_dir, current_mutated_feature_dir)
             else:
                 create_symlink(current_feature_dir, current_mutated_feature_dir)
