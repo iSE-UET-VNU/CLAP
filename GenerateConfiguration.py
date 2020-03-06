@@ -41,6 +41,8 @@ def generate_variants(feature_order_file_path, sampling_output_file_path):
     configurations = get_configurations_from_sampling_file(ordered_features, sampling_output_file_path)
     config_output_paths = []
     for i, config in enumerate(configurations):
+        if i == 0:
+            continue
         config_output_path = join_path(config_dir, f"{sampling_file_name}_{str(i).zfill(3)}.features")
         write_configuration_to_file(config, config_output_path)
         config_output_paths.append(config_output_path)

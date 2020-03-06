@@ -25,7 +25,7 @@ if __name__ == "__main__":
     for config_path in config_output_paths:
         VariantCompiler.compile_by_config(config_path, project_dir)
 
-    # generate mutants
+    # generate mutants and inject them to features
     mutated_project_dirs = Mutant.generate_mutants(project_dir)
 
     # compile mutated feature's source code
