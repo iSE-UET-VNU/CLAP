@@ -1,7 +1,7 @@
 import re
 
 from FileManager import get_plugin_path, get_variant_dir, get_feature_source_code_dir, move_file, \
-    get_file_name, join_path, is_path_exist
+    get_file_name, join_path, is_path_exist, get_src_dir
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -27,6 +27,6 @@ def compose_by_config(config_file_path, project_dir):
     ])
     output_src_dir = join_path(output_dir, config_name)
     if is_path_exist(output_src_dir):
-        renamed_folder_dir = join_path(output_dir, "src")
+        renamed_folder_dir = get_src_dir(output_dir)
         move_file(output_src_dir, renamed_folder_dir)
     return output_dir

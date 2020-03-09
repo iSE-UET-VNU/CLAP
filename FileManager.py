@@ -11,6 +11,8 @@ MODE_FILE_NAME = "model.m"
 CONFIG_FOLDER_NAME = "configs"
 
 VARIANT_FOLDER_NAME = "variants"
+SRC_FOLDER_NAME = "src"
+COMPILED_CLASSES_FOLDER_NAME = "out"
 FEATURE_FOLDER_NAME = "features"
 
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
@@ -49,6 +51,14 @@ def get_model_config_dir(project_dir):
 
 def get_variant_dir(project_dir, config_name):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME, config_name)
+
+
+def get_output_classes_dir(project_dir):
+    return get_project_sub_dir_by_folder_name(project_dir, COMPILED_CLASSES_FOLDER_NAME)
+
+
+def get_src_dir(project_dir):
+    return get_project_sub_dir_by_folder_name(project_dir, SRC_FOLDER_NAME)
 
 
 def get_mutation_result_dir(project_dir):
