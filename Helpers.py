@@ -26,9 +26,9 @@ def get_current_timestamp():
 
 
 def find_plugin_name(command):
-    plugin_names = re.findall("[^ /]+\.jar", command)
-    if len(plugin_names) > 0:
-        return plugin_names[0]
+    matched = re.search("[^ /]+\.(jar|sh)", command)
+    if matched:
+        return matched.group()
 
 
 def execute_shell_command(command, extra_args=None, show_log_path=False):
@@ -45,7 +45,9 @@ def execute_shell_command(command, extra_args=None, show_log_path=False):
         if plugin_name and show_log_path:
             logger.debug(f"Writing log [{plugin_name}] to [{log_path}]")
         process = subprocess.run(command, shell=True, stderr=outfile, stdout=outfile)
+    # print(command)
     with open(log_path, "r") as outfile:
         text = outfile.read()
-        remove_file(log_path)
+        if not show_log_path:
+            remove_file(log_path)
         return text

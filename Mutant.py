@@ -89,3 +89,8 @@ def inject_mutants(project_dir, mutant_paths):
         mutated_project_dirs.append(current_mutated_project_dir)
         break
     return mutated_project_dirs
+
+
+def get_mutated_project_dirs(project_dir):
+    mutated_projects_dir = get_mutated_projects_dir(project_dir)
+    return list_dir(mutated_projects_dir, full_path=True)

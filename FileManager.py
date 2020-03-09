@@ -13,6 +13,8 @@ CONFIG_FOLDER_NAME = "configs"
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
 COMPILED_CLASSES_FOLDER_NAME = "out"
+COMPILED_SOURCE_CLASSES_FOLDER_NAME = "main"
+COMPILED_TEST_CLASSES_FOLDER_NAME = "test"
 TEST_CASES_FOLDER_NAME = "test"
 FEATURE_FOLDER_NAME = "features"
 
@@ -52,24 +54,38 @@ def get_project_sub_dir_by_folder_name(project_dir, *args, **kwargs):
     return sub_dir
 
 
-def get_model_config_dir(project_dir):
+def get_model_configs_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, CONFIG_FOLDER_NAME)
 
 
+def get_variants_dir(project_dir):
+    return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
+
+
 def get_variant_dir(project_dir, config_name):
-    return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME, config_name)
+    return get_project_sub_dir_by_folder_name(get_variants_dir(project_dir), config_name)
 
 
-def get_compiled_classes_dir(project_dir):
-    return get_project_sub_dir_by_folder_name(project_dir, COMPILED_CLASSES_FOLDER_NAME)
+def get_compiled_classes_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(variant_dir, COMPILED_CLASSES_FOLDER_NAME)
 
 
-def get_src_dir(project_dir):
-    return get_project_sub_dir_by_folder_name(project_dir, SRC_FOLDER_NAME, force_mkdir=False)
+def get_compiled_source_classes_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
+                                              COMPILED_SOURCE_CLASSES_FOLDER_NAME)
 
 
-def get_test_cases_dir(project_dir):
-    return get_project_sub_dir_by_folder_name(project_dir, TEST_CASES_FOLDER_NAME)
+def get_compiled_test_classes_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
+                                              COMPILED_TEST_CLASSES_FOLDER_NAME, force_mkdir=False)
+
+
+def get_src_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, force_mkdir=False)
+
+
+def get_test_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(variant_dir, TEST_CASES_FOLDER_NAME, force_mkdir=False)
 
 
 def get_mutation_result_dir(project_dir):
@@ -119,8 +135,11 @@ def get_absolute_path(current_path):
     return os.path.abspath(current_path)
 
 
-def list_dir(current_dir):
-    return filter(lambda d: not d.startswith("."), os.listdir(current_dir))
+def list_dir(current_dir, full_path=False):
+    files = list(filter(lambda d: not d.startswith("."), os.listdir(current_dir)))
+    if full_path:
+        files = [join_path(current_dir, file) for file in files]
+    return files
 
 
 def delete_dir(directory):

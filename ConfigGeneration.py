@@ -4,7 +4,7 @@ from collections import defaultdict, OrderedDict
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-from FileManager import get_model_config_dir, get_outer_dir, get_file_name, join_path
+from FileManager import get_model_configs_dir, get_outer_dir, get_file_name, join_path, list_dir
 from Helpers import get_logger
 import Model
 
@@ -50,9 +50,9 @@ def write_configuration_to_file(configuration, output_file_path):
         output_file.write("\n".join(lines))
 
 
-def generate_configs(feature_order_file_path, sampling_output_file_path):
+def generate_configs(project_dir, feature_order_file_path, sampling_output_file_path):
     logger.info(f"Generating configurations from sampling csv file [{get_file_name(sampling_output_file_path)}]")
-    config_dir = get_model_config_dir(get_outer_dir(sampling_output_file_path))
+    config_dir = get_model_configs_dir(project_dir)
     sampling_file_name = get_file_name(sampling_output_file_path).replace(".", "_")
     ordered_features = Model.read_feature_order_file(feature_order_file_path)
     configurations = get_configurations_from_sampling_file(ordered_features, sampling_output_file_path)
@@ -62,3 +62,8 @@ def generate_configs(feature_order_file_path, sampling_output_file_path):
         write_configuration_to_file(config, config_output_path)
         config_output_paths.append(config_output_path)
     return config_output_paths
+
+
+def get_config_paths(project_dir):
+    config_dir = get_model_configs_dir(project_dir)
+    return list_dir(config_dir, full_path=True)
