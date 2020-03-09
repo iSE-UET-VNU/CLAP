@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 
 PLUGIN_DIR = os.path.abspath("plugins")
-
+LOG_DIR = os.path.abspath("logs")
 PROJECT_DIR = os.path.abspath("projects")
 
 MODE_FILE_NAME = "model.m"
@@ -13,6 +13,7 @@ CONFIG_FOLDER_NAME = "configs"
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
 COMPILED_CLASSES_FOLDER_NAME = "out"
+TEST_CASES_FOLDER_NAME = "test"
 FEATURE_FOLDER_NAME = "features"
 
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
@@ -28,6 +29,10 @@ def get_plugin_path(file_name):
     return join_path(PLUGIN_DIR, file_name)
 
 
+def get_log_file_path(file_name):
+    return join_path(get_project_sub_dir_by_folder_name(LOG_DIR), file_name)
+
+
 def get_model_file_path(project_dir):
     model_file_path = join_path(project_dir, MODE_FILE_NAME)
     if not is_path_exist(model_file_path):
@@ -36,12 +41,14 @@ def get_model_file_path(project_dir):
 
 
 def get_project_dir(project_name):
-    return get_absolute_path(join_path(PROJECT_DIR, project_name))
+    return join_path(PROJECT_DIR, project_name)
 
 
 def get_project_sub_dir_by_folder_name(project_dir, *args, **kwargs):
+    force_mkdir = kwargs.pop("force_mkdir", True)
     sub_dir = join_path(project_dir, *args, **kwargs)
-    mkdir_if_not_exist(sub_dir)
+    if force_mkdir:
+        mkdir_if_not_exist(sub_dir)
     return sub_dir
 
 
@@ -53,12 +60,16 @@ def get_variant_dir(project_dir, config_name):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME, config_name)
 
 
-def get_output_classes_dir(project_dir):
+def get_compiled_classes_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, COMPILED_CLASSES_FOLDER_NAME)
 
 
 def get_src_dir(project_dir):
-    return get_project_sub_dir_by_folder_name(project_dir, SRC_FOLDER_NAME)
+    return get_project_sub_dir_by_folder_name(project_dir, SRC_FOLDER_NAME, force_mkdir=False)
+
+
+def get_test_cases_dir(project_dir):
+    return get_project_sub_dir_by_folder_name(project_dir, TEST_CASES_FOLDER_NAME)
 
 
 def get_mutation_result_dir(project_dir):
@@ -130,6 +141,10 @@ def create_symlink(src, dst):
     if is_path_exist(dst):
         os.unlink(dst)
     os.symlink(src, escape_path(dst))
+
+
+def remove_file(file_path):
+    os.remove(file_path)
 
 
 def copy_dir(src, dst):

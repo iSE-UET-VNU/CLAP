@@ -14,9 +14,9 @@ def get_sampling_file_path(stdout):
     return re.search("(?<=Wrote result to )[^\n]+", stdout).group()
 
 
-def compose_by_config(config_file_path, project_dir):
+def compose_by_config(project_dir, config_file_path):
     logger.info(
-        f"Composing mutated [{get_file_name(project_dir)}] project's source code with config file [{get_file_name(config_file_path)}]")
+        f"Composing [{get_file_name(project_dir)}] project's source code with config file [{get_file_name(config_file_path)}]")
     config_name = get_file_name(config_file_path)
     output_dir = get_variant_dir(project_dir, config_name)
     execute_shell_command(f'java -jar {PLUGIN_PATH}', extra_args=[

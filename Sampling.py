@@ -10,7 +10,7 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
 def get_sampling_file_path(output_log):
-    return re.search("(?<=Wrote result to )[^\r\n]+", output_log).group()
+    return re.search("(?<=Wrote result to ).+", output_log).group()
 
 
 def sampling(model_file_path, t_wise):
@@ -22,6 +22,5 @@ def sampling(model_file_path, t_wise):
         {"-t": "t_wise"},
         {"-fm": model_file_path},
         {"-s": t_wise},
-
     ])
     return get_sampling_file_path(output_log)

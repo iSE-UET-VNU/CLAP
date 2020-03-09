@@ -1,14 +1,11 @@
 <project name="java-ant project" default="compile">
-    <property name="base_path" value="{.}"/>
-    <property name="src" value="${base_path}/src"/>
-    <property name="out" value="${base_path}/out"/>
-    <echo message="${src}"/>
-    <echo message="${out}"/>
+    <property name="src" value=""/>
+    <property name="out" value=""/>
     <mkdir dir="${out}"/>
     <target name="compile">
-        <javac includeantruntime="false" srcdir="${src}" destdir="${out}"></javac>
+        <javac includeantruntime="false" srcdir="${src}" destdir="${out}"/>
     </target>
     <copy todir="${out}">
         <fileset dir="${src}" excludes="**/*.java"/>
     </copy>
-</project> 
+</project>

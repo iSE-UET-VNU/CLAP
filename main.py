@@ -2,6 +2,7 @@ import AntCompiler
 import Mutant
 import Sampling
 import ConfigGeneration
+import TestGeneration
 import VariantComposer
 import Model
 
@@ -24,14 +25,16 @@ if __name__ == "__main__":
 
     # compile original feature's source code
     for config_path in config_output_paths:
-        variant_source_code_dir = VariantComposer.compose_by_config(config_path, project_dir)
+        variant_source_code_dir = VariantComposer.compose_by_config(project_dir, config_path)
         AntCompiler.compile_classes(variant_source_code_dir)
-    #
-    # # generate mutants and inject them to "optional" features
-    # optional_feature_names = GenerateConfiguration.get_optional_feature_names(sampling_output_file_path)
-    # mutated_project_dirs = Mutant.generate_mutants(project_dir, optional_feature_names)
-    #
-    # # compile mutated feature's source code
-    # for config_path in config_output_paths:
-    #     for mutated_project_dir in mutated_project_dirs:
-    #         VariantComposer.compose_by_config(config_path, mutated_project_dir)
+        # TestGeneration.make_junit_test_cases(variant_source_code_dir)
+
+    # generate mutants and inject them to "optional" features
+    optional_feature_names = ConfigGeneration.get_optional_feature_names(sampling_output_file_path)
+    mutated_project_dirs = Mutant.generate_mutants(project_dir, optional_feature_names)
+
+    # compile mutated feature's source code
+    for config_path in config_output_paths:
+        for mutated_project_dir in mutated_project_dirs:
+            mutated_variant_source_code_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
+            AntCompiler.compile_classes(mutated_variant_source_code_dir)
