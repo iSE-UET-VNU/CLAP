@@ -66,7 +66,7 @@
         <junit fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" printsummary="true"
                failureproperty="test.failed">
             <classpath refid="testbuild.classpath"/>
-            <test name="${classname}" methods="${method}" todir="build"/>
+            <test name="${classname}" methods="${method}" todir="${build.testclasses}"/>
         </junit>
         <condition property="coverage_output_dir" value="${report.failedcoveragedir}"
                    else="${report.passedcoveragedir}">
