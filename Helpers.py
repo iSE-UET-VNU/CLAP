@@ -48,6 +48,6 @@ def execute_shell_command(command, extra_args=None, log_to_file=False):
         process = subprocess.run(command, shell=True, stderr=outfile, stdout=outfile)
     with open(log_path, "r") as outfile:
         text = outfile.read()
-        if not log_to_file:
-            remove_file(log_path)
-        return text
+    if not log_to_file:
+        remove_file(log_path)
+    return text
