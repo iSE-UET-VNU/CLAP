@@ -50,7 +50,7 @@ def run_junit_test_cases(variant_dir, halt_on_failure=False):
         {"-report.coveragedir": test_coverage_dir},
         {"-junit.haltonfailure": "yes" if halt_on_failure else "no"},
     ], log_to_file=True)
-    if output_log.find("Failures: 1"):
+    if output_log.find("Tests run: 1, Failures: 0"):
         if halt_on_failure:
             raise logger.fatal("Some test cases were failed, see log for more detail")
         return False
