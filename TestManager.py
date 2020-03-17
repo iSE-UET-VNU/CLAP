@@ -1,6 +1,9 @@
+import csv
+import re
+
 from FileManager import get_plugin_path, get_file_name, get_test_dir, create_symlink, get_compiled_source_classes_dir, \
     get_compiled_test_classes_dir, list_dir, get_variants_dir, get_src_dir, get_test_results_dir, \
-    get_test_coverage_dir
+    get_test_coverage_dir, get_variant_dir, is_path_exist, join_path, get_model_configs_report_path
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -35,7 +38,7 @@ def link_generated_junit_test_cases(variant_dir, target_variant_dir):
     create_symlink(generated_test_dir, target_test_dir)
 
 
-def run_junit_test_cases(variant_dir, halt_on_failure=False):
+def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False):
     logger.info(f"Running JUnit Test for variant [{get_file_name(variant_dir)}]")
     src_dir = get_src_dir(variant_dir)
     test_dir = get_test_dir(variant_dir)
@@ -50,15 +53,47 @@ def run_junit_test_cases(variant_dir, halt_on_failure=False):
         {"-report.coveragedir": test_coverage_dir},
         {"-junit.haltonfailure": "yes" if halt_on_failure else "no"},
     ], log_to_file=True)
-    if output_log.find("Failures: 1") >= 0:
-        if halt_on_failure:
-            raise logger.fatal("Some test cases were failed, see log for more detail")
+    is_test_failure = re.search("(Failures: 1|Errors: 1)", output_log)
+    if is_test_failure:
+        if halt_on_failure or "Errors" in is_test_failure.group():
+            raise logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
         return False
     return True
 
 
 def generate_junit_test_output_report(project_dir):
     variants_dir = get_variants_dir(project_dir)
-    i = 0
     for variant_dir in list_dir(variants_dir, full_path=True):
-        is_passed = run_junit_test_cases(variant_dir)
+        is_passed = run_junit_test_cases_with_coverage(variant_dir)
+
+
+def check_variant_final_test_output(variant_dir):
+    coverage_dir = get_test_coverage_dir(variant_dir)
+    if is_path_exist(join_path(coverage_dir, "failed")):
+        return False
+    elif is_path_exist(join_path(coverage_dir, "passed")):
+        return True
+    else:
+        return None
+
+
+def write_test_output_to_configs_report(project_dir):
+    logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
+    configs_report_file_path = get_model_configs_report_path(project_dir)
+    rows = []
+    with open(configs_report_file_path, "r") as report_csv:
+        reader = csv.reader(report_csv)
+        for i, row in enumerate(reader):
+            rows.append(row)
+            if i == 0:
+                continue
+            config_name = row[0]
+            variant_dir = get_variant_dir(project_dir, config_name)
+            final_test_output = check_variant_final_test_output(variant_dir)
+            if final_test_output is True:
+                row[-1] = "__PASSED__"
+            elif final_test_output is False:
+                row[-1] = "__FAILED__"
+    with open(configs_report_file_path, "w") as output_report_csv:
+        writer = csv.writer(output_report_csv)
+        writer.writerows(rows)

@@ -40,7 +40,7 @@ def execute_shell_command(command, extra_args=None, log_to_file=False):
             command += f" {arg_name} {arg_val}"
     log_file_name = f"{get_current_timestamp()}_{hash_md5(command)}.log"
     log_path = get_log_file_path(log_file_name)
-    print(command)
+    # print(command)
     with open(log_path, "w+") as outfile:
         plugin_name = find_plugin_name(command)
         if plugin_name and log_to_file:

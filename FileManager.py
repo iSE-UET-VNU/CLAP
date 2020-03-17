@@ -9,6 +9,7 @@ PROJECT_DIR = os.path.abspath("projects")
 
 MODE_FILE_NAME = "model.m"
 CONFIG_FOLDER_NAME = "configs"
+CONFIGS_REPORT_FILE_NAME = "config.report"
 
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
@@ -58,6 +59,10 @@ def get_project_sub_dir_by_folder_name(project_dir, *args, **kwargs):
 
 def get_model_configs_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, CONFIG_FOLDER_NAME)
+
+
+def get_model_configs_report_path(project_dir):
+    return join_path(project_dir, CONFIGS_REPORT_FILE_NAME)
 
 
 def get_variants_dir(project_dir):
@@ -130,6 +135,10 @@ def get_file_name(file_path):
     return os.path.basename(file_path).rsplit(".", 1)[0]
 
 
+def get_file_name_without_ext(file_path):
+    return get_file_name(file_path)
+
+
 def join_path(*args, **kwargs):
     return os.path.join(*args, **kwargs)
 
@@ -175,6 +184,12 @@ def create_symlink(src, dst):
 
 def remove_file(file_path):
     os.remove(file_path)
+
+
+def copy_file(src, dst):
+    if is_path_exist(dst):
+        delete_dir(dst)
+    shutil.copyfile(src, dst)
 
 
 def copy_dir(src, dst):

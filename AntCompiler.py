@@ -1,7 +1,7 @@
 from FileManager import get_plugin_path, get_file_name, get_src_dir, get_compiled_source_classes_dir, get_test_dir, \
     get_compiled_test_classes_dir
 from Helpers import get_logger, execute_shell_command
-from TestGeneration import EVOSUITE_PLUGIN_PATH
+from TestManager import EVOSUITE_PLUGIN_PATH
 
 logger = get_logger(__name__)
 
