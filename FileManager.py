@@ -9,7 +9,7 @@ PROJECT_DIR = os.path.abspath("projects")
 
 MODE_FILE_NAME = "model.m"
 CONFIG_FOLDER_NAME = "configs"
-CONFIGS_REPORT_FILE_NAME = "config.report"
+CONFIGS_REPORT_FILE_NAME = "config.report.csv"
 
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"

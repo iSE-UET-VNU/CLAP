@@ -30,7 +30,7 @@ def get_configurations_from_sampling_file(ordered_features, sampling_file_path):
         csv_reader = csv.reader(input_file, delimiter=';')
         next(csv_reader)
         configurations = defaultdict(OrderedDict)
-        sampling_matrix = list(csv_reader)
+        sampling_matrix = list(filter(lambda x: x[0] in ordered_features, list(csv_reader)))
         sampling_matrix.sort(key=lambda row: ordered_features.index(row[0]))
         for row in sampling_matrix:
             label = re.sub("[\[\]\* ]", '', row[0])
