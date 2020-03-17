@@ -9,5 +9,6 @@
 *.csv
 *.log
 .idea
+.clover
 .evosuite
 evosuite-report

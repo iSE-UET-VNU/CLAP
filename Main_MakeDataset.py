@@ -31,7 +31,7 @@ if __name__ == "__main__":
         variant_dirs.append(variant_dir)
 
         TestGeneration.make_junit_test_cases(variant_dir)
-        AntCompiler.compile_test_classes(variant_dir)
+        TestGeneration.run_junit_test_cases(variant_dir, halt_on_failure=True)
 
     # generate mutants and inject them to "optional" features
     optional_feature_names = ConfigGeneration.get_optional_feature_names(sampling_output_file_path)
@@ -43,3 +43,4 @@ if __name__ == "__main__":
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
             AntCompiler.compile_source_classes(mutated_variant_dir)
             TestGeneration.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
+            TestGeneration.run_junit_test_cases(mutated_variant_dir, halt_on_failure=True)

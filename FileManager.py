@@ -12,9 +12,11 @@ CONFIG_FOLDER_NAME = "configs"
 
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
-COMPILED_CLASSES_FOLDER_NAME = "out"
+COMPILED_CLASSES_FOLDER_NAME = "build"
 COMPILED_SOURCE_CLASSES_FOLDER_NAME = "main"
 COMPILED_TEST_CLASSES_FOLDER_NAME = "test"
+TEST_RESULTS_FOLDER_NAME = "test_results"
+COVERAGE_FOLDER_NAME = "coverage"
 TEST_CASES_FOLDER_NAME = "test"
 FEATURE_FOLDER_NAME = "features"
 
@@ -78,6 +80,15 @@ def get_compiled_source_classes_dir(variant_dir):
 def get_compiled_test_classes_dir(variant_dir):
     return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
                                               COMPILED_TEST_CLASSES_FOLDER_NAME, force_mkdir=False)
+
+
+def get_test_results_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
+                                              TEST_RESULTS_FOLDER_NAME, force_mkdir=False)
+
+
+def get_test_coverage_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(variant_dir, COVERAGE_FOLDER_NAME)
 
 
 def get_src_dir(variant_dir):

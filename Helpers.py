@@ -31,7 +31,7 @@ def find_plugin_name(command):
         return matched.group()
 
 
-def execute_shell_command(command, extra_args=None, show_log_path=False):
+def execute_shell_command(command, extra_args=None, log_to_file=False):
     if extra_args:
         for args in extra_args:
             assert isinstance(args, dict), """Input Argument must be passed as dict={"name":"value"}"""
@@ -40,14 +40,14 @@ def execute_shell_command(command, extra_args=None, show_log_path=False):
             command += f" {arg_name} {arg_val}"
     log_file_name = f"{get_current_timestamp()}_{hash_md5(command)}.log"
     log_path = get_log_file_path(log_file_name)
+    # print(command)
     with open(log_path, "w+") as outfile:
         plugin_name = find_plugin_name(command)
-        if plugin_name and show_log_path:
+        if plugin_name and log_to_file:
             logger.debug(f"Writing log [{plugin_name}] to [{log_path}]")
         process = subprocess.run(command, shell=True, stderr=outfile, stdout=outfile)
-    # print(command)
     with open(log_path, "r") as outfile:
         text = outfile.read()
-        if not show_log_path:
+        if not log_to_file:
             remove_file(log_path)
         return text

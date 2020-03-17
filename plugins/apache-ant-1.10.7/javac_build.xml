@@ -1,4 +1,4 @@
-<project name="java-ant project" default="compile">
+<project name="javac_ant" default="compile">
     <property name="src" value=""/>
     <property name="out" value=""/>
     <property name="class_path" value=""/>
