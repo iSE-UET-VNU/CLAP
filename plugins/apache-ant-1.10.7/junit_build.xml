@@ -12,7 +12,7 @@
     <property name="junit.jar" location="../junit-4.12.jar"/>
     <property name="hamcrest.jar" location="../hamcrest-core-1.3.jar"/>
     <property name="evosuite.jar" location="../evosuite-1.0.6.jar"/>
-    <property name="clover.jar" location="../clover.jar"/>
+    <property name="clover.jar" location="lib/clover.jar"/>
 
 
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
@@ -40,6 +40,7 @@
         <javac srcdir="${test}" destdir="${build.testclasses}" classpathref="testbuild.classpath"
                includeantruntime="false"/>
     </target>
+
     <target name="test">
         <testcase-finder classpathref="testbuild.classpath" testcaseslistfileproperty='testcaseproperties.filepath'>
             <fileset dir="${build.testclasses}" casesensitive="yes">
@@ -63,7 +64,8 @@
     </target>
     <target name="junit">
         <echo>[Test Case] ${classname}.${method}</echo>
-        <junit fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" printsummary="true">
+        <junit fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" printsummary="true"
+               failureproperty="test.failed">
             <classpath refid="testbuild.classpath"/>
             <test name="${classname}" methods="${method}"/>
         </junit>
