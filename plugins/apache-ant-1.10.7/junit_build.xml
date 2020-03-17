@@ -17,7 +17,7 @@
 
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <taskdef resource="com/nkt/antlib.xml"/>
-    <taskdef resource="cloverlib.xml" classpath="${clover.jar}"/>
+    <taskdef resource="cloverlib.xml"/>
 
     <path id="build.classpath">
         <pathelement location="${build.classes}"/>
