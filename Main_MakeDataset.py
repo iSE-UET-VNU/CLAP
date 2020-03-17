@@ -43,4 +43,4 @@ if __name__ == "__main__":
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
             AntCompiler.compile_source_classes(mutated_variant_dir)
             TestGeneration.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
-            TestGeneration.run_junit_test_cases(mutated_variant_dir, halt_on_failure=True)
+            TestGeneration.run_junit_test_cases(mutated_variant_dir, halt_on_failure=False)
