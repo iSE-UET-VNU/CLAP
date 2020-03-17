@@ -87,7 +87,6 @@ def inject_mutants(project_dir, mutant_paths):
         create_symlink(mutant_path, mutant_path_dst)
 
         mutated_project_dirs.append(current_mutated_project_dir)
-        # break
     return mutated_project_dirs
 
 
