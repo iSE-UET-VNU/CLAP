@@ -31,10 +31,10 @@ if __name__ == "__main__":
         AntCompiler.compile_source_classes(variant_dir)
         variant_dirs.append(variant_dir)
 
-        TestManager.make_junit_test_cases(variant_dir)
-        TestManager.run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=True)
-
-    TestManager.write_test_output_to_configs_report(project_dir)
+        # TestManager.make_junit_test_cases(variant_dir)
+        # TestManager.run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=True)
+    #
+    # TestManager.write_test_output_to_configs_report(project_dir)
 
     # generate mutants and inject them to "optional" features
     optional_feature_names = ConfigManager.get_optional_feature_names(sampling_output_file_path)
