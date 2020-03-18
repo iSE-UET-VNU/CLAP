@@ -53,10 +53,10 @@ def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False):
         {"-report.coveragedir": test_coverage_dir},
         {"-junit.haltonfailure": "yes" if halt_on_failure else "no"},
     ], log_to_file=True)
-    is_test_failure = re.search("(Failures: 1|Errors: 1)", output_log)
+    is_test_failure = re.search("(Failures: 1|Errors: 1|BUILD FAILED)", output_log)
     if is_test_failure:
-        if halt_on_failure or "Errors" in is_test_failure.group():
-            raise logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
+        if halt_on_failure or "Errors" in is_test_failure.group() or "BUILD FAILED" in is_test_failure.group():
+            logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
         return False
     return True
 
