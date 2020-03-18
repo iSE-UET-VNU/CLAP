@@ -29,7 +29,7 @@ def get_all_mutant_paths(mutation_result_dir):
                                        {"-type": "f"},
                                        {"-name": "*.java"},
                                    ])
-    return output.split("\n")
+    return output.split("\n")[:-1]
 
 
 def count_mutants(mutant_paths):
@@ -65,6 +65,7 @@ def inject_mutants(project_dir, mutant_paths):
     features_dir = get_feature_source_code_dir(project_dir)
     mutated_project_dirs = []
     for mutant_path in mutant_paths:
+        # FORMAT: ~/InputPreparation/projects/GPL-Test/mutation_result/DirectedWithEdges.GPL.Edge/traditional_mutants/Vertex_getOtherVertex(Vertex)/ROR_1/Edge.java'
         mutant_path_parts = mutant_path.rsplit("/", 5)
         full_class_name = mutant_path_parts[1]
         package, class_name = full_class_name.rsplit(".", 1)
