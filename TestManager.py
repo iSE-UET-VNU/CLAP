@@ -38,7 +38,7 @@ def link_generated_junit_test_cases(variant_dir, target_variant_dir):
     create_symlink(generated_test_dir, target_test_dir)
 
 
-def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False):
+def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False, halt_on_error=True):
     logger.info(f"Running JUnit Test for variant [{get_file_name(variant_dir)}]")
     src_dir = get_src_dir(variant_dir)
     test_dir = get_test_dir(variant_dir)
@@ -55,7 +55,7 @@ def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False):
     ], log_to_file=True)
     is_test_failure = re.search("(Failures: 1|Errors: 1|BUILD FAILED)", output_log)
     if is_test_failure:
-        if halt_on_failure or "Errors" in is_test_failure.group() or "BUILD FAILED" in is_test_failure.group():
+        if halt_on_failure or (halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
             logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
         return False
     return True
