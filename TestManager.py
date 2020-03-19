@@ -3,7 +3,7 @@ import re
 
 from FileManager import get_plugin_path, get_file_name, get_test_dir, create_symlink, get_compiled_source_classes_dir, \
     get_compiled_test_classes_dir, list_dir, get_variants_dir, get_src_dir, get_test_results_dir, \
-    get_test_coverage_dir, get_variant_dir, is_path_exist, join_path, get_model_configs_report_path
+    get_test_coverage_dir, get_variant_dir, is_path_exist, join_path, get_model_configs_report_path, delete_dir
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -15,8 +15,9 @@ JUNIT_PLUGIN_NAME = "es_junit.sh"
 JUNIT_PLUGIN_PATH = get_plugin_path(JUNIT_PLUGIN_NAME)
 
 
-def make_junit_test_cases(variant_dir):
+def generate_junit_test_cases(variant_dir):
     logger.info(f"Generating JUnit Test for variant [{get_file_name(variant_dir)}]")
+    delete_dir("./.evosuite")
     compiled_classes_dir = get_compiled_source_classes_dir(variant_dir)
     test_cases_dir = get_test_dir(variant_dir)
     output_log = execute_shell_command(f'java -jar {EVOSUITE_PLUGIN_PATH}', extra_args=[

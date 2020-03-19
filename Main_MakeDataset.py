@@ -31,7 +31,7 @@ if __name__ == "__main__":
         AntCompiler.compile_source_classes(variant_dir)
         variant_dirs.append(variant_dir)
 
-        TestManager.make_junit_test_cases(variant_dir)
+        TestManager.generate_junit_test_cases(variant_dir)
         TestManager.run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=True, halt_on_error=True)
 
     TestManager.write_test_output_to_configs_report(project_dir)
