@@ -89,11 +89,14 @@ def write_test_output_to_configs_report(project_dir):
                 continue
             config_name = row[0]
             variant_dir = get_variant_dir(project_dir, config_name)
-            final_test_output = check_variant_final_test_output(variant_dir)
-            if final_test_output is True:
-                row[-1] = "__PASSED__"
-            elif final_test_output is False:
-                row[-1] = "__FAILED__"
+            final_test_output_flag = check_variant_final_test_output(variant_dir)
+            if final_test_output_flag is True:
+                final_test_output = "__PASSED__"
+            elif final_test_output_flag is False:
+                final_test_output = "__FAILED__"
+            else:
+                final_test_output = "__NOASWR__"
+            row[-1] = final_test_output
     with open(configs_report_file_path, "w") as output_report_csv:
         writer = csv.writer(output_report_csv)
         writer.writerows(rows)
