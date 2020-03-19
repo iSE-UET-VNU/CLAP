@@ -17,14 +17,13 @@ JUNIT_PLUGIN_PATH = get_plugin_path(JUNIT_PLUGIN_NAME)
 
 def generate_junit_test_cases(variant_dir):
     logger.info(f"Generating JUnit Test for variant [{get_file_name(variant_dir)}]")
-    delete_dir("./.evosuite")
     compiled_classes_dir = get_compiled_source_classes_dir(variant_dir)
     test_cases_dir = get_test_dir(variant_dir)
     output_log = execute_shell_command(f'java -jar {EVOSUITE_PLUGIN_PATH}', extra_args=[
         {"-projectCP": compiled_classes_dir},
         {"-seed": 1583738192420},
         {"-target": compiled_classes_dir},
-        {"-continuous": "execute"},
+        {"-continuous": "clean"},
         {"-Dctg_memory": "4000"},
         {"-Dctg_cores": "4"},
         {"-Dctg_export_folder": test_cases_dir},
