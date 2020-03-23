@@ -93,7 +93,7 @@ def get_test_results_dir(variant_dir):
 
 
 def get_test_coverage_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(variant_dir, COVERAGE_FOLDER_NAME)
+    return get_project_sub_dir_by_folder_name(variant_dir, COVERAGE_FOLDER_NAME, force_mkdir=False)
 
 
 def get_src_dir(variant_dir):
@@ -164,6 +164,8 @@ def list_dir(current_dir, full_path=False):
 
 def delete_dir(directory):
     directory = Path(directory)
+    if not directory.is_dir():
+        return
     for item in directory.iterdir():
         if item.is_dir():
             delete_dir(item)
