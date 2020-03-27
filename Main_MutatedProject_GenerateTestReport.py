@@ -7,7 +7,7 @@ from Helpers import sleep
 from VariantComposer import was_variants_composed
 
 if __name__ == "__main__":
-    project_name = "Mutated-GPL-Test"
+    project_name = "GPL-Test"
     project_dir = get_project_dir(project_name)
 
     # clone ant directory
