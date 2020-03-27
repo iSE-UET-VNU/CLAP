@@ -10,4 +10,11 @@ Nên cần lưu ý về việc config của SPLCATool và Mujava trước khi ch
 
 - model.m là file model ở dạng guiclsl 
 
+Run:
+```shell script
+$ export ANT_HOME=InputPreparation/plugins/apache-ant-1.10.7/
+```
 
+```shell script
+$ python Main_MakeDataset.py
+```

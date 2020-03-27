@@ -25,8 +25,8 @@ def generate_junit_test_cases(variant_dir):
         {"-seed": 1583738192420},
         {"-target": compiled_classes_dir},
         {"-continuous": "execute"},
-        {"-Dctg_memory": "10000"},
-        {"-Dctg_cores": "36"},
+        {"-Dctg_memory": "4000"},
+        {"-Dctg_cores": "4"},
         {"-Dctg_export_folder": test_cases_dir},
     ], log_to_file=True)
 
