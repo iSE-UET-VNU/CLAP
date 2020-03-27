@@ -23,7 +23,13 @@ if [ "${11}" = "-junit.haltonfailure" ]; then
     JUNIT_HALT_ON_FALURE=${12};
 fi;
 
+if [ "${13}" = "-ant.name" ]; then
+    ANT_FOLDER_NAME=${14}
+else
+    ANT_FOLDER_NAME=apache-ant-1.10.7
+fi;
+
 BASEDIR=$(dirname "$0")
-ANT_PATH="$BASEDIR/apache-ant-1.10.7";
+ANT_PATH="$BASEDIR/$ANT_FOLDER_NAME";
 
 $ANT_PATH/bin/ant clover.all -buildfile $ANT_PATH/junit_build.xml -Dsrc $SRC_DIR -Dtest $TEST_DIR -Dbuild.classes $SRC_CLASSES_DIR -Dbuild.testclasses $TEST_CLASSES_DIR -Dreport.coveragedir $COVERAGE_DIR -Djunit.haltonfailure=$JUNIT_HALT_ON_FALURE

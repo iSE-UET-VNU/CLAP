@@ -1,5 +1,5 @@
 from FileManager import get_plugin_path, split_path, get_mutation_result_dir, list_dir, join_path, \
-    get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name, copy_dir
+    get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -47,12 +47,12 @@ def make_mutants(current_project_dir, optional_feature_names):
     mutation_result_dir = get_mutation_result_dir(current_project_dir)
     mutant_paths = get_all_mutant_paths(mutation_result_dir)
     mutant_count = count_mutants(mutant_paths)
-    logger.info(f"Composed {mutant_count} mutants [{get_file_name(mutation_result_dir)}]")
+    logger.info(f"Composed {mutant_count} mutants [{get_file_name_without_ext(mutation_result_dir)}]")
     return mutant_paths
 
 
 def generate_mutants(project_dir, optional_feature_names):
-    logger.info(f"Mutating features [{get_file_name(project_dir)}]")
+    logger.info(f"Mutating features [{get_file_name_without_ext(project_dir)}]")
     assign_current_project_as_new_session(project_dir)
     mutant_paths = make_mutants(project_dir, optional_feature_names)
     mutated_project_dirs = inject_mutants(project_dir, mutant_paths)
@@ -60,7 +60,7 @@ def generate_mutants(project_dir, optional_feature_names):
 
 
 def inject_mutants(project_dir, mutant_paths):
-    logger.info(f"Injecting mutants to features [{get_file_name(project_dir)}]")
+    logger.info(f"Injecting mutants to features [{get_file_name_without_ext(project_dir)}]")
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     features_dir = get_feature_source_code_dir(project_dir)
     mutated_project_dirs = []

@@ -1,9 +1,10 @@
 import csv
 import re
 
-from FileManager import get_plugin_path, get_file_name, get_test_dir, create_symlink, get_compiled_source_classes_dir, \
-    get_compiled_test_classes_dir, list_dir, get_variants_dir, get_src_dir, get_test_results_dir, \
-    get_test_coverage_dir, get_variant_dir, is_path_exist, join_path, get_model_configs_report_path, delete_dir
+from FileManager import get_plugin_path, get_file_name_without_ext, get_test_dir, create_symlink, \
+    get_compiled_source_classes_dir, \
+    get_compiled_test_classes_dir, get_file_name, get_src_dir, get_test_coverage_dir, get_variant_dir, is_path_exist, \
+    join_path, get_model_configs_report_path, delete_dir, get_variants_dir, list_dir
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -16,7 +17,7 @@ JUNIT_PLUGIN_PATH = get_plugin_path(JUNIT_PLUGIN_NAME)
 
 
 def generate_junit_test_cases(variant_dir):
-    logger.info(f"Generating JUnit Test for variant [{get_file_name(variant_dir)}]")
+    logger.info(f"Generating JUnit Test for variant [{get_file_name_without_ext(variant_dir)}]")
     compiled_classes_dir = get_compiled_source_classes_dir(variant_dir)
     delete_dir("./.evosuite")
     test_cases_dir = get_test_dir(variant_dir)
@@ -32,14 +33,15 @@ def generate_junit_test_cases(variant_dir):
 
 
 def link_generated_junit_test_cases(variant_dir, target_variant_dir):
-    logger.info(f"Linking JUnit Test for variant [{get_file_name(variant_dir)}]")
+    logger.info(f"Linking JUnit Test for variant [{get_file_name_without_ext(variant_dir)}]")
     generated_test_dir = get_test_dir(variant_dir)
     target_test_dir = get_test_dir(target_variant_dir)
     create_symlink(generated_test_dir, target_test_dir)
 
 
-def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False, halt_on_error=True):
-    logger.info(f"Running JUnit Test for variant [{get_file_name(variant_dir)}]")
+def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False, halt_on_error=True, custom_ant=None):
+    logger.info(
+        f"Running JUnit Test for variant [{get_file_name_without_ext(variant_dir)}] - Using custom ant [{custom_ant}]")
     src_dir = get_src_dir(variant_dir)
     test_dir = get_test_dir(variant_dir)
     src_classes_dir = get_compiled_source_classes_dir(variant_dir)
@@ -52,19 +54,21 @@ def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False, halt_
         {"-build.testclasses": test_classes_dir},
         {"-report.coveragedir": test_coverage_dir},
         {"-junit.haltonfailure": "yes" if halt_on_failure else "no"},
+        {"-ant.name": custom_ant},
     ], log_to_file=True)
     is_test_failure = re.search("(Failures: 1|Errors: 1|BUILD FAILED)", output_log)
     if is_test_failure:
-        if halt_on_failure or (halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
+        if halt_on_failure or (
+                halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
             logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
         return False
     return True
 
 
-def generate_junit_test_output_report(project_dir):
+def run_junit_test_cases_with_coverage_on_project(project_dir, custom_ant=None):
     variants_dir = get_variants_dir(project_dir)
     for variant_dir in list_dir(variants_dir, full_path=True):
-        is_passed = run_junit_test_cases_with_coverage(variant_dir)
+        run_junit_test_cases_with_coverage(variant_dir=variant_dir, custom_ant=custom_ant)
 
 
 def check_variant_final_test_output(variant_dir):

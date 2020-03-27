@@ -4,8 +4,6 @@ import subprocess
 import hashlib
 import time
 
-from FileManager import get_log_file_path, remove_file
-
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] [%(module)s] %(message)s",
                     datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -15,6 +13,11 @@ def get_logger(name):
 
 
 logger = get_logger(__name__)
+
+
+def sleep(secs):
+    logger.info("Sleeping in {} secs".format(secs))
+    time.sleep(secs)
 
 
 def hash_md5(input_str):
@@ -32,11 +35,14 @@ def find_plugin_name(command):
 
 
 def execute_shell_command(command, extra_args=None, log_to_file=False):
+    from FileManager import get_log_file_path, remove_file
     if extra_args:
         for args in extra_args:
             assert isinstance(args, dict), """Input Argument must be passed as dict={"name":"value"}"""
             arg_name = list(args.keys())[0]
-            arg_val = args.get(arg_name, "")
+            arg_val = args.get(arg_name, None)
+            if arg_val is None:
+                continue
             command += f" {arg_name} {arg_val}"
     log_file_name = f"{get_current_timestamp()}_{hash_md5(command)}.log"
     log_path = get_log_file_path(log_file_name)

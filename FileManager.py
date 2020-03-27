@@ -3,6 +3,8 @@ import re
 import shutil
 from pathlib import Path
 
+from Helpers import get_logger
+
 PLUGIN_DIR = os.path.abspath("plugins")
 LOG_DIR = os.path.abspath("logs")
 PROJECT_DIR = os.path.abspath("projects")
@@ -10,6 +12,7 @@ PROJECT_DIR = os.path.abspath("projects")
 MODE_FILE_NAME = "model.m"
 CONFIG_FOLDER_NAME = "configs"
 CONFIGS_REPORT_FILE_NAME = "config.report.csv"
+PROJECT_LOCK_FILE_NAME = "project.lock"
 
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
@@ -23,6 +26,8 @@ FEATURE_FOLDER_NAME = "features"
 
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
 MUTATED_PROJECTS_FOLDER_NAME = "mutated_projects"
+
+logger = get_logger(__name__)
 
 
 def mkdir_if_not_exist(input_dir):
@@ -116,6 +121,22 @@ def get_feature_source_code_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, FEATURE_FOLDER_NAME)
 
 
+def is_project_locked(project_dir):
+    lock_file_path = join_path(project_dir, PROJECT_LOCK_FILE_NAME)
+    return is_path_exist(lock_file_path)
+
+
+def lock_project(project_dir):
+    if not is_project_locked(project_dir):
+        lock_file_path = join_path(project_dir, PROJECT_LOCK_FILE_NAME)
+        touch_file(lock_file_path)
+        logger.info(f"Project [{get_file_name(project_dir)}] has locked successfully")
+    else:
+        message = f"Project [{get_file_name(project_dir)}] had locked by another process, try again later"
+        logger.error(message)
+        raise BlockingIOError(message)
+
+
 def get_outer_dir(current_path, step=1):
     current_dir = Path(current_path)
     for _ in range(step):
@@ -131,12 +152,12 @@ def split_path(file_path):
     return file_path.rsplit("/", 1)
 
 
-def get_file_name(file_path):
-    return os.path.basename(file_path).rsplit(".", 1)[0]
-
-
 def get_file_name_without_ext(file_path):
-    return get_file_name(file_path)
+    return get_file_name(file_path).rsplit(".", 1)[0]
+
+
+def get_file_name(file_path):
+    return os.path.basename(file_path)
 
 
 def join_path(*args, **kwargs):
@@ -184,6 +205,18 @@ def create_symlink(src, dst):
     os.symlink(src, escape_path(dst))
 
 
+def create_non_hidden_file_symlink(src, dst):
+    if is_path_exist(dst):
+        os.unlink(dst)
+    mkdir_if_not_exist(dst)
+    for file in list_dir(src):
+        if file.startswith("."):
+            continue
+        current_src = join_path(src, file)
+        current_dst = join_path(dst, file)
+        create_symlink(current_src, current_dst)
+
+
 def remove_file(file_path):
     os.remove(file_path)
 
@@ -198,3 +231,7 @@ def copy_dir(src, dst):
     if is_path_exist(dst):
         delete_dir(dst)
     shutil.copytree(src, dst)
+
+
+def touch_file(file_path):
+    Path(file_path).touch()

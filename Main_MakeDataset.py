@@ -1,4 +1,4 @@
-import AntCompiler
+import AntManager
 import MutantManager
 import SamplingManager
 import ConfigManager
@@ -24,11 +24,11 @@ if __name__ == "__main__":
                                                                                    feature_order_file_path,
                                                                                    sampling_output_file_path)
 
-    # compile original feature's source code
+    # compose and compile original feature's source code
     variant_dirs = []
     for config_path in config_output_paths:
         variant_dir = VariantComposer.compose_by_config(project_dir, config_path)
-        AntCompiler.compile_source_classes(variant_dir)
+        AntManager.compile_source_classes(variant_dir)
         variant_dirs.append(variant_dir)
 
         TestManager.generate_junit_test_cases(variant_dir)

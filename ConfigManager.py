@@ -2,7 +2,7 @@ import csv
 import re
 from collections import defaultdict, OrderedDict
 
-from FileManager import get_model_configs_dir, get_file_name, join_path, list_dir, get_model_configs_report_path, \
+from FileManager import get_model_configs_dir, get_file_name_without_ext, join_path, list_dir, get_model_configs_report_path, \
     copy_file
 from Helpers import get_logger
 import ModelManager
@@ -68,7 +68,7 @@ def generate_configs_report(ordered_features, config_output_paths, configuration
 
         writer.writeheader()
         for config_output_path, config in zip(config_output_paths, configurations):
-            config_name = get_file_name(config_output_path)
+            config_name = get_file_name_without_ext(config_output_path)
             for feature in config:
                 is_feature_enabled = config[feature]
                 if is_feature_enabled:
@@ -83,9 +83,9 @@ def generate_configs_report(ordered_features, config_output_paths, configuration
 
 
 def generate_configs(project_dir, feature_order_file_path, sampling_output_file_path):
-    logger.info(f"Generating configurations from sampling csv file [{get_file_name(sampling_output_file_path)}]")
+    logger.info(f"Generating configurations from sampling csv file [{get_file_name_without_ext(sampling_output_file_path)}]")
     config_dir = get_model_configs_dir(project_dir)
-    sampling_file_name = get_file_name(sampling_output_file_path).replace(".", "_")
+    sampling_file_name = get_file_name_without_ext(sampling_output_file_path).replace(".", "_")
     ordered_features = ModelManager.read_feature_order_file(feature_order_file_path)
     configurations = get_configurations_from_sampling_file(ordered_features, sampling_output_file_path)
     config_output_paths = []
