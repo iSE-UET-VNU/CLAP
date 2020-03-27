@@ -27,7 +27,7 @@ def get_all_mutant_paths(mutation_result_dir):
                                    extra_args=[
                                        {"-mindepth": 4},
                                        {"-type": "f"},
-                                       {"-name": "*.java"},
+                                       {"-name": "\"*.java\""},
                                    ])
     return output.split("\n")[:-1]
 

@@ -24,7 +24,13 @@ public class Neighbor implements EdgeIfc, NeighborIfc
     {
         neighbor = theNeighbor;
     }
-  
+
+    public void NeighborConstructor( Vertex theNeighbor, int theWeight )
+    {
+        NeighborConstructor( theNeighbor );
+        //something here
+    }
+
     public void display () 
     {
         System.out.print( neighbor.name + " ," );
@@ -37,10 +43,10 @@ public class Neighbor implements EdgeIfc, NeighborIfc
 
     public Vertex getEnd( ) 
     { 
-      return neighbor; 
+      return neighbor; //mutated here
     }
 
-    public void setWeight( int weight ) 
+    public void setWeight( int weight )
     {
     }
 

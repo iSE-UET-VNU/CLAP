@@ -46,7 +46,7 @@ if __name__ == "__main__":
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
             AntCompiler.compile_source_classes(mutated_variant_dir)
             TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
-            TestManager.run_junit_test_cases_with_coverage(mutated_variant_dir, halt_on_failure=False,
-                                                           halt_on_error=False)
+            # TestManager.run_junit_test_cases_with_coverage(mutated_variant_dir, halt_on_failure=False,
+            #                                                halt_on_error=False)
         ConfigManager.copy_configs_report(project_dir, mutated_project_dir)
-        TestManager.write_test_output_to_configs_report(mutated_project_dir)
+        # TestManager.write_test_output_to_configs_report(mutated_project_dir)

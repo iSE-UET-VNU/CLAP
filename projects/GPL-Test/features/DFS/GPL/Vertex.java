@@ -51,4 +51,14 @@ public class Vertex
             System.out.println( " !visited " );
         original( );
     }
+
+    public class Test{
+
+        // hallo mama
+        protected void print(){
+            System.out.print(" wonderful");
+        }
+    }
+
+
 }

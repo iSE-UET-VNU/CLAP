@@ -12,6 +12,7 @@ public class Graph
         original( s );
     }
 
+    //day dong 15
     public void ConnectedComponents( ) 
     {
         GraphSearch( new RegionWorkSpace( ) );

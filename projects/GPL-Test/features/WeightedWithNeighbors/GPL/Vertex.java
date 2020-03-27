@@ -22,4 +22,12 @@ public class Vertex {
         original();
     }
 
+    public class Test{
+        // hallo mane
+        protected void print() {
+            original();
+            System.out.print("Hello");
+        }
+    }
+
 }

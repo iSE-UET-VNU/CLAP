@@ -23,7 +23,8 @@ def compose_by_config(project_dir, config_file_path):
         {"--expression": config_file_path},
         {"--base-directory": get_feature_source_code_dir(project_dir)},
         {"--output-directory": output_dir},
-        {"--export_roles_json": ""}
+        {"--export_roles_json": ""},
+        {"--featureAnnotationJava": ""}
     ])
     output_src_dir = join_path(output_dir, config_name)
     if is_path_exist(output_src_dir):
