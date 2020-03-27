@@ -17,7 +17,6 @@ if __name__ == "__main__":
     while True:
         mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir)
         for mutated_project_dir in mutated_project_dirs:
-            print(mutated_project_dir)
             if not was_variants_composed(mutated_project_dir):
                 continue
             try:
