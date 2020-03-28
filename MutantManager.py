@@ -75,6 +75,11 @@ def inject_mutants(project_dir, mutant_paths):
 
         current_mutated_project_dir = join_path(mutated_projects_dir, current_project_name)
         current_mutated_features_dir = get_feature_source_code_dir(project_dir=current_mutated_project_dir)
+
+        mutation_log_file = join_path(*mutant_path_parts[:-3], "mutation_logs", f"{current_project_name}.log")
+        mutated_project_mutation_log_file = join_path(current_mutated_project_dir, f"{current_project_name}.mutant.log")
+        create_symlink(mutation_log_file, mutated_project_mutation_log_file)
+
         for feature_name in list_dir(features_dir):
             current_feature_dir = join_path(features_dir, feature_name)
             current_mutated_feature_dir = join_path(current_mutated_features_dir, feature_name)

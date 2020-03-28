@@ -130,9 +130,9 @@ def lock_project(project_dir):
     if not is_project_locked(project_dir):
         lock_file_path = join_path(project_dir, PROJECT_LOCK_FILE_NAME)
         touch_file(lock_file_path)
-        logger.info(f"Project [{get_file_name(project_dir)}] has locked successfully")
+        logger.info(f"Project [{get_file_name(project_dir)}] has been locked successfully")
     else:
-        message = f"Project [{get_file_name(project_dir)}] had locked by another process, try again later"
+        message = f"Project [{get_file_name(project_dir)}] had been locked by another process, try again later"
         logger.error(message)
         raise BlockingIOError(message)
 
