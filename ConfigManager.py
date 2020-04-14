@@ -2,7 +2,8 @@ import csv
 import re
 from collections import defaultdict, OrderedDict
 
-from FileManager import get_model_configs_dir, get_file_name_without_ext, join_path, list_dir, get_model_configs_report_path, \
+from FileManager import get_model_configs_dir, get_file_name_without_ext, join_path, list_dir, \
+    get_model_configs_report_path, \
     copy_file
 from Helpers import get_logger
 import ModelManager
@@ -34,19 +35,24 @@ def get_configurations_from_sampling_file(ordered_features, sampling_file_path):
         sampling_matrix.sort(key=lambda row: ordered_features.index(row[0]))
         for row in sampling_matrix:
             label = re.sub("[\[\]\* ]", '', row[0])
-            for i, feature_selection in enumerate(row[2:-1]):
+            for i, feature_selection in enumerate(row[1:-1]):
                 configurations[i][label] = feature_selection == "X"
     return list(configurations.values())
 
 
 def write_configuration_to_file(configuration, output_file_path):
     lines = []
+    is_enabled = False
     for feature, is_enabled in configuration.items():
         # comment all disabled features
         line = ("" if is_enabled else "#") + feature
         lines.append(line)
+
+    if not is_enabled:
+        return False
     with open(output_file_path, "w+") as output_file:
         output_file.write("\n".join(lines))
+    return True
 
 
 def generate_config_name(sampling_file_name, index):
@@ -59,8 +65,7 @@ OUTPUT_FIELD = '__TEST_OUTPUT__'
 
 def generate_configs_report(ordered_features, config_output_paths, configurations, configs_report_output_path):
     assert (isinstance(ordered_features, list) and isinstance(config_output_paths, list) and isinstance(configurations,
-                                                                                                        list) and len(
-        config_output_paths) == len(configurations))
+                                                                                                        list))
 
     with open(configs_report_output_path, 'w') as output_csv:
         field_names = [PRODUCT_FEATURE_FIELD] + ordered_features + [OUTPUT_FIELD]
@@ -83,7 +88,8 @@ def generate_configs_report(ordered_features, config_output_paths, configuration
 
 
 def generate_configs(project_dir, feature_order_file_path, sampling_output_file_path):
-    logger.info(f"Generating configurations from sampling csv file [{get_file_name_without_ext(sampling_output_file_path)}]")
+    logger.info(
+        f"Generating configurations from sampling csv file [{get_file_name_without_ext(sampling_output_file_path)}]")
     config_dir = get_model_configs_dir(project_dir)
     sampling_file_name = get_file_name_without_ext(sampling_output_file_path).replace(".", "_")
     ordered_features = ModelManager.read_feature_order_file(feature_order_file_path)
@@ -92,8 +98,9 @@ def generate_configs(project_dir, feature_order_file_path, sampling_output_file_
     for i, config in enumerate(configurations):
         config_name = generate_config_name(sampling_file_name, i)
         config_output_path = join_path(config_dir, f"{config_name}.features")
-        write_configuration_to_file(config, config_output_path)
-        config_output_paths.append(config_output_path)
+        success = write_configuration_to_file(config, config_output_path)
+        if success:
+            config_output_paths.append(config_output_path)
     configs_report_file_path = get_model_configs_report_path(project_dir)
     generate_configs_report(ordered_features, config_output_paths, configurations, configs_report_file_path)
     return configs_report_file_path, config_output_paths
