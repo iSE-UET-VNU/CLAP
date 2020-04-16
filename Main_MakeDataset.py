@@ -9,7 +9,7 @@ import ModelManager
 from FileManager import get_model_file_path, get_project_dir
 
 if __name__ == "__main__":
-    project_name = "GPL-Test"
+    project_name = "BerkeleyDB-FH-Java"
     project_dir = get_project_dir(project_name)
 
     # get model file
