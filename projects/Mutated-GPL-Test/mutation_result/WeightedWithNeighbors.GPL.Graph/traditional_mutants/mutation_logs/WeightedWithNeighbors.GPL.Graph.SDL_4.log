@@ -1,0 +1,1 @@
+SDL_4:20:void_addEdge(Vertex,Neighbor): Vertex end = theNeighbor.neighbor; end.addWeight( end, theNeighbor.weight );  =>   Vertex end = theNeighbor.neighbor;

@@ -21,6 +21,6 @@ def sampling(model_file_path, t_wise):
     output_log = execute_shell_command(f'java -jar {PLUGIN_PATH} ', extra_args=[
         {"-t": "t_wise"},
         {"-fm": model_file_path},
-        {"-s": t_wise},
+        {"-a Chvatal -s": t_wise},
     ])
     return get_sampling_file_path(output_log)

@@ -1,0 +1,1 @@
+COI_5:54:void_checkNeighborAction(Vertex,Vertex): isDirected  =>  !isDirected

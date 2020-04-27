@@ -1,0 +1,3 @@
+void_addWeight(Vertex,int)
+void_adjustAdorns(Neighbor)
+void_display()

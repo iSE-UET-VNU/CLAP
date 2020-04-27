@@ -1,0 +1,1 @@
+SDL_3:23:boolean_CycleCheck(): CycleWorkSpace c = new CycleWorkSpace( isDirected ); GraphSearch( c ); return c.AnyCycles;  =>   CycleWorkSpace c = new CycleWorkSpace( isDirected ); return c.AnyCycles;

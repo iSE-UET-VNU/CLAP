@@ -1,0 +1,3 @@
+void_addAnEdge(Vertex,Vertex,int)
+void_addEdge(Vertex,Neighbor)
+void_display()

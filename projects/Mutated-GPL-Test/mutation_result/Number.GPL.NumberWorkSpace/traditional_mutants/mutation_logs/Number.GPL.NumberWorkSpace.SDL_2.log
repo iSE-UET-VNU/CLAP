@@ -1,0 +1,1 @@
+SDL_2:19:void_preVisitAction(Vertex): if (v.visited != true) {     v.VertexNumber = vertexCounter++; }  =>  

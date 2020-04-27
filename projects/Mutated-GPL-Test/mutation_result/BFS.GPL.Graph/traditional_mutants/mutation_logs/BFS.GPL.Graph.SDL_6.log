@@ -1,0 +1,1 @@
+SDL_6:23:void_GraphSearch(WorkSpace): while (vxiter.hasNext()) {     Vertex v = vxiter.next();     v.init_vertex( w ); }  =>   while (true) {     Vertex v = vxiter.next();     v.init_vertex( w ); }

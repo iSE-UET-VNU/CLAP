@@ -1,0 +1,1 @@
+ROR_4:59:void_checkNeighborAction(Vertex,Vertex): vsource.VertexColor == GRAY  =>   vsource.VertexColor != GRAY

@@ -1,0 +1,8 @@
+void_EdgeConstructor(Vertex,Vertex)
+void_adjustAdorns(EdgeIfc)
+void_setWeight(int)
+int_getWeight()
+Vertex_getOtherVertex(Vertex)
+Vertex_getStart()
+Vertex_getEnd()
+void_display()

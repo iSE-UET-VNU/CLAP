@@ -1,0 +1,1 @@
+SDL_6:40:void_preVisitAction(Vertex): if (v.visited != true) {     v.VertexCycle = counter++;     v.VertexColor = GRAY; }  =>  

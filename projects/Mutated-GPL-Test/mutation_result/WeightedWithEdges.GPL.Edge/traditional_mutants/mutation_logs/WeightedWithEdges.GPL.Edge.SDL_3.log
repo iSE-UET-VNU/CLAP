@@ -1,0 +1,1 @@
+SDL_3:21:void_adjustAdorns(EdgeIfc): setWeight( the_edge.getWeight() ); original( the_edge );  =>   original( the_edge );

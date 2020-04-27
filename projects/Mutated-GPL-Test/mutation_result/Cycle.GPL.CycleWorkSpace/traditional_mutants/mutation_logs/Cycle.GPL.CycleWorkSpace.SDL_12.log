@@ -1,0 +1,1 @@
+SDL_12:54:void_checkNeighborAction(Vertex,Vertex): if (isDirected) {     if (vsource.VertexColor == GRAY && vtarget.VertexColor == GRAY) {         AnyCycles = true;     } } else {     if (vsource.VertexColor == GRAY && vtarget.VertexColor == GRAY && vsource.VertexCycle != vtarget.VertexCycle + 1) {         AnyCycles = true;     } }  =>  

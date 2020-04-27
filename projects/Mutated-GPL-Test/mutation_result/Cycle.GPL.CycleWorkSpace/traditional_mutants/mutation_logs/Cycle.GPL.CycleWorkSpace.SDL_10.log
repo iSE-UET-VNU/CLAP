@@ -1,0 +1,1 @@
+SDL_10:49:void_postVisitAction(Vertex): v.VertexColor = BLACK; counter--;  =>   counter--;

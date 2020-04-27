@@ -1,0 +1,1 @@
+SDL_1:18:void_EdgeConstructor(Vertex,Vertex): start = the_start; end = the_end;  =>   end = the_end;

@@ -1,0 +1,4 @@
+Product\Feature,A,B,C,D,__TEST_OUTPUT__
+model_m_ca2_0001,  T  ,  T  ,  T  , T  ,__FAILED__
+model_m_ca2_0002,  F  ,  T  ,  F  , T  ,__PASSED__
+model_m_ca2_0003,  F  ,  F  ,  T  , T  ,__PASSED__

@@ -1,0 +1,1 @@
+SDL_5:35:void_init_vertex(Vertex): v.VertexCycle = Integer.MAX_VALUE; v.VertexColor = WHITE;  =>   v.VertexCycle = Integer.MAX_VALUE;

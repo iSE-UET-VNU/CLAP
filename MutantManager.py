@@ -1,5 +1,6 @@
 from FileManager import get_plugin_path, split_path, get_mutation_result_dir, list_dir, join_path, \
-    get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir
+    get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir, \
+    is_path_exist
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -99,3 +100,11 @@ def inject_mutants(project_dir, mutant_paths):
 def get_mutated_project_dirs(project_dir):
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     return list_dir(mutated_projects_dir, full_path=True)
+
+
+def get_mutated_project_dir(project_dir, mutated_project_name):
+    mutated_projects_dir = get_mutated_projects_dir(project_dir)
+    current_mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
+    if not is_path_exist(current_mutated_project_dir):
+        logger.fatal("Can't find mutated project {} from [{}]".format(mutated_project_name, project_dir))
+    return current_mutated_project_dir

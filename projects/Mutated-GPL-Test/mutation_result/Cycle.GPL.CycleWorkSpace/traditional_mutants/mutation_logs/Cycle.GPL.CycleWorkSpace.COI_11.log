@@ -1,0 +1,1 @@
+COI_11:59:void_checkNeighborAction(Vertex,Vertex): vtarget.VertexColor == GRAY  =>  !(vtarget.VertexColor == GRAY)

@@ -1,0 +1,5 @@
+CycleWorkSpace(boolean)
+void_init_vertex(Vertex)
+void_preVisitAction(Vertex)
+void_postVisitAction(Vertex)
+void_checkNeighborAction(Vertex,Vertex)

@@ -1,0 +1,1 @@
+SDL_5:26:void_setWeight(int): this.weight = weight;  =>  

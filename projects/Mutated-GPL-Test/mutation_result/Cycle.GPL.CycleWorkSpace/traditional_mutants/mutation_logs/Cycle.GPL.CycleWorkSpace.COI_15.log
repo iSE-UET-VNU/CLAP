@@ -1,0 +1,1 @@
+COI_15:60:void_checkNeighborAction(Vertex,Vertex): AnyCycles  =>  !AnyCycles

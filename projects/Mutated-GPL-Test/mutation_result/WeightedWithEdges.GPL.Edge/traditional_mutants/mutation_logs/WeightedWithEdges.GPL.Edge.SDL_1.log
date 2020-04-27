@@ -1,0 +1,1 @@
+SDL_1:15:void_EdgeConstructor(Vertex,Vertex,int): EdgeConstructor( the_start, the_end ); weight = the_weight;  =>   weight = the_weight;

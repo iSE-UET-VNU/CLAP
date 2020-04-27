@@ -1,0 +1,1 @@
+SDL_5:18:void_GraphSearch(WorkSpace): Vertex v = vxiter.next(); v.init_vertex( w );  =>   Vertex v = vxiter.next();
