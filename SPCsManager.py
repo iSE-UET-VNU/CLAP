@@ -31,8 +31,8 @@ def detect_SPCs(feature_names, passed_configs, failed_configs):
                                                                                       failed_configs):
                 print(combine_spc_with_feature_names(feature_names, current_SPC))
                 SPC_set.append(current_SPC)
-    final_SPC_set = combine_spc_set_with_feature_names(feature_names, SPC_set)
-    print(final_SPC_set)
+    # final_SPC_set = combine_spc_set_with_feature_names(feature_names, SPC_set)
+    # print(final_SPC_set)
 
 
 def combine_spc_set_with_feature_names(feature_names, SPC_set):
@@ -48,8 +48,9 @@ def combine_spc_with_feature_names(feature_names, current_SPC):
     for spc_fs in current_SPC:
         feature_position, fs = split_positioned_feature_selection(spc_fs)
         current_feature_name = feature_names[feature_position]
-        new_SPC[current_feature_name] = fs
-    return new_SPC
+        if fs is True:
+            new_SPC[current_feature_name] = fs
+    return ",".join(new_SPC.keys())
 
 
 def satisfy_spc_minimality(current_SPC, SPC_set):
