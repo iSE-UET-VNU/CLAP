@@ -2,19 +2,20 @@ import csv
 
 from more_itertools import powerset
 
-from FileManager import get_model_configs_report_path
-from Helpers import get_logger
+from FileManager import get_model_configs_report_path, get_variants_dir, join_path, get_src_dir
+from Helpers import get_logger, sleep
 
 logger = get_logger(__name__)
 
 
 def find_SPCs(mutated_project_dir):
     config_report_path = get_model_configs_report_path(mutated_project_dir)
+    variants_dir = get_variants_dir(mutated_project_dir)
     feature_names, variant_names, passed_configs, failed_configs = load_configs(config_report_path)
-    detect_SPCs(feature_names, passed_configs, failed_configs)
+    detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir)
 
 
-def detect_SPCs(feature_names, passed_configs, failed_configs):
+def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir):
     SPC_set = []
     for current_failed_config in failed_configs:
         switches = []
@@ -23,16 +24,40 @@ def detect_SPCs(feature_names, passed_configs, failed_configs):
             switches.append(current_switch)
         switches = minimize_switches(switches)
         switched_feature_selections = union_all_switched_feature_selections(switches)
+        cached_spc = []
         for current_SPC in powerset(switched_feature_selections):
             if len(current_SPC) <= 0:
                 continue
             current_SPC = set(current_SPC)
             if satisfy_spc_minimality(current_SPC, SPC_set) and satisfy_spc_necessity(current_SPC, passed_configs,
                                                                                       failed_configs):
-                print(combine_spc_with_feature_names(feature_names, current_SPC))
+                combined_spc = combine_spc_with_feature_names(feature_names, current_SPC)
+                if combined_spc.strip() and combined_spc not in cached_spc:
+                    minimized_failed_config = find_minimized_failed_config_contains_spc(current_SPC, failed_configs)
+                    print(f"{combined_spc}; {get_src_dir(join_path(variants_dir, variant_names[tuple(minimized_failed_config)]))}")
+                    cached_spc.append(combined_spc)
                 SPC_set.append(current_SPC)
     # final_SPC_set = combine_spc_set_with_feature_names(feature_names, SPC_set)
     # print(final_SPC_set)
+
+
+def find_minimized_failed_config_contains_spc(current_SPC, failed_configs):
+    minimized_failed_config = None
+    min_enabled_fs_count = 10000
+    for fc in failed_configs:
+        valid_fs = []
+        for spc_fs in current_SPC:
+            feature_position, config_fs = split_positioned_feature_selection(spc_fs)
+            if fc[feature_position] == config_fs:
+                valid_fs.append(True)
+        if len(valid_fs) == len(current_SPC):
+            current_enabled_fs_count = fc.count(True)
+            if current_enabled_fs_count < min_enabled_fs_count:
+                min_enabled_fs_count = current_enabled_fs_count
+                minimized_failed_config = fc
+    if not minimized_failed_config:
+        raise Exception("Not found any failed config contains SPC {}".format(current_SPC))
+    return minimized_failed_config
 
 
 def combine_spc_set_with_feature_names(feature_names, SPC_set):
@@ -115,19 +140,19 @@ def find_switched_feature_selections(failed_config, passed_config):
 
 
 def load_configs(config_report_path):
-    logger.info(f"Loading config report file (config test results) [{config_report_path}]")
+    # logger.info(f"Loading config report file (config test results) [{config_report_path}]")
     with open(config_report_path) as f:
         reader = csv.reader(f, delimiter=',')
         header = next(reader)
         feature_names = header[1:]
-        variant_names = []
+        variant_names = {}
         passed_configs = []
         failed_configs = []
         for row in reader:
             current_variant_name, current_config, current_test_result = row[0], row[1:-1], row[-1]
-            variant_names.append(current_variant_name)
 
             current_config = list(map(lambda fs: fs.strip() == "T", current_config))
+            variant_names[tuple(current_config)] = current_variant_name
             if current_test_result == "__NOASWR__":
                 logger.fatal(f"Found untested variant [{current_variant_name}]")
             elif current_test_result == "__PASSED__":
