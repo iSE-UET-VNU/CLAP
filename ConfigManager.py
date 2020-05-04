@@ -42,13 +42,15 @@ def get_configurations_from_sampling_file(ordered_features, sampling_file_path):
 
 def write_configuration_to_file(configuration, output_file_path):
     lines = []
-    is_enabled = False
+    has_enabled_feature = False
     for feature, is_enabled in configuration.items():
         # comment all disabled features
         line = ("" if is_enabled else "#") + feature
+        if is_enabled and not has_enabled_feature:
+            has_enabled_feature = True
         lines.append(line)
 
-    if not is_enabled:
+    if not has_enabled_feature:
         return False
     with open(output_file_path, "w+") as output_file:
         output_file.write("\n".join(lines))
@@ -95,12 +97,14 @@ def generate_configs(project_dir, feature_order_file_path, sampling_output_file_
     ordered_features = ModelManager.read_feature_order_file(feature_order_file_path)
     configurations = get_configurations_from_sampling_file(ordered_features, sampling_output_file_path)
     config_output_paths = []
-    for i, config in enumerate(configurations):
+    for i, config in enumerate(configurations[:]):
         config_name = generate_config_name(sampling_file_name, i)
         config_output_path = join_path(config_dir, f"{config_name}.features")
         success = write_configuration_to_file(config, config_output_path)
         if success:
             config_output_paths.append(config_output_path)
+        else:
+            configurations.remove(config)
     configs_report_file_path = get_model_configs_report_path(project_dir)
     generate_configs_report(ordered_features, config_output_paths, configurations, configs_report_file_path)
     return configs_report_file_path, config_output_paths
