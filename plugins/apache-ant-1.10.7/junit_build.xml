@@ -22,7 +22,7 @@
     <path id="build.classpath">
         <pathelement location="${build.classes}"/>
         <pathelement location="${junit.jar}"/>
-        <pathelement location="${hamcrest.jar}"/>]
+        <pathelement location="${hamcrest.jar}"/>
     </path>
     <path id="testbuild.classpath">
         <path refid="build.classpath"/>
