@@ -4,7 +4,7 @@ import SPCsManager
 from FileManager import get_project_dir
 
 if __name__ == "__main__":
-    project_name = "Mutated-GPL-Test"
+    project_name = "3wise-Mutated-GPL-Test"
     project_dir = get_project_dir(project_name)
     mutated_project_name = "BFS.GPL.Graph.COD_1"
 
