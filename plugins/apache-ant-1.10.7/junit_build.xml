@@ -21,14 +21,14 @@
 
     <path id="build.classpath">
         <pathelement location="${build.classes}"/>
+        <pathelement location="${junit.jar}"/>
+        <pathelement location="${hamcrest.jar}"/>]
     </path>
     <path id="testbuild.classpath">
         <path refid="build.classpath"/>
         <pathelement location="${clover.jar}"/>
         <pathelement location="${build.testclasses}"/>
         <pathelement location="${evosuite.jar}"/>
-        <pathelement location="${junit.jar}"/>
-        <pathelement location="${hamcrest.jar}"/>
     </path>
     <target name="compile">
         <mkdir dir="${build.classes}"/>

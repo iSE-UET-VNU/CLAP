@@ -5,7 +5,7 @@ from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
 
-PLUGIN_NAME = "muJava_Min.jar"
+PLUGIN_NAME = "muJava.jar"
 PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
