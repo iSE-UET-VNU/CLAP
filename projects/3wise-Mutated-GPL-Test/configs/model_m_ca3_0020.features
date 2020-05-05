@@ -6,7 +6,7 @@
 UndirectedOnlyVertices
 TestProg
 Number
-Connected
+#Connected
 #StronglyConnected
 #Transpose
 #Cycle

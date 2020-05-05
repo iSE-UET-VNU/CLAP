@@ -9,7 +9,7 @@ TestProg
 #Connected
 StronglyConnected
 Transpose
-#Cycle
+Cycle
 #MSTPrim
 #MSTKruskal
 #BFS

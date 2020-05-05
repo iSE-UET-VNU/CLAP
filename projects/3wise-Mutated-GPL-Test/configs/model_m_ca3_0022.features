@@ -12,8 +12,8 @@ Number
 #Cycle
 #MSTPrim
 #MSTKruskal
-BFS
-#DFS
+#BFS
+DFS
 #WeightedWithEdges
 #WeightedWithNeighbors
 #WeightedOnlyVertices

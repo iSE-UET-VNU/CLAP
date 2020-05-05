@@ -1,6 +1,6 @@
 #DirectedWithEdges
-DirectedWithNeighbors
-#DirectedOnlyVertices
+#DirectedWithNeighbors
+DirectedOnlyVertices
 #UndirectedWithEdges
 #UndirectedWithNeighbors
 #UndirectedOnlyVertices
@@ -15,13 +15,13 @@ Number
 BFS
 #DFS
 #WeightedWithEdges
-WeightedWithNeighbors
-#WeightedOnlyVertices
+#WeightedWithNeighbors
+WeightedOnlyVertices
 Weighted
 #Unweighted
 Directed
 #Undirected
-#OnlyVertices
-WithNeighbors
+OnlyVertices
+#WithNeighbors
 #WithEdges
 Base

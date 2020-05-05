@@ -6,11 +6,11 @@
 UndirectedOnlyVertices
 TestProg
 #Number
-Connected
+#Connected
 #StronglyConnected
 #Transpose
 Cycle
-MSTPrim
+#MSTPrim
 #MSTKruskal
 #BFS
 DFS

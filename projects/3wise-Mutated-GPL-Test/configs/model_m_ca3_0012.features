@@ -7,9 +7,9 @@ DirectedWithEdges
 TestProg
 #Number
 #Connected
-#StronglyConnected
-#Transpose
-Cycle
+StronglyConnected
+Transpose
+#Cycle
 #MSTPrim
 #MSTKruskal
 #BFS

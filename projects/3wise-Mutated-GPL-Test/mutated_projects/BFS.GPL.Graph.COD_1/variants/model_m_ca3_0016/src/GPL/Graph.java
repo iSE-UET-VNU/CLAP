@@ -46,12 +46,22 @@ public   class  Graph {
 
 	
     // Executes Number Vertices
-    //__feature_mapping__ [Number] [8:13]
-	public void run( Vertex s )
+     //__feature_mapping__ [Number] [8:13]
+	private void  run__wrappee__Number( Vertex s )
      {
        	System.out.println("Number");
         NumberVertices( );
         run__wrappee__UndirectedOnlyVertices( s );
+    }
+
+	
+    // Executes Connected Components
+    //__feature_mapping__ [Connected] [8:13]
+	public void run( Vertex s )
+    {
+	     	System.out.println("Connected");
+        ConnectedComponents( );
+        run__wrappee__Number( s );
     }
 
 	
@@ -194,6 +204,14 @@ public   class  Graph {
 	public void NumberVertices( ) 
     {
         GraphSearch( new NumberWorkSpace( ) );
+    }
+
+	
+
+    //__feature_mapping__ [Connected] [15:18]
+	public void ConnectedComponents( ) 
+    {
+        GraphSearch( new RegionWorkSpace( ) );
     }
 
 	

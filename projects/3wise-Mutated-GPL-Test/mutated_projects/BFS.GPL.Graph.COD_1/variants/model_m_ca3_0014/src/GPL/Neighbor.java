@@ -11,62 +11,20 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
     public  Vertex neighbor;
 
 	
-        
+
     // This constructor has to be present here so that the default one
-    // Called on Weighted can call it, i.e. it is not longer implicit    
-    //__feature_mapping__ [DirectedWithNeighbors] [13:16]
-	public Neighbor( )
-    {
+    // Called on Weighted can call it, i.e. it is not longer implicit
+    //__feature_mapping__ [UndirectedWithNeighbors] [15:17]
+	public Neighbor()  {
         neighbor = null;
     }
 
 	
-    
-    //__feature_mapping__ [DirectedWithNeighbors] [18:21]
-	public Neighbor( Vertex theNeighbor ) 
-    {
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [19:22]
+	public Neighbor( Vertex theNeighbor )
+   {
         NeighborConstructor( theNeighbor );
-    }
-
-	
-    
-    //__feature_mapping__ [DirectedWithNeighbors] [23:26]
-	public void NeighborConstructor( Vertex theNeighbor ) 
-    {
-        neighbor = theNeighbor;
-    }
-
-	
-  
-     //__feature_mapping__ [DirectedWithNeighbors] [28:31]
-	private void  display__wrappee__DirectedWithNeighbors () 
-    {
-        System.out.print( neighbor.name + " ," );
-    }
-
-	
-
-    //__feature_mapping__ [WeightedWithNeighbors] [20:24]
-	public void display()
-    {
-        System.out.print( " Weight = " + weight + " " );
-        display__wrappee__DirectedWithNeighbors();
-    }
-
-	
-
-    //__feature_mapping__ [DirectedWithNeighbors] [33:36]
-	public Vertex getStart( ) 
-    { 
-       return null; 
-    }
-
-	
-
-    //__feature_mapping__ [DirectedWithNeighbors] [38:41]
-	public Vertex getEnd( ) 
-    { 
-      return neighbor; 
     }
 
 	
@@ -79,7 +37,48 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
 
 	
 
-    //__feature_mapping__ [DirectedWithNeighbors] [47:50]
+    //__feature_mapping__ [WeightedWithNeighbors] [31:34]
+	public int getWeight()
+    {
+        return this.weight;
+    }
+
+	
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [27:29]
+	public void NeighborConstructor( Vertex theNeighbor ) {
+        neighbor = theNeighbor;
+    }
+
+	
+
+     //__feature_mapping__ [UndirectedWithNeighbors] [31:34]
+	private void  display__wrappee__UndirectedWithNeighbors()
+    {
+        System.out.print( neighbor.name + " ," );
+    }
+
+	
+
+    //__feature_mapping__ [WeightedWithNeighbors] [20:24]
+	public void display()
+    {
+        System.out.print( " Weight = " + weight + " " );
+        display__wrappee__UndirectedWithNeighbors();
+    }
+
+	
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [36:36]
+	public Vertex getStart( ) { return null; }
+
+	
+    //__feature_mapping__ [UndirectedWithNeighbors] [37:37]
+	public Vertex getEnd( ) { return null; }
+
+	
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [39:42]
 	public Vertex getOtherVertex( Vertex vertex )
     {
         return neighbor;
@@ -87,7 +86,7 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
 
 	
 
-    //__feature_mapping__ [DirectedWithNeighbors] [52:54]
+    //__feature_mapping__ [UndirectedWithNeighbors] [44:46]
 	public void adjustAdorns( EdgeIfc the_edge )
     {
     }
@@ -109,14 +108,6 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
     {
         NeighborConstructor( theNeighbor );
         weight = theWeight;
-    }
-
-	
-
-    //__feature_mapping__ [WeightedWithNeighbors] [31:34]
-	public int getWeight()
-    {
-        return this.weight;
     }
 
 

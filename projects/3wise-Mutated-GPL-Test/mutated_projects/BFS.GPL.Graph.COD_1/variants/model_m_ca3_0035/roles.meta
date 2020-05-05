@@ -1,115 +1,127 @@
 {
 	"features" : [
-		"UndirectedWithNeighbors",
+		"UndirectedOnlyVertices",
 		"TestProg",
-		"Cycle",
-		"DFS",
-		"Unweighted",
+		"Connected",
+		"BFS",
+		"WeightedOnlyVertices",
+		"Weighted",
 		"Undirected",
-		"WithNeighbors",
+		"OnlyVertices",
 		"Base"
 	],
 	"roles": {
 		"run": {
-			"UndirectedWithNeighbors": "run__wrappee__UndirectedWithNeighbors",
-			"Cycle": "run"
+			"UndirectedOnlyVertices": "run__wrappee__UndirectedOnlyVertices",
+			"Connected": "run"
+		},
+		"addAnEdge": {
+			"UndirectedOnlyVertices": "addAnEdge",
+			"WeightedOnlyVertices": "addAnEdge"
 		},
 		"addEdge": {
-			"UndirectedWithNeighbors": "addEdge"
+			"UndirectedOnlyVertices": "addEdge",
+			"WeightedOnlyVertices": "addEdge"
 		},
 		"addVertex": {
-			"UndirectedWithNeighbors": "addVertex"
+			"UndirectedOnlyVertices": "addVertex"
 		},
 		"findsVertex": {
-			"UndirectedWithNeighbors": "findsVertex"
+			"UndirectedOnlyVertices": "findsVertex"
 		},
 		"getVertices": {
-			"UndirectedWithNeighbors": "getVertices"
-		},
-		"findsEdge": {
-			"UndirectedWithNeighbors": "findsEdge"
+			"UndirectedOnlyVertices": "getVertices"
 		},
 		"display": {
-			"UndirectedWithNeighbors": "display__wrappee__UndirectedWithNeighbors",
-			"Cycle": "display__wrappee__Cycle",
-			"DFS": "display",
-			"Base": "display__wrappee__UndirectedWithNeighbors"
+			"UndirectedOnlyVertices": "display__wrappee__UndirectedOnlyVertices",
+			"Connected": "display__wrappee__Connected",
+			"BFS": "display__wrappee__BFS",
+			"WeightedOnlyVertices": "display",
+			"Base": "display__wrappee__UndirectedOnlyVertices"
 		},
-		"setWeight": {
-			"UndirectedWithNeighbors": "setWeight",
-			"Base": "setWeight"
+		"findsEdge": {
+			"UndirectedOnlyVertices": "findsEdge"
 		},
-		"getWeight": {
-			"UndirectedWithNeighbors": "getWeight"
+		"VertexConstructor": {
+			"UndirectedOnlyVertices": "VertexConstructor__wrappee__UndirectedOnlyVertices",
+			"BFS": "VertexConstructor__wrappee__BFS",
+			"WeightedOnlyVertices": "VertexConstructor"
 		},
-		"NeighborConstructor": {
-			"UndirectedWithNeighbors": "NeighborConstructor"
+		"assignName": {
+			"UndirectedOnlyVertices": "assignName"
+		},
+		"getNeighbors": {
+			"UndirectedOnlyVertices": "getNeighbors"
+		},
+		"addAdjacent": {
+			"UndirectedOnlyVertices": "addAdjacent"
+		},
+		"adjustAdorns": {
+			"UndirectedOnlyVertices": "adjustAdorns__wrappee__UndirectedOnlyVertices",
+			"WeightedOnlyVertices": "adjustAdorns",
+			"Base": "adjustAdorns__wrappee__UndirectedOnlyVertices"
+		},
+		"getNeighborsObj": {
+			"UndirectedOnlyVertices": "getNeighborsObj"
+		},
+		"getEdges": {
+			"UndirectedOnlyVertices": "getEdges"
+		},
+		"getName": {
+			"UndirectedOnlyVertices": "getName"
 		},
 		"getStart": {
-			"UndirectedWithNeighbors": "getStart",
+			"UndirectedOnlyVertices": "getStart",
 			"Base": "getStart"
 		},
 		"getEnd": {
-			"UndirectedWithNeighbors": "getEnd",
+			"UndirectedOnlyVertices": "getEnd",
 			"Base": "getEnd"
 		},
+		"setWeight": {
+			"UndirectedOnlyVertices": "setWeight",
+			"Base": "setWeight"
+		},
+		"getWeight": {
+			"UndirectedOnlyVertices": "getWeight",
+			"WeightedOnlyVertices": "getWeight"
+		},
 		"getOtherVertex": {
-			"UndirectedWithNeighbors": "getOtherVertex",
+			"UndirectedOnlyVertices": "getOtherVertex",
 			"Base": "getOtherVertex"
-		},
-		"adjustAdorns": {
-			"UndirectedWithNeighbors": "adjustAdorns",
-			"Base": "adjustAdorns"
-		},
-		"VertexConstructor": {
-			"UndirectedWithNeighbors": "VertexConstructor__wrappee__UndirectedWithNeighbors",
-			"DFS": "VertexConstructor"
-		},
-		"assignName": {
-			"UndirectedWithNeighbors": "assignName"
-		},
-		"getName": {
-			"UndirectedWithNeighbors": "getName"
-		},
-		"getNeighborsObj": {
-			"UndirectedWithNeighbors": "getNeighborsObj"
-		},
-		"getNeighbors": {
-			"UndirectedWithNeighbors": "getNeighbors"
-		},
-		"getEdges": {
-			"UndirectedWithNeighbors": "getEdges"
 		},
 		"main": {
 			"TestProg": "main"
 		},
-		"init_vertex": {
-			"Cycle": "init_vertex",
-			"DFS": "init_vertex"
+		"ConnectedComponents": {
+			"Connected": "ConnectedComponents"
 		},
-		"preVisitAction": {
-			"Cycle": "preVisitAction",
-			"DFS": "preVisitAction"
+		"init_vertex": {
+			"Connected": "init_vertex",
+			"BFS": "init_vertex"
 		},
 		"postVisitAction": {
-			"Cycle": "postVisitAction",
-			"DFS": "postVisitAction"
-		},
-		"checkNeighborAction": {
-			"Cycle": "checkNeighborAction",
-			"DFS": "checkNeighborAction"
-		},
-		"CycleCheck": {
-			"Cycle": "CycleCheck"
-		},
-		"GraphSearch": {
-			"DFS": "GraphSearch"
-		},
-		"nodeSearch": {
-			"DFS": "nodeSearch"
+			"Connected": "postVisitAction",
+			"BFS": "postVisitAction"
 		},
 		"nextRegionAction": {
-			"DFS": "nextRegionAction"
+			"Connected": "nextRegionAction",
+			"BFS": "nextRegionAction"
+		},
+		"nodeSearch": {
+			"BFS": "nodeSearch"
+		},
+		"preVisitAction": {
+			"BFS": "preVisitAction"
+		},
+		"checkNeighborAction": {
+			"BFS": "checkNeighborAction"
+		},
+		"GraphSearch": {
+			"BFS": "GraphSearch"
+		},
+		"addWeight": {
+			"WeightedOnlyVertices": "addWeight"
 		},
 		"hasNext": {
 			"Base": "hasNext"

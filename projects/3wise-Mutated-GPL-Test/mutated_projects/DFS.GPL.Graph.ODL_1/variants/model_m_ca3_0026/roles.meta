@@ -1,0 +1,132 @@
+{
+	"features" : [
+		"UndirectedOnlyVertices",
+		"TestProg",
+		"Number",
+		"Cycle",
+		"DFS",
+		"Unweighted",
+		"Undirected",
+		"OnlyVertices",
+		"Base"
+	],
+	"roles": {
+		"run": {
+			"UndirectedOnlyVertices": "run__wrappee__UndirectedOnlyVertices",
+			"Number": "run__wrappee__Number",
+			"Cycle": "run"
+		},
+		"addAnEdge": {
+			"UndirectedOnlyVertices": "addAnEdge"
+		},
+		"addEdge": {
+			"UndirectedOnlyVertices": "addEdge"
+		},
+		"addVertex": {
+			"UndirectedOnlyVertices": "addVertex"
+		},
+		"findsVertex": {
+			"UndirectedOnlyVertices": "findsVertex"
+		},
+		"getVertices": {
+			"UndirectedOnlyVertices": "getVertices"
+		},
+		"display": {
+			"UndirectedOnlyVertices": "display__wrappee__UndirectedOnlyVertices",
+			"Number": "display__wrappee__Number",
+			"Cycle": "display__wrappee__Cycle",
+			"DFS": "display",
+			"Base": "display__wrappee__UndirectedOnlyVertices"
+		},
+		"findsEdge": {
+			"UndirectedOnlyVertices": "findsEdge"
+		},
+		"VertexConstructor": {
+			"UndirectedOnlyVertices": "VertexConstructor__wrappee__UndirectedOnlyVertices",
+			"DFS": "VertexConstructor"
+		},
+		"assignName": {
+			"UndirectedOnlyVertices": "assignName"
+		},
+		"getNeighbors": {
+			"UndirectedOnlyVertices": "getNeighbors"
+		},
+		"addAdjacent": {
+			"UndirectedOnlyVertices": "addAdjacent"
+		},
+		"adjustAdorns": {
+			"UndirectedOnlyVertices": "adjustAdorns",
+			"Base": "adjustAdorns"
+		},
+		"getNeighborsObj": {
+			"UndirectedOnlyVertices": "getNeighborsObj"
+		},
+		"getEdges": {
+			"UndirectedOnlyVertices": "getEdges"
+		},
+		"getName": {
+			"UndirectedOnlyVertices": "getName"
+		},
+		"getStart": {
+			"UndirectedOnlyVertices": "getStart",
+			"Base": "getStart"
+		},
+		"getEnd": {
+			"UndirectedOnlyVertices": "getEnd",
+			"Base": "getEnd"
+		},
+		"setWeight": {
+			"UndirectedOnlyVertices": "setWeight",
+			"Base": "setWeight"
+		},
+		"getWeight": {
+			"UndirectedOnlyVertices": "getWeight"
+		},
+		"getOtherVertex": {
+			"UndirectedOnlyVertices": "getOtherVertex",
+			"Base": "getOtherVertex"
+		},
+		"main": {
+			"TestProg": "main"
+		},
+		"NumberVertices": {
+			"Number": "NumberVertices"
+		},
+		"preVisitAction": {
+			"Number": "preVisitAction",
+			"Cycle": "preVisitAction",
+			"DFS": "preVisitAction"
+		},
+		"init_vertex": {
+			"Cycle": "init_vertex",
+			"DFS": "init_vertex"
+		},
+		"postVisitAction": {
+			"Cycle": "postVisitAction",
+			"DFS": "postVisitAction"
+		},
+		"checkNeighborAction": {
+			"Cycle": "checkNeighborAction",
+			"DFS": "checkNeighborAction"
+		},
+		"CycleCheck": {
+			"Cycle": "CycleCheck"
+		},
+		"nodeSearch": {
+			"DFS": "nodeSearch"
+		},
+		"nextRegionAction": {
+			"DFS": "nextRegionAction"
+		},
+		"GraphSearch": {
+			"DFS": "GraphSearch"
+		},
+		"hasNext": {
+			"Base": "hasNext"
+		},
+		"next": {
+			"Base": "next"
+		}
+	}
+
+}

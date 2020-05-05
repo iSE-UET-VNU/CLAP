@@ -3,6 +3,7 @@
 		"UndirectedOnlyVertices",
 		"TestProg",
 		"Number",
+		"Connected",
 		"BFS",
 		"Unweighted",
 		"Undirected",
@@ -12,7 +13,8 @@
 	"roles": {
 		"run": {
 			"UndirectedOnlyVertices": "run__wrappee__UndirectedOnlyVertices",
-			"Number": "run"
+			"Number": "run__wrappee__Number",
+			"Connected": "run"
 		},
 		"addAnEdge": {
 			"UndirectedOnlyVertices": "addAnEdge"
@@ -32,6 +34,7 @@
 		"display": {
 			"UndirectedOnlyVertices": "display__wrappee__UndirectedOnlyVertices",
 			"Number": "display__wrappee__Number",
+			"Connected": "display__wrappee__Connected",
 			"BFS": "display",
 			"Base": "display__wrappee__UndirectedOnlyVertices"
 		},
@@ -93,17 +96,23 @@
 			"Number": "preVisitAction",
 			"BFS": "preVisitAction"
 		},
+		"ConnectedComponents": {
+			"Connected": "ConnectedComponents"
+		},
 		"init_vertex": {
+			"Connected": "init_vertex",
 			"BFS": "init_vertex"
 		},
-		"nodeSearch": {
-			"BFS": "nodeSearch"
-		},
 		"postVisitAction": {
+			"Connected": "postVisitAction",
 			"BFS": "postVisitAction"
 		},
 		"nextRegionAction": {
+			"Connected": "nextRegionAction",
 			"BFS": "nextRegionAction"
+		},
+		"nodeSearch": {
+			"BFS": "nodeSearch"
 		},
 		"checkNeighborAction": {
 			"BFS": "checkNeighborAction"
