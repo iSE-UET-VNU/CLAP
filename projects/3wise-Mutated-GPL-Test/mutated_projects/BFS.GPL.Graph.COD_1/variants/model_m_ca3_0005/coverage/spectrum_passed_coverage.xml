@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588608896242" clover="4.4.1"> 
- <project timestamp="1588608896059">  
+<coverage generated="1588694918377" clover="4.4.1"> 
+ <project timestamp="1588694918171">  
   <package name="GPL">  
    <file path="GPL/Neighbor.java" name="GPL.Neighbor">   
     <line visibility="public" signature="Neighbor()" num="16" count="12" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="13" /> 
     <line num="18" count="12" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="15" /> 
-    <line visibility="public" signature="Neighbor(Vertex)" num="24" count="13" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="18" /> 
-    <line num="26" count="13" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="20" /> 
-    <line visibility="public" signature="NeighborConstructor(Vertex) : void" num="32" count="17" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="23" /> 
-    <line num="34" count="17" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="25" /> 
+    <line visibility="public" signature="Neighbor(Vertex)" num="24" count="12" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="18" /> 
+    <line num="26" count="12" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="20" /> 
+    <line visibility="public" signature="NeighborConstructor(Vertex) : void" num="32" count="15" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="23" /> 
+    <line num="34" count="15" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="25" /> 
     <line visibility="public" signature="display() : void" num="40" count="2" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="28" /> 
     <line num="42" count="2" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="30" /> 
     <line visibility="public" signature="getStart() : Vertex" num="48" count="1" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="33" /> 
@@ -138,16 +138,16 @@
     <line num="25" count="3" type="stmt" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="19" /> 
    </file>   
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
-    <line visibility="public" signature="Vertex()" num="20" count="57" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="13" /> 
-    <line num="21" count="57" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="14" /> 
-    <line visibility="public" signature="getName() : String" num="26" count="12" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="16" /> 
-    <line num="28" count="12" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="18" /> 
-    <line visibility="private" signature="VertexConstructor__wrappee__DirectedWithNeighbors() : void" num="34" count="57" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="21" /> 
-    <line num="35" count="57" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="22" /> 
-    <line num="36" count="57" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="23" /> 
-    <line visibility="public" signature="VertexConstructor() : void" num="42" count="57" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
-    <line num="44" count="57" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
-    <line num="45" count="57" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
+    <line visibility="public" signature="Vertex()" num="20" count="56" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="13" /> 
+    <line num="21" count="56" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="14" /> 
+    <line visibility="public" signature="getName() : String" num="26" count="15" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="16" /> 
+    <line num="28" count="15" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="18" /> 
+    <line visibility="private" signature="VertexConstructor__wrappee__DirectedWithNeighbors() : void" num="34" count="56" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="21" /> 
+    <line num="35" count="56" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="22" /> 
+    <line num="36" count="56" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="23" /> 
+    <line visibility="public" signature="VertexConstructor() : void" num="42" count="56" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
+    <line num="44" count="56" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
+    <line num="45" count="56" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
     <line visibility="public" signature="assignName(String) : Vertex" num="51" count="3" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="26" /> 
     <line num="52" count="3" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="27" /> 
     <line num="53" count="3" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="28" /> 
@@ -200,6 +200,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588608896059">  
+ <testproject timestamp="1588694918171">  
  </testproject> 
 </coverage>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611555941" clover="4.4.1">
-   <project timestamp="1588611555849">
-      <metrics coveredelements="14" complexity="82" loc="793" methods="59" classes="10" statements="157" packages="1" coveredconditionals="0" coveredmethods="6" elements="262" ncloc="379" files="10" conditionals="46" coveredstatements="8"/>
+<coverage generated="1588697477845" clover="4.4.1">
+   <project timestamp="1588697477742">
+      <metrics coveredelements="12" complexity="82" loc="793" methods="59" classes="10" statements="157" packages="1" coveredconditionals="0" coveredmethods="5" elements="262" ncloc="379" files="10" conditionals="46" coveredstatements="7"/>
       <package name="GPL">
-         <metrics coveredelements="14" complexity="82" loc="793" methods="59" classes="10" statements="157" coveredconditionals="0" coveredmethods="6" elements="262" ncloc="379" files="10" conditionals="46" coveredstatements="8"/>
+         <metrics coveredelements="12" complexity="82" loc="793" methods="59" classes="10" statements="157" coveredconditionals="0" coveredmethods="5" elements="262" ncloc="379" files="10" conditionals="46" coveredstatements="7"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0036/src/GPL/WorkSpace.java" name="WorkSpace.java">
             <metrics coveredelements="1" coveredconditionals="0" complexity="5" loc="27" coveredmethods="1" methods="5" elements="5" classes="1" ncloc="9" statements="0" conditionals="0" coveredstatements="0"/>
             <class name="WorkSpace">
@@ -151,9 +151,9 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0036/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="13" coveredconditionals="0" complexity="30" loc="267" coveredmethods="5" methods="25" elements="87" classes="1" ncloc="128" statements="52" conditionals="10" coveredstatements="8"/>
+            <metrics coveredelements="11" coveredconditionals="0" complexity="30" loc="267" coveredmethods="4" methods="25" elements="87" classes="1" ncloc="128" statements="52" conditionals="10" coveredstatements="7"/>
             <class name="Vertex">
-               <metrics coveredelements="13" coveredconditionals="0" complexity="30" coveredmethods="5" methods="25" elements="87" statements="52" conditionals="10" coveredstatements="8"/>
+               <metrics coveredelements="11" coveredconditionals="0" complexity="30" coveredmethods="4" methods="25" elements="87" statements="52" conditionals="10" coveredstatements="7"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
@@ -169,8 +169,8 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="58" count="0" type="method"/>
             <line num="59" count="0" type="stmt"/>
             <line num="60" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="67" count="1" type="method"/>
-            <line num="69" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="67" count="0" type="method"/>
+            <line num="69" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="addAdjacent(Vertex) : void" num="76" count="0" type="method"/>
             <line num="77" count="0" type="stmt"/>
             <line complexity="1" visibility="private" signature="adjustAdorns__wrappee__DirectedOnlyVertices(Vertex,int) : void" num="83" count="0" type="method"/>
@@ -305,7 +305,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611555849">
+   <testproject timestamp="1588697477742">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

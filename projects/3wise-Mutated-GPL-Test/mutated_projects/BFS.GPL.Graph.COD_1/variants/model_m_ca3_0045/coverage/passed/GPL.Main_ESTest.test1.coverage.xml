@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612260539" clover="4.4.1">
+<coverage generated="1588698170757" clover="4.4.1">
    <project timestamp="0">
       <metrics coveredelements="0" complexity="82" loc="741" methods="60" classes="12" statements="131" packages="1" coveredconditionals="0" coveredmethods="0" elements="229" ncloc="374" files="12" conditionals="38" coveredstatements="0"/>
       <package name="GPL">

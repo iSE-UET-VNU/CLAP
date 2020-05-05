@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588608760519" clover="4.4.1"> 
- <project timestamp="1588608760395">  
+<coverage generated="1588694777898" clover="4.4.1"> 
+ <project timestamp="1588694777792">  
   <package name="GPL">  
    <file path="GPL/Graph.java" name="GPL.Graph">   
     <line visibility="public" signature="Graph()" num="34" count="3" type="method" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="20" /> 
@@ -287,10 +287,10 @@
     <line num="291" count="0" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="40" /> 
     <line num="295" count="0" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="44" /> 
     <line visibility="public" signature="addWeight(int) : void" num="304" count="2" type="method" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="19" /> 
-    <line num="306" count="2" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="21" /> 
+    <line num="306" count="0" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="21" /> 
    </file>  
   </package> 
  </project> 
- <testproject timestamp="1588608760395">  
+ <testproject timestamp="1588694777792">  
  </testproject> 
 </coverage>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612142018" clover="4.4.1">
-   <project timestamp="1588612141903">
+<coverage generated="1588698019533" clover="4.4.1">
+   <project timestamp="1588698019443">
       <metrics coveredelements="4" complexity="82" loc="735" methods="58" classes="10" statements="121" packages="1" coveredconditionals="0" coveredmethods="2" elements="215" ncloc="356" files="10" conditionals="36" coveredstatements="2"/>
       <package name="GPL">
          <metrics coveredelements="4" complexity="82" loc="735" methods="58" classes="10" statements="121" coveredconditionals="0" coveredmethods="2" elements="215" ncloc="356" files="10" conditionals="36" coveredstatements="2"/>
@@ -245,10 +245,10 @@
             <line num="51" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="57" count="0" type="method"/>
             <line num="57" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="61" count="1" type="method"/>
-            <line num="61" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="66" count="0" type="method"/>
-            <line num="68" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="61" count="0" type="method"/>
+            <line num="61" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="66" count="1" type="method"/>
+            <line num="68" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="74" count="0" type="method"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0043/src/GPL/VertexIter.java" name="VertexIter.java">
@@ -263,7 +263,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612141903">
+   <testproject timestamp="1588698019443">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

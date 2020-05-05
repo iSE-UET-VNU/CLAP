@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612462557" clover="4.4.1">
-   <project timestamp="1588612462449">
+<coverage generated="1588698320724" clover="4.4.1">
+   <project timestamp="1588698320606">
       <metrics coveredelements="6" complexity="108" loc="976" methods="68" classes="11" statements="213" packages="1" coveredconditionals="0" coveredmethods="2" elements="349" ncloc="507" files="11" conditionals="68" coveredstatements="4"/>
       <package name="GPL">
          <metrics coveredelements="6" complexity="108" loc="976" methods="68" classes="11" statements="213" coveredconditionals="0" coveredmethods="2" elements="349" ncloc="507" files="11" conditionals="68" coveredstatements="4"/>
@@ -112,8 +112,8 @@
             <line num="66" count="0" type="stmt"/>
             <line num="68" count="0" type="stmt"/>
             <line num="70" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="sortEdges(Comparator) : void" num="76" count="0" type="method"/>
-            <line num="77" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="sortEdges(Comparator) : void" num="76" count="1" type="method"/>
+            <line num="77" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="83" count="0" type="method"/>
             <line num="84" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="91" count="0" type="method"/>
@@ -132,8 +132,8 @@
             <line falsecount="0" truecount="0" num="120" type="cond"/>
             <line num="121" count="0" type="stmt"/>
             <line num="133" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="141" count="1" type="method"/>
-            <line num="142" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="141" count="0" type="method"/>
+            <line num="142" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : Vertex" num="144" count="0" type="method"/>
             <line num="144" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="145" count="0" type="method"/>
@@ -387,7 +387,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612462449">
+   <testproject timestamp="1588698320606">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

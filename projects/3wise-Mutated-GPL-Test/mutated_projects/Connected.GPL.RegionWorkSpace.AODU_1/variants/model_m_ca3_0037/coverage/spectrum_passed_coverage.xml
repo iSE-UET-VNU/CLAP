@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611574980" clover="4.4.1"> 
- <project timestamp="1588611574776">  
+<coverage generated="1588697482581" clover="4.4.1"> 
+ <project timestamp="1588697482361">  
   <package name="GPL">  
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
     <line visibility="public" signature="Vertex()" num="18" count="56" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="13" /> 
@@ -14,8 +14,8 @@
     <line visibility="public" signature="assignName(String) : Vertex" num="44" count="8" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="24" /> 
     <line num="46" count="8" type="stmt" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="26" /> 
     <line num="47" count="8" type="stmt" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="27" /> 
-    <line visibility="public" signature="getName() : String" num="53" count="11" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="30" /> 
-    <line num="55" count="11" type="stmt" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="32" /> 
+    <line visibility="public" signature="getName() : String" num="53" count="13" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="30" /> 
+    <line num="55" count="13" type="stmt" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="32" /> 
     <line visibility="public" signature="getNeighborsObj() : LinkedList" num="61" count="3" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="35" /> 
     <line num="63" count="3" type="stmt" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="37" /> 
     <line visibility="public" signature="getNeighbors() : VertexIter" num="69" count="16" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="40" /> 
@@ -192,6 +192,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588611574776">  
+ <testproject timestamp="1588697482361">  
  </testproject> 
 </coverage>

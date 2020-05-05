@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609155694" clover="4.4.1">
-   <project timestamp="1588609155586">
+<coverage generated="1588695160970" clover="4.4.1">
+   <project timestamp="1588695160877">
       <metrics coveredelements="14" complexity="72" loc="661" methods="53" classes="10" statements="121" packages="1" coveredconditionals="0" coveredmethods="6" elements="212" ncloc="318" files="10" conditionals="38" coveredstatements="8"/>
       <package name="GPL">
          <metrics coveredelements="14" complexity="72" loc="661" methods="53" classes="10" statements="121" coveredconditionals="0" coveredmethods="6" elements="212" ncloc="318" files="10" conditionals="38" coveredstatements="8"/>
@@ -170,8 +170,8 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="56" count="0" type="method"/>
             <line num="57" count="0" type="stmt"/>
             <line num="58" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="65" count="1" type="method"/>
-            <line num="67" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="65" count="0" type="method"/>
+            <line num="67" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="addAdjacent(Vertex) : void" num="74" count="0" type="method"/>
             <line num="75" count="0" type="stmt"/>
             <line complexity="1" visibility="private" signature="adjustAdorns__wrappee__DirectedOnlyVertices(Vertex,int) : void" num="81" count="0" type="method"/>
@@ -215,8 +215,8 @@
             <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="179" count="0" type="method"/>
             <line num="179" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="184" count="0" type="method"/>
-            <line complexity="1" visibility="public" signature="getWeight() : int" num="188" count="0" type="method"/>
-            <line num="188" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getWeight() : int" num="188" count="1" type="method"/>
+            <line num="188" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="193" count="0" type="method"/>
             <line num="195" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="203" count="0" type="method"/>
@@ -259,7 +259,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609155586">
+   <testproject timestamp="1588695160877">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

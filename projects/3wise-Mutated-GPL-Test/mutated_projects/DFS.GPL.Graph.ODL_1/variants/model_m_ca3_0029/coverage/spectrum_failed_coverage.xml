@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610939337" clover="4.4.1"> 
- <project timestamp="1588610939237">  
+<coverage generated="1588696875877" clover="4.4.1"> 
+ <project timestamp="1588696875778">  
   <package name="GPL">   
    <file path="GPL/EdgeIter.java" name="GPL.EdgeIter">   
     <line visibility="public" signature="hasNext() : boolean" num="6" count="0" type="method" featureClass="Base.GPL.EdgeIter" featureLineNum="5" /> 
@@ -136,9 +136,9 @@
     <line num="83" count="2" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="43" /> 
     <line num="84" count="2" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="44" /> 
     <line num="85" count="2" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="45" /> 
-    <line visibility="public" signature="addVertex(Vertex) : void" num="99" count="3" type="method" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="56" /> 
-    <line num="101" count="3" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="58" /> 
-    <line num="104" count="3" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="61" /> 
+    <line visibility="public" signature="addVertex(Vertex) : void" num="99" count="4" type="method" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="56" /> 
+    <line num="101" count="4" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="58" /> 
+    <line num="104" count="4" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="61" /> 
     <line visibility="public" signature="findsVertex(String) : Vertex" num="111" count="0" type="method" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="65" /> 
     <line num="113" count="0" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="67" /> 
     <line num="114" count="0" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="68" /> 
@@ -211,6 +211,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588610939237">  
+ <testproject timestamp="1588696875778">  
  </testproject> 
 </coverage>

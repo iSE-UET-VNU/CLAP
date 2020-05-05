@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609032249" clover="4.4.1">
-   <project timestamp="1588609032153">
-      <metrics coveredelements="7" complexity="102" loc="957" methods="67" classes="12" statements="207" packages="1" coveredconditionals="0" coveredmethods="2" elements="338" ncloc="497" files="12" conditionals="64" coveredstatements="5"/>
+<coverage generated="1588695027141" clover="4.4.1">
+   <project timestamp="1588695027024">
+      <metrics coveredelements="18" complexity="102" loc="957" methods="67" classes="12" statements="207" packages="1" coveredconditionals="0" coveredmethods="5" elements="338" ncloc="497" files="12" conditionals="64" coveredstatements="13"/>
       <package name="GPL">
-         <metrics coveredelements="7" complexity="102" loc="957" methods="67" classes="12" statements="207" coveredconditionals="0" coveredmethods="2" elements="338" ncloc="497" files="12" conditionals="64" coveredstatements="5"/>
+         <metrics coveredelements="18" complexity="102" loc="957" methods="67" classes="12" statements="207" coveredconditionals="0" coveredmethods="5" elements="338" ncloc="497" files="12" conditionals="64" coveredstatements="13"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0006/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="7" coveredconditionals="0" complexity="45" loc="374" coveredmethods="2" methods="21" elements="181" classes="1" ncloc="206" statements="118" conditionals="42" coveredstatements="5"/>
+            <metrics coveredelements="9" coveredconditionals="0" complexity="45" loc="374" coveredmethods="2" methods="21" elements="181" classes="1" ncloc="206" statements="118" conditionals="42" coveredstatements="7"/>
             <class name="Graph">
-               <metrics coveredelements="7" coveredconditionals="0" complexity="45" coveredmethods="2" methods="21" elements="181" statements="118" conditionals="42" coveredstatements="5"/>
+               <metrics coveredelements="9" coveredconditionals="0" complexity="45" coveredmethods="2" methods="21" elements="181" statements="118" conditionals="42" coveredstatements="7"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="38" count="1" type="method"/>
             <line num="39" count="1" type="stmt"/>
@@ -27,16 +27,16 @@
             <line num="81" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="87" count="0" type="method"/>
             <line num="88" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="95" count="0" type="method"/>
-            <line num="96" count="0" type="stmt"/>
-            <line num="97" count="0" type="stmt"/>
-            <line num="98" count="0" type="stmt"/>
-            <line num="99" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="95" count="1" type="method"/>
+            <line num="96" count="1" type="stmt"/>
+            <line num="97" count="1" type="stmt"/>
+            <line num="98" count="1" type="stmt"/>
+            <line num="99" count="1" type="stmt"/>
             <line num="100" count="0" type="stmt"/>
             <line num="102" count="0" type="stmt"/>
-            <line complexity="1" visibility="protected" signature="addVertex(Vertex) : void" num="108" count="1" type="method"/>
-            <line num="109" count="1" type="stmt"/>
-            <line num="112" count="1" type="stmt"/>
+            <line complexity="1" visibility="protected" signature="addVertex(Vertex) : void" num="108" count="0" type="method"/>
+            <line num="109" count="0" type="stmt"/>
+            <line num="112" count="0" type="stmt"/>
             <line complexity="2" visibility="public" signature="findsVertex(String) : Vertex" num="120" count="0" type="method"/>
             <line num="121" count="0" type="stmt"/>
             <line num="124" count="0" type="stmt"/>
@@ -324,13 +324,13 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0006/src/GPL/Edge.java" name="Edge.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="13" loc="121" coveredmethods="0" methods="11" elements="33" classes="1" ncloc="62" statements="18" conditionals="4" coveredstatements="0"/>
+            <metrics coveredelements="3" coveredconditionals="0" complexity="13" loc="121" coveredmethods="1" methods="11" elements="33" classes="1" ncloc="62" statements="18" conditionals="4" coveredstatements="2"/>
             <class name="Edge">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="13" coveredmethods="0" methods="11" elements="33" statements="18" conditionals="4" coveredstatements="0"/>
+               <metrics coveredelements="3" coveredconditionals="0" complexity="13" coveredmethods="1" methods="11" elements="33" statements="18" conditionals="4" coveredstatements="2"/>
             </class>
-            <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="0" type="method"/>
-            <line num="16" count="0" type="stmt"/>
-            <line num="17" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="1" type="method"/>
+            <line num="16" count="1" type="stmt"/>
+            <line num="17" count="1" type="stmt"/>
             <line complexity="1" visibility="private" signature="adjustAdorns__wrappee__UndirectedWithEdges(EdgeIfc) : void" num="23" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="36" count="0" type="method"/>
             <line num="37" count="0" type="stmt"/>
@@ -361,16 +361,16 @@
             <line num="117" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0006/src/GPL/Neighbor.java" name="Neighbor.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="2" loc="33" coveredmethods="0" methods="2" elements="6" classes="1" ncloc="16" statements="4" conditionals="0" coveredstatements="0"/>
+            <metrics coveredelements="6" coveredconditionals="0" complexity="2" loc="33" coveredmethods="2" methods="2" elements="6" classes="1" ncloc="16" statements="4" conditionals="0" coveredstatements="4"/>
             <class name="Neighbor">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="2" coveredmethods="0" methods="2" elements="6" statements="4" conditionals="0" coveredstatements="0"/>
+               <metrics coveredelements="6" coveredconditionals="0" complexity="2" coveredmethods="2" methods="2" elements="6" statements="4" conditionals="0" coveredstatements="4"/>
             </class>
-            <line complexity="1" visibility="public" signature="Neighbor()" num="17" count="0" type="method"/>
-            <line num="19" count="0" type="stmt"/>
-            <line num="20" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="Neighbor(Vertex,Edge)" num="26" count="0" type="method"/>
-            <line num="28" count="0" type="stmt"/>
-            <line num="29" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="Neighbor()" num="17" count="1" type="method"/>
+            <line num="19" count="1" type="stmt"/>
+            <line num="20" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="Neighbor(Vertex,Edge)" num="26" count="1" type="method"/>
+            <line num="28" count="1" type="stmt"/>
+            <line num="29" count="1" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0006/src/GPL/EdgeIter.java" name="EdgeIter.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="2" loc="13" coveredmethods="0" methods="2" elements="4" classes="1" ncloc="5" statements="2" conditionals="0" coveredstatements="0"/>
@@ -384,7 +384,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609032153">
+   <testproject timestamp="1588695027024">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

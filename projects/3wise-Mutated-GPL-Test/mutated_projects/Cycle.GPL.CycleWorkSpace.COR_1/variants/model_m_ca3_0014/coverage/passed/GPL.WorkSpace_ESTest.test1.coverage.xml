@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609755115" clover="4.4.1">
-   <project timestamp="1588609755002">
-      <metrics coveredelements="11" complexity="97" loc="1006" methods="63" classes="10" statements="209" packages="1" coveredconditionals="0" coveredmethods="5" elements="332" ncloc="497" files="10" conditionals="60" coveredstatements="6"/>
+<coverage generated="1588695738821" clover="4.4.1">
+   <project timestamp="1588695738711">
+      <metrics coveredelements="9" complexity="97" loc="1006" methods="63" classes="10" statements="209" packages="1" coveredconditionals="0" coveredmethods="4" elements="332" ncloc="497" files="10" conditionals="60" coveredstatements="5"/>
       <package name="GPL">
-         <metrics coveredelements="11" complexity="97" loc="1006" methods="63" classes="10" statements="209" coveredconditionals="0" coveredmethods="5" elements="332" ncloc="497" files="10" conditionals="60" coveredstatements="6"/>
+         <metrics coveredelements="9" complexity="97" loc="1006" methods="63" classes="10" statements="209" coveredconditionals="0" coveredmethods="4" elements="332" ncloc="497" files="10" conditionals="60" coveredstatements="5"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0014/src/GPL/VertexIter.java" name="VertexIter.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="2" loc="13" coveredmethods="0" methods="2" elements="4" classes="1" ncloc="5" statements="2" conditionals="0" coveredstatements="0"/>
             <class name="VertexIter">
@@ -222,9 +222,9 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0014/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="10" coveredconditionals="0" complexity="28" loc="259" coveredmethods="4" methods="22" elements="85" classes="1" ncloc="149" statements="51" conditionals="12" coveredstatements="6"/>
+            <metrics coveredelements="8" coveredconditionals="0" complexity="28" loc="259" coveredmethods="3" methods="22" elements="85" classes="1" ncloc="149" statements="51" conditionals="12" coveredstatements="5"/>
             <class name="Vertex">
-               <metrics coveredelements="10" coveredconditionals="0" complexity="28" coveredmethods="4" methods="22" elements="85" statements="51" conditionals="12" coveredstatements="6"/>
+               <metrics coveredelements="8" coveredconditionals="0" complexity="28" coveredmethods="3" methods="22" elements="85" statements="51" conditionals="12" coveredstatements="5"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="20" count="1" type="method"/>
             <line num="22" count="1" type="stmt"/>
@@ -237,8 +237,8 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="46" count="0" type="method"/>
             <line num="48" count="0" type="stmt"/>
             <line num="49" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="55" count="1" type="method"/>
-            <line num="57" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="55" count="0" type="method"/>
+            <line num="57" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="63" count="0" type="method"/>
             <line num="65" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="71" count="0" type="method"/>
@@ -368,7 +368,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609755002">
+   <testproject timestamp="1588695738711">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

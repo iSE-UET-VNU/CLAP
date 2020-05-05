@@ -15,7 +15,7 @@ model_m_ca3_0014,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  F  ,  F
 model_m_ca3_0015,  F  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  T  ,  F  ,  F  ,  T  ,  F  ,  T  ,__FAILED__
 model_m_ca3_0016,  F  ,  F  ,  F  ,  F  ,  F  ,  T  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  T  ,  F  ,  F  ,  T  ,__PASSED__
 model_m_ca3_0017,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,__FAILED__
-model_m_ca3_0018,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,__FAILED__
+model_m_ca3_0018,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,__PASSED__
 model_m_ca3_0019,  F  ,  F  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,__PASSED__
 model_m_ca3_0020,  F  ,  F  ,  F  ,  F  ,  F  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  F  ,  T  ,  T  ,  F  ,  F  ,  T  ,  T  ,  F  ,  F  ,  T  ,__PASSED__
 model_m_ca3_0021,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,  T  ,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  F  ,  T  ,  T  ,__PASSED__

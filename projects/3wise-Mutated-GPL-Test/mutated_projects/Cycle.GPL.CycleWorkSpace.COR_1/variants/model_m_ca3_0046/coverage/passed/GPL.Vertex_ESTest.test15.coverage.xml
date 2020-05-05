@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612392638" clover="4.4.1">
-   <project timestamp="1588612392535">
+<coverage generated="1588698275282" clover="4.4.1">
+   <project timestamp="1588698275191">
       <metrics coveredelements="40" complexity="93" loc="852" methods="60" classes="10" statements="191" packages="1" coveredconditionals="4" coveredmethods="13" elements="311" ncloc="446" files="10" conditionals="60" coveredstatements="23"/>
       <package name="GPL">
          <metrics coveredelements="40" complexity="93" loc="852" methods="60" classes="10" statements="191" coveredconditionals="4" coveredmethods="13" elements="311" ncloc="446" files="10" conditionals="60" coveredstatements="23"/>
@@ -282,8 +282,8 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="48" count="0" type="method"/>
             <line num="50" count="0" type="stmt"/>
             <line num="51" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="57" count="2" type="method"/>
-            <line num="59" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="57" count="1" type="method"/>
+            <line num="59" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="65" count="0" type="method"/>
             <line num="67" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="74" count="1" type="method"/>
@@ -300,9 +300,9 @@
             <line num="102" count="1" type="stmt"/>
             <line complexity="2" visibility="private" signature="display__wrappee__MSTKruskal() : void" num="108" count="1" type="method"/>
             <line num="109" count="1" type="stmt"/>
-            <line falsecount="1" truecount="0" num="109" type="cond"/>
-            <line num="110" count="0" type="stmt"/>
-            <line num="112" count="1" type="stmt"/>
+            <line falsecount="0" truecount="1" num="109" type="cond"/>
+            <line num="110" count="1" type="stmt"/>
+            <line num="112" count="0" type="stmt"/>
             <line num="113" count="1" type="stmt"/>
             <line complexity="2" visibility="public" signature="display() : void" num="119" count="1" type="method"/>
             <line num="120" count="1" type="stmt"/>
@@ -347,7 +347,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612392535">
+   <testproject timestamp="1588698275191">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

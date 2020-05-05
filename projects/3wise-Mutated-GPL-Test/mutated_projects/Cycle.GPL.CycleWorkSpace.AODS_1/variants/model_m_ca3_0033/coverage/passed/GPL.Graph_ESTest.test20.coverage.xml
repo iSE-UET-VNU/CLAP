@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611309526" clover="4.4.1">
-   <project timestamp="1588611309394">
-      <metrics coveredelements="75" complexity="74" loc="661" methods="53" classes="10" statements="111" packages="1" coveredconditionals="9" coveredmethods="21" elements="200" ncloc="330" files="10" conditionals="36" coveredstatements="45"/>
+<coverage generated="1588697243584" clover="4.4.1">
+   <project timestamp="1588697243463">
+      <metrics coveredelements="102" complexity="74" loc="661" methods="53" classes="10" statements="111" packages="1" coveredconditionals="14" coveredmethods="28" elements="200" ncloc="330" files="10" conditionals="36" coveredstatements="60"/>
       <package name="GPL">
-         <metrics coveredelements="75" complexity="74" loc="661" methods="53" classes="10" statements="111" coveredconditionals="9" coveredmethods="21" elements="200" ncloc="330" files="10" conditionals="36" coveredstatements="45"/>
+         <metrics coveredelements="102" complexity="74" loc="661" methods="53" classes="10" statements="111" coveredconditionals="14" coveredmethods="28" elements="200" ncloc="330" files="10" conditionals="36" coveredstatements="60"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0033/src/GPL/Neighbor.java" name="Neighbor.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="9" loc="84" coveredmethods="0" methods="9" elements="16" classes="1" ncloc="39" statements="7" conditionals="0" coveredstatements="0"/>
+            <metrics coveredelements="4" coveredconditionals="0" complexity="9" loc="84" coveredmethods="2" methods="9" elements="16" classes="1" ncloc="39" statements="7" conditionals="0" coveredstatements="2"/>
             <class name="Neighbor">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="9" coveredmethods="0" methods="9" elements="16" statements="7" conditionals="0" coveredstatements="0"/>
+               <metrics coveredelements="4" coveredconditionals="0" complexity="9" coveredmethods="2" methods="9" elements="16" statements="7" conditionals="0" coveredstatements="2"/>
             </class>
             <line complexity="1" visibility="public" signature="Neighbor()" num="16" count="0" type="method"/>
             <line num="18" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="Neighbor(Vertex)" num="24" count="0" type="method"/>
-            <line num="26" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="32" count="0" type="method"/>
-            <line num="34" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="Neighbor(Vertex)" num="24" count="1" type="method"/>
+            <line num="26" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="32" count="1" type="method"/>
+            <line num="34" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="display() : void" num="40" count="0" type="method"/>
             <line num="42" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="48" count="0" type="method"/>
@@ -27,9 +27,9 @@
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="79" count="0" type="method"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0033/src/GPL/CycleWorkSpace.java" name="CycleWorkSpace.java">
-            <metrics coveredelements="15" coveredconditionals="1" complexity="12" loc="91" coveredmethods="4" methods="5" elements="28" classes="1" ncloc="45" statements="15" conditionals="8" coveredstatements="10"/>
+            <metrics coveredelements="22" coveredconditionals="4" complexity="12" loc="91" coveredmethods="5" methods="5" elements="28" classes="1" ncloc="45" statements="15" conditionals="8" coveredstatements="13"/>
             <class name="CycleWorkSpace">
-               <metrics coveredelements="15" coveredconditionals="1" complexity="12" coveredmethods="4" methods="5" elements="28" statements="15" conditionals="8" coveredstatements="10"/>
+               <metrics coveredelements="22" coveredconditionals="4" complexity="12" coveredmethods="5" methods="5" elements="28" statements="15" conditionals="8" coveredstatements="13"/>
             </class>
             <line complexity="1" visibility="public" signature="CycleWorkSpace(boolean)" num="38" count="1" type="method"/>
             <line num="40" count="1" type="stmt"/>
@@ -38,20 +38,20 @@
             <line complexity="1" visibility="public" signature="init_vertex(Vertex) : void" num="48" count="1" type="method"/>
             <line num="50" count="1" type="stmt"/>
             <line num="51" count="1" type="stmt"/>
-            <line complexity="2" visibility="public" signature="preVisitAction(Vertex) : void" num="57" count="1" type="method"/>
-            <line num="59" count="1" type="stmt"/>
-            <line falsecount="0" truecount="1" num="59" type="cond"/>
+            <line complexity="2" visibility="public" signature="preVisitAction(Vertex) : void" num="57" count="2" type="method"/>
+            <line num="59" count="2" type="stmt"/>
+            <line falsecount="1" truecount="1" num="59" type="cond"/>
             <line num="60" count="1" type="stmt"/>
             <line num="61" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="postVisitAction(Vertex) : void" num="68" count="1" type="method"/>
             <line num="70" count="1" type="stmt"/>
             <line num="71" count="1" type="stmt"/>
-            <line complexity="7" visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="77" count="0" type="method"/>
-            <line num="79" count="0" type="stmt"/>
-            <line falsecount="0" truecount="0" num="79" type="cond"/>
-            <line num="80" count="0" type="stmt"/>
-            <line falsecount="0" truecount="0" num="80" type="cond"/>
-            <line num="81" count="0" type="stmt"/>
+            <line complexity="7" visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="77" count="1" type="method"/>
+            <line num="79" count="1" type="stmt"/>
+            <line falsecount="0" truecount="1" num="79" type="cond"/>
+            <line num="80" count="1" type="stmt"/>
+            <line falsecount="0" truecount="1" num="80" type="cond"/>
+            <line num="81" count="1" type="stmt"/>
             <line num="84" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="84" type="cond"/>
             <line num="85" count="0" type="stmt"/>
@@ -63,9 +63,9 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0033/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="35" coveredconditionals="6" complexity="22" loc="186" coveredmethods="9" methods="14" elements="69" classes="1" ncloc="104" statements="39" conditionals="16" coveredstatements="20"/>
+            <metrics coveredelements="41" coveredconditionals="6" complexity="22" loc="186" coveredmethods="11" methods="14" elements="69" classes="1" ncloc="104" statements="39" conditionals="16" coveredstatements="24"/>
             <class name="Graph">
-               <metrics coveredelements="35" coveredconditionals="6" complexity="22" coveredmethods="9" methods="14" elements="69" statements="39" conditionals="16" coveredstatements="20"/>
+               <metrics coveredelements="41" coveredconditionals="6" complexity="22" coveredmethods="11" methods="14" elements="69" statements="39" conditionals="16" coveredstatements="24"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="23" count="1" type="method"/>
             <line num="24" count="1" type="stmt"/>
@@ -75,14 +75,14 @@
             <line num="41" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="48" count="0" type="method"/>
             <line num="49" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="63" count="0" type="method"/>
-            <line num="65" count="0" type="stmt"/>
-            <line num="66" count="0" type="stmt"/>
-            <line num="67" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="63" count="1" type="method"/>
+            <line num="65" count="1" type="stmt"/>
+            <line num="66" count="1" type="stmt"/>
+            <line num="67" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="74" count="1" type="method"/>
             <line num="75" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="81" count="0" type="method"/>
-            <line num="82" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="81" count="1" type="method"/>
+            <line num="82" count="1" type="stmt"/>
             <line complexity="4" visibility="public" signature="findsVertex(String) : Vertex" num="89" count="0" type="method"/>
             <line num="91" count="0" type="stmt"/>
             <line num="94" count="0" type="stmt"/>
@@ -130,9 +130,9 @@
             <line num="180" count="1" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0033/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="24" coveredconditionals="2" complexity="19" loc="172" coveredmethods="7" methods="15" elements="58" classes="1" ncloc="92" statements="35" conditionals="8" coveredstatements="15"/>
+            <metrics coveredelements="34" coveredconditionals="4" complexity="19" loc="172" coveredmethods="9" methods="15" elements="58" classes="1" ncloc="92" statements="35" conditionals="8" coveredstatements="21"/>
             <class name="Vertex">
-               <metrics coveredelements="24" coveredconditionals="2" complexity="19" coveredmethods="7" methods="15" elements="58" statements="35" conditionals="8" coveredstatements="15"/>
+               <metrics coveredelements="34" coveredconditionals="4" complexity="19" coveredmethods="9" methods="15" elements="58" statements="35" conditionals="8" coveredstatements="21"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="20" count="1" type="method"/>
             <line num="21" count="1" type="stmt"/>
@@ -147,14 +147,14 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="51" count="0" type="method"/>
             <line num="52" count="0" type="stmt"/>
             <line num="53" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Neighbor) : void" num="59" count="0" type="method"/>
-            <line num="60" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Neighbor) : void" num="59" count="1" type="method"/>
+            <line num="60" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="67" count="1" type="method"/>
             <line num="69" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="next() : Vertex" num="72" count="0" type="method"/>
-            <line num="74" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="77" count="1" type="method"/>
-            <line num="79" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="next() : Vertex" num="72" count="1" type="method"/>
+            <line num="74" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="77" count="2" type="method"/>
+            <line num="79" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(Neighbor) : void" num="87" count="0" type="method"/>
             <line complexity="2" visibility="private" signature="display__wrappee__DirectedWithNeighbors() : void" num="93" count="0" type="method"/>
             <line num="95" count="0" type="stmt"/>
@@ -175,18 +175,18 @@
             <line complexity="1" visibility="public" signature="init_vertex(WorkSpace) : void" num="136" count="1" type="method"/>
             <line num="138" count="1" type="stmt"/>
             <line num="139" count="1" type="stmt"/>
-            <line complexity="3" visibility="public" signature="nodeSearch(WorkSpace) : void" num="145" count="1" type="method"/>
-            <line num="147" count="1" type="stmt"/>
-            <line num="151" count="1" type="stmt"/>
-            <line num="153" count="1" type="stmt"/>
-            <line falsecount="1" truecount="0" num="153" type="cond"/>
-            <line num="154" count="0" type="stmt"/>
+            <line complexity="3" visibility="public" signature="nodeSearch(WorkSpace) : void" num="145" count="2" type="method"/>
+            <line num="147" count="2" type="stmt"/>
+            <line num="151" count="2" type="stmt"/>
+            <line num="153" count="2" type="stmt"/>
+            <line falsecount="1" truecount="1" num="153" type="cond"/>
+            <line num="154" count="1" type="stmt"/>
             <line num="158" count="1" type="stmt"/>
             <line num="160" count="1" type="stmt"/>
-            <line falsecount="1" truecount="0" num="160" type="cond"/>
-            <line num="162" count="0" type="stmt"/>
-            <line num="163" count="0" type="stmt"/>
-            <line num="164" count="0" type="stmt"/>
+            <line falsecount="1" truecount="1" num="160" type="cond"/>
+            <line num="162" count="1" type="stmt"/>
+            <line num="163" count="1" type="stmt"/>
+            <line num="164" count="1" type="stmt"/>
             <line num="168" count="1" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0033/src/GPL/VertexIter.java" name="VertexIter.java">
@@ -248,7 +248,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611309394">
+   <testproject timestamp="1588697243463">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

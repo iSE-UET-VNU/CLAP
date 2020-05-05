@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610205236" clover="4.4.1">
-   <project timestamp="1588610205129">
+<coverage generated="1588696148434" clover="4.4.1">
+   <project timestamp="1588696148329">
       <metrics coveredelements="28" complexity="97" loc="998" methods="61" classes="10" statements="215" packages="1" coveredconditionals="1" coveredmethods="9" elements="340" ncloc="486" files="10" conditionals="64" coveredstatements="18"/>
       <package name="GPL">
          <metrics coveredelements="28" complexity="97" loc="998" methods="61" classes="10" statements="215" coveredconditionals="1" coveredmethods="9" elements="340" ncloc="486" files="10" conditionals="64" coveredstatements="18"/>
@@ -264,15 +264,15 @@
             <line num="191" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="195" count="0" type="method"/>
             <line num="197" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="205" count="0" type="method"/>
-            <line num="207" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="205" count="1" type="method"/>
+            <line num="207" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="217" count="0" type="method"/>
             <line num="217" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="221" count="0" type="method"/>
             <line num="221" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="226" count="0" type="method"/>
-            <line complexity="1" visibility="public" signature="getWeight() : int" num="230" count="1" type="method"/>
-            <line num="230" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getWeight() : int" num="230" count="0" type="method"/>
+            <line num="230" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="235" count="0" type="method"/>
             <line num="237" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="245" count="0" type="method"/>
@@ -374,7 +374,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610205129">
+   <testproject timestamp="1588696148329">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

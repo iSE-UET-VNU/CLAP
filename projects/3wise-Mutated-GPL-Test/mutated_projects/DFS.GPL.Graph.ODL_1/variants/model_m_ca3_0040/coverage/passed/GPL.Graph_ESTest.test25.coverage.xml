@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611851488" clover="4.4.1">
-   <project timestamp="1588611851368">
-      <metrics coveredelements="19" complexity="117" loc="1158" methods="76" classes="11" statements="241" packages="1" coveredconditionals="3" coveredmethods="6" elements="385" ncloc="566" files="11" conditionals="68" coveredstatements="10"/>
+<coverage generated="1588697744613" clover="4.4.1">
+   <project timestamp="1588697744511">
+      <metrics coveredelements="40" complexity="117" loc="1158" methods="76" classes="11" statements="241" packages="1" coveredconditionals="3" coveredmethods="13" elements="385" ncloc="566" files="11" conditionals="68" coveredstatements="24"/>
       <package name="GPL">
-         <metrics coveredelements="19" complexity="117" loc="1158" methods="76" classes="11" statements="241" coveredconditionals="3" coveredmethods="6" elements="385" ncloc="566" files="11" conditionals="68" coveredstatements="10"/>
+         <metrics coveredelements="40" complexity="117" loc="1158" methods="76" classes="11" statements="241" coveredconditionals="3" coveredmethods="13" elements="385" ncloc="566" files="11" conditionals="68" coveredstatements="24"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0040/src/GPL/RegionWorkSpace.java" name="RegionWorkSpace.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="4" loc="42" coveredmethods="0" methods="4" elements="8" classes="1" ncloc="20" statements="4" conditionals="0" coveredstatements="0"/>
             <class name="RegionWorkSpace">
@@ -55,21 +55,21 @@
             <line num="92" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0040/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="37" loc="336" coveredmethods="0" methods="32" elements="104" classes="1" ncloc="170" statements="62" conditionals="10" coveredstatements="0"/>
+            <metrics coveredelements="23" coveredconditionals="0" complexity="37" loc="336" coveredmethods="10" methods="32" elements="104" classes="1" ncloc="170" statements="62" conditionals="10" coveredstatements="13"/>
             <class name="Vertex">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="37" coveredmethods="0" methods="32" elements="104" statements="62" conditionals="10" coveredstatements="0"/>
+               <metrics coveredelements="23" coveredconditionals="0" complexity="37" coveredmethods="10" methods="32" elements="104" statements="62" conditionals="10" coveredstatements="13"/>
             </class>
-            <line complexity="1" visibility="public" signature="Vertex()" num="27" count="0" type="method"/>
-            <line num="29" count="0" type="stmt"/>
-            <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__UndirectedOnlyVertices() : void" num="35" count="0" type="method"/>
-            <line num="37" count="0" type="stmt"/>
-            <line num="38" count="0" type="stmt"/>
-            <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DFS() : void" num="44" count="0" type="method"/>
-            <line num="46" count="0" type="stmt"/>
-            <line num="47" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="VertexConstructor() : void" num="53" count="0" type="method"/>
-            <line num="54" count="0" type="stmt"/>
-            <line num="55" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="Vertex()" num="27" count="2" type="method"/>
+            <line num="29" count="2" type="stmt"/>
+            <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__UndirectedOnlyVertices() : void" num="35" count="2" type="method"/>
+            <line num="37" count="2" type="stmt"/>
+            <line num="38" count="2" type="stmt"/>
+            <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DFS() : void" num="44" count="2" type="method"/>
+            <line num="46" count="2" type="stmt"/>
+            <line num="47" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="VertexConstructor() : void" num="53" count="2" type="method"/>
+            <line num="54" count="2" type="stmt"/>
+            <line num="55" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="61" count="0" type="method"/>
             <line num="63" count="0" type="stmt"/>
             <line num="64" count="0" type="stmt"/>
@@ -113,8 +113,8 @@
             <line falsecount="0" truecount="0" num="157" type="cond"/>
             <line num="158" count="0" type="stmt"/>
             <line num="161" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addAdjacent(Vertex) : void" num="170" count="0" type="method"/>
-            <line num="171" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addAdjacent(Vertex) : void" num="170" count="2" type="method"/>
+            <line num="171" count="2" type="stmt"/>
             <line complexity="1" visibility="private" signature="adjustAdorns__wrappee__UndirectedOnlyVertices(Vertex,int) : void" num="177" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(Vertex,int) : void" num="183" count="0" type="method"/>
             <line num="185" count="0" type="stmt"/>
@@ -122,14 +122,14 @@
             <line num="187" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="192" count="0" type="method"/>
             <line num="194" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getEdges() : EdgeIter" num="200" count="0" type="method"/>
-            <line num="202" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="next() : EdgeIfc" num="205" count="0" type="method"/>
-            <line num="207" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="211" count="0" type="method"/>
-            <line num="213" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="221" count="0" type="method"/>
-            <line num="223" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getEdges() : EdgeIter" num="200" count="1" type="method"/>
+            <line num="202" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="next() : EdgeIfc" num="205" count="2" type="method"/>
+            <line num="207" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="211" count="3" type="method"/>
+            <line num="213" count="3" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="221" count="12" type="method"/>
+            <line num="223" count="12" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="233" count="0" type="method"/>
             <line num="233" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="237" count="0" type="method"/>
@@ -137,8 +137,8 @@
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="242" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="getWeight() : int" num="246" count="0" type="method"/>
             <line num="246" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="251" count="0" type="method"/>
-            <line num="253" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="251" count="2" type="method"/>
+            <line num="253" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="261" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="init_vertex(WorkSpace) : void" num="289" count="0" type="method"/>
             <line num="291" count="0" type="stmt"/>
@@ -211,9 +211,9 @@
             <line complexity="1" visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="23" count="0" type="method"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0040/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="17" coveredconditionals="3" complexity="49" loc="518" coveredmethods="5" methods="23" elements="209" classes="1" ncloc="259" statements="142" conditionals="44" coveredstatements="9"/>
+            <metrics coveredelements="17" coveredconditionals="3" complexity="49" loc="518" coveredmethods="3" methods="23" elements="209" classes="1" ncloc="259" statements="142" conditionals="44" coveredstatements="11"/>
             <class name="Graph">
-               <metrics coveredelements="17" coveredconditionals="3" complexity="49" coveredmethods="5" methods="23" elements="209" statements="142" conditionals="44" coveredstatements="9"/>
+               <metrics coveredelements="17" coveredconditionals="3" complexity="49" coveredmethods="3" methods="23" elements="209" statements="142" conditionals="44" coveredstatements="11"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="34" count="1" type="method"/>
             <line num="36" count="1" type="stmt"/>
@@ -237,10 +237,10 @@
             <line num="91" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="addAnEdge(Vertex,Vertex,int) : void" num="97" count="0" type="method"/>
             <line num="99" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="107" count="0" type="method"/>
-            <line num="109" count="0" type="stmt"/>
-            <line num="110" count="0" type="stmt"/>
-            <line num="111" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="107" count="1" type="method"/>
+            <line num="109" count="1" type="stmt"/>
+            <line num="110" count="1" type="stmt"/>
+            <line num="111" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="125" count="0" type="method"/>
             <line num="127" count="0" type="stmt"/>
             <line num="130" count="0" type="stmt"/>
@@ -251,12 +251,12 @@
             <line falsecount="0" truecount="0" num="143" type="cond"/>
             <line num="144" count="0" type="stmt"/>
             <line num="156" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="162" count="2" type="method"/>
-            <line num="164" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="162" count="0" type="method"/>
+            <line num="164" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : Vertex" num="167" count="0" type="method"/>
             <line num="169" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="171" count="3" type="method"/>
-            <line num="173" count="3" type="stmt"/>
+            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="171" count="0" type="method"/>
+            <line num="173" count="0" type="stmt"/>
             <line complexity="2" visibility="private" signature="display__wrappee__UndirectedOnlyVertices() : void" num="181" count="0" type="method"/>
             <line num="182" count="0" type="stmt"/>
             <line num="183" count="0" type="stmt"/>
@@ -268,18 +268,18 @@
             <line num="189" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="display() : void" num="196" count="0" type="method"/>
             <line num="198" count="0" type="stmt"/>
-            <line complexity="6" visibility="public" signature="findsEdge(Vertex,Vertex) : EdgeIfc" num="203" count="0" type="method"/>
-            <line num="221" count="0" type="stmt"/>
-            <line num="222" count="0" type="stmt"/>
-            <line falsecount="0" truecount="0" num="222" type="cond"/>
-            <line num="224" count="0" type="stmt"/>
-            <line num="225" count="0" type="stmt"/>
-            <line num="226" count="0" type="stmt"/>
-            <line falsecount="0" truecount="0" num="226" type="cond"/>
+            <line complexity="6" visibility="public" signature="findsEdge(Vertex,Vertex) : EdgeIfc" num="203" count="1" type="method"/>
+            <line num="221" count="1" type="stmt"/>
+            <line num="222" count="1" type="stmt"/>
+            <line falsecount="1" truecount="2" num="222" type="cond"/>
+            <line num="224" count="2" type="stmt"/>
+            <line num="225" count="2" type="stmt"/>
+            <line num="226" count="2" type="stmt"/>
+            <line falsecount="2" truecount="0" num="226" type="cond"/>
             <line num="230" count="0" type="stmt"/>
-            <line num="232" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="NumberVertices() : void" num="238" count="1" type="method"/>
-            <line num="240" count="1" type="stmt"/>
+            <line num="232" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="NumberVertices() : void" num="238" count="0" type="method"/>
+            <line num="240" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="ConnectedComponents() : void" num="246" count="0" type="method"/>
             <line num="248" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="CycleCheck() : boolean" num="254" count="0" type="method"/>
@@ -380,17 +380,17 @@
             <line num="466" count="0" type="stmt"/>
             <line num="470" count="0" type="stmt"/>
             <line num="477" count="0" type="stmt"/>
-            <line complexity="5" visibility="public" signature="GraphSearch(WorkSpace) : void" num="484" count="1" type="method"/>
-            <line num="486" count="1" type="stmt"/>
-            <line num="487" count="1" type="stmt"/>
-            <line falsecount="1" truecount="0" num="487" type="cond"/>
+            <line complexity="5" visibility="public" signature="GraphSearch(WorkSpace) : void" num="484" count="0" type="method"/>
+            <line num="486" count="0" type="stmt"/>
+            <line num="487" count="0" type="stmt"/>
+            <line falsecount="0" truecount="0" num="487" type="cond"/>
             <line num="488" count="0" type="stmt"/>
-            <line num="490" count="1" type="stmt"/>
-            <line falsecount="1" truecount="0" num="490" type="cond"/>
+            <line num="490" count="0" type="stmt"/>
+            <line falsecount="0" truecount="0" num="490" type="cond"/>
             <line num="491" count="0" type="stmt"/>
             <line num="492" count="0" type="stmt"/>
-            <line num="494" count="1" type="stmt"/>
-            <line falsecount="1" truecount="0" num="494" type="cond"/>
+            <line num="494" count="0" type="stmt"/>
+            <line falsecount="0" truecount="0" num="494" type="cond"/>
             <line num="495" count="0" type="stmt"/>
             <line num="496" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="496" type="cond"/>
@@ -410,12 +410,12 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0040/src/GPL/NumberWorkSpace.java" name="NumberWorkSpace.java">
-            <metrics coveredelements="2" coveredconditionals="0" complexity="3" loc="30" coveredmethods="1" methods="2" elements="7" classes="1" ncloc="15" statements="3" conditionals="2" coveredstatements="1"/>
+            <metrics coveredelements="0" coveredconditionals="0" complexity="3" loc="30" coveredmethods="0" methods="2" elements="7" classes="1" ncloc="15" statements="3" conditionals="2" coveredstatements="0"/>
             <class name="NumberWorkSpace">
-               <metrics coveredelements="2" coveredconditionals="0" complexity="3" coveredmethods="1" methods="2" elements="7" statements="3" conditionals="2" coveredstatements="1"/>
+               <metrics coveredelements="0" coveredconditionals="0" complexity="3" coveredmethods="0" methods="2" elements="7" statements="3" conditionals="2" coveredstatements="0"/>
             </class>
-            <line complexity="1" visibility="public" signature="NumberWorkSpace()" num="12" count="1" type="method"/>
-            <line num="14" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="NumberWorkSpace()" num="12" count="0" type="method"/>
+            <line num="14" count="0" type="stmt"/>
             <line complexity="2" visibility="public" signature="preVisitAction(Vertex) : void" num="20" count="0" type="method"/>
             <line num="23" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="23" type="cond"/>
@@ -423,7 +423,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611851368">
+   <testproject timestamp="1588697744511">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

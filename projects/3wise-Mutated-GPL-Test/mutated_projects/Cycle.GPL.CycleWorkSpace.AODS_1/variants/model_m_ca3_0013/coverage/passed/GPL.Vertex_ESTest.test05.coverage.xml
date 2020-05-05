@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609656432" clover="4.4.1">
-   <project timestamp="1588609656301">
-      <metrics coveredelements="18" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="1" coveredmethods="6" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="11"/>
+<coverage generated="1588695660163" clover="4.4.1">
+   <project timestamp="1588695660066">
+      <metrics coveredelements="24" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="2" coveredmethods="8" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="14"/>
       <package name="GPL">
-         <metrics coveredelements="18" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="1" coveredmethods="6" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="11"/>
+         <metrics coveredelements="24" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="2" coveredmethods="8" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="14"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0013/src/GPL/Graph.java" name="Graph.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="50" loc="539" coveredmethods="0" methods="24" elements="210" classes="1" ncloc="271" statements="142" conditionals="44" coveredstatements="0"/>
             <class name="Graph">
@@ -351,9 +351,9 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0013/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="17" coveredconditionals="1" complexity="29" loc="275" coveredmethods="5" methods="25" elements="84" classes="1" ncloc="154" statements="51" conditionals="8" coveredstatements="11"/>
+            <metrics coveredelements="23" coveredconditionals="2" complexity="29" loc="275" coveredmethods="7" methods="25" elements="84" classes="1" ncloc="154" statements="51" conditionals="8" coveredstatements="14"/>
             <class name="Vertex">
-               <metrics coveredelements="17" coveredconditionals="1" complexity="29" coveredmethods="5" methods="25" elements="84" statements="51" conditionals="8" coveredstatements="11"/>
+               <metrics coveredelements="23" coveredconditionals="2" complexity="29" coveredmethods="7" methods="25" elements="84" statements="51" conditionals="8" coveredstatements="14"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="19" count="1" type="method"/>
             <line num="21" count="1" type="stmt"/>
@@ -372,10 +372,10 @@
             <line num="64" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="70" count="1" type="method"/>
             <line num="72" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="next() : Vertex" num="75" count="0" type="method"/>
-            <line num="77" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="79" count="0" type="method"/>
-            <line num="81" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="next() : Vertex" num="75" count="1" type="method"/>
+            <line num="77" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="79" count="1" type="method"/>
+            <line num="81" count="1" type="stmt"/>
             <line complexity="2" visibility="private" signature="display__wrappee__UndirectedWithNeighbors() : void" num="89" count="0" type="method"/>
             <line num="91" count="0" type="stmt"/>
             <line num="93" count="0" type="stmt"/>
@@ -426,8 +426,8 @@
             <line num="247" count="0" type="stmt"/>
             <line num="251" count="1" type="stmt"/>
             <line num="253" count="1" type="stmt"/>
-            <line falsecount="0" truecount="0" num="253" type="cond"/>
-            <line num="255" count="0" type="stmt"/>
+            <line falsecount="0" truecount="1" num="253" type="cond"/>
+            <line num="255" count="1" type="stmt"/>
             <line num="256" count="0" type="stmt"/>
             <line num="257" count="0" type="stmt"/>
             <line num="261" count="0" type="stmt"/>
@@ -438,7 +438,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609656301">
+   <testproject timestamp="1588695660066">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

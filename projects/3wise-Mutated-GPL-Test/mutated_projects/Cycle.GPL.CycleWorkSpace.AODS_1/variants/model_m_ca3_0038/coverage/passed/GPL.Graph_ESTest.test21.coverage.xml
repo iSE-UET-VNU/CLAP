@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611699370" clover="4.4.1">
-   <project timestamp="1588611699245">
-      <metrics coveredelements="26" complexity="71" loc="615" methods="50" classes="9" statements="111" packages="1" coveredconditionals="3" coveredmethods="7" elements="197" ncloc="294" files="9" conditionals="36" coveredstatements="16"/>
+<coverage generated="1588697603835" clover="4.4.1">
+   <project timestamp="1588697603252">
+      <metrics coveredelements="28" complexity="71" loc="615" methods="50" classes="9" statements="111" packages="1" coveredconditionals="3" coveredmethods="8" elements="197" ncloc="294" files="9" conditionals="36" coveredstatements="17"/>
       <package name="GPL">
-         <metrics coveredelements="26" complexity="71" loc="615" methods="50" classes="9" statements="111" coveredconditionals="3" coveredmethods="7" elements="197" ncloc="294" files="9" conditionals="36" coveredstatements="16"/>
+         <metrics coveredelements="28" complexity="71" loc="615" methods="50" classes="9" statements="111" coveredconditionals="3" coveredmethods="8" elements="197" ncloc="294" files="9" conditionals="36" coveredstatements="17"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0038/src/GPL/Graph.java" name="Graph.java">
             <metrics coveredelements="15" coveredconditionals="3" complexity="22" loc="181" coveredmethods="3" methods="14" elements="71" classes="1" ncloc="98" statements="41" conditionals="16" coveredstatements="9"/>
             <class name="Graph">
@@ -137,9 +137,9 @@
             <line complexity="1" visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="23" count="0" type="method"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0038/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="11" coveredconditionals="0" complexity="25" loc="215" coveredmethods="4" methods="21" elements="69" classes="1" ncloc="101" statements="40" conditionals="8" coveredstatements="7"/>
+            <metrics coveredelements="13" coveredconditionals="0" complexity="25" loc="215" coveredmethods="5" methods="21" elements="69" classes="1" ncloc="101" statements="40" conditionals="8" coveredstatements="8"/>
             <class name="Vertex">
-               <metrics coveredelements="11" coveredconditionals="0" complexity="25" coveredmethods="4" methods="21" elements="69" statements="40" conditionals="8" coveredstatements="7"/>
+               <metrics coveredelements="13" coveredconditionals="0" complexity="25" coveredmethods="5" methods="21" elements="69" statements="40" conditionals="8" coveredstatements="8"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="21" count="1" type="method"/>
             <line num="22" count="1" type="stmt"/>
@@ -152,8 +152,8 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="45" count="1" type="method"/>
             <line num="46" count="1" type="stmt"/>
             <line num="47" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="54" count="0" type="method"/>
-            <line num="56" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="54" count="1" type="method"/>
+            <line num="56" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addAdjacent(Vertex) : void" num="63" count="0" type="method"/>
             <line num="64" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(Vertex,int) : void" num="70" count="0" type="method"/>
@@ -239,7 +239,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611699245">
+   <testproject timestamp="1588697603252">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

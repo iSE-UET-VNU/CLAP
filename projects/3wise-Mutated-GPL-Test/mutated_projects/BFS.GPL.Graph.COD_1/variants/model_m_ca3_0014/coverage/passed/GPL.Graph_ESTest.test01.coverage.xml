@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609664810" clover="4.4.1">
-   <project timestamp="1588609664651">
-      <metrics coveredelements="57" complexity="97" loc="999" methods="63" classes="10" statements="209" packages="1" coveredconditionals="3" coveredmethods="19" elements="332" ncloc="493" files="10" conditionals="60" coveredstatements="35"/>
+<coverage generated="1588695658756" clover="4.4.1">
+   <project timestamp="1588695658646">
+      <metrics coveredelements="59" complexity="97" loc="999" methods="63" classes="10" statements="209" packages="1" coveredconditionals="3" coveredmethods="20" elements="332" ncloc="493" files="10" conditionals="60" coveredstatements="36"/>
       <package name="GPL">
-         <metrics coveredelements="57" complexity="97" loc="999" methods="63" classes="10" statements="209" coveredconditionals="3" coveredmethods="19" elements="332" ncloc="493" files="10" conditionals="60" coveredstatements="35"/>
+         <metrics coveredelements="59" complexity="97" loc="999" methods="63" classes="10" statements="209" coveredconditionals="3" coveredmethods="20" elements="332" ncloc="493" files="10" conditionals="60" coveredstatements="36"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0014/src/GPL/Neighbor.java" name="Neighbor.java">
-            <metrics coveredelements="11" coveredconditionals="0" complexity="13" loc="114" coveredmethods="5" methods="13" elements="27" classes="1" ncloc="50" statements="14" conditionals="0" coveredstatements="6"/>
+            <metrics coveredelements="13" coveredconditionals="0" complexity="13" loc="114" coveredmethods="6" methods="13" elements="27" classes="1" ncloc="50" statements="14" conditionals="0" coveredstatements="7"/>
             <class name="Neighbor">
-               <metrics coveredelements="11" coveredconditionals="0" complexity="13" coveredmethods="5" methods="13" elements="27" statements="14" conditionals="0" coveredstatements="6"/>
+               <metrics coveredelements="13" coveredconditionals="0" complexity="13" coveredmethods="6" methods="13" elements="27" statements="14" conditionals="0" coveredstatements="7"/>
             </class>
             <line complexity="1" visibility="public" signature="Neighbor()" num="18" count="0" type="method"/>
             <line num="19" count="0" type="stmt"/>
@@ -15,8 +15,8 @@
             <line num="27" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="33" count="0" type="method"/>
             <line num="35" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getWeight() : int" num="41" count="0" type="method"/>
-            <line num="43" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getWeight() : int" num="41" count="1" type="method"/>
+            <line num="43" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="49" count="2" type="method"/>
             <line num="50" count="2" type="stmt"/>
             <line complexity="1" visibility="private" signature="display__wrappee__UndirectedWithNeighbors() : void" num="56" count="0" type="method"/>
@@ -368,7 +368,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609664651">
+   <testproject timestamp="1588695658646">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

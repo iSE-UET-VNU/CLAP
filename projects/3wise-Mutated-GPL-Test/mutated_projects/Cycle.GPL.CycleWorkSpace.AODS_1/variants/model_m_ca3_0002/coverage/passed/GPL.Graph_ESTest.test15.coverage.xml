@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588608696451" clover="4.4.1">
-   <project timestamp="1588608696321">
+<coverage generated="1588694702666" clover="4.4.1">
+   <project timestamp="1588694702549">
       <metrics coveredelements="5" complexity="104" loc="957" methods="73" classes="13" statements="191" packages="1" coveredconditionals="0" coveredmethods="2" elements="320" ncloc="467" files="13" conditionals="56" coveredstatements="3"/>
       <package name="GPL">
          <metrics coveredelements="5" complexity="104" loc="957" methods="73" classes="13" statements="191" coveredconditionals="0" coveredmethods="2" elements="320" ncloc="467" files="13" conditionals="56" coveredstatements="3"/>
@@ -45,8 +45,8 @@
             <line num="61" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="sortEdges(Comparator) : void" num="67" count="0" type="method"/>
             <line num="68" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="74" count="0" type="method"/>
-            <line num="75" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="74" count="1" type="method"/>
+            <line num="75" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="82" count="0" type="method"/>
             <line num="83" count="0" type="stmt"/>
             <line num="84" count="0" type="stmt"/>
@@ -67,8 +67,8 @@
             <line falsecount="0" truecount="0" num="114" type="cond"/>
             <line num="115" count="0" type="stmt"/>
             <line num="118" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="124" count="1" type="method"/>
-            <line num="125" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="124" count="0" type="method"/>
+            <line num="125" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : Vertex" num="127" count="0" type="method"/>
             <line num="127" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="128" count="0" type="method"/>
@@ -376,7 +376,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588608696321">
+   <testproject timestamp="1588694702549">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

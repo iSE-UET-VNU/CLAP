@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609325149" clover="4.4.1"> 
- <project timestamp="1588609324961">  
+<coverage generated="1588695326612" clover="4.4.1"> 
+ <project timestamp="1588695326425">  
   <package name="GPL">  
    <file path="GPL/NumberWorkSpace.java" name="GPL.NumberWorkSpace">   
     <line visibility="public" signature="NumberWorkSpace()" num="12" count="6" type="method" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="9" /> 
@@ -33,8 +33,8 @@
     <line num="95" count="4" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="15" /> 
     <line visibility="public" signature="sortVertices(Comparator) : void" num="102" count="10" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="47" /> 
     <line num="103" count="10" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="48" /> 
-    <line visibility="public" signature="addAnEdge(Vertex,Vertex,int) : void" num="109" count="5" type="method" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="9" /> 
-    <line num="111" count="5" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="11" /> 
+    <line visibility="public" signature="addAnEdge(Vertex,Vertex,int) : void" num="109" count="6" type="method" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="9" /> 
+    <line num="111" count="6" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="11" /> 
     <line visibility="public" signature="addVertex(Vertex) : void" num="119" count="11" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="59" /> 
     <line num="120" count="11" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="60" /> 
     <line visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="127" count="14" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="64" /> 
@@ -117,10 +117,10 @@
     <line num="319" count="0" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="22" />  
     <line num="320" count="0" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="23" /> 
     <line num="321" count="0" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="24" /> 
-    <line visibility="public" signature="addEdge(Vertex,Vertex,int) : void" num="329" count="8" type="method" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="14" /> 
-    <line num="331" count="8" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="16" /> 
-    <line num="332" count="6" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="17" /> 
-    <line num="336" count="6" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="21" />  
+    <line visibility="public" signature="addEdge(Vertex,Vertex,int) : void" num="329" count="9" type="method" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="14" /> 
+    <line num="331" count="9" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="16" /> 
+    <line num="332" count="7" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="17" /> 
+    <line num="336" count="7" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="21" />  
     <line num="337" count="0" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="22" /> 
    </file>  
    <file path="GPL/Main.java" name="GPL.Main">   
@@ -166,9 +166,9 @@
     <line visibility="public" signature="VertexConstructor() : void" num="52" count="63" type="method" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="14" /> 
     <line num="53" count="63" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="15" /> 
     <line num="54" count="63" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="16" /> 
-    <line visibility="public" signature="assignName(String) : Vertex" num="60" count="9" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="23" /> 
-    <line num="61" count="9" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
-    <line num="62" count="9" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="25" /> 
+    <line visibility="public" signature="assignName(String) : Vertex" num="60" count="10" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="23" /> 
+    <line num="61" count="10" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
+    <line num="62" count="10" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="25" /> 
     <line visibility="public" signature="getName() : String" num="69" count="11" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
     <line num="71" count="11" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
     <line visibility="public" signature="addAdjacent(Vertex) : void" num="78" count="16" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="35" /> 
@@ -236,8 +236,8 @@
     <line num="275" count="0" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="39" /> 
     <line num="276" count="0" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="40" /> 
     <line num="280" count="6" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="44" /> 
-    <line visibility="public" signature="addWeight(int) : void" num="289" count="9" type="method" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="19" /> 
-    <line num="291" count="9" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="21" /> 
+    <line visibility="public" signature="addWeight(int) : void" num="289" count="10" type="method" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="19" /> 
+    <line num="291" count="10" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="21" /> 
    </file> 
    <file path="GPL/CycleWorkSpace.java" name="GPL.CycleWorkSpace">   
     <line visibility="public" signature="CycleWorkSpace(boolean)" num="31" count="20" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="17" /> 
@@ -284,6 +284,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588609324961">  
+ <testproject timestamp="1588695326425">  
  </testproject> 
 </coverage>

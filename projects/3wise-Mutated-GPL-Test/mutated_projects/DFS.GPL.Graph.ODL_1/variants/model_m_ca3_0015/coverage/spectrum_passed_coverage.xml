@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609768869" clover="4.4.1"> 
- <project timestamp="1588609768693">  
+<coverage generated="1588695752678" clover="4.4.1"> 
+ <project timestamp="1588695752490">  
   <package name="GPL">  
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
-    <line visibility="public" signature="Vertex()" num="23" count="58" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="13" /> 
-    <line num="24" count="58" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="14" /> 
-    <line visibility="public" signature="getName() : String" num="29" count="17" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="16" /> 
-    <line num="31" count="17" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="18" /> 
-    <line visibility="private" signature="VertexConstructor__wrappee__DirectedWithNeighbors() : void" num="37" count="58" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="21" /> 
-    <line num="38" count="58" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="22" /> 
-    <line num="39" count="58" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="23" /> 
-    <line visibility="public" signature="VertexConstructor() : void" num="45" count="58" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
-    <line num="47" count="58" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
-    <line num="48" count="58" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
-    <line visibility="public" signature="assignName(String) : Vertex" num="54" count="7" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="26" /> 
-    <line num="55" count="7" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="27" /> 
-    <line num="56" count="7" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="28" /> 
-    <line visibility="public" signature="addEdge(Neighbor) : void" num="62" count="13" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="31" /> 
-    <line num="63" count="13" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="32" /> 
+    <line visibility="public" signature="Vertex()" num="23" count="59" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="13" /> 
+    <line num="24" count="59" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="14" /> 
+    <line visibility="public" signature="getName() : String" num="29" count="18" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="16" /> 
+    <line num="31" count="18" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="18" /> 
+    <line visibility="private" signature="VertexConstructor__wrappee__DirectedWithNeighbors() : void" num="37" count="59" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="21" /> 
+    <line num="38" count="59" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="22" /> 
+    <line num="39" count="59" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="23" /> 
+    <line visibility="public" signature="VertexConstructor() : void" num="45" count="59" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
+    <line num="47" count="59" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
+    <line num="48" count="59" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
+    <line visibility="public" signature="assignName(String) : Vertex" num="54" count="6" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="26" /> 
+    <line num="55" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="27" /> 
+    <line num="56" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="28" /> 
+    <line visibility="public" signature="addEdge(Neighbor) : void" num="62" count="12" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="31" /> 
+    <line num="63" count="12" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="32" /> 
     <line visibility="public" signature="getNeighbors() : VertexIter" num="70" count="18" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="36" /> 
     <line num="72" count="18" type="stmt" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="38" /> 
     <line visibility="public" signature="next() : Vertex" num="75" count="11" type="method" featureClass="DirectedWithNeighbors.GPL.Vertex" featureLineNum="41" /> 
@@ -60,10 +60,10 @@
    <file path="GPL/Neighbor.java" name="GPL.Neighbor">   
     <line visibility="public" signature="Neighbor()" num="16" count="6" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="13" /> 
     <line num="18" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="15" /> 
-    <line visibility="public" signature="Neighbor(Vertex)" num="24" count="24" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="18" /> 
-    <line num="26" count="24" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="20" /> 
-    <line visibility="public" signature="NeighborConstructor(Vertex) : void" num="32" count="25" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="23" /> 
-    <line num="34" count="25" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="25" /> 
+    <line visibility="public" signature="Neighbor(Vertex)" num="24" count="23" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="18" /> 
+    <line num="26" count="23" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="20" /> 
+    <line visibility="public" signature="NeighborConstructor(Vertex) : void" num="32" count="24" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="23" /> 
+    <line num="34" count="24" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="25" /> 
     <line visibility="public" signature="display() : void" num="40" count="2" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="28" /> 
     <line num="42" count="2" type="stmt" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="30" /> 
     <line visibility="public" signature="getStart() : Vertex" num="48" count="1" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="33" /> 
@@ -144,8 +144,8 @@
     <line num="10" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
    </file>  
    <file path="GPL/Graph.java" name="GPL.Graph">   
-    <line visibility="public" signature="Graph()" num="30" count="27" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="17" /> 
-    <line num="31" count="27" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="18" /> 
+    <line visibility="public" signature="Graph()" num="30" count="30" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="17" /> 
+    <line num="31" count="30" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="18" /> 
     <line visibility="private" signature="run__wrappee__DirectedWithNeighbors(Vertex) : void" num="38" count="2" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="22" /> 
     <line visibility="private" signature="run__wrappee__StronglyConnected(Vertex) : void" num="45" count="4" type="method" featureClass="StronglyConnected.GPL.Graph" featureLineNum="11" /> 
     <line num="47" count="4" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="13" /> 
@@ -155,16 +155,16 @@
     <line visibility="public" signature="run(Vertex) : void" num="59" count="4" type="method" featureClass="Cycle.GPL.Graph" featureLineNum="12" /> 
     <line num="61" count="4" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="14" /> 
     <line num="62" count="4" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="15" /> 
-    <line visibility="public" signature="sortVertices(Comparator) : void" num="69" count="11" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="26" /> 
-    <line num="70" count="11" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="27" /> 
-    <line visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="84" count="7" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="38" /> 
-    <line num="86" count="7" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="40" /> 
-    <line num="87" count="7" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="41" /> 
-    <line num="88" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="42" /> 
-    <line visibility="public" signature="addVertex(Vertex) : void" num="95" count="14" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="46" /> 
-    <line num="96" count="14" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="47" /> 
-    <line visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="102" count="10" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="50" /> 
-    <line num="103" count="10" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="51" /> 
+    <line visibility="public" signature="sortVertices(Comparator) : void" num="69" count="12" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="26" /> 
+    <line num="70" count="12" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="27" /> 
+    <line visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="84" count="6" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="38" /> 
+    <line num="86" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="40" /> 
+    <line num="87" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="41" /> 
+    <line num="88" count="5" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="42" /> 
+    <line visibility="public" signature="addVertex(Vertex) : void" num="95" count="15" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="46" /> 
+    <line num="96" count="15" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="47" /> 
+    <line visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="102" count="9" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="50" /> 
+    <line num="103" count="9" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="51" /> 
     <line visibility="public" signature="findsVertex(String) : Vertex" num="110" count="6" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="55" /> 
     <line num="112" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="57" /> 
     <line num="115" count="6" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="60" />  
@@ -174,8 +174,8 @@
     <line num="123" count="3" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="68" />  
     <line num="125" count="1" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="70" /> 
     <line num="129" count="2" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="74" /> 
-    <line visibility="public" signature="getVertices() : VertexIter" num="135" count="22" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="77" /> 
-    <line num="137" count="22" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="79" /> 
+    <line visibility="public" signature="getVertices() : VertexIter" num="135" count="23" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="77" /> 
+    <line num="137" count="23" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="79" /> 
     <line visibility="public" signature="next() : Vertex" num="140" count="16" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="82" /> 
     <line num="142" count="16" type="stmt" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="84" /> 
     <line visibility="public" signature="hasNext() : boolean" num="144" count="21" type="method" featureClass="DirectedWithNeighbors.GPL.Graph" featureLineNum="86" /> 
@@ -250,6 +250,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588609768693">  
+ <testproject timestamp="1588695752490">  
  </testproject> 
 </coverage>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612530147" clover="4.4.1"> 
- <project timestamp="1588612530029">  
+<coverage generated="1588698407765" clover="4.4.1"> 
+ <project timestamp="1588698407672">  
   <package name="GPL">  
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
     <line visibility="public" signature="Vertex()" num="16" count="1" type="method" featureClass="UndirectedWithNeighbors.GPL.Vertex" featureLineNum="13" /> 
@@ -220,6 +220,6 @@
    </file>  
   </package> 
  </project> 
- <testproject timestamp="1588612530029">  
+ <testproject timestamp="1588698407672">  
  </testproject> 
 </coverage>

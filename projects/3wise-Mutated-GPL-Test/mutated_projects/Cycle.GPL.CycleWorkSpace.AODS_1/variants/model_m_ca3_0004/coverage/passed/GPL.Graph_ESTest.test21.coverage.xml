@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588608856278" clover="4.4.1">
-   <project timestamp="1588608856168">
-      <metrics coveredelements="18" complexity="94" loc="929" methods="71" classes="12" statements="169" packages="1" coveredconditionals="2" coveredmethods="6" elements="286" ncloc="464" files="12" conditionals="46" coveredstatements="10"/>
+<coverage generated="1588694850839" clover="4.4.1">
+   <project timestamp="1588694850697">
+      <metrics coveredelements="15" complexity="94" loc="929" methods="71" classes="12" statements="169" packages="1" coveredconditionals="2" coveredmethods="5" elements="286" ncloc="464" files="12" conditionals="46" coveredstatements="8"/>
       <package name="GPL">
-         <metrics coveredelements="18" complexity="94" loc="929" methods="71" classes="12" statements="169" coveredconditionals="2" coveredmethods="6" elements="286" ncloc="464" files="12" conditionals="46" coveredstatements="10"/>
+         <metrics coveredelements="15" complexity="94" loc="929" methods="71" classes="12" statements="169" coveredconditionals="2" coveredmethods="5" elements="286" ncloc="464" files="12" conditionals="46" coveredstatements="8"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0004/src/GPL/EdgeIfc.java" name="EdgeIfc.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="0" loc="41" coveredmethods="0" methods="0" elements="0" classes="1" ncloc="10" statements="0" conditionals="0" coveredstatements="0"/>
             <class name="EdgeIfc">
@@ -25,9 +25,9 @@
             <line num="33" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0004/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="18" coveredconditionals="2" complexity="35" loc="347" coveredmethods="6" methods="21" elements="133" classes="1" ncloc="181" statements="84" conditionals="28" coveredstatements="10"/>
+            <metrics coveredelements="15" coveredconditionals="2" complexity="35" loc="347" coveredmethods="5" methods="21" elements="133" classes="1" ncloc="181" statements="84" conditionals="28" coveredstatements="8"/>
             <class name="Graph">
-               <metrics coveredelements="18" coveredconditionals="2" complexity="35" coveredmethods="6" methods="21" elements="133" statements="84" conditionals="28" coveredstatements="10"/>
+               <metrics coveredelements="15" coveredconditionals="2" complexity="35" coveredmethods="5" methods="21" elements="133" statements="84" conditionals="28" coveredstatements="8"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
@@ -47,8 +47,8 @@
             <line num="82" count="0" type="stmt"/>
             <line num="83" count="0" type="stmt"/>
             <line num="84" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="91" count="1" type="method"/>
-            <line num="92" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="91" count="0" type="method"/>
+            <line num="92" count="0" type="stmt"/>
             <line complexity="1" visibility="private" signature="addEdge__wrappee__DirectedWithNeighbors(Vertex,Neighbor) : void" num="98" count="0" type="method"/>
             <line num="99" count="0" type="stmt"/>
             <line complexity="2" visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="105" count="0" type="method"/>
@@ -138,7 +138,7 @@
             <line num="320" count="1" type="stmt"/>
             <line falsecount="0" truecount="1" num="320" type="cond"/>
             <line num="322" count="1" type="stmt"/>
-            <line num="323" count="1" type="stmt"/>
+            <line num="323" count="0" type="stmt"/>
             <line num="327" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="327" type="cond"/>
             <line num="329" count="0" type="stmt"/>
@@ -341,7 +341,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588608856168">
+   <testproject timestamp="1588694850697">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

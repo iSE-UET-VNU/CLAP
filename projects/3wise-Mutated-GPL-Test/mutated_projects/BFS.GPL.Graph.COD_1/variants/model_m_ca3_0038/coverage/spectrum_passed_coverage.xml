@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611630009" clover="4.4.1"> 
- <project timestamp="1588611629793">  
+<coverage generated="1588697549028" clover="4.4.1"> 
+ <project timestamp="1588697548820">  
   <package name="GPL">  
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
     <line visibility="public" signature="Vertex()" num="21" count="50" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="14" /> 
@@ -14,8 +14,8 @@
     <line visibility="public" signature="assignName(String) : Vertex" num="45" count="3" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="23" /> 
     <line num="46" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
     <line num="47" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="25" /> 
-    <line visibility="public" signature="getName() : String" num="54" count="3" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
-    <line num="56" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
+    <line visibility="public" signature="getName() : String" num="54" count="4" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
+    <line num="56" count="4" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
     <line visibility="public" signature="addAdjacent(Vertex) : void" num="63" count="11" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="35" /> 
     <line num="64" count="11" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="36" /> 
     <line visibility="public" signature="adjustAdorns(Vertex,int) : void" num="70" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="39" /> 
@@ -175,10 +175,10 @@
     <line num="82" count="6" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="56" />  
     <line num="84" count="2" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="58" /> 
     <line num="89" count="7" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="63" />  
-    <line num="92" count="1" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="66" /> 
+    <line num="92" count="0" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="66" /> 
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588611629793">  
+ <testproject timestamp="1588697548820">  
  </testproject> 
 </coverage>

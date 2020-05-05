@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609861068" clover="4.4.1">
-   <project timestamp="1588609860929">
+<coverage generated="1588695860439" clover="4.4.1">
+   <project timestamp="1588695860328">
       <metrics coveredelements="36" complexity="78" loc="734" methods="58" classes="11" statements="123" packages="1" coveredconditionals="2" coveredmethods="12" elements="215" ncloc="356" files="11" conditionals="34" coveredstatements="22"/>
       <package name="GPL">
          <metrics coveredelements="36" complexity="78" loc="734" methods="58" classes="11" statements="123" coveredconditionals="2" coveredmethods="12" elements="215" ncloc="356" files="11" conditionals="34" coveredstatements="22"/>
@@ -231,8 +231,8 @@
             <line num="148" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="152" count="1" type="method"/>
             <line num="154" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="162" count="5" type="method"/>
-            <line num="164" count="5" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="162" count="4" type="method"/>
+            <line num="164" count="4" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="174" count="0" type="method"/>
             <line num="174" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="178" count="0" type="method"/>
@@ -270,7 +270,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609860929">
+   <testproject timestamp="1588695860328">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

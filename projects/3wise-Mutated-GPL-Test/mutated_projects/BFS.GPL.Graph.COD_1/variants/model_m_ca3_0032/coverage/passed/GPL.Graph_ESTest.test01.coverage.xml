@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611196103" clover="4.4.1">
-   <project timestamp="1588611195981">
+<coverage generated="1588697152255" clover="4.4.1">
+   <project timestamp="1588697152144">
       <metrics coveredelements="14" complexity="77" loc="763" methods="56" classes="11" statements="140" packages="1" coveredconditionals="0" coveredmethods="6" elements="238" ncloc="378" files="11" conditionals="42" coveredstatements="8"/>
       <package name="GPL">
          <metrics coveredelements="14" complexity="77" loc="763" methods="56" classes="11" statements="140" coveredconditionals="0" coveredmethods="6" elements="238" ncloc="378" files="11" conditionals="42" coveredstatements="8"/>
@@ -177,8 +177,8 @@
             <line num="72" count="0" type="stmt"/>
             <line num="73" count="0" type="stmt"/>
             <line num="74" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="81" count="2" type="method"/>
-            <line num="82" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="81" count="1" type="method"/>
+            <line num="82" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="88" count="0" type="method"/>
             <line num="89" count="0" type="stmt"/>
             <line complexity="4" visibility="public" signature="findsVertex(String) : Vertex" num="96" count="0" type="method"/>
@@ -289,7 +289,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611195981">
+   <testproject timestamp="1588697152144">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

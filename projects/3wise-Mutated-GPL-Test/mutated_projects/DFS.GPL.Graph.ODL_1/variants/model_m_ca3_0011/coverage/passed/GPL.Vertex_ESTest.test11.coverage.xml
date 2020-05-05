@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609494454" clover="4.4.1">
-   <project timestamp="1588609494352">
+<coverage generated="1588695487625" clover="4.4.1">
+   <project timestamp="1588695487537">
       <metrics coveredelements="10" complexity="101" loc="899" methods="73" classes="13" statements="156" packages="1" coveredconditionals="0" coveredmethods="4" elements="273" ncloc="455" files="13" conditionals="44" coveredstatements="6"/>
       <package name="GPL">
          <metrics coveredelements="10" complexity="101" loc="899" methods="73" classes="13" statements="156" coveredconditionals="0" coveredmethods="4" elements="273" ncloc="455" files="13" conditionals="44" coveredstatements="6"/>
@@ -174,12 +174,12 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="46" count="0" type="method"/>
             <line num="48" count="0" type="stmt"/>
             <line num="49" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="55" count="1" type="method"/>
-            <line num="57" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="55" count="0" type="method"/>
+            <line num="57" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="63" count="0" type="method"/>
             <line num="65" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="72" count="0" type="method"/>
-            <line num="74" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="72" count="1" type="method"/>
+            <line num="74" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : Vertex" num="77" count="0" type="method"/>
             <line num="79" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="81" count="0" type="method"/>
@@ -335,7 +335,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609494352">
+   <testproject timestamp="1588695487537">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

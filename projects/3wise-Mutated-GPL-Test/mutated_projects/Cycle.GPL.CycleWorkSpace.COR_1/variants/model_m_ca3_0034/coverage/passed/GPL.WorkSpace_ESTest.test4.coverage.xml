@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611432668" clover="4.4.1">
-   <project timestamp="1588611432571">
-      <metrics coveredelements="9" complexity="76" loc="653" methods="56" classes="12" statements="126" packages="1" coveredconditionals="0" coveredmethods="4" elements="222" ncloc="322" files="12" conditionals="40" coveredstatements="5"/>
+<coverage generated="1588697344590" clover="4.4.1">
+   <project timestamp="1588697344491">
+      <metrics coveredelements="11" complexity="76" loc="653" methods="56" classes="12" statements="126" packages="1" coveredconditionals="0" coveredmethods="5" elements="222" ncloc="322" files="12" conditionals="40" coveredstatements="6"/>
       <package name="GPL">
-         <metrics coveredelements="9" complexity="76" loc="653" methods="56" classes="12" statements="126" coveredconditionals="0" coveredmethods="4" elements="222" ncloc="322" files="12" conditionals="40" coveredstatements="5"/>
+         <metrics coveredelements="11" complexity="76" loc="653" methods="56" classes="12" statements="126" coveredconditionals="0" coveredmethods="5" elements="222" ncloc="322" files="12" conditionals="40" coveredstatements="6"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0034/src/GPL/Edge.java" name="Edge.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="10" loc="75" coveredmethods="0" methods="8" elements="23" classes="1" ncloc="33" statements="11" conditionals="4" coveredstatements="0"/>
             <class name="Edge">
@@ -48,12 +48,12 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0034/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="8" coveredconditionals="0" complexity="23" loc="192" coveredmethods="3" methods="17" elements="73" classes="1" ncloc="102" statements="44" conditionals="12" coveredstatements="5"/>
+            <metrics coveredelements="10" coveredconditionals="0" complexity="23" loc="192" coveredmethods="4" methods="17" elements="73" classes="1" ncloc="102" statements="44" conditionals="12" coveredstatements="6"/>
             <class name="Vertex">
-               <metrics coveredelements="8" coveredconditionals="0" complexity="23" coveredmethods="3" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="5"/>
+               <metrics coveredelements="10" coveredconditionals="0" complexity="23" coveredmethods="4" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="6"/>
             </class>
-            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="0" type="method"/>
-            <line num="21" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="1" type="method"/>
+            <line num="21" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="Vertex()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
             <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DirectedWithEdges() : void" num="33" count="1" type="method"/>
@@ -280,7 +280,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611432571">
+   <testproject timestamp="1588697344491">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

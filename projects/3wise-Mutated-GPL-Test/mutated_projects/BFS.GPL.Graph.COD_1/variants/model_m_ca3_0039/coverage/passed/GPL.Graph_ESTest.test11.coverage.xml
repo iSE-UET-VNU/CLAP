@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611729044" clover="4.4.1">
-   <project timestamp="1588611728912">
-      <metrics coveredelements="4" complexity="64" loc="580" methods="47" classes="10" statements="104" packages="1" coveredconditionals="0" coveredmethods="2" elements="185" ncloc="277" files="10" conditionals="34" coveredstatements="2"/>
+<coverage generated="1588697634103" clover="4.4.1">
+   <project timestamp="1588697633976">
+      <metrics coveredelements="6" complexity="64" loc="580" methods="47" classes="10" statements="104" packages="1" coveredconditionals="0" coveredmethods="3" elements="185" ncloc="277" files="10" conditionals="34" coveredstatements="3"/>
       <package name="GPL">
-         <metrics coveredelements="4" complexity="64" loc="580" methods="47" classes="10" statements="104" coveredconditionals="0" coveredmethods="2" elements="185" ncloc="277" files="10" conditionals="34" coveredstatements="2"/>
+         <metrics coveredelements="6" complexity="64" loc="580" methods="47" classes="10" statements="104" coveredconditionals="0" coveredmethods="3" elements="185" ncloc="277" files="10" conditionals="34" coveredstatements="3"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0039/src/GPL/GlobalVarsWrapper.java" name="GlobalVarsWrapper.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="0" loc="12" coveredmethods="0" methods="0" elements="0" classes="1" ncloc="5" statements="0" conditionals="0" coveredstatements="0"/>
             <class name="GlobalVarsWrapper">
@@ -27,9 +27,9 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0039/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="4" coveredconditionals="0" complexity="22" loc="174" coveredmethods="2" methods="14" elements="70" classes="1" ncloc="93" statements="40" conditionals="16" coveredstatements="2"/>
+            <metrics coveredelements="6" coveredconditionals="0" complexity="22" loc="174" coveredmethods="3" methods="14" elements="70" classes="1" ncloc="93" statements="40" conditionals="16" coveredstatements="3"/>
             <class name="Graph">
-               <metrics coveredelements="4" coveredconditionals="0" complexity="22" coveredmethods="2" methods="14" elements="70" statements="40" conditionals="16" coveredstatements="2"/>
+               <metrics coveredelements="6" coveredconditionals="0" complexity="22" coveredmethods="3" methods="14" elements="70" statements="40" conditionals="16" coveredstatements="3"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
@@ -46,8 +46,8 @@
             <line num="68" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="75" count="0" type="method"/>
             <line num="76" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addAnEdge(Vertex,Vertex,int) : void" num="83" count="0" type="method"/>
-            <line num="85" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addAnEdge(Vertex,Vertex,int) : void" num="83" count="1" type="method"/>
+            <line num="85" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="93" count="0" type="method"/>
             <line num="94" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="101" count="1" type="method"/>
@@ -234,7 +234,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611728912">
+   <testproject timestamp="1588697633976">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610688911" clover="4.4.1">
-   <project timestamp="1588610688808">
-      <metrics coveredelements="37" complexity="84" loc="752" methods="59" classes="10" statements="129" packages="1" coveredconditionals="3" coveredmethods="12" elements="226" ncloc="364" files="10" conditionals="38" coveredstatements="22"/>
+<coverage generated="1588696619480" clover="4.4.1">
+   <project timestamp="1588696619379">
+      <metrics coveredelements="34" complexity="84" loc="752" methods="59" classes="10" statements="129" packages="1" coveredconditionals="3" coveredmethods="11" elements="226" ncloc="364" files="10" conditionals="38" coveredstatements="20"/>
       <package name="GPL">
-         <metrics coveredelements="37" complexity="84" loc="752" methods="59" classes="10" statements="129" coveredconditionals="3" coveredmethods="12" elements="226" ncloc="364" files="10" conditionals="38" coveredstatements="22"/>
+         <metrics coveredelements="34" complexity="84" loc="752" methods="59" classes="10" statements="129" coveredconditionals="3" coveredmethods="11" elements="226" ncloc="364" files="10" conditionals="38" coveredstatements="20"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0026/src/GPL/WorkSpace.java" name="WorkSpace.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="5" loc="27" coveredmethods="0" methods="5" elements="5" classes="1" ncloc="9" statements="0" conditionals="0" coveredstatements="0"/>
             <class name="WorkSpace">
@@ -190,9 +190,9 @@
             <line num="241" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0026/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="21" coveredconditionals="0" complexity="30" loc="256" coveredmethods="9" methods="26" elements="80" classes="1" ncloc="130" statements="46" conditionals="8" coveredstatements="12"/>
+            <metrics coveredelements="18" coveredconditionals="0" complexity="30" loc="256" coveredmethods="8" methods="26" elements="80" classes="1" ncloc="130" statements="46" conditionals="8" coveredstatements="10"/>
             <class name="Vertex">
-               <metrics coveredelements="21" coveredconditionals="0" complexity="30" coveredmethods="9" methods="26" elements="80" statements="46" conditionals="8" coveredstatements="12"/>
+               <metrics coveredelements="18" coveredconditionals="0" complexity="30" coveredmethods="8" methods="26" elements="80" statements="46" conditionals="8" coveredstatements="10"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="20" count="2" type="method"/>
             <line num="22" count="2" type="stmt"/>
@@ -202,9 +202,9 @@
             <line complexity="1" visibility="public" signature="VertexConstructor() : void" num="37" count="2" type="method"/>
             <line num="39" count="2" type="stmt"/>
             <line num="40" count="2" type="stmt"/>
-            <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="46" count="1" type="method"/>
-            <line num="48" count="1" type="stmt"/>
-            <line num="49" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="46" count="0" type="method"/>
+            <line num="48" count="0" type="stmt"/>
+            <line num="49" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="55" count="0" type="method"/>
             <line num="57" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : Vertex" num="60" count="0" type="method"/>
@@ -273,7 +273,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610688808">
+   <testproject timestamp="1588696619379">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

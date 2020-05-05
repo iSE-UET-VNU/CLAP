@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611041700" clover="4.4.1">
-   <project timestamp="1588611041574">
+<coverage generated="1588696947500" clover="4.4.1">
+   <project timestamp="1588696947384">
       <metrics coveredelements="6" complexity="109" loc="1058" methods="68" classes="11" statements="229" packages="1" coveredconditionals="0" coveredmethods="2" elements="365" ncloc="527" files="11" conditionals="68" coveredstatements="4"/>
       <package name="GPL">
          <metrics coveredelements="6" complexity="109" loc="1058" methods="68" classes="11" statements="229" coveredconditionals="0" coveredmethods="2" elements="365" ncloc="527" files="11" conditionals="68" coveredstatements="4"/>
@@ -164,10 +164,10 @@
             <line num="68" count="0" type="stmt"/>
             <line num="70" count="0" type="stmt"/>
             <line num="72" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="sortEdges(Comparator) : void" num="78" count="1" type="method"/>
-            <line num="79" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="85" count="0" type="method"/>
-            <line num="86" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="sortEdges(Comparator) : void" num="78" count="0" type="method"/>
+            <line num="79" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="85" count="1" type="method"/>
+            <line num="86" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="93" count="0" type="method"/>
             <line num="94" count="0" type="stmt"/>
             <line num="95" count="0" type="stmt"/>
@@ -403,7 +403,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611041574">
+   <testproject timestamp="1588696947384">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

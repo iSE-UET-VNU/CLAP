@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610593704" clover="4.4.1"> 
- <project timestamp="1588610593515">  
+<coverage generated="1588696545160" clover="4.4.1"> 
+ <project timestamp="1588696544961">  
   <package name="GPL">   
    <file path="GPL/CycleWorkSpace.java" name="GPL.CycleWorkSpace">   
     <line visibility="public" signature="CycleWorkSpace(boolean)" num="31" count="17" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="17" /> 
@@ -25,9 +25,9 @@
     <line num="92" count="2" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="66" /> 
    </file> 
    <file path="GPL/Edge.java" name="GPL.Edge">   
-    <line visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="13" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="10" /> 
-    <line num="16" count="13" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="12" /> 
-    <line num="17" count="13" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="13" /> 
+    <line visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="14" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="10" /> 
+    <line num="16" count="14" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="12" /> 
+    <line num="17" count="14" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="13" /> 
     <line visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="25" count="1" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="18" /> 
     <line visibility="public" signature="setWeight(int) : void" num="32" count="1" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="22" /> 
     <line visibility="public" signature="getWeight() : int" num="36" count="4" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="23" /> 
@@ -46,9 +46,9 @@
     <line num="71" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="46" /> 
    </file> 
    <file path="GPL/Neighbor.java" name="GPL.Neighbor">   
-    <line visibility="public" signature="Neighbor()" num="17" count="29" type="method" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="11" /> 
-    <line num="18" count="29" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="12" /> 
-    <line num="19" count="29" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="13" /> 
+    <line visibility="public" signature="Neighbor()" num="17" count="30" type="method" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="11" /> 
+    <line num="18" count="30" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="12" /> 
+    <line num="19" count="30" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="13" /> 
     <line visibility="public" signature="Neighbor(Vertex,Edge)" num="25" count="6" type="method" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="16" /> 
     <line num="26" count="6" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="17" /> 
     <line num="27" count="6" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="18" /> 
@@ -135,8 +135,8 @@
     <line num="10" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
    </file> 
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
-    <line visibility="public" signature="getName() : String" num="23" count="14" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="17" /> 
-    <line num="23" count="14" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="17" /> 
+    <line visibility="public" signature="getName() : String" num="23" count="16" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="17" /> 
+    <line num="23" count="16" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="17" /> 
     <line visibility="public" signature="Vertex()" num="28" count="48" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="19" /> 
     <line num="29" count="48" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="20" /> 
     <line visibility="private" signature="VertexConstructor__wrappee__DirectedWithEdges() : void" num="35" count="48" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="23" /> 
@@ -214,6 +214,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588610593515">  
+ <testproject timestamp="1588696544961">  
  </testproject> 
 </coverage>

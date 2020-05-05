@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609597980" clover="4.4.1">
-   <project timestamp="1588609597847">
+<coverage generated="1588695620578" clover="4.4.1">
+   <project timestamp="1588695620470">
       <metrics coveredelements="57" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="3" coveredmethods="19" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="35"/>
       <package name="GPL">
          <metrics coveredelements="57" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="3" coveredmethods="19" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="35"/>
@@ -247,14 +247,14 @@
             </class>
             <line complexity="1" visibility="public" signature="Neighbor()" num="18" count="0" type="method"/>
             <line num="19" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="Neighbor(Vertex)" num="25" count="2" type="method"/>
-            <line num="27" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="Neighbor(Vertex)" num="25" count="1" type="method"/>
+            <line num="27" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="33" count="0" type="method"/>
             <line num="35" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getWeight() : int" num="41" count="0" type="method"/>
             <line num="43" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="49" count="3" type="method"/>
-            <line num="50" count="3" type="stmt"/>
+            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="49" count="2" type="method"/>
+            <line num="50" count="2" type="stmt"/>
             <line complexity="1" visibility="private" signature="display__wrappee__UndirectedWithNeighbors() : void" num="56" count="0" type="method"/>
             <line num="58" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="display() : void" num="64" count="0" type="method"/>
@@ -438,7 +438,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609597847">
+   <testproject timestamp="1588695620470">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

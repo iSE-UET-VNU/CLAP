@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611709221" clover="4.4.1"> 
- <project timestamp="1588611709009">  
+<coverage generated="1588697624361" clover="4.4.1"> 
+ <project timestamp="1588697624175">  
   <package name="GPL">    
    <file path="GPL/EdgeIter.java" name="GPL.EdgeIter">   
     <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.EdgeIter" featureLineNum="5" /> 
@@ -9,10 +9,10 @@
     <line num="10" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
    </file> 
    <file path="GPL/Graph.java" name="GPL.Graph">   
-    <line visibility="public" signature="Graph()" num="26" count="28" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="17" /> 
-    <line num="27" count="28" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="18" /> 
-    <line visibility="public" signature="getVertices() : VertexIter" num="33" count="13" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="21" /> 
-    <line num="36" count="13" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="24" /> 
+    <line visibility="public" signature="Graph()" num="26" count="27" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="17" /> 
+    <line num="27" count="27" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="18" /> 
+    <line visibility="public" signature="getVertices() : VertexIter" num="33" count="12" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="21" /> 
+    <line num="36" count="12" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="24" /> 
     <line visibility="public" signature="next() : Vertex" num="39" count="8" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="27" /> 
     <line num="41" count="8" type="stmt" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="29" /> 
     <line visibility="public" signature="hasNext() : boolean" num="43" count="11" type="method" featureClass="DirectedOnlyVertices.GPL.Graph" featureLineNum="31" /> 
@@ -83,8 +83,8 @@
     <line visibility="public" signature="assignName(String) : Vertex" num="44" count="4" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="23" /> 
     <line num="45" count="4" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
     <line num="46" count="4" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="25" /> 
-    <line visibility="public" signature="getName() : String" num="53" count="4" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
-    <line num="55" count="4" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
+    <line visibility="public" signature="getName() : String" num="53" count="3" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
+    <line num="55" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
     <line visibility="public" signature="addAdjacent(Vertex) : void" num="62" count="9" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="35" /> 
     <line num="63" count="9" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="36" /> 
     <line visibility="public" signature="adjustAdorns(Vertex,int) : void" num="69" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="39" /> 
@@ -169,6 +169,6 @@
    </file>  
   </package> 
  </project> 
- <testproject timestamp="1588611709009">  
+ <testproject timestamp="1588697624175">  
  </testproject> 
 </coverage>

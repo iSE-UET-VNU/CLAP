@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610381202" clover="4.4.1">
-   <project timestamp="1588610381089">
+<coverage generated="1588696324425" clover="4.4.1">
+   <project timestamp="1588696324321">
       <metrics coveredelements="4" complexity="73" loc="667" methods="55" classes="10" statements="108" packages="1" coveredconditionals="0" coveredmethods="2" elements="193" ncloc="324" files="10" conditionals="30" coveredstatements="2"/>
       <package name="GPL">
          <metrics coveredelements="4" complexity="73" loc="667" methods="55" classes="10" statements="108" coveredconditionals="0" coveredmethods="2" elements="193" ncloc="324" files="10" conditionals="30" coveredstatements="2"/>
@@ -24,12 +24,12 @@
             <line num="37" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="42" count="0" type="method"/>
             <line num="43" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="display() : void" num="49" count="1" type="method"/>
-            <line num="51" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="display() : void" num="49" count="0" type="method"/>
+            <line num="51" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="57" count="0" type="method"/>
             <line num="57" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="61" count="0" type="method"/>
-            <line num="61" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="61" count="1" type="method"/>
+            <line num="61" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="66" count="0" type="method"/>
             <line num="68" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="74" count="0" type="method"/>
@@ -244,7 +244,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610381089">
+   <testproject timestamp="1588696324321">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

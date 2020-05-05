@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612518966" clover="4.4.1">
-   <project timestamp="1588612518856">
-      <metrics coveredelements="14" complexity="86" loc="821" methods="66" classes="11" statements="134" packages="1" coveredconditionals="0" coveredmethods="6" elements="234" ncloc="404" files="11" conditionals="34" coveredstatements="8"/>
+<coverage generated="1588698397256" clover="4.4.1">
+   <project timestamp="1588698397158">
+      <metrics coveredelements="15" complexity="86" loc="821" methods="66" classes="11" statements="134" packages="1" coveredconditionals="0" coveredmethods="6" elements="234" ncloc="404" files="11" conditionals="34" coveredstatements="9"/>
       <package name="GPL">
-         <metrics coveredelements="14" complexity="86" loc="821" methods="66" classes="11" statements="134" coveredconditionals="0" coveredmethods="6" elements="234" ncloc="404" files="11" conditionals="34" coveredstatements="8"/>
+         <metrics coveredelements="15" complexity="86" loc="821" methods="66" classes="11" statements="134" coveredconditionals="0" coveredmethods="6" elements="234" ncloc="404" files="11" conditionals="34" coveredstatements="9"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0048/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="10" coveredconditionals="0" complexity="28" loc="252" coveredmethods="4" methods="22" elements="85" classes="1" ncloc="145" statements="51" conditionals="12" coveredstatements="6"/>
+            <metrics coveredelements="8" coveredconditionals="0" complexity="28" loc="252" coveredmethods="3" methods="22" elements="85" classes="1" ncloc="145" statements="51" conditionals="12" coveredstatements="5"/>
             <class name="Vertex">
-               <metrics coveredelements="10" coveredconditionals="0" complexity="28" coveredmethods="4" methods="22" elements="85" statements="51" conditionals="12" coveredstatements="6"/>
+               <metrics coveredelements="8" coveredconditionals="0" complexity="28" coveredmethods="3" methods="22" elements="85" statements="51" conditionals="12" coveredstatements="5"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="16" count="1" type="method"/>
             <line num="18" count="1" type="stmt"/>
@@ -20,8 +20,8 @@
             <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="42" count="0" type="method"/>
             <line num="44" count="0" type="stmt"/>
             <line num="45" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="51" count="1" type="method"/>
-            <line num="53" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="51" count="0" type="method"/>
+            <line num="53" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="59" count="0" type="method"/>
             <line num="61" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="67" count="0" type="method"/>
@@ -238,9 +238,9 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0048/src/GPL/Neighbor.java" name="Neighbor.java">
-            <metrics coveredelements="4" coveredconditionals="0" complexity="13" loc="114" coveredmethods="2" methods="13" elements="27" classes="1" ncloc="50" statements="14" conditionals="0" coveredstatements="2"/>
+            <metrics coveredelements="7" coveredconditionals="0" complexity="13" loc="114" coveredmethods="3" methods="13" elements="27" classes="1" ncloc="50" statements="14" conditionals="0" coveredstatements="4"/>
             <class name="Neighbor">
-               <metrics coveredelements="4" coveredconditionals="0" complexity="13" coveredmethods="2" methods="13" elements="27" statements="14" conditionals="0" coveredstatements="2"/>
+               <metrics coveredelements="7" coveredconditionals="0" complexity="13" coveredmethods="3" methods="13" elements="27" statements="14" conditionals="0" coveredstatements="4"/>
             </class>
             <line complexity="1" visibility="public" signature="Neighbor()" num="18" count="1" type="method"/>
             <line num="19" count="1" type="stmt"/>
@@ -266,9 +266,9 @@
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="90" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="Neighbor(Vertex,int)" num="100" count="0" type="method"/>
             <line num="101" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex,int) : void" num="107" count="0" type="method"/>
-            <line num="109" count="0" type="stmt"/>
-            <line num="110" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex,int) : void" num="107" count="1" type="method"/>
+            <line num="109" count="1" type="stmt"/>
+            <line num="110" count="1" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0048/src/GPL/WorkSpace.java" name="WorkSpace.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="5" loc="30" coveredmethods="0" methods="5" elements="5" classes="1" ncloc="10" statements="0" conditionals="0" coveredstatements="0"/>
@@ -289,7 +289,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612518856">
+   <testproject timestamp="1588698397158">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

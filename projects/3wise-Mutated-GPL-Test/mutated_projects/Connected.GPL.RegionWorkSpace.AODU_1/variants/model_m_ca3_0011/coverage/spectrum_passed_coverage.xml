@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609408215" clover="4.4.1"> 
- <project timestamp="1588609408035">  
+<coverage generated="1588695409800" clover="4.4.1"> 
+ <project timestamp="1588695409614">  
   <package name="GPL">  
    <file path="GPL/Vertex.java" name="GPL.Vertex">   
-    <line visibility="public" signature="Vertex()" num="20" count="63" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="13" /> 
-    <line num="22" count="63" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="15" /> 
-    <line visibility="private" signature="VertexConstructor__wrappee__UndirectedWithEdges() : void" num="28" count="63" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="18" /> 
-    <line num="30" count="63" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="20" /> 
-    <line num="31" count="63" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="21" /> 
-    <line visibility="public" signature="VertexConstructor() : void" num="37" count="63" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
-    <line num="39" count="63" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
-    <line num="40" count="63" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
+    <line visibility="public" signature="Vertex()" num="20" count="61" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="13" /> 
+    <line num="22" count="61" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="15" /> 
+    <line visibility="private" signature="VertexConstructor__wrappee__UndirectedWithEdges() : void" num="28" count="61" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="18" /> 
+    <line num="30" count="61" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="20" /> 
+    <line num="31" count="61" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="21" /> 
+    <line visibility="public" signature="VertexConstructor() : void" num="37" count="61" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
+    <line num="39" count="61" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
+    <line num="40" count="61" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
     <line visibility="public" signature="assignName(String) : Vertex" num="46" count="8" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="24" /> 
     <line num="48" count="8" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="26" /> 
     <line num="49" count="8" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="27" /> 
@@ -43,8 +43,8 @@
     <line num="134" count="2" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="49" /> 
     <line num="136" count="5" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="51" /> 
     <line num="137" count="7" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="52" /> 
-    <line visibility="public" signature="addNeighbor(Neighbor) : void" num="146" count="14" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="72" /> 
-    <line num="148" count="14" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="74" /> 
+    <line visibility="public" signature="addNeighbor(Neighbor) : void" num="146" count="13" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="72" /> 
+    <line num="148" count="13" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="74" /> 
     <line visibility="public" signature="getEdges() : EdgeIter" num="154" count="8" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="77" /> 
     <line num="156" count="8" type="stmt" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="79" /> 
     <line visibility="public" signature="next() : EdgeIfc" num="159" count="6" type="method" featureClass="UndirectedWithEdges.GPL.Vertex" featureLineNum="82" /> 
@@ -54,17 +54,17 @@
     <line visibility="public" signature="init_vertex(WorkSpace) : void" num="188" count="10" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="15" /> 
     <line num="190" count="10" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="17" /> 
     <line num="191" count="10" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="18" /> 
-    <line visibility="public" signature="nodeSearch(WorkSpace) : void" num="197" count="15" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="21" /> 
-    <line num="199" count="15" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="23" /> 
-    <line num="203" count="15" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="27" /> 
+    <line visibility="public" signature="nodeSearch(WorkSpace) : void" num="197" count="14" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="21" /> 
+    <line num="199" count="14" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="23" /> 
+    <line num="203" count="14" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="27" /> 
     <line num="205" count="14" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="29" />  
-    <line num="206" count="4" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="30" /> 
+    <line num="206" count="3" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="30" /> 
     <line num="210" count="14" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="34" /> 
     <line num="212" count="14" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="36" />  
     <line num="214" count="9" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="38" /> 
     <line num="215" count="4" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="39" /> 
     <line num="216" count="3" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="40" /> 
-    <line num="220" count="8" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="44" /> 
+    <line num="220" count="7" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="44" /> 
    </file>   
    <file path="GPL/NumberWorkSpace.java" name="GPL.NumberWorkSpace">   
     <line visibility="public" signature="NumberWorkSpace()" num="12" count="6" type="method" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="9" /> 
@@ -74,18 +74,18 @@
     <line num="25" count="3" type="stmt" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="19" /> 
    </file> 
    <file path="GPL/Edge.java" name="GPL.Edge">   
-    <line visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="14" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="11" /> 
-    <line num="16" count="14" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="13" /> 
-    <line num="17" count="14" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="14" /> 
+    <line visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="12" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="11" /> 
+    <line num="16" count="12" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="13" /> 
+    <line num="17" count="12" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="14" /> 
     <line visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="23" count="1" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="17" /> 
     <line visibility="public" signature="setWeight(int) : void" num="30" count="1" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="21" /> 
     <line visibility="public" signature="getWeight() : int" num="37" count="5" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="25" /> 
     <line num="39" count="5" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="27" /> 
-    <line visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="45" count="4" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="30" /> 
-    <line num="47" count="4" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="32" />  
+    <line visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="45" count="2" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="30" /> 
+    <line num="47" count="2" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="32" />  
     <line num="49" count="1" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="34" /> 
-    <line num="51" count="3" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="36" />  
-    <line num="53" count="2" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="38" /> 
+    <line num="51" count="2" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="36" />  
+    <line num="53" count="1" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="38" /> 
     <line num="57" count="1" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="42" /> 
     <line visibility="public" signature="getStart() : Vertex" num="64" count="7" type="method" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="46" /> 
     <line num="66" count="7" type="stmt" featureClass="UndirectedWithEdges.GPL.Edge" featureLineNum="48" /> 
@@ -197,33 +197,33 @@
     <line num="10" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
    </file> 
    <file path="GPL/Neighbor.java" name="GPL.Neighbor">   
-    <line visibility="public" signature="Neighbor()" num="17" count="34" type="method" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="12" /> 
-    <line num="19" count="34" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="14" /> 
-    <line num="20" count="34" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="15" /> 
-    <line visibility="public" signature="Neighbor(Vertex,Edge)" num="26" count="14" type="method" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="18" /> 
-    <line num="28" count="14" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="20" /> 
-    <line num="29" count="14" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="21" /> 
+    <line visibility="public" signature="Neighbor()" num="17" count="27" type="method" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="12" /> 
+    <line num="19" count="27" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="14" /> 
+    <line num="20" count="27" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="15" /> 
+    <line visibility="public" signature="Neighbor(Vertex,Edge)" num="26" count="11" type="method" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="18" /> 
+    <line num="28" count="11" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="20" /> 
+    <line num="29" count="11" type="stmt" featureClass="UndirectedWithEdges.GPL.Neighbor" featureLineNum="21" /> 
    </file> 
    <file path="GPL/CycleWorkSpace.java" name="GPL.CycleWorkSpace">   
-    <line visibility="public" signature="CycleWorkSpace(boolean)" num="31" count="20" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="17" /> 
-    <line num="32" count="20" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="18" /> 
-    <line num="33" count="20" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="19" /> 
-    <line num="34" count="20" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="20" /> 
+    <line visibility="public" signature="CycleWorkSpace(boolean)" num="31" count="21" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="17" /> 
+    <line num="32" count="21" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="18" /> 
+    <line num="33" count="21" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="19" /> 
+    <line num="34" count="21" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="20" /> 
     <line visibility="public" signature="init_vertex(Vertex) : void" num="40" count="6" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="23" /> 
     <line num="42" count="6" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="25" /> 
     <line num="43" count="5" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="26" /> 
-    <line visibility="public" signature="preVisitAction(Vertex) : void" num="49" count="11" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="29" /> 
-    <line num="52" count="11" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="32" />  
-    <line num="55" count="10" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="35" /> 
-    <line num="56" count="10" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="36" /> 
+    <line visibility="public" signature="preVisitAction(Vertex) : void" num="49" count="12" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="29" /> 
+    <line num="52" count="12" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="32" />  
+    <line num="55" count="11" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="35" /> 
+    <line num="56" count="11" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="36" /> 
     <line visibility="public" signature="postVisitAction(Vertex) : void" num="63" count="5" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="40" /> 
     <line num="65" count="5" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="42" /> 
     <line num="66" count="4" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="43" /> 
-    <line visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="72" count="11" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="46" /> 
-    <line num="80" count="11" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="54" />  
-    <line num="82" count="4" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="56" />  
+    <line visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="72" count="12" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="46" /> 
+    <line num="80" count="12" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="54" />  
+    <line num="82" count="3" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="56" />  
     <line num="84" count="1" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="58" /> 
-    <line num="89" count="7" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="63" />  
+    <line num="89" count="9" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="63" />  
     <line num="92" count="3" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="66" /> 
    </file> 
    <file path="GPL/Main.java" name="GPL.Main">   
@@ -243,7 +243,7 @@
    <file path="GPL/WorkSpace.java" name="GPL.WorkSpace">   
     <line visibility="public" signature="init_vertex(Vertex) : void" num="7" count="6" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="6" /> 
     <line visibility="public" signature="preVisitAction(Vertex) : void" num="11" count="10" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="7" /> 
-    <line visibility="public" signature="postVisitAction(Vertex) : void" num="15" count="7" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="8" /> 
+    <line visibility="public" signature="postVisitAction(Vertex) : void" num="15" count="6" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="8" /> 
     <line visibility="public" signature="nextRegionAction(Vertex) : void" num="19" count="8" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="9" /> 
     <line visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="23" count="3" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="10" /> 
    </file> 
@@ -255,6 +255,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588609408035">  
+ <testproject timestamp="1588695409614">  
  </testproject> 
 </coverage>

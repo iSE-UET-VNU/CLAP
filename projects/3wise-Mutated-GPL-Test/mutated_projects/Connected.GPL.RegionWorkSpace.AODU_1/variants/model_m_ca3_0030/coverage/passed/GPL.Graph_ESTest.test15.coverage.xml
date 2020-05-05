@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611031648" clover="4.4.1">
-   <project timestamp="1588611031518">
-      <metrics coveredelements="13" complexity="109" loc="1066" methods="68" classes="11" statements="229" packages="1" coveredconditionals="1" coveredmethods="4" elements="365" ncloc="533" files="11" conditionals="68" coveredstatements="8"/>
+<coverage generated="1588696941959" clover="4.4.1">
+   <project timestamp="1588696941836">
+      <metrics coveredelements="21" complexity="109" loc="1066" methods="68" classes="11" statements="229" packages="1" coveredconditionals="1" coveredmethods="6" elements="365" ncloc="533" files="11" conditionals="68" coveredstatements="14"/>
       <package name="GPL">
-         <metrics coveredelements="13" complexity="109" loc="1066" methods="68" classes="11" statements="229" coveredconditionals="1" coveredmethods="4" elements="365" ncloc="533" files="11" conditionals="68" coveredstatements="8"/>
+         <metrics coveredelements="21" complexity="109" loc="1066" methods="68" classes="11" statements="229" coveredconditionals="1" coveredmethods="6" elements="365" ncloc="533" files="11" conditionals="68" coveredstatements="14"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0030/src/GPL/CycleWorkSpace.java" name="CycleWorkSpace.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="12" loc="99" coveredmethods="0" methods="5" elements="28" classes="1" ncloc="51" statements="15" conditionals="8" coveredstatements="0"/>
+            <metrics coveredelements="4" coveredconditionals="0" complexity="12" loc="99" coveredmethods="1" methods="5" elements="28" classes="1" ncloc="51" statements="15" conditionals="8" coveredstatements="3"/>
             <class name="CycleWorkSpace">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="12" coveredmethods="0" methods="5" elements="28" statements="15" conditionals="8" coveredstatements="0"/>
+               <metrics coveredelements="4" coveredconditionals="0" complexity="12" coveredmethods="1" methods="5" elements="28" statements="15" conditionals="8" coveredstatements="3"/>
             </class>
-            <line complexity="1" visibility="public" signature="CycleWorkSpace(boolean)" num="31" count="0" type="method"/>
-            <line num="32" count="0" type="stmt"/>
-            <line num="33" count="0" type="stmt"/>
-            <line num="34" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="CycleWorkSpace(boolean)" num="31" count="1" type="method"/>
+            <line num="32" count="1" type="stmt"/>
+            <line num="33" count="1" type="stmt"/>
+            <line num="34" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="init_vertex(Vertex) : void" num="40" count="0" type="method"/>
             <line num="42" count="0" type="stmt"/>
             <line num="43" count="0" type="stmt"/>
@@ -206,9 +206,9 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0030/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="13" coveredconditionals="1" complexity="47" loc="463" coveredmethods="4" methods="21" elements="202" classes="1" ncloc="232" statements="137" conditionals="44" coveredstatements="8"/>
+            <metrics coveredelements="17" coveredconditionals="1" complexity="47" loc="463" coveredmethods="5" methods="21" elements="202" classes="1" ncloc="232" statements="137" conditionals="44" coveredstatements="11"/>
             <class name="Graph">
-               <metrics coveredelements="13" coveredconditionals="1" complexity="47" coveredmethods="4" methods="21" elements="202" statements="137" conditionals="44" coveredstatements="8"/>
+               <metrics coveredelements="17" coveredconditionals="1" complexity="47" coveredmethods="5" methods="21" elements="202" statements="137" conditionals="44" coveredstatements="11"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="36" count="1" type="method"/>
             <line num="37" count="1" type="stmt"/>
@@ -276,10 +276,10 @@
             <line falsecount="0" truecount="0" num="196" type="cond"/>
             <line num="197" count="0" type="stmt"/>
             <line num="199" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="CycleCheck() : boolean" num="205" count="0" type="method"/>
-            <line num="206" count="0" type="stmt"/>
-            <line num="207" count="0" type="stmt"/>
-            <line num="208" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="CycleCheck() : boolean" num="205" count="1" type="method"/>
+            <line num="206" count="1" type="stmt"/>
+            <line num="207" count="1" type="stmt"/>
+            <line num="208" count="1" type="stmt"/>
             <line complexity="13" visibility="public" signature="Prim(Vertex) : Graph" num="214" count="0" type="method"/>
             <line num="215" count="0" type="stmt"/>
             <line num="217" count="0" type="stmt"/>
@@ -403,7 +403,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611031518">
+   <testproject timestamp="1588696941836">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

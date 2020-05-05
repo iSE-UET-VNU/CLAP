@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612359275" clover="4.4.1">
-   <project timestamp="1588612359135">
-      <metrics coveredelements="58" complexity="93" loc="852" methods="60" classes="10" statements="191" packages="1" coveredconditionals="2" coveredmethods="19" elements="311" ncloc="446" files="10" conditionals="60" coveredstatements="37"/>
+<coverage generated="1588698234172" clover="4.4.1">
+   <project timestamp="1588698234061">
+      <metrics coveredelements="55" complexity="93" loc="852" methods="60" classes="10" statements="191" packages="1" coveredconditionals="2" coveredmethods="18" elements="311" ncloc="446" files="10" conditionals="60" coveredstatements="35"/>
       <package name="GPL">
-         <metrics coveredelements="58" complexity="93" loc="852" methods="60" classes="10" statements="191" coveredconditionals="2" coveredmethods="19" elements="311" ncloc="446" files="10" conditionals="60" coveredstatements="37"/>
+         <metrics coveredelements="55" complexity="93" loc="852" methods="60" classes="10" statements="191" coveredconditionals="2" coveredmethods="18" elements="311" ncloc="446" files="10" conditionals="60" coveredstatements="35"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0046/src/GPL/Graph.java" name="Graph.java">
             <metrics coveredelements="19" coveredconditionals="2" complexity="43" loc="360" coveredmethods="3" methods="19" elements="175" classes="1" ncloc="200" statements="114" conditionals="42" coveredstatements="14"/>
             <class name="Graph">
@@ -309,21 +309,21 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Connected.GPL.RegionWorkSpace.AODU_1/variants/model_m_ca3_0046/src/GPL/Edge.java" name="Edge.java">
-            <metrics coveredelements="12" coveredconditionals="0" complexity="13" loc="121" coveredmethods="5" methods="11" elements="33" classes="1" ncloc="62" statements="18" conditionals="4" coveredstatements="7"/>
+            <metrics coveredelements="9" coveredconditionals="0" complexity="13" loc="121" coveredmethods="4" methods="11" elements="33" classes="1" ncloc="62" statements="18" conditionals="4" coveredstatements="5"/>
             <class name="Edge">
-               <metrics coveredelements="12" coveredconditionals="0" complexity="13" coveredmethods="5" methods="11" elements="33" statements="18" conditionals="4" coveredstatements="7"/>
+               <metrics coveredelements="9" coveredconditionals="0" complexity="13" coveredmethods="4" methods="11" elements="33" statements="18" conditionals="4" coveredstatements="5"/>
             </class>
-            <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="2" type="method"/>
-            <line num="16" count="2" type="stmt"/>
-            <line num="17" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="1" type="method"/>
+            <line num="16" count="1" type="stmt"/>
+            <line num="17" count="1" type="stmt"/>
             <line complexity="1" visibility="private" signature="adjustAdorns__wrappee__UndirectedWithEdges(EdgeIfc) : void" num="23" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="36" count="0" type="method"/>
             <line num="37" count="0" type="stmt"/>
             <line num="38" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="setWeight(int) : void" num="44" count="0" type="method"/>
-            <line num="46" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getWeight() : int" num="52" count="1" type="method"/>
-            <line num="54" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="setWeight(int) : void" num="44" count="1" type="method"/>
+            <line num="46" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getWeight() : int" num="52" count="0" type="method"/>
+            <line num="54" count="0" type="stmt"/>
             <line complexity="3" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="60" count="0" type="method"/>
             <line num="62" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="62" type="cond"/>
@@ -341,13 +341,13 @@
             <line complexity="1" visibility="public" signature="display() : void" num="103" count="0" type="method"/>
             <line num="104" count="0" type="stmt"/>
             <line num="105" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex,int) : void" num="114" count="1" type="method"/>
-            <line num="116" count="1" type="stmt"/>
-            <line num="117" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex,int) : void" num="114" count="0" type="method"/>
+            <line num="116" count="0" type="stmt"/>
+            <line num="117" count="0" type="stmt"/>
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612359135">
+   <testproject timestamp="1588698234061">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

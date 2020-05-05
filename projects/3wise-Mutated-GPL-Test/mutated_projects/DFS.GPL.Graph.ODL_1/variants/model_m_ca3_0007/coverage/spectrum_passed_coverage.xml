@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609101225" clover="4.4.1"> 
- <project timestamp="1588609101002">  
+<coverage generated="1588695105320" clover="4.4.1"> 
+ <project timestamp="1588695105087">  
   <package name="GPL">  
    <file path="GPL/WorkSpace.java" name="GPL.WorkSpace">   
     <line visibility="public" signature="init_vertex(Vertex) : void" num="10" count="5" type="method" featureClass="BFS.GPL.WorkSpace" featureLineNum="9" /> 
@@ -108,8 +108,8 @@
     <line visibility="public" signature="assignName(String) : Vertex" num="56" count="3" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="23" /> 
     <line num="57" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
     <line num="58" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="25" /> 
-    <line visibility="public" signature="getName() : String" num="65" count="5" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
-    <line num="67" count="5" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
+    <line visibility="public" signature="getName() : String" num="65" count="4" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
+    <line num="67" count="4" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
     <line visibility="public" signature="addAdjacent(Vertex) : void" num="74" count="12" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="35" /> 
     <line num="75" count="12" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="36" /> 
     <line visibility="private" signature="adjustAdorns__wrappee__DirectedOnlyVertices(Vertex,int) : void" num="81" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="39" /> 
@@ -150,8 +150,8 @@
     <line visibility="public" signature="getEnd() : Vertex" num="179" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="77" /> 
     <line num="179" count="1" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="77" /> 
     <line visibility="public" signature="setWeight(int) : void" num="184" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="79" /> 
-    <line visibility="public" signature="getWeight() : int" num="188" count="6" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="80" /> 
-    <line num="188" count="6" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="80" /> 
+    <line visibility="public" signature="getWeight() : int" num="188" count="5" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="80" /> 
+    <line num="188" count="5" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="80" /> 
     <line visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="193" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="82" /> 
     <line num="195" count="1" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="84" /> 
     <line visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="203" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="89" /> 
@@ -192,6 +192,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588609101002">  
+ <testproject timestamp="1588695105087">  
  </testproject> 
 </coverage>

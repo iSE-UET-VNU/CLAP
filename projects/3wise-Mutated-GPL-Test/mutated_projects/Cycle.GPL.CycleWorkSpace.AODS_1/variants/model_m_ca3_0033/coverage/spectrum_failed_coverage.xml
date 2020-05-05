@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611289736" clover="4.4.1"> 
- <project timestamp="1588611289609">  
+<coverage generated="1588697203174" clover="4.4.1"> 
+ <project timestamp="1588697202995">  
   <package name="GPL">  
    <file path="GPL/Neighbor.java" name="GPL.Neighbor">   
     <line visibility="public" signature="Neighbor()" num="16" count="0" type="method" featureClass="DirectedWithNeighbors.GPL.Neighbor" featureLineNum="13" /> 
@@ -184,6 +184,6 @@
    </file>  
   </package> 
  </project> 
- <testproject timestamp="1588611289609">  
+ <testproject timestamp="1588697202995">  
  </testproject> 
 </coverage>

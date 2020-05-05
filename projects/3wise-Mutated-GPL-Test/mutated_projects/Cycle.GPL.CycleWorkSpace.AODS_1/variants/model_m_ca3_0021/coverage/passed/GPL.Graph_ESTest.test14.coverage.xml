@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610309975" clover="4.4.1">
-   <project timestamp="1588610309862">
+<coverage generated="1588696241870" clover="4.4.1">
+   <project timestamp="1588696241749">
       <metrics coveredelements="32" complexity="79" loc="697" methods="59" classes="12" statements="133" packages="1" coveredconditionals="4" coveredmethods="10" elements="232" ncloc="343" files="12" conditionals="40" coveredstatements="18"/>
       <package name="GPL">
          <metrics coveredelements="32" complexity="79" loc="697" methods="59" classes="12" statements="133" coveredconditionals="4" coveredmethods="10" elements="232" ncloc="343" files="12" conditionals="40" coveredstatements="18"/>
@@ -189,8 +189,8 @@
             <class name="Vertex">
                <metrics coveredelements="10" coveredconditionals="0" complexity="23" coveredmethods="4" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="6"/>
             </class>
-            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="1" type="method"/>
-            <line num="21" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="2" type="method"/>
+            <line num="21" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="Vertex()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
             <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DirectedWithEdges() : void" num="33" count="1" type="method"/>
@@ -290,7 +290,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610309862">
+   <testproject timestamp="1588696241749">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609402212" clover="4.4.1">
-   <project timestamp="1588609402099">
+<coverage generated="1588695410075" clover="4.4.1">
+   <project timestamp="1588695409981">
       <metrics coveredelements="15" complexity="101" loc="905" methods="73" classes="13" statements="156" packages="1" coveredconditionals="0" coveredmethods="5" elements="273" ncloc="459" files="13" conditionals="44" coveredstatements="10"/>
       <package name="GPL">
          <metrics coveredelements="15" complexity="101" loc="905" methods="73" classes="13" statements="156" coveredconditionals="0" coveredmethods="5" elements="273" ncloc="459" files="13" conditionals="44" coveredstatements="10"/>
@@ -19,17 +19,17 @@
             <line num="32" count="1" type="stmt"/>
             <line num="33" count="1" type="stmt"/>
             <line num="34" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="init_vertex(Vertex) : void" num="40" count="1" type="method"/>
-            <line num="42" count="1" type="stmt"/>
-            <line num="43" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="init_vertex(Vertex) : void" num="40" count="0" type="method"/>
+            <line num="42" count="0" type="stmt"/>
+            <line num="43" count="0" type="stmt"/>
             <line complexity="2" visibility="public" signature="preVisitAction(Vertex) : void" num="49" count="0" type="method"/>
             <line num="52" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="52" type="cond"/>
             <line num="55" count="0" type="stmt"/>
             <line num="56" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="postVisitAction(Vertex) : void" num="63" count="0" type="method"/>
-            <line num="65" count="0" type="stmt"/>
-            <line num="66" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="postVisitAction(Vertex) : void" num="63" count="1" type="method"/>
+            <line num="65" count="1" type="stmt"/>
+            <line num="66" count="1" type="stmt"/>
             <line complexity="7" visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="72" count="0" type="method"/>
             <line num="80" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="80" type="cond"/>
@@ -335,7 +335,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609402099">
+   <testproject timestamp="1588695409981">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609431671" clover="4.4.1">
-   <project timestamp="1588609431564">
-      <metrics coveredelements="5" complexity="101" loc="897" methods="73" classes="13" statements="156" packages="1" coveredconditionals="0" coveredmethods="2" elements="273" ncloc="453" files="13" conditionals="44" coveredstatements="3"/>
+<coverage generated="1588695433582" clover="4.4.1">
+   <project timestamp="1588695433482">
+      <metrics coveredelements="6" complexity="101" loc="897" methods="73" classes="13" statements="156" packages="1" coveredconditionals="0" coveredmethods="3" elements="273" ncloc="453" files="13" conditionals="44" coveredstatements="3"/>
       <package name="GPL">
-         <metrics coveredelements="5" complexity="101" loc="897" methods="73" classes="13" statements="156" coveredconditionals="0" coveredmethods="2" elements="273" ncloc="453" files="13" conditionals="44" coveredstatements="3"/>
+         <metrics coveredelements="6" complexity="101" loc="897" methods="73" classes="13" statements="156" coveredconditionals="0" coveredmethods="3" elements="273" ncloc="453" files="13" conditionals="44" coveredstatements="3"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0011/src/GPL/RegionWorkSpace.java" name="RegionWorkSpace.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="4" loc="42" coveredmethods="0" methods="4" elements="8" classes="1" ncloc="20" statements="4" conditionals="0" coveredstatements="0"/>
             <class name="RegionWorkSpace">
@@ -29,17 +29,17 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0011/src/GPL/Edge.java" name="Edge.java">
-            <metrics coveredelements="2" coveredconditionals="0" complexity="10" loc="86" coveredmethods="1" methods="8" elements="23" classes="1" ncloc="47" statements="11" conditionals="4" coveredstatements="1"/>
+            <metrics coveredelements="3" coveredconditionals="0" complexity="10" loc="86" coveredmethods="2" methods="8" elements="23" classes="1" ncloc="47" statements="11" conditionals="4" coveredstatements="1"/>
             <class name="Edge">
-               <metrics coveredelements="2" coveredconditionals="0" complexity="10" coveredmethods="1" methods="8" elements="23" statements="11" conditionals="4" coveredstatements="1"/>
+               <metrics coveredelements="3" coveredconditionals="0" complexity="10" coveredmethods="2" methods="8" elements="23" statements="11" conditionals="4" coveredstatements="1"/>
             </class>
             <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="0" type="method"/>
             <line num="16" count="0" type="stmt"/>
             <line num="17" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="23" count="0" type="method"/>
-            <line complexity="1" visibility="public" signature="setWeight(int) : void" num="30" count="0" type="method"/>
-            <line complexity="1" visibility="public" signature="getWeight() : int" num="37" count="0" type="method"/>
-            <line num="39" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="setWeight(int) : void" num="30" count="1" type="method"/>
+            <line complexity="1" visibility="public" signature="getWeight() : int" num="37" count="1" type="method"/>
+            <line num="39" count="1" type="stmt"/>
             <line complexity="3" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="45" count="0" type="method"/>
             <line num="47" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="47" type="cond"/>
@@ -52,8 +52,8 @@
             <line num="66" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="72" count="0" type="method"/>
             <line num="74" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="display() : void" num="80" count="1" type="method"/>
-            <line num="82" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="display() : void" num="80" count="0" type="method"/>
+            <line num="82" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.COR_1/variants/model_m_ca3_0011/src/GPL/EdgeIter.java" name="EdgeIter.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="2" loc="13" coveredmethods="0" methods="2" elements="4" classes="1" ncloc="5" statements="2" conditionals="0" coveredstatements="0"/>
@@ -335,7 +335,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609431564">
+   <testproject timestamp="1588695433482">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

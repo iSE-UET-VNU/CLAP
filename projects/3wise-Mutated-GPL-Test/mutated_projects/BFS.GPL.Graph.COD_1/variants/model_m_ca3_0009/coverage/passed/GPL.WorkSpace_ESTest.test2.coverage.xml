@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609288094" clover="4.4.1">
-   <project timestamp="1588609287979">
-      <metrics coveredelements="11" complexity="67" loc="626" methods="50" classes="11" statements="104" packages="1" coveredconditionals="0" coveredmethods="5" elements="188" ncloc="313" files="11" conditionals="34" coveredstatements="6"/>
+<coverage generated="1588695296647" clover="4.4.1">
+   <project timestamp="1588695296544">
+      <metrics coveredelements="9" complexity="67" loc="626" methods="50" classes="11" statements="104" packages="1" coveredconditionals="0" coveredmethods="4" elements="188" ncloc="313" files="11" conditionals="34" coveredstatements="5"/>
       <package name="GPL">
-         <metrics coveredelements="11" complexity="67" loc="626" methods="50" classes="11" statements="104" coveredconditionals="0" coveredmethods="5" elements="188" ncloc="313" files="11" conditionals="34" coveredstatements="6"/>
+         <metrics coveredelements="9" complexity="67" loc="626" methods="50" classes="11" statements="104" coveredconditionals="0" coveredmethods="4" elements="188" ncloc="313" files="11" conditionals="34" coveredstatements="5"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0009/src/GPL/GlobalVarsWrapper.java" name="GlobalVarsWrapper.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="0" loc="12" coveredmethods="0" methods="0" elements="0" classes="1" ncloc="5" statements="0" conditionals="0" coveredstatements="0"/>
             <class name="GlobalVarsWrapper">
@@ -117,14 +117,14 @@
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="79" count="0" type="method"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0009/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="10" coveredconditionals="0" complexity="21" loc="190" coveredmethods="4" methods="15" elements="68" classes="1" ncloc="104" statements="41" conditionals="12" coveredstatements="6"/>
+            <metrics coveredelements="8" coveredconditionals="0" complexity="21" loc="190" coveredmethods="3" methods="15" elements="68" classes="1" ncloc="104" statements="41" conditionals="12" coveredstatements="5"/>
             <class name="Vertex">
-               <metrics coveredelements="10" coveredconditionals="0" complexity="21" coveredmethods="4" methods="15" elements="68" statements="41" conditionals="12" coveredstatements="6"/>
+               <metrics coveredelements="8" coveredconditionals="0" complexity="21" coveredmethods="3" methods="15" elements="68" statements="41" conditionals="12" coveredstatements="5"/>
             </class>
             <line complexity="1" visibility="public" signature="Vertex()" num="19" count="1" type="method"/>
             <line num="20" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="25" count="1" type="method"/>
-            <line num="27" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="25" count="0" type="method"/>
+            <line num="27" count="0" type="stmt"/>
             <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DirectedWithNeighbors() : void" num="33" count="1" type="method"/>
             <line num="34" count="1" type="stmt"/>
             <line num="35" count="1" type="stmt"/>
@@ -243,7 +243,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609287979">
+   <testproject timestamp="1588695296544">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

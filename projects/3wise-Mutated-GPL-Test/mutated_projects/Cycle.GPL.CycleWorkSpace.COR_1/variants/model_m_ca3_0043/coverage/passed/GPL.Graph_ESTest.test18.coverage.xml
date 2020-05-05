@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612111026" clover="4.4.1">
-   <project timestamp="1588612110914">
+<coverage generated="1588698009694" clover="4.4.1">
+   <project timestamp="1588698009595">
       <metrics coveredelements="48" complexity="82" loc="735" methods="58" classes="10" statements="121" packages="1" coveredconditionals="3" coveredmethods="16" elements="215" ncloc="356" files="10" conditionals="36" coveredstatements="29"/>
       <package name="GPL">
          <metrics coveredelements="48" complexity="82" loc="735" methods="58" classes="10" statements="121" coveredconditionals="3" coveredmethods="16" elements="215" ncloc="356" files="10" conditionals="36" coveredstatements="29"/>
@@ -99,10 +99,10 @@
             <line complexity="1" visibility="public" signature="run(Vertex) : void" num="50" count="0" type="method"/>
             <line num="52" count="0" type="stmt"/>
             <line num="53" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="60" count="1" type="method"/>
-            <line num="62" count="1" type="stmt"/>
-            <line num="63" count="1" type="stmt"/>
-            <line num="64" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Neighbor) : void" num="60" count="2" type="method"/>
+            <line num="62" count="2" type="stmt"/>
+            <line num="63" count="2" type="stmt"/>
+            <line num="64" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="71" count="0" type="method"/>
             <line num="73" count="0" type="stmt"/>
             <line num="76" count="0" type="stmt"/>
@@ -121,11 +121,11 @@
             <line complexity="6" visibility="public" signature="findsEdge(Vertex,Vertex) : EdgeIfc" num="130" count="1" type="method"/>
             <line num="148" count="1" type="stmt"/>
             <line num="149" count="1" type="stmt"/>
-            <line falsecount="1" truecount="2" num="149" type="cond"/>
-            <line num="151" count="2" type="stmt"/>
-            <line num="152" count="2" type="stmt"/>
-            <line num="153" count="2" type="stmt"/>
-            <line falsecount="2" truecount="0" num="153" type="cond"/>
+            <line falsecount="1" truecount="1" num="149" type="cond"/>
+            <line num="151" count="1" type="stmt"/>
+            <line num="152" count="1" type="stmt"/>
+            <line num="153" count="1" type="stmt"/>
+            <line falsecount="1" truecount="0" num="153" type="cond"/>
             <line num="157" count="0" type="stmt"/>
             <line num="159" count="1" type="stmt"/>
             <line complexity="2" visibility="public" signature="display() : void" num="166" count="0" type="method"/>
@@ -135,10 +135,10 @@
             <line falsecount="0" truecount="0" num="170" type="cond"/>
             <line num="172" count="0" type="stmt"/>
             <line num="175" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="182" count="1" type="method"/>
-            <line num="184" count="1" type="stmt"/>
-            <line num="185" count="1" type="stmt"/>
-            <line num="186" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="182" count="2" type="method"/>
+            <line num="184" count="2" type="stmt"/>
+            <line num="185" count="2" type="stmt"/>
+            <line num="186" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="CycleCheck() : boolean" num="192" count="0" type="method"/>
             <line num="193" count="0" type="stmt"/>
             <line num="194" count="0" type="stmt"/>
@@ -183,11 +183,11 @@
             <line complexity="1" visibility="public" signature="VertexConstructor() : void" num="37" count="2" type="method"/>
             <line num="39" count="2" type="stmt"/>
             <line num="40" count="2" type="stmt"/>
-            <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="46" count="1" type="method"/>
-            <line num="48" count="1" type="stmt"/>
-            <line num="49" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getName() : String" num="55" count="12" type="method"/>
-            <line num="57" count="12" type="stmt"/>
+            <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="46" count="2" type="method"/>
+            <line num="48" count="2" type="stmt"/>
+            <line num="49" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="55" count="8" type="method"/>
+            <line num="57" count="8" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="63" count="0" type="method"/>
             <line num="65" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighbors() : VertexIter" num="71" count="0" type="method"/>
@@ -211,15 +211,15 @@
             <line num="115" count="0" type="stmt"/>
             <line num="117" count="0" type="stmt"/>
             <line num="118" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Neighbor) : void" num="127" count="2" type="method"/>
-            <line num="129" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Neighbor) : void" num="127" count="4" type="method"/>
+            <line num="129" count="4" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(Neighbor) : void" num="135" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="getEdges() : EdgeIter" num="142" count="1" type="method"/>
             <line num="144" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="next() : EdgeIfc" num="147" count="2" type="method"/>
-            <line num="149" count="2" type="stmt"/>
-            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="153" count="3" type="method"/>
-            <line num="155" count="3" type="stmt"/>
+            <line complexity="1" visibility="public" signature="next() : EdgeIfc" num="147" count="1" type="method"/>
+            <line num="149" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="hasNext() : boolean" num="153" count="2" type="method"/>
+            <line num="155" count="2" type="stmt"/>
             <line complexity="1" visibility="public" signature="init_vertex(WorkSpace) : void" num="172" count="0" type="method"/>
             <line num="174" count="0" type="stmt"/>
             <line num="175" count="0" type="stmt"/>
@@ -244,26 +244,26 @@
             </class>
             <line complexity="1" visibility="public" signature="Neighbor()" num="18" count="0" type="method"/>
             <line num="19" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="Neighbor(Vertex)" num="25" count="2" type="method"/>
-            <line num="27" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="Neighbor(Vertex)" num="25" count="4" type="method"/>
+            <line num="27" count="4" type="stmt"/>
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="33" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="getWeight() : int" num="37" count="0" type="method"/>
             <line num="37" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="42" count="2" type="method"/>
-            <line num="43" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="NeighborConstructor(Vertex) : void" num="42" count="4" type="method"/>
+            <line num="43" count="4" type="stmt"/>
             <line complexity="1" visibility="public" signature="display() : void" num="49" count="0" type="method"/>
             <line num="51" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="57" count="0" type="method"/>
             <line num="57" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="61" count="0" type="method"/>
             <line num="61" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="66" count="2" type="method"/>
-            <line num="68" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="66" count="1" type="method"/>
+            <line num="68" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="74" count="0" type="method"/>
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612110914">
+   <testproject timestamp="1588698009595">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

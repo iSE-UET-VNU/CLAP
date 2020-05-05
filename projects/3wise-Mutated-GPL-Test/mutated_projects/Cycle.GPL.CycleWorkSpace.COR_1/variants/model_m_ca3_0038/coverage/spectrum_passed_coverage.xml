@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611659108" clover="4.4.1"> 
- <project timestamp="1588611658913">  
+<coverage generated="1588697558592" clover="4.4.1"> 
+ <project timestamp="1588697558383">  
   <package name="GPL">  
    <file path="GPL/VertexIter.java" name="GPL.VertexIter">   
     <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
@@ -126,8 +126,8 @@
     <line visibility="public" signature="assignName(String) : Vertex" num="45" count="3" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="23" /> 
     <line num="46" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
     <line num="47" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="25" /> 
-    <line visibility="public" signature="getName() : String" num="54" count="3" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
-    <line num="56" count="3" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
+    <line visibility="public" signature="getName() : String" num="54" count="4" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="29" /> 
+    <line num="56" count="4" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="31" /> 
     <line visibility="public" signature="addAdjacent(Vertex) : void" num="63" count="11" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="35" /> 
     <line num="64" count="11" type="stmt" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="36" /> 
     <line visibility="public" signature="adjustAdorns(Vertex,int) : void" num="70" count="1" type="method" featureClass="DirectedOnlyVertices.GPL.Vertex" featureLineNum="39" /> 
@@ -179,6 +179,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588611658913">  
+ <testproject timestamp="1588697558383">  
  </testproject> 
 </coverage>

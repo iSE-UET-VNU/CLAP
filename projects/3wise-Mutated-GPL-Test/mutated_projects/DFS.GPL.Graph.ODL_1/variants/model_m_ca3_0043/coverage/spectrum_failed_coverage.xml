@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612116313" clover="4.4.1"> 
- <project timestamp="1588612116199">  
+<coverage generated="1588698009135" clover="4.4.1"> 
+ <project timestamp="1588698009028">  
   <package name="GPL">  
    <file path="GPL/Graph.java" name="GPL.Graph">   
     <line visibility="public" signature="Graph()" num="31" count="5" type="method" featureClass="UndirectedWithNeighbors.GPL.Graph" featureLineNum="21" /> 
@@ -199,6 +199,6 @@
    </file>  
   </package> 
  </project> 
- <testproject timestamp="1588612116199">  
+ <testproject timestamp="1588698009028">  
  </testproject> 
 </coverage>

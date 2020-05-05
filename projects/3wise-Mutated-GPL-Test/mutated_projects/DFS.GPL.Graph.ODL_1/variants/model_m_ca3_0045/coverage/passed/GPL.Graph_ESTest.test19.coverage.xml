@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612274300" clover="4.4.1">
-   <project timestamp="1588612274155">
-      <metrics coveredelements="50" complexity="82" loc="746" methods="60" classes="12" statements="131" packages="1" coveredconditionals="2" coveredmethods="16" elements="229" ncloc="378" files="12" conditionals="38" coveredstatements="32"/>
+<coverage generated="1588698183940" clover="4.4.1">
+   <project timestamp="1588698183828">
+      <metrics coveredelements="52" complexity="82" loc="746" methods="60" classes="12" statements="131" packages="1" coveredconditionals="2" coveredmethods="17" elements="229" ncloc="378" files="12" conditionals="38" coveredstatements="33"/>
       <package name="GPL">
-         <metrics coveredelements="50" complexity="82" loc="746" methods="60" classes="12" statements="131" coveredconditionals="2" coveredmethods="16" elements="229" ncloc="378" files="12" conditionals="38" coveredstatements="32"/>
+         <metrics coveredelements="52" complexity="82" loc="746" methods="60" classes="12" statements="131" coveredconditionals="2" coveredmethods="17" elements="229" ncloc="378" files="12" conditionals="38" coveredstatements="33"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0045/src/GPL/GlobalVarsWrapper.java" name="GlobalVarsWrapper.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="0" loc="12" coveredmethods="0" methods="0" elements="0" classes="1" ncloc="5" statements="0" conditionals="0" coveredstatements="0"/>
             <class name="GlobalVarsWrapper">
@@ -11,17 +11,17 @@
             </class>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0045/src/GPL/Edge.java" name="Edge.java">
-            <metrics coveredelements="7" coveredconditionals="0" complexity="10" loc="86" coveredmethods="3" methods="8" elements="23" classes="1" ncloc="47" statements="11" conditionals="4" coveredstatements="4"/>
+            <metrics coveredelements="9" coveredconditionals="0" complexity="10" loc="86" coveredmethods="4" methods="8" elements="23" classes="1" ncloc="47" statements="11" conditionals="4" coveredstatements="5"/>
             <class name="Edge">
-               <metrics coveredelements="7" coveredconditionals="0" complexity="10" coveredmethods="3" methods="8" elements="23" statements="11" conditionals="4" coveredstatements="4"/>
+               <metrics coveredelements="9" coveredconditionals="0" complexity="10" coveredmethods="4" methods="8" elements="23" statements="11" conditionals="4" coveredstatements="5"/>
             </class>
             <line complexity="1" visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="1" type="method"/>
             <line num="16" count="1" type="stmt"/>
             <line num="17" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="23" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="setWeight(int) : void" num="30" count="0" type="method"/>
-            <line complexity="1" visibility="public" signature="getWeight() : int" num="37" count="0" type="method"/>
-            <line num="39" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getWeight() : int" num="37" count="1" type="method"/>
+            <line num="39" count="1" type="stmt"/>
             <line complexity="3" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="45" count="0" type="method"/>
             <line num="47" count="0" type="stmt"/>
             <line falsecount="0" truecount="0" num="47" type="cond"/>
@@ -288,7 +288,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612274155">
+   <testproject timestamp="1588698183828">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

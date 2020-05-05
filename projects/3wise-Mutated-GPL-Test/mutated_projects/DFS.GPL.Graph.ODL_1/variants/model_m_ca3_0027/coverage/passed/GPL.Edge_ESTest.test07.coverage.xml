@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610767881" clover="4.4.1">
-   <project timestamp="1588610767767">
+<coverage generated="1588696709048" clover="4.4.1">
+   <project timestamp="1588696708949">
       <metrics coveredelements="5" complexity="88" loc="767" methods="61" classes="11" statements="137" packages="1" coveredconditionals="0" coveredmethods="2" elements="240" ncloc="388" files="11" conditionals="42" coveredstatements="3"/>
       <package name="GPL">
          <metrics coveredelements="5" complexity="88" loc="767" methods="61" classes="11" statements="137" coveredconditionals="0" coveredmethods="2" elements="240" ncloc="388" files="11" conditionals="42" coveredstatements="3"/>
@@ -56,10 +56,10 @@
             <line num="57" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="64" count="0" type="method"/>
             <line num="66" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="72" count="1" type="method"/>
-            <line num="74" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="display() : void" num="80" count="0" type="method"/>
-            <line num="82" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="72" count="0" type="method"/>
+            <line num="74" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="display() : void" num="80" count="1" type="method"/>
+            <line num="82" count="1" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/DFS.GPL.Graph.ODL_1/variants/model_m_ca3_0027/src/GPL/Neighbor.java" name="Neighbor.java">
             <metrics coveredelements="3" coveredconditionals="0" complexity="2" loc="33" coveredmethods="1" methods="2" elements="6" classes="1" ncloc="16" statements="4" conditionals="0" coveredstatements="2"/>
@@ -291,7 +291,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610767767">
+   <testproject timestamp="1588696708949">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

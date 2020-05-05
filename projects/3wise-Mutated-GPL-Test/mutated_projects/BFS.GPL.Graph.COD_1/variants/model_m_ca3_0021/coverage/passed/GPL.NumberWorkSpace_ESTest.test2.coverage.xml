@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610299563" clover="4.4.1">
-   <project timestamp="1588610299453">
-      <metrics coveredelements="15" complexity="79" loc="692" methods="59" classes="12" statements="133" packages="1" coveredconditionals="1" coveredmethods="6" elements="232" ncloc="339" files="12" conditionals="40" coveredstatements="8"/>
+<coverage generated="1588696258882" clover="4.4.1">
+   <project timestamp="1588696258788">
+      <metrics coveredelements="13" complexity="79" loc="692" methods="59" classes="12" statements="133" packages="1" coveredconditionals="1" coveredmethods="5" elements="232" ncloc="339" files="12" conditionals="40" coveredstatements="7"/>
       <package name="GPL">
-         <metrics coveredelements="15" complexity="79" loc="692" methods="59" classes="12" statements="133" coveredconditionals="1" coveredmethods="6" elements="232" ncloc="339" files="12" conditionals="40" coveredstatements="8"/>
+         <metrics coveredelements="13" complexity="79" loc="692" methods="59" classes="12" statements="133" coveredconditionals="1" coveredmethods="5" elements="232" ncloc="339" files="12" conditionals="40" coveredstatements="7"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0021/src/GPL/Neighbor.java" name="Neighbor.java">
             <metrics coveredelements="0" coveredconditionals="0" complexity="2" loc="31" coveredmethods="0" methods="2" elements="6" classes="1" ncloc="14" statements="4" conditionals="0" coveredstatements="0"/>
             <class name="Neighbor">
@@ -206,12 +206,12 @@
             <line num="10" count="0" type="stmt"/>
          </file>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0021/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="10" coveredconditionals="0" complexity="23" loc="192" coveredmethods="4" methods="17" elements="73" classes="1" ncloc="102" statements="44" conditionals="12" coveredstatements="6"/>
+            <metrics coveredelements="8" coveredconditionals="0" complexity="23" loc="192" coveredmethods="3" methods="17" elements="73" classes="1" ncloc="102" statements="44" conditionals="12" coveredstatements="5"/>
             <class name="Vertex">
-               <metrics coveredelements="10" coveredconditionals="0" complexity="23" coveredmethods="4" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="6"/>
+               <metrics coveredelements="8" coveredconditionals="0" complexity="23" coveredmethods="3" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="5"/>
             </class>
-            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="1" type="method"/>
-            <line num="21" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="0" type="method"/>
+            <line num="21" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="Vertex()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
             <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DirectedWithEdges() : void" num="33" count="1" type="method"/>
@@ -290,7 +290,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610299453">
+   <testproject timestamp="1588696258788">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588612443112" clover="4.4.1">
-   <project timestamp="1588612442995">
+<coverage generated="1588698346627" clover="4.4.1">
+   <project timestamp="1588698346509">
       <metrics coveredelements="63" complexity="108" loc="976" methods="68" classes="11" statements="213" packages="1" coveredconditionals="7" coveredmethods="15" elements="349" ncloc="507" files="11" conditionals="68" coveredstatements="41"/>
       <package name="GPL">
          <metrics coveredelements="63" complexity="108" loc="976" methods="68" classes="11" statements="213" coveredconditionals="7" coveredmethods="15" elements="349" ncloc="507" files="11" conditionals="68" coveredstatements="41"/>
@@ -296,9 +296,9 @@
             <line complexity="1" visibility="public" signature="VertexConstructor() : void" num="39" count="2" type="method"/>
             <line num="41" count="2" type="stmt"/>
             <line num="42" count="2" type="stmt"/>
-            <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="48" count="2" type="method"/>
-            <line num="50" count="2" type="stmt"/>
-            <line num="51" count="2" type="stmt"/>
+            <line complexity="1" visibility="public" signature="assignName(String) : Vertex" num="48" count="1" type="method"/>
+            <line num="50" count="1" type="stmt"/>
+            <line num="51" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getName() : String" num="57" count="1" type="method"/>
             <line num="59" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="getNeighborsObj() : LinkedList" num="65" count="0" type="method"/>
@@ -387,7 +387,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588612442995">
+   <testproject timestamp="1588698346509">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

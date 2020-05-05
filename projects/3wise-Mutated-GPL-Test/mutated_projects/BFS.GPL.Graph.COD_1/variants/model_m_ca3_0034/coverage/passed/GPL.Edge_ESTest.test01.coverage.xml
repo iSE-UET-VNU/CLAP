@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611338910" clover="4.4.1">
-   <project timestamp="1588611338788">
-      <metrics coveredelements="18" complexity="76" loc="648" methods="56" classes="12" statements="126" packages="1" coveredconditionals="0" coveredmethods="7" elements="222" ncloc="318" files="12" conditionals="40" coveredstatements="11"/>
+<coverage generated="1588697276416" clover="4.4.1">
+   <project timestamp="1588697276308">
+      <metrics coveredelements="16" complexity="76" loc="648" methods="56" classes="12" statements="126" packages="1" coveredconditionals="0" coveredmethods="6" elements="222" ncloc="318" files="12" conditionals="40" coveredstatements="10"/>
       <package name="GPL">
-         <metrics coveredelements="18" complexity="76" loc="648" methods="56" classes="12" statements="126" coveredconditionals="0" coveredmethods="7" elements="222" ncloc="318" files="12" conditionals="40" coveredstatements="11"/>
+         <metrics coveredelements="16" complexity="76" loc="648" methods="56" classes="12" statements="126" coveredconditionals="0" coveredmethods="6" elements="222" ncloc="318" files="12" conditionals="40" coveredstatements="10"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/BFS.GPL.Graph.COD_1/variants/model_m_ca3_0034/src/GPL/Vertex.java" name="Vertex.java">
-            <metrics coveredelements="10" coveredconditionals="0" complexity="23" loc="192" coveredmethods="4" methods="17" elements="73" classes="1" ncloc="102" statements="44" conditionals="12" coveredstatements="6"/>
+            <metrics coveredelements="8" coveredconditionals="0" complexity="23" loc="192" coveredmethods="3" methods="17" elements="73" classes="1" ncloc="102" statements="44" conditionals="12" coveredstatements="5"/>
             <class name="Vertex">
-               <metrics coveredelements="10" coveredconditionals="0" complexity="23" coveredmethods="4" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="6"/>
+               <metrics coveredelements="8" coveredconditionals="0" complexity="23" coveredmethods="3" methods="17" elements="73" statements="44" conditionals="12" coveredstatements="5"/>
             </class>
-            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="1" type="method"/>
-            <line num="21" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getName() : String" num="21" count="0" type="method"/>
+            <line num="21" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="Vertex()" num="26" count="1" type="method"/>
             <line num="27" count="1" type="stmt"/>
             <line complexity="1" visibility="private" signature="VertexConstructor__wrappee__DirectedWithEdges() : void" num="33" count="1" type="method"/>
@@ -280,7 +280,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588611338788">
+   <testproject timestamp="1588697276308">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

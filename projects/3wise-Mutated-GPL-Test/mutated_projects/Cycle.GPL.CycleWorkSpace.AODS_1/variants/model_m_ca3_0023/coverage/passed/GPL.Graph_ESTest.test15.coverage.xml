@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610463391" clover="4.4.1">
-   <project timestamp="1588610463281">
+<coverage generated="1588696386581" clover="4.4.1">
+   <project timestamp="1588696386464">
       <metrics coveredelements="5" complexity="107" loc="973" methods="75" classes="14" statements="193" packages="1" coveredconditionals="0" coveredmethods="2" elements="326" ncloc="477" files="14" conditionals="58" coveredstatements="3"/>
       <package name="GPL">
          <metrics coveredelements="5" complexity="107" loc="973" methods="75" classes="14" statements="193" coveredconditionals="0" coveredmethods="2" elements="326" ncloc="477" files="14" conditionals="58" coveredstatements="3"/>
@@ -251,8 +251,8 @@
             <line num="71" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="sortEdges(Comparator) : void" num="77" count="0" type="method"/>
             <line num="78" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="84" count="0" type="method"/>
-            <line num="85" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="sortVertices(Comparator) : void" num="84" count="1" type="method"/>
+            <line num="85" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="92" count="0" type="method"/>
             <line num="93" count="0" type="stmt"/>
             <line num="94" count="0" type="stmt"/>
@@ -279,8 +279,8 @@
             <line num="137" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="138" count="0" type="method"/>
             <line num="138" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getEdges() : EdgeIter" num="146" count="1" type="method"/>
-            <line num="147" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getEdges() : EdgeIter" num="146" count="0" type="method"/>
+            <line num="147" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : EdgeIfc" num="149" count="0" type="method"/>
             <line num="149" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="150" count="0" type="method"/>
@@ -387,7 +387,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610463281">
+   <testproject timestamp="1588696386464">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

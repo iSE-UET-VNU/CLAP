@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609676564" clover="4.4.1">
-   <project timestamp="1588609676455">
+<coverage generated="1588695658644" clover="4.4.1">
+   <project timestamp="1588695658550">
       <metrics coveredelements="10" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="0" coveredmethods="4" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="6"/>
       <package name="GPL">
          <metrics coveredelements="10" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="0" coveredmethods="4" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="6"/>
@@ -405,8 +405,8 @@
             <line complexity="1" visibility="public" signature="addEdge(Neighbor) : void" num="161" count="0" type="method"/>
             <line num="163" count="0" type="stmt"/>
             <line complexity="1" visibility="private" signature="adjustAdorns__wrappee__UndirectedWithNeighbors(Neighbor) : void" num="169" count="0" type="method"/>
-            <line complexity="1" visibility="public" signature="adjustAdorns(Neighbor) : void" num="176" count="1" type="method"/>
-            <line num="178" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="adjustAdorns(Neighbor) : void" num="176" count="0" type="method"/>
+            <line num="178" count="0" type="stmt"/>
             <line num="180" count="0" type="stmt"/>
             <line num="181" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getEdges() : EdgeIter" num="187" count="0" type="method"/>
@@ -431,14 +431,14 @@
             <line num="256" count="0" type="stmt"/>
             <line num="257" count="0" type="stmt"/>
             <line num="261" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addWeight(Vertex,int) : void" num="266" count="0" type="method"/>
-            <line num="268" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addWeight(Vertex,int) : void" num="266" count="1" type="method"/>
+            <line num="268" count="1" type="stmt"/>
             <line num="270" count="0" type="stmt"/>
             <line num="271" count="0" type="stmt"/>
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609676455">
+   <testproject timestamp="1588695658550">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

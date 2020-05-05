@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609618013" clover="4.4.1">
-   <project timestamp="1588609617909">
-      <metrics coveredelements="5" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="0" coveredmethods="2" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="3"/>
+<coverage generated="1588695600945" clover="4.4.1">
+   <project timestamp="1588695600854">
+      <metrics coveredelements="8" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="1" coveredmethods="2" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="5"/>
       <package name="GPL">
-         <metrics coveredelements="5" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="0" coveredmethods="2" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="3"/>
+         <metrics coveredelements="8" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="1" coveredmethods="2" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="5"/>
          <file path="/home/hieuvd/spl_dataset_generation/InputPreparation/projects/3-GPL/mutated_projects/Cycle.GPL.CycleWorkSpace.AODS_1/variants/model_m_ca3_0013/src/GPL/Graph.java" name="Graph.java">
-            <metrics coveredelements="5" coveredconditionals="0" complexity="50" loc="539" coveredmethods="2" methods="24" elements="210" classes="1" ncloc="271" statements="142" conditionals="44" coveredstatements="3"/>
+            <metrics coveredelements="8" coveredconditionals="1" complexity="50" loc="539" coveredmethods="2" methods="24" elements="210" classes="1" ncloc="271" statements="142" conditionals="44" coveredstatements="5"/>
             <class name="Graph">
-               <metrics coveredelements="5" coveredconditionals="0" complexity="50" coveredmethods="2" methods="24" elements="210" statements="142" conditionals="44" coveredstatements="3"/>
+               <metrics coveredelements="8" coveredconditionals="1" complexity="50" coveredmethods="2" methods="24" elements="210" statements="142" conditionals="44" coveredstatements="5"/>
             </class>
             <line complexity="1" visibility="public" signature="Graph()" num="33" count="1" type="method"/>
             <line num="35" count="1" type="stmt"/>
@@ -42,14 +42,14 @@
             <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="128" count="0" type="method"/>
             <line num="130" count="0" type="stmt"/>
             <line num="133" count="0" type="stmt"/>
-            <line complexity="2" visibility="public" signature="findsVertex(String) : Vertex" num="140" count="0" type="method"/>
-            <line num="142" count="0" type="stmt"/>
-            <line num="145" count="0" type="stmt"/>
-            <line falsecount="0" truecount="0" num="145" type="cond"/>
-            <line num="146" count="0" type="stmt"/>
+            <line complexity="2" visibility="public" signature="findsVertex(String) : Vertex" num="140" count="1" type="method"/>
+            <line num="142" count="1" type="stmt"/>
+            <line num="145" count="1" type="stmt"/>
+            <line falsecount="0" truecount="1" num="145" type="cond"/>
+            <line num="146" count="1" type="stmt"/>
             <line num="160" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="167" count="1" type="method"/>
-            <line num="169" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getVertices() : VertexIter" num="167" count="0" type="method"/>
+            <line num="169" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="next() : Vertex" num="172" count="0" type="method"/>
             <line num="174" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="hasNext() : boolean" num="176" count="0" type="method"/>
@@ -438,7 +438,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609617909">
+   <testproject timestamp="1588695600854">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

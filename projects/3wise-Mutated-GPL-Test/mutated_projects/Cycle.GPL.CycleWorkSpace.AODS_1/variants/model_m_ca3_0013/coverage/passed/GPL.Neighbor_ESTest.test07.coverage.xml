@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609639320" clover="4.4.1">
-   <project timestamp="1588609639222">
+<coverage generated="1588695631575" clover="4.4.1">
+   <project timestamp="1588695631474">
       <metrics coveredelements="4" complexity="123" loc="1224" methods="83" classes="12" statements="244" packages="1" coveredconditionals="0" coveredmethods="2" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="2"/>
       <package name="GPL">
          <metrics coveredelements="4" complexity="123" loc="1224" methods="83" classes="12" statements="244" coveredconditionals="0" coveredmethods="2" elements="393" ncloc="606" files="12" conditionals="66" coveredstatements="2"/>
@@ -262,10 +262,10 @@
             <line num="67" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="getStart() : Vertex" num="73" count="0" type="method"/>
             <line num="73" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="77" count="1" type="method"/>
-            <line num="77" count="1" type="stmt"/>
-            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="82" count="0" type="method"/>
-            <line num="84" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getEnd() : Vertex" num="77" count="0" type="method"/>
+            <line num="77" count="0" type="stmt"/>
+            <line complexity="1" visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="82" count="1" type="method"/>
+            <line num="84" count="1" type="stmt"/>
             <line complexity="1" visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="90" count="0" type="method"/>
             <line complexity="1" visibility="public" signature="Neighbor(Vertex,int)" num="100" count="0" type="method"/>
             <line num="101" count="0" type="stmt"/>
@@ -438,7 +438,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588609639222">
+   <testproject timestamp="1588695631474">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

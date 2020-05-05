@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588610160495" clover="4.4.1">
-   <project timestamp="1588610160359">
+<coverage generated="1588696122508" clover="4.4.1">
+   <project timestamp="1588696122400">
       <metrics coveredelements="17" complexity="74" loc="717" methods="53" classes="10" statements="140" packages="1" coveredconditionals="0" coveredmethods="7" elements="235" ncloc="342" files="10" conditionals="42" coveredstatements="10"/>
       <package name="GPL">
          <metrics coveredelements="17" complexity="74" loc="717" methods="53" classes="10" statements="140" coveredconditionals="0" coveredmethods="7" elements="235" ncloc="342" files="10" conditionals="42" coveredstatements="10"/>
@@ -43,9 +43,9 @@
             <line num="90" count="0" type="stmt"/>
             <line complexity="1" visibility="public" signature="addVertex(Vertex) : void" num="98" count="0" type="method"/>
             <line num="99" count="0" type="stmt"/>
-            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="106" count="1" type="method"/>
-            <line num="107" count="1" type="stmt"/>
-            <line num="108" count="1" type="stmt"/>
+            <line complexity="1" visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="106" count="2" type="method"/>
+            <line num="107" count="2" type="stmt"/>
+            <line num="108" count="2" type="stmt"/>
             <line complexity="4" visibility="public" signature="findsVertex(String) : Vertex" num="115" count="0" type="method"/>
             <line num="117" count="0" type="stmt"/>
             <line num="118" count="0" type="stmt"/>
@@ -280,7 +280,7 @@
          </file>
       </package>
    </project>
-   <testproject timestamp="1588610160359">
+   <testproject timestamp="1588696122400">
       <metrics coveredelements="0" complexity="0" loc="0" methods="0" classes="0" statements="0" packages="0" coveredconditionals="0" coveredmethods="0" elements="0" ncloc="0" files="0" conditionals="0" coveredstatements="0"/>
    </testproject>
 </coverage>

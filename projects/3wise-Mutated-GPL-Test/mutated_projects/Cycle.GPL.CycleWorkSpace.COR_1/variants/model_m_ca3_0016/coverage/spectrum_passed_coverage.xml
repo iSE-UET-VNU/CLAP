@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588609852904" clover="4.4.1"> 
- <project timestamp="1588609852713">  
+<coverage generated="1588695835841" clover="4.4.1"> 
+ <project timestamp="1588695835654">  
   <package name="GPL">  
    <file path="GPL/Main.java" name="GPL.Main">   
     <line visibility="public" signature="main(String[]) : void" num="8" count="1" type="method" featureClass="TestProg.GPL.Main" featureLineNum="4" /> 
@@ -156,8 +156,8 @@
     <line num="148" count="5" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="79" /> 
     <line visibility="public" signature="hasNext() : boolean" num="152" count="5" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="83" /> 
     <line num="154" count="5" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="85" /> 
-    <line visibility="public" signature="getName() : String" num="162" count="10" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="90" /> 
-    <line num="164" count="10" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="92" /> 
+    <line visibility="public" signature="getName() : String" num="162" count="8" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="90" /> 
+    <line num="164" count="8" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="92" /> 
     <line visibility="public" signature="getStart() : Vertex" num="174" count="1" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="99" /> 
     <line num="174" count="1" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="99" /> 
     <line visibility="public" signature="getEnd() : Vertex" num="178" count="1" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="100" /> 
@@ -201,6 +201,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588609852713">  
+ <testproject timestamp="1588695835654">  
  </testproject> 
 </coverage>

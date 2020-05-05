@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588611684910" clover="4.4.1"> 
- <project timestamp="1588611684803">  
+<coverage generated="1588697588028" clover="4.4.1"> 
+ <project timestamp="1588697587913">  
   <package name="GPL">  
    <file path="GPL/Main.java" name="GPL.Main">   
     <line visibility="public" signature="main(String[]) : void" num="8" count="0" type="method" featureClass="TestProg.GPL.Main" featureLineNum="4" /> 
@@ -179,6 +179,6 @@
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1588611684803">  
+ <testproject timestamp="1588697587913">  
  </testproject> 
 </coverage>
