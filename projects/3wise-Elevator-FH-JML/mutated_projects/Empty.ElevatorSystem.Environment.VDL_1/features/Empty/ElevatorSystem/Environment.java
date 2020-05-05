@@ -1,0 +1,33 @@
+// This is a mutant program.
+// Author : ysma
+
+package ElevatorSystem;
+
+
+public class Environment
+{
+
+    public Environment( int numFloors )
+    {
+        floors = new Floor[numFloors];
+        for (int i = 0; numFloors; i++) {
+            floors[i] = new Floor( this, i );
+        }
+    }
+
+    public  Floor getFloor( int id )
+    {
+        return floors[id];
+    }
+
+    public  Floor[] getFloors()
+    {
+        return floors;
+    }
+
+    public  boolean isTopFloor( int id )
+    {
+        return id == floors.length - 1;
+    }
+
+}

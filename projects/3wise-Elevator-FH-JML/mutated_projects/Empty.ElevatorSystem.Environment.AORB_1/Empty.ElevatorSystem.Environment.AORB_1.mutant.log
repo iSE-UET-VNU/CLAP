@@ -1,0 +1,1 @@
+AORB_1:30:boolean_isTopFloor(int):floors.length - 1 => floors.length * 1

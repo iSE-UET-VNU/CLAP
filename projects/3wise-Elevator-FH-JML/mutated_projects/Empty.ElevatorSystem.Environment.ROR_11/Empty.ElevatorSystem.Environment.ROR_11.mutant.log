@@ -1,0 +1,1 @@
+ROR_11:30:boolean_isTopFloor(int): id == floors.length - 1  =>   id <= floors.length - 1
