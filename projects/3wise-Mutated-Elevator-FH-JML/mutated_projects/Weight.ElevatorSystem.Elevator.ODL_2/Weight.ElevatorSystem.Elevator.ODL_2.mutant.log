@@ -1,0 +1,1 @@
+ODL_2:32:void_enterElevator(Person):weight += p.getWeight() => weight = p.getWeight()

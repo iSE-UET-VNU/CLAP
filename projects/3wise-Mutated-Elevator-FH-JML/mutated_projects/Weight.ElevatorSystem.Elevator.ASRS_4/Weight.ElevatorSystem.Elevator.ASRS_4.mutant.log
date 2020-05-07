@@ -1,0 +1,1 @@
+ASRS_4:22:boolean_leaveElevator(Person):weight -= p.getWeight() => weight %= p.getWeight()

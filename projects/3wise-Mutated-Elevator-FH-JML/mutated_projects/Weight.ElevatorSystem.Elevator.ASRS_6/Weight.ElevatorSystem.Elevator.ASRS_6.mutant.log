@@ -1,0 +1,1 @@
+ASRS_6:32:void_enterElevator(Person):weight += p.getWeight() => weight *= p.getWeight()

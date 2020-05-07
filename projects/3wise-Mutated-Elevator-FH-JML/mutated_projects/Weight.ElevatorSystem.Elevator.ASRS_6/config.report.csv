@@ -1,0 +1,12 @@
+Product\Feature,Base,Weight,Empty,ExecutiveFloor,TwoThirdsFull,Overloaded,__TEST_OUTPUT__
+model_m_ca3_0001,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,__PASSED__
+model_m_ca3_0002,  T  ,  T  ,  F  ,  T  ,  T  ,  F  ,__PASSED__
+model_m_ca3_0003,  T  ,  T  ,  F  ,  T  ,  F  ,  T  ,__FAILED__
+model_m_ca3_0004,  T  ,  T  ,  F  ,  F  ,  T  ,  T  ,__PASSED__
+model_m_ca3_0005,  T  ,  T  ,  T  ,  T  ,  F  ,  F  ,__PASSED__
+model_m_ca3_0006,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,__PASSED__
+model_m_ca3_0007,  T  ,  F  ,  T  ,  F  ,  F  ,  F  ,__PASSED__
+model_m_ca3_0008,  T  ,  T  ,  T  ,  T  ,  T  ,  T  ,__FAILED__
+model_m_ca3_0009,  T  ,  T  ,  T  ,  F  ,  F  ,  T  ,__PASSED__
+model_m_ca3_0010,  T  ,  T  ,  T  ,  F  ,  T  ,  F  ,__FAILED__
+model_m_ca3_0011,  T  ,  F  ,  T  ,  T  ,  F  ,  F  ,__PASSED__
