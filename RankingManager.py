@@ -4,71 +4,42 @@ from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir
 
 # keywords
-FAILED_TEST_COUNT = 'failed_test_count'
-PASSED_TEST_COUNT = 'passed_test_count'
-SUSPICIOUS = 'suspicious'
-SPECTRUM_SCORE = 'spectrum_score'
-NUM_INTERACTIONS = 'num_interactions'
+STM_FAILED_TEST_COUNT = 'failed_test_count'
+STM_PASSED_TEST_COUNT = 'passed_test_count'
+STM_SUSPICIOUS = 'suspicious'
+STM_SPECTRUM_SCORE = 'spectrum_score'
+STM_NUM_INTERACTIONS = 'num_interactions'
 
+RANKING_SPECTRUM = "spectrum"
+RANKING_SPECTRUM_DETAIL = "spectrum_detail"
+RANKING_SPC_SPECTRUM = "spc_spectrum"
+RANKING_SPC_SPECTRUM_DETAIL = "spc_spectrum_detail"
+RANKING_SPC_SPECTRUM_INTERACTION = "spc_spectrum_interaction"
+RANKING_SPC_SPECTRUM_INTERACTION_DETAIL = "spc_spectrum_interaction_detail"
 
-
-def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list):
-    ava_buggy_stm_spectrum_ranked = 0
-    ava_buggy_stm_spc_spectrum_ranked = 0
-    ava_buggy_stm_spc_interaction_spectrum_ranked = 0
-
-    flag_not_found = False
+def ranking( buggy_statement, mutated_project_dir, suspicious_stms_list):
+    ranking_results = {}
     for variant in suspicious_stms_list:
-        print(variant)
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant])
 
         spectrum_ranked_list = spectrum_ranking(statement_infor)
         buggy_stm_spectrum_ranked = search_rank(buggy_statement, spectrum_ranked_list)
-        if(buggy_stm_spectrum_ranked is not None):
-            ava_buggy_stm_spectrum_ranked += buggy_stm_spectrum_ranked
-        else:
-            flag_not_found = True
 
         spc_spectrum_ranked_list = spc_spectrum_ranking(statement_infor)
         buggy_stm_spc_spectrum_ranked = search_rank(buggy_statement, spc_spectrum_ranked_list)
-        if (buggy_stm_spc_spectrum_ranked is not None):
-            ava_buggy_stm_spc_spectrum_ranked += buggy_stm_spc_spectrum_ranked
-        else:
-            flag_not_found = True
 
         spc_interaction_spectrum_ranked_list = spc_interaction_spectrum_raking(statement_infor)
         buggy_stm_spc_interaction_spectrum_ranked = search_rank(buggy_statement, spc_interaction_spectrum_ranked_list)
-        if (buggy_stm_spc_interaction_spectrum_ranked is not None):
-            ava_buggy_stm_spc_interaction_spectrum_ranked += buggy_stm_spc_interaction_spectrum_ranked
-        else:
-            flag_not_found = True
 
-        print("spectrum ranking")
-        print_info(spectrum_ranked_list, buggy_stm_spectrum_ranked)
-        print("--------------")
+        ranking_results[variant] = {RANKING_SPECTRUM: buggy_stm_spectrum_ranked,
+                                    RANKING_SPECTRUM_DETAIL: spectrum_ranked_list,
+                                    RANKING_SPC_SPECTRUM: buggy_stm_spc_spectrum_ranked,
+                                    RANKING_SPC_SPECTRUM_DETAIL: spc_spectrum_ranked_list,
+                                    RANKING_SPC_SPECTRUM_INTERACTION: buggy_stm_spc_interaction_spectrum_ranked,
+                                    RANKING_SPC_SPECTRUM_INTERACTION_DETAIL: spc_interaction_spectrum_ranked_list}
 
-        print("spc spectrum ranking")
-        print_info(spc_spectrum_ranked_list, buggy_stm_spc_spectrum_ranked)
-        print("--------------")
-
-        print("spc interaction spectrum ranking")
-        print_info(spc_interaction_spectrum_ranked_list, buggy_stm_spc_interaction_spectrum_ranked)
-        print("--------------")
-
-
-        print("**************")
-
-    num_variants = len(suspicious_stms_list.keys())
-    if (flag_not_found == False):
-        return ava_buggy_stm_spectrum_ranked/num_variants, ava_buggy_stm_spc_spectrum_ranked/num_variants, ava_buggy_stm_spc_interaction_spectrum_ranked/num_variants
-    else: return 0, 0, 0
-
-def print_info(ranked_list, buggy_stm_ranked):
-    print("ranked list: ", ranked_list[0:buggy_stm_ranked])
-    print("num of ranking stms: ", len(ranked_list))
-    print("buggy stms ranked:", buggy_stm_ranked)
-
+        return ranking_results
 
 def suspiciousness_calculation(variant_dir, suspicious_stms_list):
     statement_infor = {}
@@ -79,11 +50,11 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list):
 
     if os.path.isfile(spectrum_failed_coverage_file_dir):
         statement_infor = read_statement_infor_from_coverage_file(statement_infor, spectrum_failed_coverage_file_dir,
-                                                                  FAILED_TEST_COUNT, suspicious_stms_list)
+                                                                  STM_FAILED_TEST_COUNT, suspicious_stms_list)
 
     if os.path.isfile(spectrum_passed_coverage_file_dir):
         statement_infor = read_statement_infor_from_coverage_file(statement_infor, spectrum_passed_coverage_file_dir,
-                                                                  PASSED_TEST_COUNT, suspicious_stms_list)
+                                                                  STM_PASSED_TEST_COUNT, suspicious_stms_list)
 
     (total_failed_tests, total_passed_tests) = count_tests(test_coverage_dir)
 
@@ -117,15 +88,15 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
                 id = line.get('featureClass') + "." + line.get('featureLineNum')
                 if id not in statement_infor:
                     statement_infor[id] = {}
-                    statement_infor[id][FAILED_TEST_COUNT] = 0
-                    statement_infor[id][PASSED_TEST_COUNT] = 0
+                    statement_infor[id][STM_FAILED_TEST_COUNT] = 0
+                    statement_infor[id][STM_PASSED_TEST_COUNT] = 0
 
                     if id in suspicious_stms_list.keys():
-                        statement_infor[id][SUSPICIOUS] = True
-                        statement_infor[id][NUM_INTERACTIONS] = suspicious_stms_list[id]['num_interactions']
+                        statement_infor[id][STM_SUSPICIOUS] = True
+                        statement_infor[id][STM_NUM_INTERACTIONS] = suspicious_stms_list[id]['num_interactions']
                     else:
-                        statement_infor[id][SUSPICIOUS] = False
-                        statement_infor[id][NUM_INTERACTIONS] = 0
+                        statement_infor[id][STM_SUSPICIOUS] = False
+                        statement_infor[id][STM_NUM_INTERACTIONS] = 0
 
                 statement_infor[id][kind_of_test_count] = max(int(line.get('count')),
                                                               statement_infor[id][kind_of_test_count])
@@ -134,7 +105,7 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests):
     for id in statement_infor.keys():
-        statement_infor[id][SPECTRUM_SCORE] = stm_spectrum_calculation(statement_infor, id, total_failed_tests,
+        statement_infor[id][STM_SPECTRUM_SCORE] = stm_spectrum_calculation(statement_infor, id, total_failed_tests,
                                                                        total_passed_tests)
     return statement_infor
 
@@ -143,18 +114,18 @@ def stm_spectrum_calculation(statement_infor, stm_id, total_failed_tests, total_
     if (total_failed_tests == 0 or total_passed_tests == 0):
         return -1
 
-    if (statement_infor[stm_id][FAILED_TEST_COUNT] == 0 and statement_infor[stm_id][PASSED_TEST_COUNT] == 0):
+    if (statement_infor[stm_id][STM_FAILED_TEST_COUNT] == 0 and statement_infor[stm_id][STM_PASSED_TEST_COUNT] == 0):
         return -1
 
-    return (statement_infor[stm_id][FAILED_TEST_COUNT] / total_failed_tests) / \
-           ((statement_infor[stm_id][FAILED_TEST_COUNT] / total_failed_tests) +
-            (statement_infor[stm_id][PASSED_TEST_COUNT] / total_passed_tests))
+    return (statement_infor[stm_id][STM_FAILED_TEST_COUNT] / total_failed_tests) / \
+           ((statement_infor[stm_id][STM_FAILED_TEST_COUNT] / total_failed_tests) +
+            (statement_infor[stm_id][STM_PASSED_TEST_COUNT] / total_passed_tests))
 
 
 def spectrum_ranking(statement_infor):
     spectrum_ranked_list = []
     for (key, value) in statement_infor.items():
-        spectrum_ranked_list.append((key, statement_infor[key][SPECTRUM_SCORE]))
+        spectrum_ranked_list.append((key, statement_infor[key][STM_SPECTRUM_SCORE]))
 
     for i in range(0, len(spectrum_ranked_list) - 1):
         for j in range(i + 1, len(spectrum_ranked_list)):
@@ -169,8 +140,8 @@ def spc_spectrum_ranking(statement_infor):
     spc_spectrum_ranked_list = []
 
     for (key, value) in statement_infor.items():
-        if statement_infor[key][SUSPICIOUS] == True:
-            spc_spectrum_ranked_list.append((key, statement_infor[key][SPECTRUM_SCORE]))
+        if statement_infor[key][STM_SUSPICIOUS] == True:
+            spc_spectrum_ranked_list.append((key, statement_infor[key][STM_SPECTRUM_SCORE]))
 
     for i in range(0, len(spc_spectrum_ranked_list) - 1):
         for j in range(i + 1, len(spc_spectrum_ranked_list)):
@@ -184,9 +155,9 @@ def spc_spectrum_ranking(statement_infor):
 def spc_interaction_spectrum_raking(statement_infor):
     spc_interaction_spectrum_ranked_list = []
     for (key, value) in statement_infor.items():
-        if statement_infor[key][SUSPICIOUS] == True:
+        if statement_infor[key][STM_SUSPICIOUS] == True:
             spc_interaction_spectrum_ranked_list.append(
-                (key, statement_infor[key][SPECTRUM_SCORE], statement_infor[key][NUM_INTERACTIONS]))
+                (key, statement_infor[key][STM_SPECTRUM_SCORE], statement_infor[key][STM_NUM_INTERACTIONS]))
 
     for i in range(0, len(spc_interaction_spectrum_ranked_list) - 1):
         for j in range(i + 1, len(spc_interaction_spectrum_ranked_list)):

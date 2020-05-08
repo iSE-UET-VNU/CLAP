@@ -1,18 +1,109 @@
-from FileManager import get_project_dir
+import logging
+import os
+import time
+
+from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER
 import MutantManager
 import RankingManager
+from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
+import threading
+from xlsxwriter import Workbook
+
+MUTATED_PROJECT_COL = 0
+VARIANT_COL = 1
+SPECTRUM_COL = 2
+SPECTRUM_SPACE_COL = 3
+SPECTRUM_DETAIL_COL = 4
+SPC_SPECTRUM_COL = 5
+SPC_SPECTRUM_SPACE_COL = 6
+SPC_SPECTRUM_DETAIL_COL = 7
+SPC_SPECTRUM_INTERACTION_COL = 8
+SPC_SPECTRUM_INTERACTION_SPACE_COL = 9
+SPC_SPECTRUM_INTERACTION_DETAIL_COL = 10
+
+
+def write_header_in_result_file(row, sheet):
+    sheet.write(row, SPECTRUM_COL, "SPECTRUM")
+    sheet.write(row, SPECTRUM_SPACE_COL, "SPECTRUM_SPACE")
+    sheet.write(row, SPECTRUM_DETAIL_COL, "SPECTRUM_DETAIL")
+    sheet.write(row, SPC_SPECTRUM_COL, "SPC_SPECTRUM")
+    sheet.write(row, SPC_SPECTRUM_SPACE_COL, "SPC_SPECTRUM_SPACE")
+    sheet.write(row, SPC_SPECTRUM_DETAIL_COL, "SPC_SPECTRUM_DETAIL")
+    sheet.write(row, SPC_SPECTRUM_INTERACTION_COL, "SPC_SPECTRUM_INTERACTION")
+    sheet.write(row, SPC_SPECTRUM_INTERACTION_SPACE_COL, "SPC_SPECTRUM_INTERACTION_SPACE")
+    sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL, "SPC_SPECTRUM_INTERACTION_DETAIL")
+
+
+def write_results_to_file(row, sheet, ranking_results):
+    for item in ranking_results:
+        sheet.write(row, VARIANT_COL, item)
+        spectrum_rank = ranking_results[item][RankingManager.RANKING_SPECTRUM]
+        sheet.write(row, SPECTRUM_COL, spectrum_rank)
+        sheet.write(row, SPECTRUM_SPACE_COL, len(ranking_results[item][RankingManager.RANKING_SPECTRUM_DETAIL]))
+        sheet.write(row, SPECTRUM_DETAIL_COL, str(ranking_results[item][RankingManager.RANKING_SPECTRUM_DETAIL][0:spectrum_rank]))
+
+        spc_spectrum_rank = ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM]
+        sheet.write(row, SPC_SPECTRUM_COL,spc_spectrum_rank)
+        sheet.write(row, SPC_SPECTRUM_SPACE_COL, len(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_DETAIL]))
+        sheet.write(row, SPC_SPECTRUM_DETAIL_COL,
+                    str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_DETAIL][0:spc_spectrum_rank]))
+
+        spc_spectrum_interaction_rank = ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_INTERACTION]
+        sheet.write(row, SPC_SPECTRUM_INTERACTION_COL, spc_spectrum_interaction_rank)
+        sheet.write(row, SPC_SPECTRUM_INTERACTION_SPACE_COL, len(ranking_results[item][
+                                                                     RankingManager.RANKING_SPC_SPECTRUM_INTERACTION_DETAIL]))
+        sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL,
+                    str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_INTERACTION_DETAIL][0:spc_spectrum_interaction_rank]))
+        row += 1
+
+def thread_function( project_name):
+    experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER, project_name + "_result.xlsx")
+    wb = Workbook(experiment_file_name)
+    project_dir = get_project_dir(project_name)
+    sheet = wb.add_worksheet()
+    row = 1
+    write_header_in_result_file(row, sheet)
+    row += 1
+    mutated_projects_dir = get_mutated_projects_dir(project_dir)
+    mutated_projects = os.listdir(mutated_projects_dir)
+
+    for mutated_project_name in mutated_projects:
+        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
+        suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
+        sheet.write(row, MUTATED_PROJECT_COL, mutated_project_name)
+        buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
+        ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
+                                                 suspicious_stms_list)
+        write_results_to_file(row, sheet, ranking_results)
+        row += 1
+
+    wb.close()
 
 if __name__ == "__main__":
-    project_name = "Mutated-GPL-Test"
-    project_dir = get_project_dir(project_name)
-    mutated_project_name = "DirectedWithEdges.GPL.Edge.ROR_1"
-    mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
+
+    project_names = ["ProjectTest1", "ProjectTest2"]
 
 
-    suspicious_stms_list = {"model_m_ca2_0009": {"DirectedWithEdges.GPL.Graph.90": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.92": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.91": {"num_interactions": 1},"DirectedWithEdges.GPL.Vertex.34": {"num_interactions": 1},"BFS.GPL.Vertex.20": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.93": {"num_interactions": 1},"DirectedWithEdges.GPL.Vertex.38": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.95": {"num_interactions": 1},"BFS.GPL.Graph.21": {"num_interactions": 2},"BFS.GPL.Graph.22": {"num_interactions": 2},"BFS.GPL.Graph.26": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.30": {"num_interactions": 1},"BFS.GPL.Graph.29": {"num_interactions": 2},"BFS.GPL.Graph.28": {"num_interactions": 2},"BFS.GPL.Vertex.19": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.24": {"num_interactions": 1},"DirectedWithEdges.GPL.Vertex.25": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.83": {"num_interactions": 1},"DirectedWithEdges.GPL.Vertex.29": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.85": {"num_interactions": 1},"BFS.GPL.Graph.32": {"num_interactions": 2},"BFS.GPL.Graph.31": {"num_interactions": 2},"BFS.GPL.WorkSpace.10": {"num_interactions": 2},"BFS.GPL.WorkSpace.11": {"num_interactions": 2},"BFS.GPL.WorkSpace.12": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.87": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.86": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.59": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.88": {"num_interactions": 1},"Number.GPL.NumberWorkSpace.19": {"num_interactions": 2},"Number.GPL.NumberWorkSpace.17": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.17": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.75": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.78": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.77": {"num_interactions": 1},"BFS.GPL.Vertex.71": {"num_interactions": 1},"BFS.GPL.Vertex.72": {"num_interactions": 1},"BFS.GPL.Vertex.75": {"num_interactions": 1},"BFS.GPL.Vertex.74": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.62": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.66": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.69": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.68": {"num_interactions": 2},"BFS.GPL.Vertex.61": {"num_interactions": 2},"BFS.GPL.Vertex.64": {"num_interactions": 2},"Number.GPL.Vertex.11": {"num_interactions": 2},"BFS.GPL.Vertex.63": {"num_interactions": 2},"Number.GPL.Vertex.12": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.52": {"num_interactions": 1},"BFS.GPL.Vertex.65": {"num_interactions": 2},"DirectedWithEdges.GPL.Edge.31": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.25": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.53": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.55": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.58": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.57": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.59": {"num_interactions": 1},"DirectedWithEdges.GPL.Vertex.69": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.66": {"num_interactions": 2},"BFS.GPL.Vertex.50": {"num_interactions": 2},"BFS.GPL.Vertex.53": {"num_interactions": 2},"DirectedWithEdges.GPL.Edge.21": {"num_interactions": 1},"BFS.GPL.Vertex.55": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.61": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.65": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.63": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.43": {"num_interactions": 1},"BFS.GPL.Vertex.45": {"num_interactions": 2},"BFS.GPL.Vertex.48": {"num_interactions": 2},"TestProg.GPL.Main.18": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.18": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.49": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.17": {"num_interactions": 1},"Number.GPL.Graph.17": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.56": {"num_interactions": 1},"Number.GPL.Graph.11": {"num_interactions": 2},"DirectedWithEdges.GPL.Edge.54": {"num_interactions": 1},"Number.GPL.Graph.10": {"num_interactions": 2},"BFS.GPL.Vertex.41": {"num_interactions": 2},"Number.GPL.Graph.12": {"num_interactions": 2},"BFS.GPL.WorkSpace.9": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.54": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.39": {"num_interactions": 1},"BFS.GPL.Vertex.35": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.34": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.33": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.36": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.35": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.49": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.40": {"num_interactions": 1},"DirectedWithEdges.GPL.Vertex.47": {"num_interactions": 1},"BFS.GPL.Vertex.31": {"num_interactions": 2},"BFS.GPL.Vertex.33": {"num_interactions": 2},"DirectedWithEdges.GPL.Edge.42": {"num_interactions": 1},"BFS.GPL.Graph.15": {"num_interactions": 2},"BFS.GPL.Graph.12": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.40": {"num_interactions": 2},"BFS.GPL.Graph.13": {"num_interactions": 2},"DirectedWithEdges.GPL.Vertex.41": {"num_interactions": 2},"BFS.GPL.Graph.19": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.28": {"num_interactions": 1},"DirectedWithEdges.GPL.Graph.21": {"num_interactions": 2},"DirectedWithEdges.GPL.Edge.36": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.37": {"num_interactions": 1},"BFS.GPL.Vertex.26": {"num_interactions": 2},"BFS.GPL.Vertex.25": {"num_interactions": 2},"BFS.GPL.Vertex.27": {"num_interactions": 2},"DirectedWithEdges.GPL.Graph.24": {"num_interactions": 1},"DirectedWithEdges.GPL.Edge.39": {"num_interactions": 1}}}
+    logging.info("Main    : before creating thread")
+    x = threading.Thread(target=thread_function, args=(project_names[0],))
+    y = threading.Thread(target=thread_function, args=(project_names[1],))
 
-    buggy_statement = "DirectedWithEdges.GPL.Edge.36"
+    logging.info("Main    : before running thread")
+    x.start()
+    y.start()
+    logging.info("Main    : wait for the thread to finish")
+    # x.join()
 
-    print(RankingManager.ranking(buggy_statement, mutated_project_dir, suspicious_stms_list))
+    logging.info("Main    : all done")
+
+
+
+
+
+
+
+
+
+
 
 
