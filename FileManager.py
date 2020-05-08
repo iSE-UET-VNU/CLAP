@@ -12,6 +12,8 @@ PROJECT_DIR = os.path.abspath("projects")
 MODE_FILE_NAME = "model.m"
 CONFIG_FOLDER_NAME = "configs"
 CONFIGS_REPORT_FILE_NAME = "config.report.csv"
+SPC_LOG_FILE_NAME = "spc.log"
+SLICING_LOG_FILE_NAME = "slicing.log"
 PROJECT_LOCK_FILE_NAME = "project.lock"
 
 VARIANT_FOLDER_NAME = "variants"
@@ -79,6 +81,14 @@ def get_model_configs_report_path(project_dir):
 
 def get_variants_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
+
+
+def get_spc_log_file_path(project_dir):
+    return join_path(project_dir, SPC_LOG_FILE_NAME)
+
+
+def get_slicing_log_file_path(project_dir):
+    return join_path(project_dir, SLICING_LOG_FILE_NAME)
 
 
 def get_variant_dir(project_dir, config_name):
@@ -165,6 +175,10 @@ def get_file_name_without_ext(file_path):
 
 def get_file_name(file_path):
     return os.path.basename(file_path)
+
+
+def get_file_name_with_parent(file_path):
+    return "/".join(file_path.rsplit("/", 2)[1:])
 
 
 def join_path(*args, **kwargs):
