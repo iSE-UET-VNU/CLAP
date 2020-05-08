@@ -35,7 +35,9 @@ def write_header_in_result_file(row, sheet):
 
 
 def write_results_to_file(row, sheet, ranking_results):
+
     for item in ranking_results:
+
         sheet.write(row, VARIANT_COL, item)
         spectrum_rank = ranking_results[item][RankingManager.RANKING_SPECTRUM]
         sheet.write(row, SPECTRUM_COL, spectrum_rank)
@@ -55,11 +57,14 @@ def write_results_to_file(row, sheet, ranking_results):
         sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL,
                     str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_INTERACTION_DETAIL][0:spc_spectrum_interaction_rank]))
         row += 1
+    return row
 
 def thread_function( project_name):
+    logging.info("Thread %s: starting", project_name)
     experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER, project_name + "_result.xlsx")
     wb = Workbook(experiment_file_name)
     project_dir = get_project_dir(project_name)
+
     sheet = wb.add_worksheet()
     row = 1
     write_header_in_result_file(row, sheet)
@@ -74,35 +79,27 @@ def thread_function( project_name):
         buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
         ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
                                                  suspicious_stms_list)
-        write_results_to_file(row, sheet, ranking_results)
+        row = write_results_to_file(row, sheet, ranking_results)
         row += 1
-
     wb.close()
+    logging.info("Thread %s: finishing", project_name)
+
 
 if __name__ == "__main__":
 
     project_names = ["ProjectTest1", "ProjectTest2"]
 
-
     logging.info("Main    : before creating thread")
-    x = threading.Thread(target=thread_function, args=(project_names[0],))
-    y = threading.Thread(target=thread_function, args=(project_names[1],))
+    threads = []
+    for i in range(0, len(project_names)):
+         threads.append(threading.Thread(target=thread_function, args=(project_names[i],)))
+         threads[i].start()
 
-    logging.info("Main    : before running thread")
-    x.start()
-    y.start()
     logging.info("Main    : wait for the thread to finish")
-    # x.join()
+    for i in range(0, len(project_names)):
+         threads[i].join()
 
     logging.info("Main    : all done")
-
-
-
-
-
-
-
-
 
 
 

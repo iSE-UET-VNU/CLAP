@@ -39,7 +39,7 @@ def ranking( buggy_statement, mutated_project_dir, suspicious_stms_list):
                                     RANKING_SPC_SPECTRUM_INTERACTION: buggy_stm_spc_interaction_spectrum_ranked,
                                     RANKING_SPC_SPECTRUM_INTERACTION_DETAIL: spc_interaction_spectrum_ranked_list}
 
-        return ranking_results
+    return ranking_results
 
 def suspiciousness_calculation(variant_dir, suspicious_stms_list):
     statement_infor = {}
