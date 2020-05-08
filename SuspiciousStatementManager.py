@@ -1,10 +1,10 @@
 from os.path import isfile
 
-from FileManager import join_path
+from FileManager import join_path, SLICING_LOG_FILE_NAME
 import json
 
 def get_suspicious_statement(mutated_project_dir):
-    slicing_info_file_path = join_path(mutated_project_dir, "slicing_info.txt")
+    slicing_info_file_path = join_path(mutated_project_dir, SLICING_LOG_FILE_NAME)
 
     if(isfile(slicing_info_file_path)):
         slicing_info_file = open(slicing_info_file_path, "r")

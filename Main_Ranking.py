@@ -1,7 +1,8 @@
 import logging
 import os
-import time
 
+import SPCsManager
+import SlicingManager
 from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER
 import MutantManager
 import RankingManager
@@ -20,7 +21,6 @@ SPC_SPECTRUM_DETAIL_COL = 7
 SPC_SPECTRUM_INTERACTION_COL = 8
 SPC_SPECTRUM_INTERACTION_SPACE_COL = 9
 SPC_SPECTRUM_INTERACTION_DETAIL_COL = 10
-
 
 def write_header_in_result_file(row, sheet):
     sheet.write(row, SPECTRUM_COL, "SPECTRUM")
@@ -59,7 +59,8 @@ def write_results_to_file(row, sheet, ranking_results):
         row += 1
     return row
 
-def thread_function( project_name):
+def ranking( project_name):
+
     logging.info("Thread %s: starting", project_name)
     experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER, project_name + "_result.xlsx")
     wb = Workbook(experiment_file_name)
@@ -73,10 +74,20 @@ def thread_function( project_name):
     mutated_projects = os.listdir(mutated_projects_dir)
 
     for mutated_project_name in mutated_projects:
-        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
-        suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
+        ranking_variant = project_name + "_" + mutated_project_name + "\n"
+
+        logging.info("Ranking... %s", ranking_variant)
+
         sheet.write(row, MUTATED_PROJECT_COL, mutated_project_name)
+
+        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
+
+        spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir)
+        SlicingManager.do_slice(spc_log_file_path)
+
+        suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
         buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
+
         ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
                                                  suspicious_stms_list)
         row = write_results_to_file(row, sheet, ranking_results)
@@ -89,10 +100,9 @@ if __name__ == "__main__":
 
     project_names = ["ProjectTest1", "ProjectTest2"]
 
-    logging.info("Main    : before creating thread")
     threads = []
     for i in range(0, len(project_names)):
-         threads.append(threading.Thread(target=thread_function, args=(project_names[i],)))
+         threads.append(threading.Thread(target=ranking, args=(project_names[i], )))
          threads[i].start()
 
     logging.info("Main    : wait for the thread to finish")

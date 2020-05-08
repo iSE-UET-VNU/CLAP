@@ -2,6 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir
+import xml.dom.minidom
 
 # keywords
 STM_FAILED_TEST_COUNT = 'failed_test_count'
