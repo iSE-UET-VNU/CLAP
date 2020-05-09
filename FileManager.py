@@ -123,7 +123,7 @@ def get_src_dir(variant_dir):
 
 
 def get_test_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, "test", "java", force_mkdir=False)
+    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, "test", "java", force_mkdir=True)
 
 
 def get_mutation_result_dir(project_dir):
@@ -223,6 +223,8 @@ def escape_path(current_path):
 def create_symlink(src, dst):
     if is_path_exist(dst):
         os.unlink(dst)
+    else:
+        mkdir_if_not_exist(get_outer_dir(dst))
     os.symlink(src, escape_path(dst))
 
 
