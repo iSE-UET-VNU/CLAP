@@ -119,11 +119,11 @@ def get_test_coverage_dir(variant_dir):
 
 
 def get_src_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, force_mkdir=False)
+    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, "main", "java", force_mkdir=False)
 
 
 def get_test_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(variant_dir, TEST_CASES_FOLDER_NAME, force_mkdir=False)
+    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, "test", "java", force_mkdir=False)
 
 
 def get_mutation_result_dir(project_dir):

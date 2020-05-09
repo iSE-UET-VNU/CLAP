@@ -61,7 +61,7 @@ def run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=False, halt_
         if halt_on_failure and (
                 halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
             logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
-            raise Exception("Test case failures")
+            raise RuntimeError("Test case failures")
         return False
     return True
 

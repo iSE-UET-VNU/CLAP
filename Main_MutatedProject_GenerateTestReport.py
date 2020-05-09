@@ -7,7 +7,7 @@ from Helpers import sleep
 from VariantComposer import was_variants_composed
 
 if __name__ == "__main__":
-    project_name = "GPL-Test"
+    project_name = "3wise-Mutated-Elevator-FH-JML"
     project_dir = get_project_dir(project_name)
 
     # clone ant directory
@@ -23,6 +23,9 @@ if __name__ == "__main__":
                 lock_project(mutated_project_dir)
             except BlockingIOError as e:
                 continue
-            TestManager.run_junit_test_cases_with_coverage_on_project(mutated_project_dir, cloned_ant_name)
+            try:
+                TestManager.run_junit_test_cases_with_coverage_on_project(mutated_project_dir, cloned_ant_name)
+            except RuntimeError:
+                continue
             TestManager.write_test_output_to_configs_report(mutated_project_dir)
         sleep(1800)
