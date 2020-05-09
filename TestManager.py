@@ -35,7 +35,7 @@ def generate_junit_test_cases(variant_dir):
 def link_generated_junit_test_cases(variant_dir, target_variant_dir):
     logger.info(f"Linking JUnit Test for variant [{get_file_name_without_ext(variant_dir)}]")
     generated_test_dir = get_test_dir(variant_dir)
-    target_test_dir = get_test_dir(target_variant_dir)
+    target_test_dir = get_test_dir(target_variant_dir, force_mkdir=False)
     create_symlink(generated_test_dir, target_test_dir)
 
 

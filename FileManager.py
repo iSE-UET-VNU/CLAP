@@ -18,6 +18,7 @@ PROJECT_LOCK_FILE_NAME = "project.lock"
 
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
+TEST_FOLDER_NAME = "test"
 COMPILED_CLASSES_FOLDER_NAME = "build"
 COMPILED_SOURCE_CLASSES_FOLDER_NAME = "main"
 COMPILED_TEST_CLASSES_FOLDER_NAME = "test"
@@ -119,11 +120,11 @@ def get_test_coverage_dir(variant_dir):
 
 
 def get_src_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, "main", "java", force_mkdir=False)
+    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, force_mkdir=False)
 
 
-def get_test_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, "test", "java", force_mkdir=True)
+def get_test_dir(variant_dir, force_mkdir=True):
+    return get_project_sub_dir_by_folder_name(variant_dir, TEST_FOLDER_NAME, force_mkdir=force_mkdir)
 
 
 def get_mutation_result_dir(project_dir):
@@ -222,7 +223,10 @@ def escape_path(current_path):
 
 def create_symlink(src, dst):
     if is_path_exist(dst):
-        os.unlink(dst)
+        try:
+            os.unlink(dst)
+        except (IsADirectoryError, PermissionError):
+            pass
     else:
         mkdir_if_not_exist(get_outer_dir(dst))
     os.symlink(src, escape_path(dst))

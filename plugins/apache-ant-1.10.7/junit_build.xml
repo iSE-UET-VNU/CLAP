@@ -99,9 +99,9 @@
         <clover-snapshot/>
     </target>
     <target name="clover.report">
+        <clover-html-report outdir="/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/tools/evosuite-coverage-tools/openclover/test3" title="Tutorial" showUniqueCoverage="true"/>
         <clover-report>
-            <current outfile="${output_path}" alwaysReport="true" showLambdaFunctions="true"
-                     showInnerFunctions="true">
+            <current outfile="${output_path}" alwaysReport="true">
                 <format type="xml"/>
             </current>
         </clover-report>
