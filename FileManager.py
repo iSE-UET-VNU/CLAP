@@ -178,7 +178,7 @@ def get_file_name(file_path):
 
 
 def get_file_name_with_parent(file_path):
-    return os.sep.join(file_path.rsplit(os.sep, 2)[1:])
+    return join_path(*file_path.rsplit(os.sep, 2)[1:])
 
 
 def join_path(*args, **kwargs):
