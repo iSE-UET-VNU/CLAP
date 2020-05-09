@@ -166,7 +166,7 @@ def move_file(source, target):
 
 
 def split_path(file_path):
-    return file_path.rsplit("/", 1)
+    return file_path.rsplit(os.sep, 1)
 
 
 def get_file_name_without_ext(file_path):
@@ -178,7 +178,7 @@ def get_file_name(file_path):
 
 
 def get_file_name_with_parent(file_path):
-    return "/".join(file_path.rsplit("/", 2)[1:])
+    return join_path(*file_path.rsplit(os.sep, 2)[1:])
 
 
 def join_path(*args, **kwargs):
