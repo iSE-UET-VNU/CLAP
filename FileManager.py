@@ -34,6 +34,8 @@ SPECTRUM_PASSED_COVERAGE_FILE_NAME = "spectrum_passed_coverage.xml"
 FAILED_TEST_COVERAGE_FOLDER_NAME = "failed"
 PASSED_TEST_COVERAGE_FOLDER_NAME = "passed"
 
+EXPERIMENT_RESULT_FOLDER = os.path.abspath("experiment_results")
+
 logger = get_logger(__name__)
 
 
