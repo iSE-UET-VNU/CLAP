@@ -3,12 +3,15 @@ import os
 
 import SPCsManager
 import SlicingManager
-from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER
+from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, \
+    SPC_LOG_FILE_NAME
 import MutantManager
 import RankingManager
 from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
 import threading
 from xlsxwriter import Workbook
+import multiprocessing
+import time
 
 MUTATED_PROJECT_COL = 0
 VARIANT_COL = 1
@@ -59,6 +62,9 @@ def write_results_to_file(row, sheet, ranking_results):
         row += 1
     return row
 
+def find_spcs(mutated_project_dir):
+    SPCsManager.find_SPCs(mutated_project_dir)
+
 def ranking( project_name):
 
     logging.info("Thread %s: starting", project_name)
@@ -82,9 +88,21 @@ def ranking( project_name):
 
         mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-        spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir)
-        SlicingManager.do_slice(spc_log_file_path)
+        p = multiprocessing.Process(target=find_spcs, args=(mutated_project_dir,))
+        p.start()
+        p.join(timeout = 3600)
 
+        # If thread is still active
+        if p.is_alive():
+            logging.info("force stop finding spcs in %s", mutated_project_name)
+
+            # Terminate
+            p.terminate()
+            p.join()
+
+        print("mutated_project_dir", mutated_project_dir)
+        spc_log_file_path = join_path(mutated_project_dir, SPC_LOG_FILE_NAME)
+        SlicingManager.do_slice(spc_log_file_path)
         suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
         buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
 
@@ -98,8 +116,8 @@ def ranking( project_name):
 
 if __name__ == "__main__":
 
-    project_names = ["ProjectTest1", "ProjectTest2"]
-
+    #project_names = ["3wise-Mutated-Elevator-FH-JML", "3wise-Mutated-GPL-Test", "Mutated-GPL-Test"]
+    project_names = ["ProjectTest1"]
     threads = []
     for i in range(0, len(project_names)):
          threads.append(threading.Thread(target=ranking, args=(project_names[i], )))

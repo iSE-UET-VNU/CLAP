@@ -1,3 +1,4 @@
+import logging
 import os
 import xml.etree.ElementTree as ET
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
@@ -79,29 +80,33 @@ def count_tests(dir):
 
 
 def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind_of_test_count, suspicious_stms_list):
-    tree = ET.parse(coverage_file)
-    root = tree.getroot()
-    project = root.find("project")
+    print(coverage_file)
+    try:
+        tree = ET.parse(coverage_file)
+        root = tree.getroot()
+        project = root.find("project")
 
-    for package in project:
-        for file in package:
-            for line in file:
-                id = line.get('featureClass') + "." + line.get('featureLineNum')
-                if id not in statement_infor:
-                    statement_infor[id] = {}
-                    statement_infor[id][STM_FAILED_TEST_COUNT] = 0
-                    statement_infor[id][STM_PASSED_TEST_COUNT] = 0
+        for package in project:
+            for file in package:
+                for line in file:
+                    id = line.get('featureClass') + "." + line.get('featureLineNum')
+                    if id not in statement_infor:
+                        statement_infor[id] = {}
+                        statement_infor[id][STM_FAILED_TEST_COUNT] = 0
+                        statement_infor[id][STM_PASSED_TEST_COUNT] = 0
 
-                    if id in suspicious_stms_list.keys():
-                        statement_infor[id][STM_SUSPICIOUS] = True
-                        statement_infor[id][STM_NUM_INTERACTIONS] = suspicious_stms_list[id]['num_interactions']
-                    else:
-                        statement_infor[id][STM_SUSPICIOUS] = False
-                        statement_infor[id][STM_NUM_INTERACTIONS] = 0
+                        if id in suspicious_stms_list.keys():
+                            statement_infor[id][STM_SUSPICIOUS] = True
+                            statement_infor[id][STM_NUM_INTERACTIONS] = suspicious_stms_list[id]['num_interactions']
+                        else:
+                            statement_infor[id][STM_SUSPICIOUS] = False
+                            statement_infor[id][STM_NUM_INTERACTIONS] = 0
 
-                statement_infor[id][kind_of_test_count] = max(int(line.get('count')),
-                                                              statement_infor[id][kind_of_test_count])
-    return statement_infor
+                    statement_infor[id][kind_of_test_count] = max(int(line.get('count')),
+                                                                  statement_infor[id][kind_of_test_count])
+        return statement_infor
+    except:
+        logging.info("Exception when parsing %s", coverage_file)
 
 
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests):
