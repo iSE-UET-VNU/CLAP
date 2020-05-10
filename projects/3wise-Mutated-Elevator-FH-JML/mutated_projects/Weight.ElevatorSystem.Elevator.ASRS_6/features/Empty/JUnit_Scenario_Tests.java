@@ -1,4 +1,6 @@
-import org.junit.Before; 
+package main;
+
+import org.junit.Before;
 import org.junit.Test; 
 
 import ElevatorSystem.Elevator; 

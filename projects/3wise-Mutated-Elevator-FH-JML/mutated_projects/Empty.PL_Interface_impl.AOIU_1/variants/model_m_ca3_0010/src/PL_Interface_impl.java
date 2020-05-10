@@ -1,5 +1,10 @@
-import TestSpecifications.SpecificationException; // This is a mutant program.
+// This is a mutant program.
 // Author : ysma
+
+package main; 
+
+import TestSpecifications.SpecificationException; 
+
 
 import TestSpecifications.SpecificationManager; 
 import ElevatorSystem.Elevator; 
@@ -38,7 +43,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 
 	
 
-	//__feature_mapping__ [Base] [26:38]
+	//__feature_mapping__ [Base] [28:40]
 	public static void main(String[] args) {
 		try {
 			PL_Interface_impl impl = new PL_Interface_impl();
@@ -55,7 +60,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 
 	
 
-	//__feature_mapping__ [Base] [40:56]
+	//__feature_mapping__ [Base] [42:58]
 	public void start(int specification, int variation) throws Throwable {
 	try {
 		if (verbose) 
@@ -75,21 +80,21 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [57:59]
+	//__feature_mapping__ [Base] [59:61]
 	public void checkOnlySpecification(int specID) {
 		SpecificationManager.checkOnlySpecification(specID);
 	}
 
 	
 
-	//__feature_mapping__ [Base] [61:63]
+	//__feature_mapping__ [Base] [63:65]
 	public List<String> getExecutedActions() {
 		return actionHistory;
 	}
 
 	
 	
-	//__feature_mapping__ [Base] [65:67]
+	//__feature_mapping__ [Base] [67:69]
 	public boolean isAbortedRun() {
 		return isAbortedRun;
 	}
@@ -101,7 +106,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	  @ ensures (\forall int i; 0 <= i && i < env.calledAt_Spec1.length; !env.calledAt_Spec1[i]);
 	  @ ensures (\forall int i; 0 <= i && i < env.calledAt_Spec2.length; !env.calledAt_Spec2[i]);
 	  @*/
-	 //__feature_mapping__ [Base] [74:90]
+	 //__feature_mapping__ [Base] [76:92]
 	private void  test__wrappee__Base(int specification, int variation) {
 		if (variation==-1) {
 			switch (specification) {
@@ -122,7 +127,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 
 	
 
-    //__feature_mapping__ [Empty] [16:19]
+    //__feature_mapping__ [Empty] [19:22]
 	public  void test( int specification, int variation )
     {
         test__wrappee__Base( -specification, variation );
@@ -134,7 +139,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 
 	
 	
-	//__feature_mapping__ [Base] [94:145]
+	//__feature_mapping__ [Base] [96:147]
 	public void randomSequenceOfActions(int maxLength) {
 		cleanupTimeShifts=6 * maxLength; // tests have shown that this is enough
 		env = new Environment(NUM_FLOORS);
@@ -190,7 +195,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 
 	
 	
-	//__feature_mapping__ [Base] [147:200]
+	//__feature_mapping__ [Base] [149:202]
 	public void modifiedrandomSequenceOfActions(int maxLength) {
 		env = new Environment(NUM_FLOORS);
 		Elevator e;
@@ -248,7 +253,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 
 	
 	
-	//__feature_mapping__ [Base] [202:211]
+	//__feature_mapping__ [Base] [204:213]
 	public void Specification1() {
 		env = new Environment(5);
 		Elevator e = new Elevator(env, false);
@@ -261,7 +266,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [212:220]
+	//__feature_mapping__ [Base] [214:222]
 	public void Specification2() {
 		env = new Environment(5);
 		Elevator e = new Elevator(env, false);
@@ -273,7 +278,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [221:239]
+	//__feature_mapping__ [Base] [223:241]
 	public void Specification3() {
 		env = new Environment(5);
 		Elevator e = new Elevator(env, false, 4, false);
@@ -295,7 +300,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [240:248]
+	//__feature_mapping__ [Base] [242:250]
 	public void Specification9() {
 		env = new Environment(5);
 		Elevator e = new Elevator(env, false);
@@ -307,7 +312,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [249:262]
+	//__feature_mapping__ [Base] [251:264]
 	public void Specification13() {
 		env = new Environment(5);
 		Elevator e = new Elevator(env, false);
@@ -324,7 +329,7 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [263:276]
+	//__feature_mapping__ [Base] [265:278]
 	public void Specification14() {
 		env = new Environment(5);
 		Elevator e = new Elevator(env, false);
@@ -341,20 +346,20 @@ public   class  PL_Interface_impl  implements PL_Interface {
 	}
 
 	
-	//__feature_mapping__ [Base] [277:279]
+	//__feature_mapping__ [Base] [279:281]
 	public static int getIntegerMinMax(int min, int max) {
 		return min + (int) (Math.random() * (max - min + 1));//Verify.getInt(min, max);
 	}
 
 	
-	//__feature_mapping__ [Base] [280:282]
+	//__feature_mapping__ [Base] [282:284]
 	public static boolean getBoolean() {
 		return Math.random() >= 0.5;//Verify.getBoolean();// verify true first
 	}
 
 	
 	
-	//__feature_mapping__ [Base] [284:290]
+	//__feature_mapping__ [Base] [286:292]
 	static String listToString(List<String> list) {
 		String ret = "";
 		for (String s : list) {

@@ -1,6 +1,9 @@
 // This is a mutant program.
 // Author : ysma
 
+package main;
+
+
 import TestSpecifications.SpecificationManager;
 import ElevatorSystem.Elevator;
 import ElevatorSystem.Environment;

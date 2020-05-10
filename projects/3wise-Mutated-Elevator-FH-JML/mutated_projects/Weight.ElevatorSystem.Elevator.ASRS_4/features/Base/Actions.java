@@ -1,3 +1,5 @@
+package main;
+
 import ElevatorSystem.Elevator;
 import ElevatorSystem.Environment;
 import ElevatorSystem.Person;

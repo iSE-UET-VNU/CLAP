@@ -1,4 +1,6 @@
-import java.util.List; 
+package main;
+
+import java.util.List;
 
 public interface PL_Interface {
 	public List<String> getExecutedActions();

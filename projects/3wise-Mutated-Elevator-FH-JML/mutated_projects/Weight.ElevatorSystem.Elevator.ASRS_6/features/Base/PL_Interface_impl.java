@@ -1,3 +1,5 @@
+package main;
+
 import TestSpecifications.SpecificationException;
 import TestSpecifications.SpecificationManager;
 

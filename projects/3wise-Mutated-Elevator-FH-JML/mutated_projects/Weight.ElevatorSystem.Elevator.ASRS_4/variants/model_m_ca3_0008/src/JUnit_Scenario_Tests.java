@@ -1,4 +1,6 @@
-import org.junit.Before;  
+package main; 
+
+import org.junit.Before; 
 import org.junit.Test;  
 
 import ElevatorSystem.Elevator;  
@@ -18,7 +20,7 @@ public    class   JUnit_Scenario_Tests {
 	/**
 	 * Hook for AbstractSpecification.aj (resets specifications at test start)
 	 */
-	//__feature_mapping__ [Base] [18:21]
+	//__feature_mapping__ [Base] [20:23]
 	@Before
 	public void setup() {
 
@@ -36,7 +38,7 @@ public    class   JUnit_Scenario_Tests {
 	  @ ensures (\forall int i; 0 <= i && i < env.calledAt_Spec1.length; !env.calledAt_Spec1[i]);
 	  @ ensures (\forall int i; 0 <= i && i < env.calledAt_Spec2.length; !env.calledAt_Spec2[i]);
 	  @*/
-	 //__feature_mapping__ [Base] [33:35]
+	 //__feature_mapping__ [Base] [35:37]
 	private void  testFinished__wrappee__Base(Environment env) {
 
 	}
@@ -51,14 +53,14 @@ public    class   JUnit_Scenario_Tests {
 	  @ ensures \original;
 	  @ ensures (\forall int i; 0 <= i && i < env.calledAt_Spec9.length; !env.calledAt_Spec9[i]);
 	  @*/
-	//__feature_mapping__ [Empty] [20:22]
+	//__feature_mapping__ [Empty] [22:24]
 	public void testFinished(Environment env) {
 		testFinished__wrappee__Base(env);
 	}
 
 	
 
-	//__feature_mapping__ [Base] [37:49]
+	//__feature_mapping__ [Base] [39:51]
 	@Test(expected = SpecificationException.class)
 	public void Specification1() {
 		SpecificationManager.checkOnlySpecification(1);
@@ -77,7 +79,7 @@ public    class   JUnit_Scenario_Tests {
 
 	
 
-	//__feature_mapping__ [Base] [53:64]
+	//__feature_mapping__ [Base] [55:66]
 	@Test(expected = SpecificationException.class)
 	public void Specification2() {
 		SpecificationManager.checkOnlySpecification(2);
@@ -95,7 +97,7 @@ public    class   JUnit_Scenario_Tests {
 
 	
 
-	//__feature_mapping__ [Base] [68:89]
+	//__feature_mapping__ [Base] [70:91]
 	@Test(expected = SpecificationException.class)
 	public void Specification3() {
 		SpecificationManager.checkOnlySpecification(3);
@@ -128,7 +130,7 @@ public    class   JUnit_Scenario_Tests {
 	// "Feature integration using a Feature Construct")
 
 	// copy of Spec2-Test because Spec9 is a near-copy of Spec2
-	//__feature_mapping__ [Base] [98:109]
+	//__feature_mapping__ [Base] [100:111]
 	@Test(expected = SpecificationException.class)
 	public void Specification9() {
 		SpecificationManager.checkOnlySpecification(9);
@@ -150,7 +152,7 @@ public    class   JUnit_Scenario_Tests {
 	// (see end of chapter 5 in Malte Plath and Mark Ryan
 	// "Feature integration using a Feature Construct")
 
-	//__feature_mapping__ [Base] [117:133]
+	//__feature_mapping__ [Base] [119:135]
 	@Test(expected = SpecificationException.class)
 	public void Specification13() {
 		SpecificationManager.checkOnlySpecification(13);
@@ -173,7 +175,7 @@ public    class   JUnit_Scenario_Tests {
 
 	
 
-	//__feature_mapping__ [Base] [137:153]
+	//__feature_mapping__ [Base] [139:155]
 	@Test(expected = SpecificationException.class)
 	public void Specification14() {
 		SpecificationManager.checkOnlySpecification(14);
