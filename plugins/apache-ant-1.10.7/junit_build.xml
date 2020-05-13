@@ -64,7 +64,7 @@
     </target>
     <target name="junit">
         <echo>[Test Case] ${classname}.${method}</echo>
-        <junit fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" printsummary="true"
+        <junit maxmemory="512m" fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" printsummary="true"
                failureproperty="test.failed">
             <classpath refid="testbuild.classpath"/>
             <test name="${classname}" methods="${method}"/>
