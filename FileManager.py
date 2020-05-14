@@ -64,6 +64,10 @@ def get_project_dir(project_name):
     return join_path(PROJECT_DIR, project_name)
 
 
+def get_project_name(project_dir):
+    return get_file_name(project_dir)
+
+
 def get_project_sub_dir_by_folder_name(project_dir, *args, **kwargs):
     force_mkdir = kwargs.pop("force_mkdir", True)
     sub_dir = join_path(project_dir, *args, **kwargs)

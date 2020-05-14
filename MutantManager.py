@@ -1,6 +1,8 @@
+import csv
+
 from FileManager import get_plugin_path, split_path, get_mutation_result_dir, list_dir, join_path, \
     get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir, \
-    is_path_exist
+    is_path_exist, get_model_configs_report_path, get_project_name
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -108,3 +110,26 @@ def get_mutated_project_dir(project_dir, mutated_project_name):
     if not is_path_exist(current_mutated_project_dir):
         logger.fatal("Can't find mutated project {} from [{}]".format(mutated_project_name, project_dir))
     return current_mutated_project_dir
+
+
+def get_feature_name_from_mutated_project_name(mutated_project_dir):
+    return get_project_name(mutated_project_dir).split(".", 1)[0]
+
+
+def check_interaction_bug_from_report(mutated_project_dir):
+    # logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
+    configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
+    feature_name = get_feature_name_from_mutated_project_name(mutated_project_dir)
+    is_interaction_bug = False
+    with open(configs_report_file_path, "r") as report_csv:
+        reader = csv.reader(report_csv)
+        header = next(reader)
+        feature_column_index = header.index(feature_name)
+        for i, row in enumerate(reader):
+            feature_was_enabled = row[feature_column_index].strip() == "T"
+            all_test_passed = row[-1] == "__PASSED__"
+            if feature_was_enabled and all_test_passed:
+                is_interaction_bug = True
+                break
+
+    return is_interaction_bug
