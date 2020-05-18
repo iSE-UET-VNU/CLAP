@@ -4,14 +4,13 @@ import os
 import SPCsManager
 import SlicingManager
 from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, \
-    SPC_LOG_FILE_NAME
+    SPC_LOG_FILE_NAME, list_dir
 import MutantManager
 import RankingManager
 from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
 import threading
 from xlsxwriter import Workbook
 import multiprocessing
-import time
 
 MUTATED_PROJECT_COL = 0
 VARIANT_COL = 1
@@ -62,13 +61,9 @@ def write_results_to_file(row, sheet, ranking_results):
         row += 1
     return row
 
-def find_spcs(mutated_project_dir):
-    SPCsManager.find_SPCs(mutated_project_dir)
+def ranking( project_name, filtering_coverage_rate):
 
-def ranking( project_name):
-
-    logging.info("Thread %s: starting", project_name)
-    experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER, project_name + "_result.xlsx")
+    experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER, project_name + "_" + str(filtering_coverage_rate) + "_result.xlsx")
     wb = Workbook(experiment_file_name)
     project_dir = get_project_dir(project_name)
 
@@ -77,57 +72,42 @@ def ranking( project_name):
     write_header_in_result_file(row, sheet)
     row += 1
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
-    mutated_projects = os.listdir(mutated_projects_dir)
+    mutated_projects = list_dir(mutated_projects_dir)
 
     for mutated_project_name in mutated_projects:
-        ranking_variant = project_name + "_" + mutated_project_name + "\n"
+        try:
+            ranking_project = project_name + "_" + mutated_project_name
 
-        logging.info("Ranking... %s", ranking_variant)
+            logging.info("Ranking... %s", ranking_project)
 
-        sheet.write(row, MUTATED_PROJECT_COL, mutated_project_name)
+            sheet.write(row, MUTATED_PROJECT_COL, mutated_project_name)
 
-        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
+            mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-        p = multiprocessing.Process(target=find_spcs, args=(mutated_project_dir,))
-        p.start()
-        p.join(timeout = 3600)
+            spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
 
-        # If thread is still active
-        if p.is_alive():
-            logging.info("force stop finding spcs in %s", mutated_project_name)
+            SlicingManager.do_slice(spc_log_file_path)
+            suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
+            buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
 
-            # Terminate
-            p.terminate()
-            p.join()
-
-        print("mutated_project_dir", mutated_project_dir)
-        spc_log_file_path = join_path(mutated_project_dir, SPC_LOG_FILE_NAME)
-        SlicingManager.do_slice(spc_log_file_path)
-        suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
-        buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
-
-        ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                 suspicious_stms_list)
-        row = write_results_to_file(row, sheet, ranking_results)
-        row += 1
+            ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
+                                                     suspicious_stms_list)
+            row = write_results_to_file(row, sheet, ranking_results)
+            row += 1
+        except:
+            logging.info(" Exception in ranking %s", mutated_project_name)
     wb.close()
-    logging.info("Thread %s: finishing", project_name)
 
 
 if __name__ == "__main__":
 
-    #project_names = ["3wise-Mutated-Elevator-FH-JML", "3wise-Mutated-GPL-Test", "Mutated-GPL-Test"]
-    project_names = ["ProjectTest1"]
-    threads = []
-    for i in range(0, len(project_names)):
-         threads.append(threading.Thread(target=ranking, args=(project_names[i], )))
-         threads[i].start()
+    project_name = "ProjectTest2"
 
-    logging.info("Main    : wait for the thread to finish")
-    for i in range(0, len(project_names)):
-         threads[i].join()
+    #filtering_coverage_rate_list = [1, 0.95, 0.9, 0.8, 0.5]
+    filtering_coverage_rate_list = [0.95]
+    for i in range(0, len(filtering_coverage_rate_list)):
+         ranking(project_name, filtering_coverage_rate_list[i])
 
-    logging.info("Main    : all done")
 
 
 
