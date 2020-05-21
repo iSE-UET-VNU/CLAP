@@ -1,16 +1,13 @@
 import logging
-import os
+import threading
 
 import SPCsManager
 import SlicingManager
-from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, \
-    SPC_LOG_FILE_NAME, list_dir
+from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, list_dir
 import MutantManager
 import RankingManager
 from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
-import threading
 from xlsxwriter import Workbook
-import multiprocessing
 
 MUTATED_PROJECT_COL = 0
 VARIANT_COL = 1
@@ -101,14 +98,16 @@ def ranking( project_name, filtering_coverage_rate):
 
 if __name__ == "__main__":
 
-    project_name = "ProjectTest2"
+    project_names = ["ProjectTest1", "ProjectTest2"]
 
-    #filtering_coverage_rate_list = [1, 0.95, 0.9, 0.8, 0.5]
-    filtering_coverage_rate_list = [0.95]
-    for i in range(0, len(filtering_coverage_rate_list)):
-         ranking(project_name, filtering_coverage_rate_list[i])
+    filtering_coverage_rate_list = [0.95, 0.5]
+    for coverage_index in range(0, len(filtering_coverage_rate_list)):
+         threads = []
+         for project_index in range(0, len(project_names)):
+            threads.append(threading.Thread(target = ranking, args = (project_names[project_index], filtering_coverage_rate_list[coverage_index],)))
+            threads[project_index].start()
 
-
-
+         for project_index in range(0, len(project_names)):
+             threads[project_index].join()
 
 

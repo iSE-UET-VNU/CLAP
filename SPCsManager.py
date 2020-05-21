@@ -37,6 +37,8 @@ def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, va
                 switched_feature_selections = union_all_switched_feature_selections(switches)
                 cached_spc = []
                 for current_SPC in powerset(switched_feature_selections):
+                    if(len(current_SPC) > 7):
+                        break
                     if len(current_SPC) <= 0:
                         continue
                     current_SPC = set(current_SPC)
