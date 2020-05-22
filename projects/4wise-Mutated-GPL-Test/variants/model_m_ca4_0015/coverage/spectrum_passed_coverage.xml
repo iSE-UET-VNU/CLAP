@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1586842679316" clover="4.4.1"> 
- <project timestamp="1586842679134">  
+<coverage generated="1588757941235" clover="4.4.1"> 
+ <project timestamp="1588757941055">  
   <package name="GPL">  
    <file path="GPL/NumberWorkSpace.java" name="GPL.NumberWorkSpace">   
     <line visibility="public" signature="NumberWorkSpace()" num="12" count="8" type="method" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="9" /> 
@@ -21,9 +21,9 @@
     <line visibility="public" signature="VertexConstructor() : void" num="53" count="62" type="method" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="14" /> 
     <line num="54" count="62" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="15" /> 
     <line num="55" count="62" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="16" /> 
-    <line visibility="public" signature="assignName(String) : Vertex" num="61" count="12" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
-    <line num="63" count="12" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="26" /> 
-    <line num="64" count="12" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="27" /> 
+    <line visibility="public" signature="assignName(String) : Vertex" num="61" count="13" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="24" /> 
+    <line num="63" count="13" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="26" /> 
+    <line num="64" count="13" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="27" /> 
     <line visibility="public" signature="getNeighbors() : VertexIter" num="70" count="8" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="30" /> 
     <line num="72" count="8" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="32" /> 
     <line visibility="public" signature="next() : Vertex" num="75" count="4" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="35" /> 
@@ -70,15 +70,15 @@
     <line num="190" count="11" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="79" /> 
     <line visibility="public" signature="hasNext() : boolean" num="194" count="12" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="83" /> 
     <line num="196" count="12" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="85" /> 
-    <line visibility="public" signature="getName() : String" num="204" count="15" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="90" /> 
-    <line num="206" count="15" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="92" /> 
+    <line visibility="public" signature="getName() : String" num="204" count="16" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="90" /> 
+    <line num="206" count="16" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="92" /> 
     <line visibility="public" signature="getStart() : Vertex" num="216" count="1" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="99" /> 
     <line num="216" count="1" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="99" /> 
     <line visibility="public" signature="getEnd() : Vertex" num="220" count="1" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="100" /> 
     <line num="220" count="1" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="100" /> 
     <line visibility="public" signature="setWeight(int) : void" num="225" count="1" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="102" /> 
-    <line visibility="public" signature="getWeight() : int" num="229" count="9" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="103" /> 
-    <line num="229" count="9" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="103" /> 
+    <line visibility="public" signature="getWeight() : int" num="229" count="8" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="103" /> 
+    <line num="229" count="8" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="103" /> 
     <line visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="234" count="11" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="105" /> 
     <line num="236" count="11" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="107" /> 
     <line visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="244" count="2" type="method" featureClass="UndirectedOnlyVertices.GPL.Vertex" featureLineNum="112" /> 
@@ -99,18 +99,12 @@
     <line visibility="public" signature="addWeight(int) : void" num="304" count="18" type="method" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="19" /> 
     <line num="306" count="18" type="stmt" featureClass="WeightedOnlyVertices.GPL.Vertex" featureLineNum="21" /> 
    </file> 
-   <file path="GPL/VertexIter.java" name="GPL.VertexIter">   
-    <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
-    <line num="6" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
-    <line visibility="public" signature="next() : Vertex" num="10" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
-    <line num="10" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
-   </file> 
    <file path="GPL/EdgeIter.java" name="GPL.EdgeIter">   
     <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.EdgeIter" featureLineNum="5" /> 
     <line num="6" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="5" /> 
     <line visibility="public" signature="next() : EdgeIfc" num="10" count="1" type="method" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
     <line num="10" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
-   </file>  
+   </file>   
    <file path="GPL/Main.java" name="GPL.Main">   
     <line visibility="public" signature="main(String[]) : void" num="8" count="1" type="method" featureClass="TestProg.GPL.Main" featureLineNum="4" /> 
     <line num="10" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="6" /> 
@@ -131,7 +125,13 @@
     <line visibility="public" signature="postVisitAction(Vertex) : void" num="15" count="6" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="8" /> 
     <line visibility="public" signature="nextRegionAction(Vertex) : void" num="19" count="4" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="9" /> 
     <line visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="23" count="4" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="10" /> 
-   </file>  
+   </file> 
+   <file path="GPL/VertexIter.java" name="GPL.VertexIter">   
+    <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
+    <line num="6" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
+    <line visibility="public" signature="next() : Vertex" num="10" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
+    <line num="10" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
+   </file> 
    <file path="GPL/Graph.java" name="GPL.Graph">   
     <line visibility="public" signature="Graph()" num="34" count="31" type="method" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="20" /> 
     <line num="36" count="31" type="stmt" featureClass="UndirectedOnlyVertices.GPL.Graph" featureLineNum="22" /> 
@@ -283,11 +283,11 @@
     <line visibility="public" signature="addEdge(Vertex,Vertex,int) : void" num="477" count="15" type="method" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="14" /> 
     <line num="479" count="15" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="16" /> 
     <line num="480" count="14" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="17" /> 
-    <line num="484" count="14" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="21" />  
+    <line num="484" count="13" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="21" />  
     <line num="485" count="0" type="stmt" featureClass="WeightedOnlyVertices.GPL.Graph" featureLineNum="22" /> 
    </file> 
   </package> 
  </project> 
- <testproject timestamp="1586842679134">  
+ <testproject timestamp="1588757941055">  
  </testproject> 
 </coverage>

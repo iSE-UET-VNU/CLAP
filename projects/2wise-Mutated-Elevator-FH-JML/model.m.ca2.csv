@@ -1,0 +1,8 @@
+Feature\Product;0;1;2;3;4;
+Empty;-;X;X;-;X;
+Elevator;X;X;X;X;X;
+TwoThirdsFull;-;-;-;X;X;
+ExecutiveFloor;-;-;X;X;-;
+Base;X;X;X;X;X;
+Weight;-;X;-;X;X;
+Overloaded;-;X;-;X;-;

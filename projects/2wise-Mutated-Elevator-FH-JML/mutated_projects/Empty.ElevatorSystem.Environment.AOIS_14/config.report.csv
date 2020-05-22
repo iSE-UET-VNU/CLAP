@@ -1,0 +1,6 @@
+Product\Feature,Base,Weight,Empty,ExecutiveFloor,TwoThirdsFull,Overloaded,__TEST_OUTPUT__
+model_m_ca2_0001,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,__PASSED__
+model_m_ca2_0002,  T  ,  T  ,  T  ,  F  ,  F  ,  T  ,__FAILED__
+model_m_ca2_0003,  T  ,  F  ,  T  ,  T  ,  F  ,  F  ,__PASSED__
+model_m_ca2_0004,  T  ,  T  ,  F  ,  T  ,  T  ,  T  ,__PASSED__
+model_m_ca2_0005,  T  ,  T  ,  T  ,  F  ,  T  ,  F  ,__PASSED__
