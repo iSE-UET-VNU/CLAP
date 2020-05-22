@@ -120,6 +120,7 @@ def check_interaction_bug_from_report(mutated_project_dir):
     # logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
     configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
     feature_name = get_feature_name_from_mutated_project_name(mutated_project_dir)
+    exist_failing_configuration = False
     is_interaction_bug = False
     with open(configs_report_file_path, "r") as report_csv:
         reader = csv.reader(report_csv)
@@ -128,8 +129,10 @@ def check_interaction_bug_from_report(mutated_project_dir):
         for i, row in enumerate(reader):
             feature_was_enabled = row[feature_column_index].strip() == "T"
             all_test_passed = row[-1] == "__PASSED__"
+            if not exist_failing_configuration and not all_test_passed:
+                exist_failing_configuration = True
             if feature_was_enabled and all_test_passed:
                 is_interaction_bug = True
                 break
 
-    return is_interaction_bug
+    return exist_failing_configuration and is_interaction_bug
