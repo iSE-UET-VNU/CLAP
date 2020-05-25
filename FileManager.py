@@ -44,6 +44,8 @@ def mkdir_if_not_exist(input_dir):
     if not is_path_exist(input_dir):
         os.makedirs(input_dir)
 
+def get_experimental_result_file(file_name):
+    return join_path(EXPERIMENT_RESULT_FOLDER, file_name)
 
 def get_plugin_path(file_name):
     return join_path(PLUGIN_DIR, file_name)
