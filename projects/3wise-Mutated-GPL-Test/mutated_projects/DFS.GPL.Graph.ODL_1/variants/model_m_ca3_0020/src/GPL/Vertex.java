@@ -107,13 +107,22 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
         display__wrappee__UndirectedOnlyVertices( );
     }
 
+	
+
+     //__feature_mapping__ [Connected] [9:13]
+	private void  display__wrappee__Connected( ) 
+    {
+        System.out.print( " comp# "+ componentNumber + " " );
+        display__wrappee__Number( );
+    }
+
 	 // weight so far from s to it
             
      //__feature_mapping__ [MSTPrim] [14:18]
 	private void  display__wrappee__MSTPrim( ) 
     {
         System.out.print( " Pred " + pred + " Key " + key + " " );
-        display__wrappee__Number( );
+        display__wrappee__Connected( );
     }
 
 	 // of bfsNodeSearch
@@ -248,6 +257,9 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
 
 	
     public int VertexNumber;
+
+	
+    public int componentNumber;
 
 	
     public String pred;

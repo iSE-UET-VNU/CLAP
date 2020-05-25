@@ -2,27 +2,32 @@
 	"features" : [
 		"UndirectedWithEdges",
 		"TestProg",
-		"Cycle",
-		"DFS",
-		"Unweighted",
+		"MSTKruskal",
+		"BFS",
+		"WeightedWithEdges",
+		"Weighted",
 		"Undirected",
 		"WithEdges",
 		"Base"
 	],
 	"roles": {
 		"EdgeConstructor": {
-			"UndirectedWithEdges": "EdgeConstructor"
+			"UndirectedWithEdges": "EdgeConstructor",
+			"WeightedWithEdges": "EdgeConstructor"
 		},
 		"adjustAdorns": {
-			"UndirectedWithEdges": "adjustAdorns",
-			"Base": "adjustAdorns"
+			"UndirectedWithEdges": "adjustAdorns__wrappee__UndirectedWithEdges",
+			"WeightedWithEdges": "adjustAdorns",
+			"Base": "adjustAdorns__wrappee__UndirectedWithEdges"
 		},
 		"setWeight": {
 			"UndirectedWithEdges": "setWeight",
+			"WeightedWithEdges": "setWeight",
 			"Base": "setWeight"
 		},
 		"getWeight": {
-			"UndirectedWithEdges": "getWeight"
+			"UndirectedWithEdges": "getWeight",
+			"WeightedWithEdges": "getWeight"
 		},
 		"getOtherVertex": {
 			"UndirectedWithEdges": "getOtherVertex",
@@ -38,13 +43,14 @@
 		},
 		"display": {
 			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
-			"Cycle": "display__wrappee__Cycle",
-			"DFS": "display",
+			"MSTKruskal": "display__wrappee__MSTKruskal",
+			"BFS": "display__wrappee__UndirectedWithEdges",
+			"WeightedWithEdges": "display",
 			"Base": "display__wrappee__UndirectedWithEdges"
 		},
 		"run": {
 			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
-			"Cycle": "run"
+			"MSTKruskal": "run"
 		},
 		"sortEdges": {
 			"UndirectedWithEdges": "sortEdges"
@@ -72,7 +78,7 @@
 		},
 		"VertexConstructor": {
 			"UndirectedWithEdges": "VertexConstructor__wrappee__UndirectedWithEdges",
-			"DFS": "VertexConstructor"
+			"BFS": "VertexConstructor"
 		},
 		"assignName": {
 			"UndirectedWithEdges": "assignName"
@@ -92,33 +98,29 @@
 		"main": {
 			"TestProg": "main"
 		},
-		"CycleCheck": {
-			"Cycle": "CycleCheck"
-		},
-		"init_vertex": {
-			"Cycle": "init_vertex",
-			"DFS": "init_vertex"
-		},
-		"preVisitAction": {
-			"Cycle": "preVisitAction",
-			"DFS": "preVisitAction"
-		},
-		"postVisitAction": {
-			"Cycle": "postVisitAction",
-			"DFS": "postVisitAction"
-		},
-		"checkNeighborAction": {
-			"Cycle": "checkNeighborAction",
-			"DFS": "checkNeighborAction"
+		"Kruskal": {
+			"MSTKruskal": "Kruskal"
 		},
 		"GraphSearch": {
-			"DFS": "GraphSearch"
+			"BFS": "GraphSearch"
+		},
+		"init_vertex": {
+			"BFS": "init_vertex"
 		},
 		"nodeSearch": {
-			"DFS": "nodeSearch"
+			"BFS": "nodeSearch"
+		},
+		"preVisitAction": {
+			"BFS": "preVisitAction"
+		},
+		"postVisitAction": {
+			"BFS": "postVisitAction"
 		},
 		"nextRegionAction": {
-			"DFS": "nextRegionAction"
+			"BFS": "nextRegionAction"
+		},
+		"checkNeighborAction": {
+			"BFS": "checkNeighborAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

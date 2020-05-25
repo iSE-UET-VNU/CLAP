@@ -1,14 +1,13 @@
 package GPL; 
 
 import java.util.Iterator; 
-
 import java.util.LinkedList; 
 
 import java.lang.Integer; 
 import java.util.Collections; 
 import java.util.Comparator; 
 
-// *************************************************************************
+  // *************************************************************************
 
 public   class  Vertex {
 	
@@ -36,10 +35,10 @@ public   class  Vertex {
 
 	
 
-    //__feature_mapping__ [BFS] [11:15]
+    //__feature_mapping__ [DFS] [9:13]
 	public void VertexConstructor( ) 
     {
-        VertexConstructor__wrappee__UndirectedWithEdges();
+        VertexConstructor__wrappee__UndirectedWithEdges( );
         visited = false;
     }
 
@@ -112,34 +111,34 @@ public   class  Vertex {
         display__wrappee__UndirectedWithEdges( );
     }
 
+	 // white ->0, gray ->1, black->2
+      
+     //__feature_mapping__ [Cycle] [11:14]
+	private void  display__wrappee__Cycle() {
+        System.out.print( " VertexCycle# " + VertexCycle + " " );
+        display__wrappee__Number();
+    }
+
 	
 
-     //__feature_mapping__ [Connected] [9:13]
-	private void  display__wrappee__Connected( ) 
-    {
-        System.out.print( " comp# "+ componentNumber + " " );
-        display__wrappee__Number( );
+     //__feature_mapping__ [MSTKruskal] [16:22]
+	private void  display__wrappee__MSTKruskal() {
+        if ( representative == null )
+            System.out.print( "Rep null " );
+        else
+            System.out.print( " Rep " + representative.getName() + " " );
+        display__wrappee__Cycle();
     }
 
-	 // weight so far from s to it
-            
-     //__feature_mapping__ [MSTPrim] [14:18]
-	private void  display__wrappee__MSTPrim( ) 
-    {
-        System.out.print( " Pred " + pred + " Key " + key + " " );
-        display__wrappee__Connected( );
-    }
+	 // of dftNodeSearch
 
-	 // of bfsNodeSearch
-
-    //__feature_mapping__ [BFS] [69:76]
-	public void display( ) 
-    {
+    //__feature_mapping__ [DFS] [47:53]
+	public void display( ) {
         if ( visited )
-            System.out.print( "  visited " );
+            System.out.print( "  visited" );
         else
             System.out.println( " !visited " );
-        display__wrappee__MSTPrim( );
+        display__wrappee__MSTKruskal( );
     }
 
 	      
@@ -176,20 +175,23 @@ public   class  Vertex {
     public int VertexNumber;
 
 	
-    public int componentNumber;
+    public int VertexCycle;
 
 	
-    public String pred;
+    public int VertexColor;
 
-	 // the predecessor vertex if any
-    public int key;
+	
+    public  Vertex representative;
+
+	
+    public LinkedList members;
 
 	
     public boolean visited;
 
 	
 
-    //__feature_mapping__ [BFS] [17:21]
+    //__feature_mapping__ [DFS] [15:19]
 	public void init_vertex( WorkSpace w ) 
     {
         visited = false;
@@ -198,51 +200,31 @@ public   class  Vertex {
 
 	
 
-    //__feature_mapping__ [BFS] [23:67]
+    //__feature_mapping__ [DFS] [21:45]
 	public void nodeSearch( WorkSpace w ) 
     {
-        int     s, c;
-        Vertex  v;
-        Vertex  header;
+        Vertex v;
 
-        // Step 1: if preVisitAction is true or if we've already
-        //         visited this node
+        // Step 1: Do preVisitAction.
+        //            If we've already visited this node return
         w.preVisitAction( ( Vertex ) this );
 
         if ( visited )
-        {
             return;
-        }
 
-        // Step 2: Mark as visited, put the unvisited neighbors in the queue
-        //     and make the recursive call on the first element of the queue
-        //     if there is such if not you are done
+        // Step 2: else remember that we've visited and
+        //         visit all neighbors
         visited = true;
 
-        // Step 3: do postVisitAction now, you are no longer going through the
-        // node again, mark it as black
-        w.postVisitAction( ( Vertex ) this );
-
-        // enqueues the vertices not visited
-        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
+        for ( VertexIter  vxiter = getNeighbors(); vxiter.hasNext(); ) 
         {
             v = vxiter.next( );
-
-            // if your neighbor has not been visited then enqueue
-            if ( !v.visited ) 
-            {
-                GlobalVarsWrapper.Queue.add( v );
-            }
-
-        } // end of for
-
-        // while there is something in the queue
-        while( GlobalVarsWrapper.Queue.size( )!= 0 )
-        {
-            header = ( Vertex ) GlobalVarsWrapper.Queue.get( 0 );
-            GlobalVarsWrapper.Queue.remove( 0 );
-            header.nodeSearch( w );
+            w.checkNeighborAction( ( Vertex ) this, v );
+            v.nodeSearch( w );
         }
+
+        // Step 3: do postVisitAction now
+        w.postVisitAction( ( Vertex ) this );
     }
 
 

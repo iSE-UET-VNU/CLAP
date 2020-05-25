@@ -1,0 +1,228 @@
+{
+	"features" : [
+		"Base",
+		"Weight",
+		"Empty",
+		"TwoThirdsFull"
+	],
+	"roles": {
+		"bobCall": {
+			"Base": "bobCall"
+		},
+		"aliceCall": {
+			"Base": "aliceCall"
+		},
+		"angelinaCall": {
+			"Base": "angelinaCall"
+		},
+		"chuckCall": {
+			"Base": "chuckCall"
+		},
+		"monicaCall": {
+			"Base": "monicaCall"
+		},
+		"bigMacCall": {
+			"Base": "bigMacCall"
+		},
+		"pressInLift0": {
+			"Base": "pressInLift0"
+		},
+		"pressInLift1": {
+			"Base": "pressInLift1"
+		},
+		"pressInLift2": {
+			"Base": "pressInLift2"
+		},
+		"pressInLift3": {
+			"Base": "pressInLift3"
+		},
+		"pressInLift4": {
+			"Base": "pressInLift4"
+		},
+		"setup": {
+			"Base": "setup"
+		},
+		"testFinished": {
+			"Base": "testFinished__wrappee__Base",
+			"Empty": "testFinished"
+		},
+		"Specification1": {
+			"Base": "Specification1"
+		},
+		"Specification2": {
+			"Base": "Specification2"
+		},
+		"Specification3": {
+			"Base": "Specification3"
+		},
+		"Specification9": {
+			"Base": "Specification9"
+		},
+		"Specification13": {
+			"Base": "Specification13"
+		},
+		"Specification14": {
+			"Base": "Specification14"
+		},
+		"getExecutedActions": {
+			"Base": "getExecutedActions"
+		},
+		"start": {
+			"Base": "start"
+		},
+		"checkOnlySpecification": {
+			"Base": "checkOnlySpecification"
+		},
+		"isAbortedRun": {
+			"Base": "isAbortedRun"
+		},
+		"main": {
+			"Base": "main"
+		},
+		"test": {
+			"Base": "test__wrappee__Base",
+			"Empty": "test"
+		},
+		"randomSequenceOfActions": {
+			"Base": "randomSequenceOfActions"
+		},
+		"modifiedrandomSequenceOfActions": {
+			"Base": "modifiedrandomSequenceOfActions"
+		},
+		"getIntegerMinMax": {
+			"Base": "getIntegerMinMax"
+		},
+		"getBoolean": {
+			"Base": "getBoolean"
+		},
+		"listToString": {
+			"Base": "listToString"
+		},
+		"reverse": {
+			"Base": "reverse"
+		},
+		"isBlocked": {
+			"Base": "isBlocked"
+		},
+		"enterElevator": {
+			"Base": "enterElevator__wrappee__Base",
+			"Weight": "enterElevator"
+		},
+		"leaveElevator": {
+			"Base": "leaveElevator__wrappee__Base",
+			"Weight": "leaveElevator__wrappee__Weight",
+			"Empty": "leaveElevator"
+		},
+		"pressInLiftFloorButton": {
+			"Base": "pressInLiftFloorButton__wrappee__Base",
+			"Empty": "pressInLiftFloorButton"
+		},
+		"resetFloorButton": {
+			"Base": "resetFloorButton"
+		},
+		"getCurrentFloorID": {
+			"Base": "getCurrentFloorID"
+		},
+		"areDoorsOpen": {
+			"Base": "areDoorsOpen"
+		},
+		"timeShift": {
+			"Base": "timeShift__wrappee__Base",
+			"Empty": "timeShift"
+		},
+		"stopRequestedAtCurrentFloor": {
+			"Base": "stopRequestedAtCurrentFloor__wrappee__Base",
+			"TwoThirdsFull": "stopRequestedAtCurrentFloor"
+		},
+		"continueInDirection": {
+			"Base": "continueInDirection__wrappee__Base",
+			"TwoThirdsFull": "continueInDirection"
+		},
+		"isAnyLiftButtonPressed": {
+			"Base": "isAnyLiftButtonPressed"
+		},
+		"stopRequestedInDirection": {
+			"Base": "stopRequestedInDirection__wrappee__Base",
+			"TwoThirdsFull": "stopRequestedInDirection"
+		},
+		"anyStopRequested": {
+			"Base": "anyStopRequested"
+		},
+		"buttonForFloorIsPressed": {
+			"Base": "buttonForFloorIsPressed"
+		},
+		"getCurrentDirection": {
+			"Base": "getCurrentDirection"
+		},
+		"getEnv": {
+			"Base": "getEnv"
+		},
+		"isEmpty": {
+			"Base": "isEmpty"
+		},
+		"isIdle": {
+			"Base": "isIdle"
+		},
+		"toString": {
+			"Base": "toString"
+		},
+		"getFloor": {
+			"Base": "getFloor",
+			"Empty": "getFloor"
+		},
+		"getFloors": {
+			"Base": "getFloors",
+			"Empty": "getFloors"
+		},
+		"isTopFloor": {
+			"Base": "isTopFloor",
+			"Empty": "isTopFloor"
+		},
+		"getFloorID": {
+			"Base": "getFloorID"
+		},
+		"callElevator": {
+			"Base": "callElevator"
+		},
+		"reset": {
+			"Base": "reset"
+		},
+		"hasCall": {
+			"Base": "hasCall"
+		},
+		"processWaitingPersons": {
+			"Base": "processWaitingPersons"
+		},
+		"addWaitingPerson": {
+			"Base": "addWaitingPerson"
+		},
+		"getWeight": {
+			"Base": "getWeight"
+		},
+		"getName": {
+			"Base": "getName"
+		},
+		"getOrigin": {
+			"Base": "getOrigin"
+		},
+		"getDestination": {
+			"Base": "getDestination"
+		},
+		"isDestinationReached": {
+			"Base": "isDestinationReached"
+		},
+		"getSpecificationName": {
+			"Base": "getSpecificationName"
+		},
+		"setupSpecifications": {
+			"Base": "setupSpecifications"
+		},
+		"checkSpecification": {
+			"Base": "checkSpecification"
+		},
+		"existInLiftCallsInDirection": {
+			"TwoThirdsFull": "existInLiftCallsInDirection"
+		}
+	}
+
+}

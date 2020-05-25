@@ -47,6 +47,26 @@ public   class  Graph {
 	private void  run__wrappee__UndirectedWithEdges( Vertex s ) {}
 
 	
+    // Executes Connected Components
+     //__feature_mapping__ [Connected] [8:13]
+	private void  run__wrappee__Connected( Vertex s )
+    {
+	     	System.out.println("Connected");
+        ConnectedComponents( );
+        run__wrappee__UndirectedWithEdges( s );
+    }
+
+	
+
+    // Executes Cycle Checking
+     //__feature_mapping__ [Cycle] [12:16]
+	private void  run__wrappee__Cycle( Vertex s )
+     {
+        System.out.println( "Cycle? " + CycleCheck() );
+        run__wrappee__Connected( s );
+    }
+
+	
 
     // Executes MSTKruskal
     //__feature_mapping__ [MSTKruskal] [13:21]
@@ -57,7 +77,7 @@ public   class  Graph {
 //        Graph.stopProfile();
         gaux.display();
 //        Graph.resumeProfile();
-        run__wrappee__UndirectedWithEdges( s );
+        run__wrappee__Cycle( s );
     }
 
 	
@@ -185,6 +205,23 @@ public   class  Graph {
             edgeiter.next().display();
 
         System.out.println( "******************************************" );
+    }
+
+	
+
+    //__feature_mapping__ [Connected] [15:18]
+	public void ConnectedComponents( ) 
+    {
+        GraphSearch( new RegionWorkSpace( ) );
+    }
+
+	
+              
+    //__feature_mapping__ [Cycle] [18:22]
+	public boolean CycleCheck() {
+        CycleWorkSpace c = new CycleWorkSpace( isDirected );
+        GraphSearch( c );
+        return c.AnyCycles;
     }
 
 	

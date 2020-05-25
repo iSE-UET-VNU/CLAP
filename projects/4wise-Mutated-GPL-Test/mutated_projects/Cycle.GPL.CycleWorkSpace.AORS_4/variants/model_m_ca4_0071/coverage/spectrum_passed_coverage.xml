@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1589088030659" clover="4.4.1"> 
+ <project timestamp="1589088030467">  
+  <package name="GPL">  
+   <file path="GPL/NumberWorkSpace.java" name="GPL.NumberWorkSpace">   
+    <line visibility="public" signature="NumberWorkSpace()" num="12" count="7" type="method" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="9" /> 
+    <line num="14" count="7" type="stmt" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="11" /> 
+    <line visibility="public" signature="preVisitAction(Vertex) : void" num="20" count="5" type="method" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="14" /> 
+    <line num="23" count="5" type="stmt" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="17" />  
+    <line num="25" count="4" type="stmt" featureClass="Number.GPL.NumberWorkSpace" featureLineNum="19" /> 
+   </file> 
+   <file path="GPL/WorkSpace.java" name="GPL.WorkSpace">   
+    <line visibility="public" signature="init_vertex(Vertex) : void" num="7" count="7" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="6" /> 
+    <line visibility="public" signature="preVisitAction(Vertex) : void" num="11" count="6" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="7" /> 
+    <line visibility="public" signature="postVisitAction(Vertex) : void" num="15" count="9" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="8" /> 
+    <line visibility="public" signature="nextRegionAction(Vertex) : void" num="19" count="7" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="9" /> 
+    <line visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="23" count="5" type="method" featureClass="DFS.GPL.WorkSpace" featureLineNum="10" /> 
+   </file>  
+   <file path="GPL/Vertex.java" name="GPL.Vertex">   
+    <line visibility="public" signature="getName() : String" num="25" count="18" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="17" /> 
+    <line num="25" count="18" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="17" /> 
+    <line visibility="public" signature="Vertex()" num="30" count="57" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="19" /> 
+    <line num="31" count="57" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="20" /> 
+    <line visibility="private" signature="VertexConstructor__wrappee__DirectedWithEdges() : void" num="37" count="57" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="23" /> 
+    <line num="38" count="57" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="24" /> 
+    <line num="39" count="57" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="25" /> 
+    <line visibility="public" signature="VertexConstructor() : void" num="45" count="57" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="9" /> 
+    <line num="47" count="57" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="11" /> 
+    <line num="48" count="57" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="12" /> 
+    <line visibility="public" signature="assignName(String) : Vertex" num="54" count="9" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="28" /> 
+    <line num="55" count="9" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="29" /> 
+    <line num="56" count="9" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="30" /> 
+    <line visibility="public" signature="addNeighbor(Neighbor) : void" num="62" count="11" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="33" /> 
+    <line num="63" count="11" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="34" /> 
+    <line visibility="public" signature="getNeighbors() : VertexIter" num="69" count="19" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="37" /> 
+    <line num="70" count="19" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="38" /> 
+    <line visibility="public" signature="next() : Vertex" num="72" count="10" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="40" /> 
+    <line num="72" count="10" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="40" /> 
+    <line visibility="public" signature="hasNext() : boolean" num="73" count="17" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="41" /> 
+    <line num="73" count="17" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="41" /> 
+    <line visibility="public" signature="getEdges() : EdgeIter" num="80" count="2" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="45" /> 
+    <line num="82" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="47" /> 
+    <line visibility="public" signature="next() : EdgeIfc" num="87" count="0" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="52" /> 
+    <line num="89" count="0" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="54" /> 
+    <line visibility="public" signature="hasNext() : boolean" num="91" count="0" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="56" /> 
+    <line num="91" count="0" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="56" /> 
+    <line visibility="private" signature="display__wrappee__DirectedWithEdges() : void" num="98" count="6" type="method" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="60" /> 
+    <line num="99" count="6" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="61" /> 
+    <line num="101" count="6" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="63" />  
+    <line num="103" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="65" /> 
+    <line num="104" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="66" /> 
+    <line num="107" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Vertex" featureLineNum="69" /> 
+    <line visibility="private" signature="display__wrappee__Number() : void" num="113" count="6" type="method" featureClass="Number.GPL.Vertex" featureLineNum="9" /> 
+    <line num="115" count="6" type="stmt" featureClass="Number.GPL.Vertex" featureLineNum="11" /> 
+    <line num="116" count="6" type="stmt" featureClass="Number.GPL.Vertex" featureLineNum="12" /> 
+    <line visibility="private" signature="display__wrappee__StronglyConnected() : void" num="122" count="6" type="method" featureClass="StronglyConnected.GPL.Vertex" featureLineNum="15" /> 
+    <line num="123" count="6" type="stmt" featureClass="StronglyConnected.GPL.Vertex" featureLineNum="16" /> 
+    <line num="125" count="6" type="stmt" featureClass="StronglyConnected.GPL.Vertex" featureLineNum="18" /> 
+    <line visibility="private" signature="display__wrappee__Cycle() : void" num="131" count="6" type="method" featureClass="Cycle.GPL.Vertex" featureLineNum="11" /> 
+    <line num="132" count="6" type="stmt" featureClass="Cycle.GPL.Vertex" featureLineNum="12" /> 
+    <line num="133" count="6" type="stmt" featureClass="Cycle.GPL.Vertex" featureLineNum="13" /> 
+    <line visibility="public" signature="display() : void" num="139" count="6" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="47" /> 
+    <line num="140" count="6" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="48" />  
+    <line num="141" count="3" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="49" /> 
+    <line num="143" count="3" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="51" /> 
+    <line num="144" count="6" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="52" /> 
+    <line visibility="public" signature="init_vertex(WorkSpace) : void" num="168" count="8" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="15" /> 
+    <line num="170" count="8" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="17" /> 
+    <line num="171" count="8" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="18" /> 
+    <line visibility="public" signature="nodeSearch(WorkSpace) : void" num="177" count="12" type="method" featureClass="DFS.GPL.Vertex" featureLineNum="21" /> 
+    <line num="179" count="12" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="23" /> 
+    <line num="183" count="12" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="27" /> 
+    <line num="185" count="12" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="29" />  
+    <line num="186" count="5" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="30" /> 
+    <line num="190" count="12" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="34" /> 
+    <line num="192" count="12" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="36" />  
+    <line num="194" count="6" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="38" /> 
+    <line num="195" count="5" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="39" /> 
+    <line num="196" count="5" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="40" /> 
+    <line num="200" count="10" type="stmt" featureClass="DFS.GPL.Vertex" featureLineNum="44" /> 
+   </file> 
+   <file path="GPL/WorkSpaceTranspose.java" name="GPL.WorkSpaceTranspose">   
+    <line visibility="public" signature="WorkSpaceTranspose()" num="20" count="8" type="method" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="16" /> 
+    <line num="22" count="8" type="stmt" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="18" /> 
+    <line visibility="public" signature="preVisitAction(Vertex) : void" num="28" count="7" type="method" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="21" /> 
+    <line num="30" count="7" type="stmt" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="23" />  
+    <line num="32" count="5" type="stmt" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="25" /> 
+    <line num="34" count="6" type="stmt" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="27" /> 
+    <line visibility="public" signature="nextRegionAction(Vertex) : void" num="40" count="5" type="method" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="30" /> 
+    <line num="42" count="5" type="stmt" featureClass="StronglyConnected.GPL.WorkSpaceTranspose" featureLineNum="32" /> 
+   </file> 
+   <file path="GPL/Main.java" name="GPL.Main">   
+    <line visibility="public" signature="main(String[]) : void" num="8" count="1" type="method" featureClass="TestProg.GPL.Main" featureLineNum="4" /> 
+    <line num="10" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="6" /> 
+    <line num="12" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="8" /> 
+    <line num="13" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="9" />  
+    <line num="14" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="10" /> 
+    <line num="15" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="11" /> 
+    <line num="16" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="12" /> 
+    <line num="17" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="13" />  
+    <line num="18" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="14" /> 
+    <line num="20" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="16" /> 
+    <line num="22" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="18" /> 
+    <line num="23" count="1" type="stmt" featureClass="TestProg.GPL.Main" featureLineNum="19" /> 
+   </file>  
+   <file path="GPL/VertexIter.java" name="GPL.VertexIter">   
+    <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
+    <line num="6" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="5" /> 
+    <line visibility="public" signature="next() : Vertex" num="10" count="1" type="method" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
+    <line num="10" count="1" type="stmt" featureClass="Base.GPL.VertexIter" featureLineNum="6" /> 
+   </file> 
+   <file path="GPL/CycleWorkSpace.java" name="GPL.CycleWorkSpace">   
+    <line visibility="public" signature="CycleWorkSpace(boolean)" num="38" count="19" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="25" /> 
+    <line num="40" count="19" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="27" /> 
+    <line num="41" count="19" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="28" /> 
+    <line num="42" count="19" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="29" /> 
+    <line visibility="public" signature="init_vertex(Vertex) : void" num="48" count="5" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="32" /> 
+    <line num="50" count="5" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="34" /> 
+    <line num="51" count="4" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="35" /> 
+    <line visibility="public" signature="preVisitAction(Vertex) : void" num="57" count="9" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="38" /> 
+    <line num="59" count="9" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="40" />  
+    <line num="60" count="8" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="41" /> 
+    <line num="61" count="8" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="42" /> 
+    <line visibility="public" signature="postVisitAction(Vertex) : void" num="68" count="5" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="46" /> 
+    <line num="70" count="5" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="48" /> 
+    <line num="71" count="4" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="49" /> 
+    <line visibility="public" signature="checkNeighborAction(Vertex,Vertex) : void" num="77" count="11" type="method" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="52" /> 
+    <line num="79" count="11" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="54" />  
+    <line num="80" count="6" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="55" />  
+    <line num="81" count="2" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="56" /> 
+    <line num="84" count="5" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="59" />  
+    <line num="85" count="2" type="stmt" featureClass="Cycle.GPL.CycleWorkSpace" featureLineNum="60" /> 
+   </file> 
+   <file path="GPL/FinishTimeWorkSpace.java" name="GPL.FinishTimeWorkSpace">   
+    <line visibility="public" signature="FinishTimeWorkSpace()" num="16" count="10" type="method" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="12" /> 
+    <line num="17" count="10" type="stmt" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="13" /> 
+    <line visibility="public" signature="preVisitAction(Vertex) : void" num="23" count="7" type="method" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="16" /> 
+    <line num="25" count="7" type="stmt" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="18" />  
+    <line num="26" count="5" type="stmt" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="19" /> 
+    <line visibility="public" signature="postVisitAction(Vertex) : void" num="32" count="6" type="method" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="22" /> 
+    <line num="33" count="6" type="stmt" featureClass="StronglyConnected.GPL.FinishTimeWorkSpace" featureLineNum="23" /> 
+   </file> 
+   <file path="GPL/Graph.java" name="GPL.Graph">   
+    <line visibility="public" signature="Graph()" num="29" count="27" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="15" /> 
+    <line num="30" count="27" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="16" /> 
+    <line num="31" count="27" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="17" /> 
+    <line visibility="private" signature="run__wrappee__DirectedWithEdges(Vertex) : void" num="38" count="2" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="21" /> 
+    <line visibility="private" signature="run__wrappee__Number(Vertex) : void" num="43" count="2" type="method" featureClass="Number.GPL.Graph" featureLineNum="8" /> 
+    <line num="45" count="2" type="stmt" featureClass="Number.GPL.Graph" featureLineNum="10" /> 
+    <line num="46" count="2" type="stmt" featureClass="Number.GPL.Graph" featureLineNum="11" /> 
+    <line num="47" count="2" type="stmt" featureClass="Number.GPL.Graph" featureLineNum="12" /> 
+    <line visibility="private" signature="run__wrappee__StronglyConnected(Vertex) : void" num="54" count="2" type="method" featureClass="StronglyConnected.GPL.Graph" featureLineNum="11" /> 
+    <line num="56" count="2" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="13" /> 
+    <line num="57" count="2" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="14" /> 
+    <line num="59" count="2" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="16" /> 
+    <line num="61" count="2" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="18" /> 
+    <line visibility="public" signature="run(Vertex) : void" num="68" count="3" type="method" featureClass="Cycle.GPL.Graph" featureLineNum="12" /> 
+    <line num="70" count="3" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="14" /> 
+    <line num="71" count="2" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="15" /> 
+    <line visibility="public" signature="sortEdges(Comparator) : void" num="77" count="2" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="23" /> 
+    <line num="78" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="24" /> 
+    <line visibility="public" signature="sortVertices(Comparator) : void" num="84" count="5" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="27" /> 
+    <line num="85" count="5" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="28" /> 
+    <line visibility="public" signature="addEdge(Vertex,Vertex) : EdgeIfc" num="92" count="7" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="32" /> 
+    <line num="93" count="7" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="33" /> 
+    <line num="94" count="7" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="34" /> 
+    <line num="95" count="7" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="35" /> 
+    <line num="96" count="7" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="36" /> 
+    <line num="99" count="7" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="39" /> 
+    <line visibility="protected" signature="addVertex(Vertex) : void" num="105" count="17" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="42" /> 
+    <line num="106" count="17" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="43" /> 
+    <line visibility="public" signature="findsVertex(String) : Vertex" num="113" count="4" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="47" /> 
+    <line num="115" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="49" /> 
+    <line num="118" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="52" />  
+    <line num="119" count="1" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="53" /> 
+    <line num="121" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="55" />  
+    <line num="123" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="57" /> 
+    <line num="124" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="58" />  
+    <line num="125" count="1" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="59" /> 
+    <line num="128" count="1" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="62" /> 
+    <line visibility="public" signature="getVertices() : VertexIter" num="134" count="22" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="65" /> 
+    <line num="135" count="22" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="66" /> 
+    <line visibility="public" signature="next() : Vertex" num="137" count="17" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="68" /> 
+    <line num="137" count="17" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="68" /> 
+    <line visibility="public" signature="hasNext() : boolean" num="138" count="21" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="69" /> 
+    <line num="138" count="21" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="69" /> 
+    <line visibility="public" signature="getEdges() : EdgeIter" num="146" count="4" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="74" /> 
+    <line num="147" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="75" /> 
+    <line visibility="public" signature="next() : EdgeIfc" num="149" count="2" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="77" /> 
+    <line num="149" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="77" /> 
+    <line visibility="public" signature="hasNext() : boolean" num="150" count="3" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="78" /> 
+    <line num="150" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="78" /> 
+    <line visibility="public" signature="display() : void" num="157" count="4" type="method" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="82" /> 
+    <line num="158" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="83" /> 
+    <line num="160" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="85" /> 
+    <line num="161" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="86" /> 
+    <line num="162" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="87" />  
+    <line num="163" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="88" /> 
+    <line num="165" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="90" /> 
+    <line num="166" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="91" /> 
+    <line num="167" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="92" />  
+    <line num="168" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="93" /> 
+    <line num="170" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Graph" featureLineNum="95" /> 
+    <line visibility="public" signature="NumberVertices() : void" num="176" count="4" type="method" featureClass="Number.GPL.Graph" featureLineNum="15" /> 
+    <line num="178" count="4" type="stmt" featureClass="Number.GPL.Graph" featureLineNum="17" /> 
+    <line visibility="public" signature="StrongComponents() : Graph" num="184" count="5" type="method" featureClass="StronglyConnected.GPL.Graph" featureLineNum="21" /> 
+    <line num="186" count="5" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="23" /> 
+    <line num="189" count="5" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="26" /> 
+    <line num="192" count="4" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="29" /> 
+    <line visibility="public" signature="compare(Object,Object) : int" num="194" count="3" type="method" featureClass="StronglyConnected.GPL.Graph" featureLineNum="31" /> 
+    <line num="196" count="3" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="33" /> 
+    <line num="197" count="3" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="34" /> 
+    <line num="199" count="3" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="36" />  
+    <line num="200" count="1" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="37" /> 
+    <line num="202" count="3" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="39" />  
+    <line num="203" count="2" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="40" /> 
+    <line num="204" count="2" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="41" /> 
+    <line num="210" count="4" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="47" /> 
+    <line num="213" count="4" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="50" /> 
+    <line num="214" count="4" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="51" /> 
+    <line num="216" count="4" type="stmt" featureClass="StronglyConnected.GPL.Graph" featureLineNum="53" /> 
+    <line visibility="public" signature="ComputeTranspose(Graph) : Graph" num="223" count="6" type="method" featureClass="Transpose.GPL.Graph" featureLineNum="13" /> 
+    <line num="225" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="15" /> 
+    <line num="226" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="16" /> 
+    <line num="229" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="19" /> 
+    <line num="232" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="22" /> 
+    <line num="235" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="25" />  
+    <line num="237" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="27" /> 
+    <line num="239" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="29" /> 
+    <line num="241" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="31" /> 
+    <line num="244" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="34" /> 
+    <line num="247" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="37" /> 
+    <line num="248" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="38" /> 
+    <line num="249" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="39" /> 
+    <line num="250" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="40" /> 
+    <line num="254" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="44" /> 
+    <line num="255" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="45" />  
+    <line num="259" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="49" /> 
+    <line num="263" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="53" /> 
+    <line num="265" count="6" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="55" />  
+    <line num="268" count="4" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="58" /> 
+    <line num="274" count="4" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="64" /> 
+    <line num="277" count="3" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="67" /> 
+    <line num="287" count="5" type="stmt" featureClass="Transpose.GPL.Graph" featureLineNum="77" /> 
+    <line visibility="public" signature="CycleCheck() : boolean" num="294" count="6" type="method" featureClass="Cycle.GPL.Graph" featureLineNum="18" /> 
+    <line num="295" count="6" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="19" /> 
+    <line num="296" count="6" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="20" /> 
+    <line num="297" count="4" type="stmt" featureClass="Cycle.GPL.Graph" featureLineNum="21" /> 
+    <line visibility="public" signature="GraphSearch(WorkSpace) : void" num="302" count="14" type="method" featureClass="DFS.GPL.Graph" featureLineNum="7" /> 
+    <line num="305" count="14" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="10" /> 
+    <line num="306" count="14" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="11" />  
+    <line num="308" count="3" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="13" /> 
+    <line num="312" count="11" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="17" />  
+    <line num="314" count="11" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="19" /> 
+    <line num="315" count="11" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="20" /> 
+    <line num="319" count="6" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="24" />  
+    <line num="321" count="6" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="26" /> 
+    <line num="322" count="6" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="27" />  
+    <line num="324" count="6" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="29" /> 
+    <line num="325" count="6" type="stmt" featureClass="DFS.GPL.Graph" featureLineNum="30" /> 
+   </file> 
+   <file path="GPL/Edge.java" name="GPL.Edge">   
+    <line visibility="public" signature="EdgeConstructor(Vertex,Vertex) : void" num="14" count="13" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="10" /> 
+    <line num="16" count="13" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="12" /> 
+    <line num="17" count="13" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="13" /> 
+    <line visibility="private" signature="adjustAdorns__wrappee__DirectedWithEdges(EdgeIfc) : void" num="25" count="1" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="18" /> 
+    <line visibility="public" signature="adjustAdorns(EdgeIfc) : void" num="36" count="2" type="method" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="20" /> 
+    <line num="37" count="2" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="21" /> 
+    <line num="38" count="1" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="22" /> 
+    <line visibility="public" signature="setWeight(int) : void" num="44" count="2" type="method" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="25" /> 
+    <line num="46" count="2" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="27" /> 
+    <line visibility="public" signature="getWeight() : int" num="52" count="5" type="method" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="30" /> 
+    <line num="54" count="5" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="32" /> 
+    <line visibility="public" signature="getOtherVertex(Vertex) : Vertex" num="60" count="3" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="25" /> 
+    <line num="62" count="3" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="27" />  
+    <line num="63" count="1" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="28" /> 
+    <line num="64" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="29" />  
+    <line num="65" count="1" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="30" /> 
+    <line num="67" count="1" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="32" /> 
+    <line visibility="public" signature="getStart() : Vertex" num="73" count="2" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="35" /> 
+    <line num="75" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="37" /> 
+    <line visibility="public" signature="getEnd() : Vertex" num="81" count="2" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="40" /> 
+    <line num="83" count="2" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="42" /> 
+    <line visibility="private" signature="display__wrappee__DirectedWithEdges() : void" num="89" count="4" type="method" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="45" /> 
+    <line num="90" count="4" type="stmt" featureClass="DirectedWithEdges.GPL.Edge" featureLineNum="46" /> 
+    <line visibility="public" signature="display() : void" num="96" count="4" type="method" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="35" /> 
+    <line num="97" count="4" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="36" /> 
+    <line num="98" count="4" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="37" /> 
+    <line visibility="public" signature="EdgeConstructor(Vertex,Vertex,int) : void" num="107" count="2" type="method" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="8" /> 
+    <line num="109" count="2" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="10" /> 
+    <line num="110" count="2" type="stmt" featureClass="WeightedWithEdges.GPL.Edge" featureLineNum="11" /> 
+   </file> 
+   <file path="GPL/EdgeIter.java" name="GPL.EdgeIter">   
+    <line visibility="public" signature="hasNext() : boolean" num="6" count="1" type="method" featureClass="Base.GPL.EdgeIter" featureLineNum="5" /> 
+    <line num="6" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="5" /> 
+    <line visibility="public" signature="next() : EdgeIfc" num="10" count="1" type="method" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
+    <line num="10" count="1" type="stmt" featureClass="Base.GPL.EdgeIter" featureLineNum="6" /> 
+   </file> 
+   <file path="GPL/Neighbor.java" name="GPL.Neighbor">   
+    <line visibility="public" signature="Neighbor()" num="17" count="27" type="method" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="11" /> 
+    <line num="18" count="27" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="12" /> 
+    <line num="19" count="27" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="13" /> 
+    <line visibility="public" signature="Neighbor(Vertex,Edge)" num="25" count="10" type="method" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="16" /> 
+    <line num="26" count="10" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="17" /> 
+    <line num="27" count="0" type="stmt" featureClass="DirectedWithEdges.GPL.Neighbor" featureLineNum="18" /> 
+   </file> 
+  </package> 
+ </project> 
+ <testproject timestamp="1589088030467">  
+ </testproject> 
+</coverage>

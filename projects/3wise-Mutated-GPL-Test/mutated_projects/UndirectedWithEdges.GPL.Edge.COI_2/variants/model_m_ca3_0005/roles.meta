@@ -1,97 +1,120 @@
 {
 	"features" : [
-		"DirectedWithNeighbors",
+		"UndirectedWithEdges",
 		"TestProg",
-		"Number",
+		"Connected",
 		"Cycle",
 		"DFS",
 		"Unweighted",
-		"Directed",
-		"WithNeighbors",
+		"Undirected",
+		"WithEdges",
 		"Base"
 	],
 	"roles": {
 		"run": {
-			"DirectedWithNeighbors": "run__wrappee__DirectedWithNeighbors",
-			"Number": "run__wrappee__Number",
+			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
+			"Connected": "run__wrappee__Connected",
 			"Cycle": "run"
 		},
+		"sortEdges": {
+			"UndirectedWithEdges": "sortEdges"
+		},
 		"sortVertices": {
-			"DirectedWithNeighbors": "sortVertices"
+			"UndirectedWithEdges": "sortVertices"
 		},
 		"addEdge": {
-			"DirectedWithNeighbors": "addEdge"
+			"UndirectedWithEdges": "addEdge"
 		},
 		"addVertex": {
-			"DirectedWithNeighbors": "addVertex"
+			"UndirectedWithEdges": "addVertex"
 		},
 		"findsVertex": {
-			"DirectedWithNeighbors": "findsVertex"
+			"UndirectedWithEdges": "findsVertex"
 		},
 		"getVertices": {
-			"DirectedWithNeighbors": "getVertices"
+			"UndirectedWithEdges": "getVertices"
+		},
+		"getEdges": {
+			"UndirectedWithEdges": "getEdges"
+		},
+		"findsEdge": {
+			"UndirectedWithEdges": "findsEdge"
 		},
 		"display": {
-			"DirectedWithNeighbors": "display__wrappee__DirectedWithNeighbors",
-			"Number": "display__wrappee__Number",
+			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
+			"Connected": "display__wrappee__Connected",
 			"Cycle": "display__wrappee__Cycle",
 			"DFS": "display",
-			"Base": "display__wrappee__DirectedWithNeighbors"
-		},
-		"NeighborConstructor": {
-			"DirectedWithNeighbors": "NeighborConstructor"
-		},
-		"getStart": {
-			"DirectedWithNeighbors": "getStart",
-			"Base": "getStart"
-		},
-		"getEnd": {
-			"DirectedWithNeighbors": "getEnd",
-			"Base": "getEnd"
-		},
-		"setWeight": {
-			"DirectedWithNeighbors": "setWeight",
-			"Base": "setWeight"
-		},
-		"getOtherVertex": {
-			"DirectedWithNeighbors": "getOtherVertex",
-			"Base": "getOtherVertex"
-		},
-		"adjustAdorns": {
-			"DirectedWithNeighbors": "adjustAdorns",
-			"Base": "adjustAdorns"
-		},
-		"getName": {
-			"DirectedWithNeighbors": "getName"
+			"Base": "display__wrappee__UndirectedWithEdges"
 		},
 		"VertexConstructor": {
-			"DirectedWithNeighbors": "VertexConstructor__wrappee__DirectedWithNeighbors",
+			"UndirectedWithEdges": "VertexConstructor__wrappee__UndirectedWithEdges",
 			"DFS": "VertexConstructor"
 		},
 		"assignName": {
-			"DirectedWithNeighbors": "assignName"
+			"UndirectedWithEdges": "assignName"
+		},
+		"getName": {
+			"UndirectedWithEdges": "getName"
+		},
+		"getNeighborsObj": {
+			"UndirectedWithEdges": "getNeighborsObj"
 		},
 		"getNeighbors": {
-			"DirectedWithNeighbors": "getNeighbors"
+			"UndirectedWithEdges": "getNeighbors"
+		},
+		"addNeighbor": {
+			"UndirectedWithEdges": "addNeighbor"
+		},
+		"EdgeConstructor": {
+			"UndirectedWithEdges": "EdgeConstructor"
+		},
+		"adjustAdorns": {
+			"UndirectedWithEdges": "adjustAdorns",
+			"Base": "adjustAdorns"
+		},
+		"setWeight": {
+			"UndirectedWithEdges": "setWeight",
+			"Base": "setWeight"
+		},
+		"getWeight": {
+			"UndirectedWithEdges": "getWeight"
+		},
+		"getOtherVertex": {
+			"UndirectedWithEdges": "getOtherVertex",
+			"Base": "getOtherVertex"
+		},
+		"getStart": {
+			"UndirectedWithEdges": "getStart",
+			"Base": "getStart"
+		},
+		"getEnd": {
+			"UndirectedWithEdges": "getEnd",
+			"Base": "getEnd"
 		},
 		"main": {
 			"TestProg": "main"
 		},
-		"NumberVertices": {
-			"Number": "NumberVertices"
-		},
-		"preVisitAction": {
-			"Number": "preVisitAction",
-			"Cycle": "preVisitAction",
-			"DFS": "preVisitAction"
+		"ConnectedComponents": {
+			"Connected": "ConnectedComponents"
 		},
 		"init_vertex": {
+			"Connected": "init_vertex",
 			"Cycle": "init_vertex",
 			"DFS": "init_vertex"
 		},
 		"postVisitAction": {
+			"Connected": "postVisitAction",
 			"Cycle": "postVisitAction",
 			"DFS": "postVisitAction"
+		},
+		"nextRegionAction": {
+			"Connected": "nextRegionAction",
+			"DFS": "nextRegionAction"
+		},
+		"preVisitAction": {
+			"Cycle": "preVisitAction",
+			"DFS": "preVisitAction"
 		},
 		"checkNeighborAction": {
 			"Cycle": "checkNeighborAction",
@@ -105,9 +128,6 @@
 		},
 		"nodeSearch": {
 			"DFS": "nodeSearch"
-		},
-		"nextRegionAction": {
-			"DFS": "nextRegionAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

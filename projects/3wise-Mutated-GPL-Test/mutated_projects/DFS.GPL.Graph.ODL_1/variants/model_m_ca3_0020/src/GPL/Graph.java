@@ -58,6 +58,16 @@ public   class  Graph {
     }
 
 	
+    // Executes Connected Components
+     //__feature_mapping__ [Connected] [8:13]
+	private void  run__wrappee__Connected( Vertex s )
+    {
+	     	System.out.println("Connected");
+        ConnectedComponents( );
+        run__wrappee__Number( s );
+    }
+
+	
 
     // Executes MSTPrim
     //__feature_mapping__ [MSTPrim] [15:23]
@@ -68,7 +78,7 @@ public   class  Graph {
 //        Graph.stopProfile();
         gaux.display();
 //        Graph.resumeProfile();
-        run__wrappee__Number( s );
+        run__wrappee__Connected( s );
     }
 
 	
@@ -218,6 +228,14 @@ public   class  Graph {
 	public void NumberVertices( ) 
     {
         GraphSearch( new NumberWorkSpace( ) );
+    }
+
+	
+
+    //__feature_mapping__ [Connected] [15:18]
+	public void ConnectedComponents( ) 
+    {
+        GraphSearch( new RegionWorkSpace( ) );
     }
 
 	

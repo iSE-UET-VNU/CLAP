@@ -9,8 +9,6 @@ import java.util.Comparator;
 import java.util.HashMap; 
 import java.util.Map; 
 
-import java.lang.Integer; 
-
 // **********************************************************************
 
 public   class  Graph {
@@ -40,8 +38,8 @@ public   class  Graph {
 	
 
     // Executes Strongly Connected Components
-     //__feature_mapping__ [StronglyConnected] [11:19]
-	private void  run__wrappee__StronglyConnected( Vertex s )
+    //__feature_mapping__ [StronglyConnected] [11:19]
+	public void run( Vertex s )
      {
           	System.out.println("StronglyConnected");
         Graph gaux = StrongComponents();
@@ -49,16 +47,6 @@ public   class  Graph {
         gaux.display();
 //        Graph.resumeProfile();
         run__wrappee__DirectedWithEdges( s );
-    }
-
-	
-
-    // Executes Cycle Checking
-    //__feature_mapping__ [Cycle] [12:16]
-	public void run( Vertex s )
-     {
-        System.out.println( "Cycle? " + CycleCheck() );
-        run__wrappee__StronglyConnected( s );
     }
 
 	
@@ -268,15 +256,6 @@ public   class  Graph {
 
         return newGraph;
 
-    }
-
-	
-              
-    //__feature_mapping__ [Cycle] [18:22]
-	public boolean CycleCheck() {
-        CycleWorkSpace c = new CycleWorkSpace( isDirected );
-        GraphSearch( c );
-        return c.AnyCycles;
     }
 
 	

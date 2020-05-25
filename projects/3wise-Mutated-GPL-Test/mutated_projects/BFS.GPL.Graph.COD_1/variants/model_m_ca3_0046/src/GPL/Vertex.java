@@ -104,13 +104,30 @@ public   class  Vertex {
 
 	
 
+     //__feature_mapping__ [Connected] [9:13]
+	private void  display__wrappee__Connected( ) 
+    {
+        System.out.print( " comp# "+ componentNumber + " " );
+        display__wrappee__UndirectedWithEdges( );
+    }
+
+	 // white ->0, gray ->1, black->2
+      
+     //__feature_mapping__ [Cycle] [11:14]
+	private void  display__wrappee__Cycle() {
+        System.out.print( " VertexCycle# " + VertexCycle + " " );
+        display__wrappee__Connected();
+    }
+
+	
+
      //__feature_mapping__ [MSTKruskal] [16:22]
 	private void  display__wrappee__MSTKruskal() {
         if ( representative == null )
             System.out.print( "Rep null " );
         else
             System.out.print( " Rep " + representative.getName() + " " );
-        display__wrappee__UndirectedWithEdges();
+        display__wrappee__Cycle();
     }
 
 	 // of dftNodeSearch
@@ -153,6 +170,15 @@ public   class  Vertex {
             }
         };
     }
+
+	
+    public int componentNumber;
+
+	
+    public int VertexCycle;
+
+	
+    public int VertexColor;
 
 	
     public  Vertex representative;

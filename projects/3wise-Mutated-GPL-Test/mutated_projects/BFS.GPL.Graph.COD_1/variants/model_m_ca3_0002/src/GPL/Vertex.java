@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.Collections; 
 import java.util.Comparator; 
 
-import java.lang.Integer; 
-
   // *************************************************************************
 
 public   class  Vertex {
@@ -116,14 +114,6 @@ public   class  Vertex {
         display__wrappee__DirectedWithEdges();
     }
 
-	 // white ->0, gray ->1, black->2
-      
-     //__feature_mapping__ [Cycle] [11:14]
-	private void  display__wrappee__Cycle() {
-        System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__StronglyConnected();
-    }
-
 	 // of dftNodeSearch
 
     //__feature_mapping__ [DFS] [47:53]
@@ -132,7 +122,7 @@ public   class  Vertex {
             System.out.print( "  visited" );
         else
             System.out.println( " !visited " );
-        display__wrappee__Cycle( );
+        display__wrappee__StronglyConnected( );
     }
 
 	
@@ -140,12 +130,6 @@ public   class  Vertex {
 
 	
     public int strongComponentNumber;
-
-	
-    public int VertexCycle;
-
-	
-    public int VertexColor;
 
 	
     public boolean visited;

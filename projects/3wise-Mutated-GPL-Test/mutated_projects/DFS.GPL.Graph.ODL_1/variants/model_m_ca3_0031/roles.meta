@@ -2,12 +2,9 @@
 	"features" : [
 		"DirectedWithNeighbors",
 		"TestProg",
-		"StronglyConnected",
-		"Transpose",
 		"Cycle",
 		"DFS",
-		"WeightedWithNeighbors",
-		"Weighted",
+		"Unweighted",
 		"Directed",
 		"WithNeighbors",
 		"Base"
@@ -15,15 +12,13 @@
 	"roles": {
 		"run": {
 			"DirectedWithNeighbors": "run__wrappee__DirectedWithNeighbors",
-			"StronglyConnected": "run__wrappee__StronglyConnected",
 			"Cycle": "run"
 		},
 		"sortVertices": {
 			"DirectedWithNeighbors": "sortVertices"
 		},
 		"addEdge": {
-			"DirectedWithNeighbors": "addEdge__wrappee__DirectedWithNeighbors",
-			"WeightedWithNeighbors": "addEdge"
+			"DirectedWithNeighbors": "addEdge"
 		},
 		"addVertex": {
 			"DirectedWithNeighbors": "addVertex"
@@ -36,15 +31,12 @@
 		},
 		"display": {
 			"DirectedWithNeighbors": "display__wrappee__DirectedWithNeighbors",
-			"StronglyConnected": "display__wrappee__StronglyConnected",
 			"Cycle": "display__wrappee__Cycle",
-			"DFS": "display__wrappee__DFS",
-			"WeightedWithNeighbors": "display",
+			"DFS": "display",
 			"Base": "display__wrappee__DirectedWithNeighbors"
 		},
 		"NeighborConstructor": {
-			"DirectedWithNeighbors": "NeighborConstructor",
-			"WeightedWithNeighbors": "NeighborConstructor"
+			"DirectedWithNeighbors": "NeighborConstructor"
 		},
 		"getStart": {
 			"DirectedWithNeighbors": "getStart",
@@ -56,7 +48,6 @@
 		},
 		"setWeight": {
 			"DirectedWithNeighbors": "setWeight",
-			"WeightedWithNeighbors": "setWeight",
 			"Base": "setWeight"
 		},
 		"getOtherVertex": {
@@ -64,9 +55,8 @@
 			"Base": "getOtherVertex"
 		},
 		"adjustAdorns": {
-			"DirectedWithNeighbors": "adjustAdorns__wrappee__DirectedWithNeighbors",
-			"WeightedWithNeighbors": "adjustAdorns",
-			"Base": "adjustAdorns__wrappee__DirectedWithNeighbors"
+			"DirectedWithNeighbors": "adjustAdorns",
+			"Base": "adjustAdorns"
 		},
 		"getName": {
 			"DirectedWithNeighbors": "getName"
@@ -84,29 +74,17 @@
 		"main": {
 			"TestProg": "main"
 		},
+		"init_vertex": {
+			"Cycle": "init_vertex",
+			"DFS": "init_vertex"
+		},
 		"preVisitAction": {
-			"StronglyConnected": "preVisitAction",
 			"Cycle": "preVisitAction",
 			"DFS": "preVisitAction"
 		},
 		"postVisitAction": {
-			"StronglyConnected": "postVisitAction",
 			"Cycle": "postVisitAction",
 			"DFS": "postVisitAction"
-		},
-		"StrongComponents": {
-			"StronglyConnected": "StrongComponents"
-		},
-		"nextRegionAction": {
-			"StronglyConnected": "nextRegionAction",
-			"DFS": "nextRegionAction"
-		},
-		"ComputeTranspose": {
-			"Transpose": "ComputeTranspose"
-		},
-		"init_vertex": {
-			"Cycle": "init_vertex",
-			"DFS": "init_vertex"
 		},
 		"checkNeighborAction": {
 			"Cycle": "checkNeighborAction",
@@ -118,17 +96,11 @@
 		"nodeSearch": {
 			"DFS": "nodeSearch"
 		},
+		"nextRegionAction": {
+			"DFS": "nextRegionAction"
+		},
 		"GraphSearch": {
 			"DFS": "GraphSearch"
-		},
-		"getWeight": {
-			"WeightedWithNeighbors": "getWeight"
-		},
-		"addAnEdge": {
-			"WeightedWithNeighbors": "addAnEdge"
-		},
-		"addWeight": {
-			"WeightedWithNeighbors": "addWeight"
 		},
 		"hasNext": {
 			"Base": "hasNext"

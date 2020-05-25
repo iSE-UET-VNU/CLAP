@@ -1,42 +1,33 @@
-// This is a mutant program.
-// Author : ysma
-
 package GPL; 
 
+import java.util.Iterator; 
 
 import java.util.LinkedList; 
-import java.util.Iterator; 
-import java.util.Collections; 
-import java.util.Comparator; 
 
 //dja: add for performance reasons
 import java.util.HashMap; 
 import java.util.Map; 
 
-
+// ************************************************************
+ 
 public   class  Graph {
 	
-    private LinkedList vertices;
-
-	
-    private LinkedList edges;
+    public LinkedList vertices;
 
 	
     public static final boolean isDirected = false;
 
 	
-
     //dja: add for performance reasons
     private Map verticesMap;
 
 	
 
 
-    //__feature_mapping__ [UndirectedWithEdges] [26:33]
-	public Graph() {
+    //__feature_mapping__ [UndirectedOnlyVertices] [20:26]
+	public Graph( )
+    {
         vertices = new LinkedList();
-        edges = new LinkedList();
-
 	  //dja: add for performance reasons
         verticesMap = new HashMap( );
 
@@ -45,8 +36,10 @@ public   class  Graph {
 	
 
     // Fall back method that stops the execution of programs
-     //__feature_mapping__ [UndirectedWithEdges] [36:36]
-	private void  run__wrappee__UndirectedWithEdges( Vertex s ) {}
+     //__feature_mapping__ [UndirectedOnlyVertices] [29:31]
+	private void  run__wrappee__UndirectedOnlyVertices( Vertex s )
+    {
+    }
 
 	
     // Executes Connected Components
@@ -55,134 +48,148 @@ public   class  Graph {
     {
 	     	System.out.println("Connected");
         ConnectedComponents( );
-        run__wrappee__UndirectedWithEdges( s );
+        run__wrappee__UndirectedOnlyVertices( s );
+    }
+
+	
+    // Adds an edge with weights
+    //__feature_mapping__ [WeightedOnlyVertices] [9:12]
+	public void addAnEdge( Vertex start,  Vertex end, int weight )
+   {
+        addEdge( start,end, weight );
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [38:40]
-	public void sortEdges(Comparator c) {
-        Collections.sort(edges, c);
+    // Adds and edge by setting start as adjacent to end and
+    // viceversa
+    //__feature_mapping__ [UndirectedOnlyVertices] [41:46]
+	public EdgeIfc addEdge( Vertex start,  Vertex end )
+    {
+        start.addAdjacent( end );
+        end.addAdjacent( start );
+        return ( EdgeIfc ) start;
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [42:44]
-	public void sortVertices(Comparator c) {
-        Collections.sort(vertices, c);
-    }
+     // Adds an edge without weights if Weighted layer is not present
+ //   public void addEdge( Vertex start,   NeighborIfc theNeighbor )
+   // {
+     //   addEdge( Vertex start,  ( Vertex ) theNeighbor )
+   // }
 
-	
 
-    // Adds an edge without weights if Weighted layer is not present
-    //__feature_mapping__ [UndirectedWithEdges] [47:55]
-	public EdgeIfc addEdge(Vertex start,  Vertex end) {
-        Edge theEdge = new  Edge();
-        theEdge.EdgeConstructor( start, end );
-        edges.add( theEdge );
-        start.addNeighbor( new  Neighbor( end, theEdge ) );
-        end.addNeighbor( new  Neighbor( start, theEdge ) );
 
-        return theEdge;
-    }
-
-	
-
-    //__feature_mapping__ [UndirectedWithEdges] [57:63]
-	protected void addVertex( Vertex v ) {
+    //__feature_mapping__ [UndirectedOnlyVertices] [56:62]
+	public void addVertex( Vertex v )
+    {
         vertices.add( v );
 
 	  //dja: add for performance reasons
 	  verticesMap.put( v.name, v );
-
     }
 
 	
 
     // Finds a vertex given its name in the vertices list
-    //__feature_mapping__ [UndirectedWithEdges] [66:85]
-	public  Vertex findsVertex( String theName ) {
+    //__feature_mapping__ [UndirectedOnlyVertices] [65:85]
+	public  Vertex findsVertex( String theName )
+      {
+        int i=0;
         Vertex theVertex;
 
         // if we are dealing with the root
-        if ( theName==null )
+        if ( theName == null )
             return null;
 
 	  //dja: removed for performance reasons
-//        for( VertexIter vxiter = getVertices(); vxiter.hasNext(); )
+//        for( i=0; i<vertices.size(); i++ )
 //        {
-//            theVertex = vxiter.next();
-//            if ( theName.equals( theVertex.getName() ) )
+//            theVertex = ( Vertex )vertices.get( i );
+//            if ( theName.equals( theVertex.name ) )
 //                return theVertex;
 //        }
 //        return null;
 
 	  //dja: add for performance reasons
 	  return ( Vertex ) verticesMap.get( theName );
-
     }
 
 	
 
-
-    //__feature_mapping__ [UndirectedWithEdges] [88:94]
-	public VertexIter getVertices() {
-        return new VertexIter() {
-                private Iterator iter = vertices.iterator();
-                public Vertex next() { return (Vertex)iter.next(); }
-                public boolean hasNext() { return iter.hasNext(); }
-            };
+    //__feature_mapping__ [UndirectedOnlyVertices] [87:101]
+	public VertexIter getVertices( )
+    {
+        return new VertexIter( )
+        {
+                private Iterator iter = vertices.iterator( );
+                public Vertex next( )
+                {
+                    return ( Vertex )iter.next( );
+                }
+                public boolean hasNext( )
+                {
+                    return iter.hasNext( );
+                }
+        };
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [96:102]
-	public EdgeIter getEdges() {
-        return new EdgeIter() {
-                private Iterator iter = edges.iterator();
-                public EdgeIfc next() { return (EdgeIfc)iter.next(); }
-                public boolean hasNext() { return iter.hasNext(); }
-            };
+     //__feature_mapping__ [UndirectedOnlyVertices] [103:113]
+	private void  display__wrappee__UndirectedOnlyVertices() {
+        int s = vertices.size();
+        int i;
+
+        System.out.println( "******************************************" );
+        System.out.println( "Vertices " );
+        for ( i=0; i<s; i++ )
+            ( ( Vertex ) vertices.get( i ) ).display();
+        System.out.println( "******************************************" );
+
     }
 
 	
+    
+    //__feature_mapping__ [WeightedOnlyVertices] [25:28]
+	public void display() 
+   {
+        display__wrappee__UndirectedOnlyVertices();
+    }
 
-    // Finds an Edge given both of its vertices
-    //__feature_mapping__ [UndirectedWithEdges] [105:122]
+	
+   //__feature_mapping__ [UndirectedOnlyVertices] [114:144]
 	public  EdgeIfc findsEdge( Vertex theSource,
                     Vertex theTarget )
        {
-        EdgeIfc theEdge;
-
-	  // dja: performance improvement
-      //  for( EdgeIter edgeiter = getEdges(); edgeiter.hasNext(); )
-        for( EdgeIter edgeiter = theSource.getEdges(); edgeiter.hasNext(); )
-         {
-            theEdge = edgeiter.next();
-            if ( ( theEdge.getStart().getName().equals( theSource.getName() ) &&
-                  theEdge.getEnd().getName().equals( theTarget.getName() ) ) ||
-                 ( theEdge.getStart().getName().equals( theTarget.getName() ) &&
-                  theEdge.getEnd().getName().equals( theSource.getName() ) ) )
-                return theEdge;
-        }
+        //dja: performance improvement
+//        for( VertexIter vertexiter = getVertices(); vertexiter.hasNext(); )
+//         {
+//        Vertex v1 = vertexiter.next( );
+//        for( EdgeIter edgeiter = v1.getEdges(); edgeiter.hasNext(); )
+//            {
+//                EdgeIfc theEdge = edgeiter.next();
+//            Vertex v2 = theEdge.getOtherVertex( v1 );
+//              if ( ( v1.getName().equals( theSource.getName() ) &&
+//                       v2.getName().equals( theTarget.getName() ) ) ||
+//                         ( v1.getName().equals( theTarget.getName() ) &&
+//                     v2.getName().equals( theSource.getName() ) ) )
+//                    return theEdge;
+//            }
+//        }
+        Vertex v1 = theSource;
+        for( EdgeIter edgeiter = v1.getEdges(); edgeiter.hasNext(); )
+            {
+                EdgeIfc theEdge = edgeiter.next();
+            Vertex v2 = theEdge.getOtherVertex( v1 );
+              if ( ( v1.getName().equals( theSource.getName() ) &&
+                       v2.getName().equals( theTarget.getName() ) ) ||
+                         ( v1.getName().equals( theTarget.getName() ) &&
+                     v2.getName().equals( theSource.getName() ) ) )
+                    return theEdge;
+            }
         return null;
-    }
-
-	
-
-    //__feature_mapping__ [UndirectedWithEdges] [124:136]
-	public void display() {
-        System.out.println( "******************************************" );
-        System.out.println( "Vertices " );
-        for ( VertexIter vxiter = getVertices(); vxiter.hasNext() ; )
-            vxiter.next().display();
-
-        System.out.println( "******************************************" );
-        System.out.println( "Edges " );
-        for ( EdgeIter edgeiter = getEdges(); edgeiter.hasNext(); )
-            edgeiter.next().display();
-
-        System.out.println( "******************************************" );
     }
 
 	
@@ -213,6 +220,20 @@ public   class  Graph {
                 v.nodeSearch( w );
             }
         }
+    }
+
+	
+ 
+    //__feature_mapping__ [WeightedOnlyVertices] [14:23]
+	public void addEdge( Vertex start,  Vertex end, int weight )
+   {
+        addEdge( start,end ); // adds the start and end as adjacent
+        start.addWeight( weight ); // the direction layer takes care of that
+                
+        // if the graph is undirected you have to include 
+        // the weight of the edge coming back
+        if ( isDirected==false )
+            end.addWeight( weight );
     }
 
 

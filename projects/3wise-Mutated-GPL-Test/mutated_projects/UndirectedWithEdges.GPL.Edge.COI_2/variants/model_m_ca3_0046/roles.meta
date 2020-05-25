@@ -2,6 +2,8 @@
 	"features" : [
 		"UndirectedWithEdges",
 		"TestProg",
+		"Connected",
+		"Cycle",
 		"MSTKruskal",
 		"DFS",
 		"WeightedWithEdges",
@@ -13,6 +15,8 @@
 	"roles": {
 		"run": {
 			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
+			"Connected": "run__wrappee__Connected",
+			"Cycle": "run__wrappee__Cycle",
 			"MSTKruskal": "run"
 		},
 		"sortEdges": {
@@ -41,6 +45,8 @@
 		},
 		"display": {
 			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
+			"Connected": "display__wrappee__Connected",
+			"Cycle": "display__wrappee__Cycle",
 			"MSTKruskal": "display__wrappee__MSTKruskal",
 			"DFS": "display__wrappee__UndirectedWithEdges",
 			"WeightedWithEdges": "display",
@@ -98,29 +104,42 @@
 		"main": {
 			"TestProg": "main"
 		},
+		"ConnectedComponents": {
+			"Connected": "ConnectedComponents"
+		},
+		"init_vertex": {
+			"Connected": "init_vertex",
+			"Cycle": "init_vertex",
+			"DFS": "init_vertex"
+		},
+		"postVisitAction": {
+			"Connected": "postVisitAction",
+			"Cycle": "postVisitAction",
+			"DFS": "postVisitAction"
+		},
+		"nextRegionAction": {
+			"Connected": "nextRegionAction",
+			"DFS": "nextRegionAction"
+		},
+		"preVisitAction": {
+			"Cycle": "preVisitAction",
+			"DFS": "preVisitAction"
+		},
+		"checkNeighborAction": {
+			"Cycle": "checkNeighborAction",
+			"DFS": "checkNeighborAction"
+		},
+		"CycleCheck": {
+			"Cycle": "CycleCheck"
+		},
 		"Kruskal": {
 			"MSTKruskal": "Kruskal"
 		},
 		"GraphSearch": {
 			"DFS": "GraphSearch"
 		},
-		"init_vertex": {
-			"DFS": "init_vertex"
-		},
 		"nodeSearch": {
 			"DFS": "nodeSearch"
-		},
-		"preVisitAction": {
-			"DFS": "preVisitAction"
-		},
-		"postVisitAction": {
-			"DFS": "postVisitAction"
-		},
-		"nextRegionAction": {
-			"DFS": "nextRegionAction"
-		},
-		"checkNeighborAction": {
-			"DFS": "checkNeighborAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

@@ -1,13 +1,17 @@
+// This is a mutant program.
+// Author : ysma
+
 package GPL; 
 
 import java.util.Iterator; 
+
+
 import java.util.LinkedList; 
 
 //dja: add for performance reasons
 import java.util.HashMap; 
 import java.util.Map; 
 
-// **********************************************************************
 
 public   class  Graph {
 	
@@ -193,33 +197,25 @@ public   class  Graph {
     }
 
 	
-    //__feature_mapping__ [DFS] [7:33]
-	public void GraphSearch( WorkSpace w ) 
-    {
-        // Step 1: initialize visited member of all nodes
-        VertexIter vxiter = getVertices( );
-        if ( vxiter.hasNext( ) == false )
-        {
-            return; // if there are no vertices return
-        }
 
-        // Initializing the vertices
-        while( vxiter.hasNext( ) ) 
-        {
-            Vertex v = vxiter.next( );
+    //__feature_mapping__ [BFS] [13:30]
+	public  void GraphSearch( WorkSpace w )
+    {
+        VertexIter vxiter = getVertices();
+        if (vxiter.hasNext() == false) {
+            return;
+        }
+        while (vxiter.hasNext()) {
+            Vertex v = vxiter.next();
             v.init_vertex( w );
         }
-
-        // Step 2: traverse neighbors of each node
-        for( vxiter = getVertices( ); vxiter.hasNext( ); ) 
-        {
-            Vertex v = vxiter.next( );
-            if ( !v.visited ) 
-            {
+        for (vxiter = getVertices(); vxiter.hasNext();) {
+            Vertex v = vxiter.next();
+            if (v.visited) {
                 w.nextRegionAction( v );
                 v.nodeSearch( w );
             }
-        } 
+        }
     }
 
 

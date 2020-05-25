@@ -1,0 +1,135 @@
+{
+	"features" : [
+		"DirectedWithEdges",
+		"TestProg",
+		"Number",
+		"StronglyConnected",
+		"Transpose",
+		"DFS",
+		"Unweighted",
+		"Directed",
+		"WithEdges",
+		"Base"
+	],
+	"roles": {
+		"run": {
+			"DirectedWithEdges": "run__wrappee__DirectedWithEdges",
+			"Number": "run__wrappee__Number",
+			"StronglyConnected": "run"
+		},
+		"sortEdges": {
+			"DirectedWithEdges": "sortEdges"
+		},
+		"sortVertices": {
+			"DirectedWithEdges": "sortVertices"
+		},
+		"addEdge": {
+			"DirectedWithEdges": "addEdge"
+		},
+		"addVertex": {
+			"DirectedWithEdges": "addVertex"
+		},
+		"findsVertex": {
+			"DirectedWithEdges": "findsVertex"
+		},
+		"getVertices": {
+			"DirectedWithEdges": "getVertices"
+		},
+		"getEdges": {
+			"DirectedWithEdges": "getEdges"
+		},
+		"display": {
+			"DirectedWithEdges": "display__wrappee__DirectedWithEdges",
+			"Number": "display__wrappee__Number",
+			"StronglyConnected": "display__wrappee__StronglyConnected",
+			"DFS": "display",
+			"Base": "display__wrappee__DirectedWithEdges"
+		},
+		"getName": {
+			"DirectedWithEdges": "getName"
+		},
+		"VertexConstructor": {
+			"DirectedWithEdges": "VertexConstructor__wrappee__DirectedWithEdges",
+			"DFS": "VertexConstructor"
+		},
+		"assignName": {
+			"DirectedWithEdges": "assignName"
+		},
+		"addNeighbor": {
+			"DirectedWithEdges": "addNeighbor"
+		},
+		"getNeighbors": {
+			"DirectedWithEdges": "getNeighbors"
+		},
+		"EdgeConstructor": {
+			"DirectedWithEdges": "EdgeConstructor"
+		},
+		"adjustAdorns": {
+			"DirectedWithEdges": "adjustAdorns",
+			"Base": "adjustAdorns"
+		},
+		"setWeight": {
+			"DirectedWithEdges": "setWeight",
+			"Base": "setWeight"
+		},
+		"getWeight": {
+			"DirectedWithEdges": "getWeight"
+		},
+		"getOtherVertex": {
+			"DirectedWithEdges": "getOtherVertex",
+			"Base": "getOtherVertex"
+		},
+		"getStart": {
+			"DirectedWithEdges": "getStart",
+			"Base": "getStart"
+		},
+		"getEnd": {
+			"DirectedWithEdges": "getEnd",
+			"Base": "getEnd"
+		},
+		"main": {
+			"TestProg": "main"
+		},
+		"NumberVertices": {
+			"Number": "NumberVertices"
+		},
+		"preVisitAction": {
+			"Number": "preVisitAction",
+			"StronglyConnected": "preVisitAction",
+			"DFS": "preVisitAction"
+		},
+		"postVisitAction": {
+			"StronglyConnected": "postVisitAction",
+			"DFS": "postVisitAction"
+		},
+		"StrongComponents": {
+			"StronglyConnected": "StrongComponents"
+		},
+		"nextRegionAction": {
+			"StronglyConnected": "nextRegionAction",
+			"DFS": "nextRegionAction"
+		},
+		"ComputeTranspose": {
+			"Transpose": "ComputeTranspose"
+		},
+		"GraphSearch": {
+			"DFS": "GraphSearch"
+		},
+		"init_vertex": {
+			"DFS": "init_vertex"
+		},
+		"nodeSearch": {
+			"DFS": "nodeSearch"
+		},
+		"checkNeighborAction": {
+			"DFS": "checkNeighborAction"
+		},
+		"hasNext": {
+			"Base": "hasNext"
+		},
+		"next": {
+			"Base": "next"
+		}
+	}
+
+}

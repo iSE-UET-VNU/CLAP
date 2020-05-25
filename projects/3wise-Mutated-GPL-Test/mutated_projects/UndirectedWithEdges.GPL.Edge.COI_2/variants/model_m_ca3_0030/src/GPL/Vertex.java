@@ -1,36 +1,33 @@
 package GPL; 
 
+// dja - trying to fix compile problems
 import java.util.Iterator; 
 import java.util.LinkedList; 
 
 import java.lang.Integer; 
-import java.util.Collections; 
-import java.util.Comparator; 
 
   // *************************************************************************
 
-public   class  Vertex {
+public   class  Vertex  implements EdgeIfc, NeighborIfc {
 	
-    public LinkedList neighbors;
+    public LinkedList adjacentVertices;
 
 	
     public String name;
 
 	
-
-    //__feature_mapping__ [UndirectedWithEdges] [13:16]
-	public Vertex( ) 
-    {
-        VertexConstructor( );
+ 
+    //__feature_mapping__ [DirectedOnlyVertices] [14:16]
+	public Vertex() {
+        VertexConstructor();
     }
 
 	
-
-     //__feature_mapping__ [UndirectedWithEdges] [18:22]
-	private void  VertexConstructor__wrappee__UndirectedWithEdges( ) 
-    {
+  
+     //__feature_mapping__ [DirectedOnlyVertices] [18:21]
+	private void  VertexConstructor__wrappee__DirectedOnlyVertices() {
         name      = null;
-        neighbors = new LinkedList( );
+        adjacentVertices = new LinkedList();
     }
 
 	
@@ -38,68 +35,75 @@ public   class  Vertex {
     //__feature_mapping__ [DFS] [9:13]
 	public void VertexConstructor( ) 
     {
-        VertexConstructor__wrappee__UndirectedWithEdges( );
+        VertexConstructor__wrappee__DirectedOnlyVertices( );
         visited = false;
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [24:28]
-	public  Vertex assignName( String name ) 
-    {
+    //__feature_mapping__ [DirectedOnlyVertices] [23:26]
+	public  Vertex assignName( String name ) {
         this.name = name;
         return ( Vertex ) this;
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [30:33]
-	public String getName( )
-    {
-        return this.name;
+    //dja: fix for compile errors during performance improvements
+    //__feature_mapping__ [DirectedOnlyVertices] [29:32]
+	public String getName( ) 
+    { 
+        return name; 
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [35:38]
-	public LinkedList getNeighborsObj( )
-    {
- 	  return neighbors;
+ 
+    //__feature_mapping__ [DirectedOnlyVertices] [35:37]
+	public void addAdjacent( Vertex n ) {
+        adjacentVertices.add( n );
     }
 
 	
 
+    //__feature_mapping__ [DirectedOnlyVertices] [39:40]
+	public void adjustAdorns( Vertex the_vertex, int index ) 
+      {}
 
-    //__feature_mapping__ [UndirectedWithEdges] [41:55]
-	public VertexIter getNeighbors( )
+	
+      
+    // dja - trying to fix compile errors
+    //__feature_mapping__ [DirectedOnlyVertices] [43:58]
+	public VertexIter getNeighbors( ) 
     {
-        return new VertexIter( )
+        return new VertexIter( ) 
         {
-            private Iterator iter = neighbors.iterator( );
+            private Iterator iter = adjacentVertices.iterator( );
             public Vertex next( ) 
             { 
-              return ( ( Neighbor )iter.next( ) ).end; 
+               return ( Vertex )iter.next( ); 
             }
+
             public boolean hasNext( ) 
-            { 
-              return iter.hasNext( ); 
+            {
+               return iter.hasNext( ); 
             }
         };
     }
 
 	
 
-     //__feature_mapping__ [UndirectedWithEdges] [57:67]
-	private void  display__wrappee__UndirectedWithEdges( ) 
-    {
-        System.out.print( " Node " + name + " connected to: " );
 
-        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
-        {
-            System.out.print( vxiter.next().getName() + ", " );
-        }
+     //__feature_mapping__ [DirectedOnlyVertices] [61:70]
+	private void  display__wrappee__DirectedOnlyVertices() {
+        int s = adjacentVertices.size();
+        int i;
 
-        System.out.println( );
+        System.out.print( "Vertex " + name + " connected to: " );
+
+        for ( i=0; i<s; i++ )
+            System.out.print( ( ( Vertex )adjacentVertices.get( i ) ).name+", " );
+        System.out.println();
     }
 
 	 // white ->0, gray ->1, black->2
@@ -107,16 +111,7 @@ public   class  Vertex {
      //__feature_mapping__ [Cycle] [11:14]
 	private void  display__wrappee__Cycle() {
         System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__UndirectedWithEdges();
-    }
-
-	 // weight so far from s to it
-            
-     //__feature_mapping__ [MSTPrim] [14:18]
-	private void  display__wrappee__MSTPrim( ) 
-    {
-        System.out.print( " Pred " + pred + " Key " + key + " " );
-        display__wrappee__Cycle( );
+        display__wrappee__DirectedOnlyVertices();
     }
 
 	 // of dftNodeSearch
@@ -127,37 +122,46 @@ public   class  Vertex {
             System.out.print( "  visited" );
         else
             System.out.println( " !visited " );
-        display__wrappee__MSTPrim( );
-    }
-
-	      
-//--------------------
-// differences
-//--------------------
-
-    //__feature_mapping__ [UndirectedWithEdges] [72:75]
-	public void addNeighbor( Neighbor n ) 
-    {
-        neighbors.add( n );
+        display__wrappee__Cycle( );
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [77:91]
-	public EdgeIter getEdges( )
+//--------------------
+// from EdgeIfc
+//--------------------
+
+    //__feature_mapping__ [DirectedOnlyVertices] [76:76]
+	public Vertex getStart( ) { return null; }
+
+	
+    //__feature_mapping__ [DirectedOnlyVertices] [77:77]
+	public Vertex getEnd( ) { return null; }
+
+	
+
+    //__feature_mapping__ [DirectedOnlyVertices] [79:79]
+	public void setWeight( int weight ){}
+
+	
+    //__feature_mapping__ [DirectedOnlyVertices] [80:80]
+	public int getWeight() { return 0; }
+
+	
+
+    //__feature_mapping__ [DirectedOnlyVertices] [82:85]
+	public Vertex getOtherVertex( Vertex vertex )
     {
-        return new EdgeIter( )
-        {
-            private Iterator iter = neighbors.iterator( );
-            public EdgeIfc next( ) 
-            { 
-              return ( ( EdgeIfc ) ( ( Neighbor )iter.next( ) ).edge );
-            }
-            public boolean hasNext( ) 
-            { 
-              return iter.hasNext( ); 
-            }
-        };
+        return this;
+    }
+
+	
+
+
+
+    //__feature_mapping__ [DirectedOnlyVertices] [89:91]
+	public void adjustAdorns( EdgeIfc the_edge )
+    {
     }
 
 	
@@ -165,12 +169,6 @@ public   class  Vertex {
 
 	
     public int VertexColor;
-
-	
-    public String pred;
-
-	 // the predecessor vertex if any
-    public int key;
 
 	
     public boolean visited;

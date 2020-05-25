@@ -2,7 +2,12 @@
 
 package GPL; 
 
-public  interface  EdgeIfc {
+public   interface  EdgeIfc {
+	
+    //public void setWeight( int weight );
+    //__feature_mapping__ [WeightedWithNeighbors] [8:8]
+	public int getWeight();
+
 	
     //__feature_mapping__ [Base] [7:7]
 	public Vertex getStart( );

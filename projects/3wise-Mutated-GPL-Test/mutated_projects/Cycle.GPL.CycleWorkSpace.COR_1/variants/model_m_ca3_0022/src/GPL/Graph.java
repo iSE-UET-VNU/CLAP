@@ -1,13 +1,14 @@
 package GPL; 
 
 import java.util.Iterator; 
+
 import java.util.LinkedList; 
 
 //dja: add for performance reasons
 import java.util.HashMap; 
 import java.util.Map; 
 
-// **********************************************************************
+// ***********************************************************************
 
 public   class  Graph {
 	
@@ -193,25 +194,25 @@ public   class  Graph {
     }
 
 	
-    //__feature_mapping__ [DFS] [7:33]
+    //__feature_mapping__ [BFS] [9:35]
 	public void GraphSearch( WorkSpace w ) 
     {
         // Step 1: initialize visited member of all nodes
         VertexIter vxiter = getVertices( );
         if ( vxiter.hasNext( ) == false )
         {
-            return; // if there are no vertices return
+            return;
         }
 
-        // Initializing the vertices
-        while( vxiter.hasNext( ) ) 
+        // Showing the initialization process
+        while(vxiter.hasNext( ) ) 
         {
             Vertex v = vxiter.next( );
             v.init_vertex( w );
         }
 
         // Step 2: traverse neighbors of each node
-        for( vxiter = getVertices( ); vxiter.hasNext( ); ) 
+        for (vxiter = getVertices( ); vxiter.hasNext( ); ) 
         {
             Vertex v = vxiter.next( );
             if ( !v.visited ) 
@@ -219,7 +220,7 @@ public   class  Graph {
                 w.nextRegionAction( v );
                 v.nodeSearch( w );
             }
-        } 
+        } //end for
     }
 
 

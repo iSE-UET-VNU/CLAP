@@ -1,12 +1,11 @@
 package GPL; 
 
 import java.util.Iterator; 
-
 import java.util.LinkedList; 
-import java.util.Collections; 
-import java.util.Comparator; 
 
 import java.lang.Integer; 
+
+  // *************************************************************************
 
 public   class  Vertex {
 	
@@ -84,20 +83,9 @@ public   class  Vertex {
 
 	
 
-     //__feature_mapping__ [DirectedWithNeighbors] [53:54]
-	private void  adjustAdorns__wrappee__DirectedWithNeighbors( Neighbor sourceNeighbor )
-      {}
-
-	
-    
-    //__feature_mapping__ [WeightedWithNeighbors] [12:18]
+    //__feature_mapping__ [DirectedWithNeighbors] [53:54]
 	public void adjustAdorns( Neighbor sourceNeighbor )
-     {
-        Neighbor targetNeighbor = 
-                ( Neighbor )adjacentNeighbors.getLast();
-        targetNeighbor.weight = sourceNeighbor.weight;
-        adjustAdorns__wrappee__DirectedWithNeighbors( sourceNeighbor );
-    }
+      {}
 
 	
       
@@ -114,47 +102,24 @@ public   class  Vertex {
         System.out.println( );
     }
 
-	
-      
-     //__feature_mapping__ [StronglyConnected] [15:19]
-	private void  display__wrappee__StronglyConnected() {
-        System.out.print( " FinishTime -> " + finishTime + " SCCNo -> " 
-                        + strongComponentNumber );
-        display__wrappee__DirectedWithNeighbors();
-    }
-
 	 // white ->0, gray ->1, black->2
       
      //__feature_mapping__ [Cycle] [11:14]
 	private void  display__wrappee__Cycle() {
         System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__StronglyConnected();
+        display__wrappee__DirectedWithNeighbors();
     }
 
 	 // of dftNodeSearch
 
-     //__feature_mapping__ [DFS] [47:53]
-	private void  display__wrappee__DFS( ) {
+    //__feature_mapping__ [DFS] [47:53]
+	public void display( ) {
         if ( visited )
             System.out.print( "  visited" );
         else
             System.out.println( " !visited " );
         display__wrappee__Cycle( );
     }
-
-	
-    
-    //__feature_mapping__ [WeightedWithNeighbors] [20:23]
-	public void display()
-    {
-        display__wrappee__DFS();
-    }
-
-	
-    public int finishTime;
-
-	
-    public int strongComponentNumber;
 
 	
     public int VertexCycle;
@@ -201,16 +166,6 @@ public   class  Vertex {
 
         // Step 3: do postVisitAction now
         w.postVisitAction( ( Vertex ) this );
-    }
-
-	
-    //__feature_mapping__ [WeightedWithNeighbors] [4:10]
-	public void addWeight( Vertex end, int theWeight ) 
-    {
-        Neighbor the_neighbor = 
-                ( Neighbor ) ( end.adjacentNeighbors ).removeLast();
-        the_neighbor.weight = theWeight;
-        ( end.adjacentNeighbors ).add( the_neighbor );
     }
 
 

@@ -1,174 +1,226 @@
-// This is a mutant program.
-// Author : ysma
-
 package GPL; 
 
-//dja - trying to fix logic problems
 import java.util.Iterator; 
+
 import java.util.LinkedList; 
-//dja: added to fix compile problems when doing the performance improvements
-import java.util.Comparator; 
-import java.util.Collections; 
 
-import java.lang.Integer; 
+//dja: add for performance reasons
+import java.util.HashMap; 
+import java.util.Map; 
 
+// ***********************************************************************
 
 public   class  Graph {
 	
     public LinkedList vertices;
 
 	
-    public static final boolean isDirected = true;
+    public static boolean isDirected = false;
+
+	
+      
+    //dja: add for performance reasons
+    private Map verticesMap;
 
 	
 
-    //__feature_mapping__ [DirectedOnlyVertices] [17:19]
-	public Graph() {
+    //__feature_mapping__ [UndirectedWithNeighbors] [21:28]
+	public Graph( ) 
+    {
         vertices = new LinkedList();
-    }
 
-	
-
-    //__feature_mapping__ [DirectedOnlyVertices] [21:37]
-	public VertexIter getVertices( ) 
-    { 
-        // dja - trying to fix logic problems
-        return new VertexIter( ) 
-        {
-                private Iterator iter = vertices.iterator( );
-                public Vertex next( ) 
-                { 
-                    return ( Vertex )iter.next( ); 
-                }
-                public boolean hasNext( ) 
-                { 
-                    return iter.hasNext( ); 
-                }
-            };
+	  //dja: add for performance reasons
+        verticesMap = new HashMap( );
 
     }
 
 	
-// dja - fix compile code.
-//    public EdgeIter getEdges() { return null; }
-//    public EdgeIfc addEdge(Vertex start,  Vertex end) { return null; }
-//    public  Vertex findsVertex( String theName ) { return null; }
-
+ 
     // Fall back method that stops the execution of programs
-     //__feature_mapping__ [DirectedOnlyVertices] [44:44]
-	private void  run__wrappee__DirectedOnlyVertices( Vertex s ) {}
-
-	
-
-    // Executes Cycle Checking
-    //__feature_mapping__ [Cycle] [12:16]
-	public void run( Vertex s )
-     {
-        System.out.println( "Cycle? " + CycleCheck() );
-        run__wrappee__DirectedOnlyVertices( s );
+     //__feature_mapping__ [UndirectedWithNeighbors] [31:33]
+	private void  run__wrappee__UndirectedWithNeighbors( Vertex s )
+    {
     }
 
 	
-
-    //dja: fix for compile problems during performance improvements
-    //__feature_mapping__ [DirectedOnlyVertices] [47:49]
-	public void sortVertices(Comparator c) {
-        Collections.sort(vertices, c);
+    // Executes Connected Components
+    //__feature_mapping__ [Connected] [8:13]
+	public void run( Vertex s )
+    {
+	     	System.out.println("Connected");
+        ConnectedComponents( );
+        run__wrappee__UndirectedWithNeighbors( s );
     }
 
 	
 
     // Adds an edge without weights if Weighted layer is not present
-    //__feature_mapping__ [DirectedOnlyVertices] [52:55]
-	public void addAnEdge( Vertex start,  Vertex end, int weight )
-      {
-        addEdge( start,end );
+    //__feature_mapping__ [UndirectedWithNeighbors] [36:41]
+	public void addEdge( Vertex start,   Neighbor theNeighbor ) 
+    {
+        start.addEdge( theNeighbor );
+        Vertex end = theNeighbor.neighbor;
+        end.addEdge( new  Neighbor( start ) );
     }
 
 	
 
-
-
-    //__feature_mapping__ [DirectedOnlyVertices] [59:61]
-	public void addVertex( Vertex v ) {
+        
+    //__feature_mapping__ [UndirectedWithNeighbors] [44:50]
+	public void addVertex( Vertex v ) 
+    {
         vertices.add( v );
+
+	  //dja: add for performance reasons
+	  verticesMap.put( v.name, v );
     }
 
 	
-
-    // Adds and edge by setting end as adjacent to start vertices
-    //__feature_mapping__ [DirectedOnlyVertices] [64:67]
-	public EdgeIfc addEdge( Vertex start,  Vertex end ) {
-        start.addAdjacent( end );
-        return( EdgeIfc ) start;
-    }
-
-	
-
+   
     // Finds a vertex given its name in the vertices list
-    //__feature_mapping__ [DirectedOnlyVertices] [70:86]
+    //__feature_mapping__ [UndirectedWithNeighbors] [53:75]
 	public  Vertex findsVertex( String theName )
-      {
-        int i=0;
+    {
         Vertex theVertex;
-
+        
         // if we are dealing with the root
-        if ( theName==null )
+        if ( theName == null )
             return null;
 
-        for( i=0; i<vertices.size(); i++ )
+	  //dja: removed for performance reasons
+//        for( VertexIter vxiter = getVertices( ); vxiter.hasNext( ); )
+//        {
+//            theVertex = vxiter.next( );
+//            if ( theName.equals( theVertex.getName( ) ) )
+//            {
+//               return theVertex;
+//            }
+//        }
+//        return null;
+
+	  //dja: add for performance reasons
+	  return ( Vertex ) verticesMap.get( theName );
+
+    }
+
+	
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [77:91]
+	public VertexIter getVertices( ) 
+    {
+        return new VertexIter( ) 
+        {
+            private Iterator iter = vertices.iterator( );
+            public Vertex next( ) 
+            { 
+                return ( Vertex )iter.next( ); 
+            }
+            public boolean hasNext( ) 
+            { 
+                return iter.hasNext(); 
+            }
+        };
+    }
+
+	
+
+    // Finds an Edge given both of its vertices
+    //__feature_mapping__ [UndirectedWithNeighbors] [94:124]
+	public  EdgeIfc findsEdge( Vertex theSource,
+                    Vertex theTarget )
+       {
+	  //dja: performance improvement
+        //for( VertexIter vertexiter = getVertices(); vertexiter.hasNext(); )
+        // {
+	  //	Vertex v1 = vertexiter.next( );
+	  //	for( EdgeIter edgeiter = v1.getEdges(); edgeiter.hasNext(); )
+        //    {
+	  //          EdgeIfc theEdge = edgeiter.next();
+	  //		Vertex v2 = theEdge.getOtherVertex( v1 );
+        //	      if ( ( v1.getName().equals( theSource.getName() ) &&
+        //    	       v2.getName().equals( theTarget.getName() ) ) ||
+        //         	     ( v1.getName().equals( theTarget.getName() ) &&
+        //          	 v2.getName().equals( theSource.getName() ) ) )
+        //        	return theEdge;
+        //    }
+        //}
+		Vertex v1 = theSource;
+		for( EdgeIter edgeiter = v1.getEdges(); edgeiter.hasNext(); )
             {
-            theVertex = ( Vertex )vertices.get( i );
-            if ( theName.equals( theVertex.name ) )
-                return theVertex;
-        }
+	            EdgeIfc theEdge = edgeiter.next();
+			Vertex v2 = theEdge.getOtherVertex( v1 );
+      	      if ( ( v1.getName().equals( theSource.getName() ) &&
+            	       v2.getName().equals( theTarget.getName() ) ) ||
+                 	     ( v1.getName().equals( theTarget.getName() ) &&
+                  	 v2.getName().equals( theSource.getName() ) ) )
+                	return theEdge;
+            }
         return null;
     }
 
 	
 
-    //__feature_mapping__ [DirectedOnlyVertices] [88:98]
-	public void display() {
-        int s = vertices.size();
-        int i;
 
+    //__feature_mapping__ [UndirectedWithNeighbors] [127:137]
+	public void display( ) 
+    {
         System.out.println( "******************************************" );
         System.out.println( "Vertices " );
-        for ( i=0; i<s; i++ )
-            ( ( Vertex ) vertices.get( i ) ).display();
+        for ( VertexIter vxiter = getVertices( ); vxiter.hasNext( ) ; )
+        {
+            vxiter.next( ).display( );
+        }
+
         System.out.println( "******************************************" );
-
-    }
-
-	
-              
-    //__feature_mapping__ [Cycle] [18:22]
-	public boolean CycleCheck() {
-        CycleWorkSpace c = new CycleWorkSpace( isDirected );
-        GraphSearch( c );
-        return c.AnyCycles;
     }
 
 	
 
-    //__feature_mapping__ [DFS] [10:27]
-	public  void GraphSearch( WorkSpace w )
+    // Adds an edge without weights if Weighted layer is not present
+    //__feature_mapping__ [UndirectedWithNeighbors] [140:145]
+	public EdgeIfc addEdge( Vertex start,  Vertex end )
+      {
+	  Neighbor e = new Neighbor( end );
+        addEdge( start, e );
+        return e;
+    }
+
+	
+
+    //__feature_mapping__ [Connected] [15:18]
+	public void ConnectedComponents( ) 
     {
-        VertexIter vxiter = getVertices();
-        if (vxiter.hasNext()) {
+        GraphSearch( new RegionWorkSpace( ) );
+    }
+
+	
+    //__feature_mapping__ [BFS] [9:35]
+	public void GraphSearch( WorkSpace w ) 
+    {
+        // Step 1: initialize visited member of all nodes
+        VertexIter vxiter = getVertices( );
+        if ( vxiter.hasNext( ) == false )
+        {
             return;
         }
-        while (vxiter.hasNext()) {
-            Vertex v = vxiter.next();
+
+        // Showing the initialization process
+        while(vxiter.hasNext( ) ) 
+        {
+            Vertex v = vxiter.next( );
             v.init_vertex( w );
         }
-        for (vxiter = getVertices(); vxiter.hasNext();) {
-            Vertex v = vxiter.next();
-            if (!v.visited) {
+
+        // Step 2: traverse neighbors of each node
+        for (vxiter = getVertices( ); vxiter.hasNext( ); ) 
+        {
+            Vertex v = vxiter.next( );
+            if ( !v.visited ) 
+            {
                 w.nextRegionAction( v );
                 v.nodeSearch( w );
             }
-        }
+        } //end for
     }
 
 

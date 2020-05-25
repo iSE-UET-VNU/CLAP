@@ -1,0 +1,8 @@
+Feature\Product;0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;
+Empty;-;X;-;-;X;-;X;X;-;-;X;X;X;-;-;X;-;X;
+Elevator;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;
+TwoThirdsFull;-;X;-;X;-;X;-;X;-;X;-;-;X;-;X;X;-;-;
+ExecutiveFloor;-;X;X;-;-;X;X;-;X;X;-;X;-;-;-;X;X;-;
+Base;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;X;
+Weight;-;X;-;X;X;X;X;X;X;X;X;-;X;X;X;X;X;-;
+Overloaded;-;-;-;X;-;X;X;X;X;-;X;-;-;X;-;X;-;-;

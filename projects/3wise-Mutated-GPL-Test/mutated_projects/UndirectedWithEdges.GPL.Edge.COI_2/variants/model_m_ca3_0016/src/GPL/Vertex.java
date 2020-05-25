@@ -91,15 +91,6 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
         display__wrappee__UndirectedOnlyVertices( );
     }
 
-	
-
-     //__feature_mapping__ [Connected] [9:13]
-	private void  display__wrappee__Connected( ) 
-    {
-        System.out.print( " comp# "+ componentNumber + " " );
-        display__wrappee__Number( );
-    }
-
 	 // of bfsNodeSearch
 
     //__feature_mapping__ [BFS] [69:76]
@@ -109,7 +100,7 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
             System.out.print( "  visited " );
         else
             System.out.println( " !visited " );
-        display__wrappee__Connected( );
+        display__wrappee__Number( );
     }
 
 	
@@ -205,9 +196,6 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
 
 	
     public int VertexNumber;
-
-	
-    public int componentNumber;
 
 	
     public boolean visited;

@@ -1,85 +1,105 @@
 {
 	"features" : [
-		"DirectedWithNeighbors",
+		"UndirectedWithEdges",
 		"TestProg",
 		"Number",
-		"StronglyConnected",
-		"Transpose",
-		"DFS",
-		"WeightedWithNeighbors",
+		"Connected",
+		"MSTKruskal",
+		"BFS",
+		"WeightedWithEdges",
 		"Weighted",
-		"Directed",
-		"WithNeighbors",
+		"Undirected",
+		"WithEdges",
 		"Base"
 	],
 	"roles": {
-		"run": {
-			"DirectedWithNeighbors": "run__wrappee__DirectedWithNeighbors",
-			"Number": "run__wrappee__Number",
-			"StronglyConnected": "run"
+		"EdgeConstructor": {
+			"UndirectedWithEdges": "EdgeConstructor",
+			"WeightedWithEdges": "EdgeConstructor"
 		},
-		"sortVertices": {
-			"DirectedWithNeighbors": "sortVertices"
+		"adjustAdorns": {
+			"UndirectedWithEdges": "adjustAdorns__wrappee__UndirectedWithEdges",
+			"WeightedWithEdges": "adjustAdorns",
+			"Base": "adjustAdorns__wrappee__UndirectedWithEdges"
 		},
-		"addEdge": {
-			"DirectedWithNeighbors": "addEdge__wrappee__DirectedWithNeighbors",
-			"WeightedWithNeighbors": "addEdge"
+		"setWeight": {
+			"UndirectedWithEdges": "setWeight",
+			"WeightedWithEdges": "setWeight",
+			"Base": "setWeight"
 		},
-		"addVertex": {
-			"DirectedWithNeighbors": "addVertex"
+		"getWeight": {
+			"UndirectedWithEdges": "getWeight",
+			"WeightedWithEdges": "getWeight"
 		},
-		"findsVertex": {
-			"DirectedWithNeighbors": "findsVertex"
-		},
-		"getVertices": {
-			"DirectedWithNeighbors": "getVertices"
-		},
-		"display": {
-			"DirectedWithNeighbors": "display__wrappee__DirectedWithNeighbors",
-			"Number": "display__wrappee__Number",
-			"StronglyConnected": "display__wrappee__StronglyConnected",
-			"DFS": "display__wrappee__DFS",
-			"WeightedWithNeighbors": "display",
-			"Base": "display__wrappee__DirectedWithNeighbors"
-		},
-		"NeighborConstructor": {
-			"DirectedWithNeighbors": "NeighborConstructor",
-			"WeightedWithNeighbors": "NeighborConstructor"
+		"getOtherVertex": {
+			"UndirectedWithEdges": "getOtherVertex",
+			"Base": "getOtherVertex"
 		},
 		"getStart": {
-			"DirectedWithNeighbors": "getStart",
+			"UndirectedWithEdges": "getStart",
 			"Base": "getStart"
 		},
 		"getEnd": {
-			"DirectedWithNeighbors": "getEnd",
+			"UndirectedWithEdges": "getEnd",
 			"Base": "getEnd"
 		},
-		"setWeight": {
-			"DirectedWithNeighbors": "setWeight",
-			"WeightedWithNeighbors": "setWeight",
-			"Base": "setWeight"
+		"display": {
+			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
+			"Number": "display__wrappee__Number",
+			"Connected": "display__wrappee__Connected",
+			"MSTKruskal": "display__wrappee__MSTKruskal",
+			"BFS": "display__wrappee__UndirectedWithEdges",
+			"WeightedWithEdges": "display",
+			"Base": "display__wrappee__UndirectedWithEdges"
 		},
-		"getOtherVertex": {
-			"DirectedWithNeighbors": "getOtherVertex",
-			"Base": "getOtherVertex"
+		"run": {
+			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
+			"Number": "run__wrappee__Number",
+			"Connected": "run__wrappee__Connected",
+			"MSTKruskal": "run"
 		},
-		"adjustAdorns": {
-			"DirectedWithNeighbors": "adjustAdorns__wrappee__DirectedWithNeighbors",
-			"WeightedWithNeighbors": "adjustAdorns",
-			"Base": "adjustAdorns__wrappee__DirectedWithNeighbors"
+		"sortEdges": {
+			"UndirectedWithEdges": "sortEdges"
 		},
-		"getName": {
-			"DirectedWithNeighbors": "getName"
+		"sortVertices": {
+			"UndirectedWithEdges": "sortVertices"
+		},
+		"addEdge": {
+			"UndirectedWithEdges": "addEdge"
+		},
+		"addVertex": {
+			"UndirectedWithEdges": "addVertex"
+		},
+		"findsVertex": {
+			"UndirectedWithEdges": "findsVertex"
+		},
+		"getVertices": {
+			"UndirectedWithEdges": "getVertices"
+		},
+		"getEdges": {
+			"UndirectedWithEdges": "getEdges"
+		},
+		"findsEdge": {
+			"UndirectedWithEdges": "findsEdge"
 		},
 		"VertexConstructor": {
-			"DirectedWithNeighbors": "VertexConstructor__wrappee__DirectedWithNeighbors",
-			"DFS": "VertexConstructor"
+			"UndirectedWithEdges": "VertexConstructor__wrappee__UndirectedWithEdges",
+			"BFS": "VertexConstructor"
 		},
 		"assignName": {
-			"DirectedWithNeighbors": "assignName"
+			"UndirectedWithEdges": "assignName"
+		},
+		"getName": {
+			"UndirectedWithEdges": "getName"
+		},
+		"getNeighborsObj": {
+			"UndirectedWithEdges": "getNeighborsObj"
 		},
 		"getNeighbors": {
-			"DirectedWithNeighbors": "getNeighbors"
+			"UndirectedWithEdges": "getNeighbors"
+		},
+		"addNeighbor": {
+			"UndirectedWithEdges": "addNeighbor"
 		},
 		"main": {
 			"TestProg": "main"
@@ -89,43 +109,34 @@
 		},
 		"preVisitAction": {
 			"Number": "preVisitAction",
-			"StronglyConnected": "preVisitAction",
-			"DFS": "preVisitAction"
+			"BFS": "preVisitAction"
 		},
-		"postVisitAction": {
-			"StronglyConnected": "postVisitAction",
-			"DFS": "postVisitAction"
-		},
-		"StrongComponents": {
-			"StronglyConnected": "StrongComponents"
-		},
-		"nextRegionAction": {
-			"StronglyConnected": "nextRegionAction",
-			"DFS": "nextRegionAction"
-		},
-		"ComputeTranspose": {
-			"Transpose": "ComputeTranspose"
-		},
-		"GraphSearch": {
-			"DFS": "GraphSearch"
+		"ConnectedComponents": {
+			"Connected": "ConnectedComponents"
 		},
 		"init_vertex": {
-			"DFS": "init_vertex"
+			"Connected": "init_vertex",
+			"BFS": "init_vertex"
+		},
+		"postVisitAction": {
+			"Connected": "postVisitAction",
+			"BFS": "postVisitAction"
+		},
+		"nextRegionAction": {
+			"Connected": "nextRegionAction",
+			"BFS": "nextRegionAction"
+		},
+		"Kruskal": {
+			"MSTKruskal": "Kruskal"
 		},
 		"nodeSearch": {
-			"DFS": "nodeSearch"
+			"BFS": "nodeSearch"
 		},
 		"checkNeighborAction": {
-			"DFS": "checkNeighborAction"
+			"BFS": "checkNeighborAction"
 		},
-		"getWeight": {
-			"WeightedWithNeighbors": "getWeight"
-		},
-		"addAnEdge": {
-			"WeightedWithNeighbors": "addAnEdge"
-		},
-		"addWeight": {
-			"WeightedWithNeighbors": "addWeight"
+		"GraphSearch": {
+			"BFS": "GraphSearch"
 		},
 		"hasNext": {
 			"Base": "hasNext"

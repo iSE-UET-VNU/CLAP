@@ -2,10 +2,8 @@
 	"features" : [
 		"UndirectedWithEdges",
 		"TestProg",
-		"Number",
-		"Cycle",
-		"MSTKruskal",
-		"DFS",
+		"MSTPrim",
+		"BFS",
 		"WeightedWithEdges",
 		"Weighted",
 		"Undirected",
@@ -45,18 +43,14 @@
 		},
 		"display": {
 			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
-			"Number": "display__wrappee__Number",
-			"Cycle": "display__wrappee__Cycle",
-			"MSTKruskal": "display__wrappee__MSTKruskal",
-			"DFS": "display__wrappee__UndirectedWithEdges",
+			"MSTPrim": "display__wrappee__MSTPrim",
+			"BFS": "display__wrappee__UndirectedWithEdges",
 			"WeightedWithEdges": "display",
 			"Base": "display__wrappee__UndirectedWithEdges"
 		},
 		"run": {
 			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
-			"Number": "run__wrappee__Number",
-			"Cycle": "run__wrappee__Cycle",
-			"MSTKruskal": "run"
+			"MSTPrim": "run"
 		},
 		"sortEdges": {
 			"UndirectedWithEdges": "sortEdges"
@@ -84,7 +78,7 @@
 		},
 		"VertexConstructor": {
 			"UndirectedWithEdges": "VertexConstructor__wrappee__UndirectedWithEdges",
-			"DFS": "VertexConstructor"
+			"BFS": "VertexConstructor"
 		},
 		"assignName": {
 			"UndirectedWithEdges": "assignName"
@@ -104,40 +98,29 @@
 		"main": {
 			"TestProg": "main"
 		},
-		"NumberVertices": {
-			"Number": "NumberVertices"
-		},
-		"preVisitAction": {
-			"Number": "preVisitAction",
-			"Cycle": "preVisitAction",
-			"DFS": "preVisitAction"
-		},
-		"init_vertex": {
-			"Cycle": "init_vertex",
-			"DFS": "init_vertex"
-		},
-		"postVisitAction": {
-			"Cycle": "postVisitAction",
-			"DFS": "postVisitAction"
-		},
-		"checkNeighborAction": {
-			"Cycle": "checkNeighborAction",
-			"DFS": "checkNeighborAction"
-		},
-		"CycleCheck": {
-			"Cycle": "CycleCheck"
-		},
-		"Kruskal": {
-			"MSTKruskal": "Kruskal"
+		"Prim": {
+			"MSTPrim": "Prim"
 		},
 		"GraphSearch": {
-			"DFS": "GraphSearch"
+			"BFS": "GraphSearch"
+		},
+		"init_vertex": {
+			"BFS": "init_vertex"
 		},
 		"nodeSearch": {
-			"DFS": "nodeSearch"
+			"BFS": "nodeSearch"
+		},
+		"preVisitAction": {
+			"BFS": "preVisitAction"
+		},
+		"postVisitAction": {
+			"BFS": "postVisitAction"
 		},
 		"nextRegionAction": {
-			"DFS": "nextRegionAction"
+			"BFS": "nextRegionAction"
+		},
+		"checkNeighborAction": {
+			"BFS": "checkNeighborAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

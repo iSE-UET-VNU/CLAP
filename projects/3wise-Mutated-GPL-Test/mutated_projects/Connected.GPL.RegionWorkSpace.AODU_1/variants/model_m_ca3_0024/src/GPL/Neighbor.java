@@ -3,28 +3,26 @@ package GPL;
 import java.util.LinkedList; 
 
 // *************************************************************************
-  
-public  class  Neighbor  implements NeighborIfc {
+   
+public  class  Neighbor {
 	
     public  Vertex end;
 
 	
-    public  Edge   edge;
+    public  Edge edge;
 
 	
         
-    //__feature_mapping__ [UndirectedWithEdges] [12:16]
-	public Neighbor( )
-    {
+    //__feature_mapping__ [DirectedWithEdges] [11:14]
+	public Neighbor() {
         end = null;
         edge = null;
     }
 
 	
         
-    //__feature_mapping__ [UndirectedWithEdges] [18:22]
-	public Neighbor( Vertex v,  Edge e )
-    {
+    //__feature_mapping__ [DirectedWithEdges] [16:19]
+	public Neighbor( Vertex v,  Edge e ) {
         end = v;
         edge = e;
     }

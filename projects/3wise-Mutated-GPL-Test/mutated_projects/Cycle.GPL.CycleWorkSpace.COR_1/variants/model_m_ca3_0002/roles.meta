@@ -4,7 +4,6 @@
 		"TestProg",
 		"StronglyConnected",
 		"Transpose",
-		"Cycle",
 		"DFS",
 		"WeightedWithEdges",
 		"Weighted",
@@ -46,15 +45,13 @@
 		"display": {
 			"DirectedWithEdges": "display__wrappee__DirectedWithEdges",
 			"StronglyConnected": "display__wrappee__StronglyConnected",
-			"Cycle": "display__wrappee__Cycle",
 			"DFS": "display__wrappee__DirectedWithEdges",
 			"WeightedWithEdges": "display",
 			"Base": "display__wrappee__DirectedWithEdges"
 		},
 		"run": {
 			"DirectedWithEdges": "run__wrappee__DirectedWithEdges",
-			"StronglyConnected": "run__wrappee__StronglyConnected",
-			"Cycle": "run"
+			"StronglyConnected": "run"
 		},
 		"sortEdges": {
 			"DirectedWithEdges": "sortEdges"
@@ -98,12 +95,10 @@
 		},
 		"preVisitAction": {
 			"StronglyConnected": "preVisitAction",
-			"Cycle": "preVisitAction",
 			"DFS": "preVisitAction"
 		},
 		"postVisitAction": {
 			"StronglyConnected": "postVisitAction",
-			"Cycle": "postVisitAction",
 			"DFS": "postVisitAction"
 		},
 		"StrongComponents": {
@@ -116,22 +111,17 @@
 		"ComputeTranspose": {
 			"Transpose": "ComputeTranspose"
 		},
-		"CycleCheck": {
-			"Cycle": "CycleCheck"
-		},
-		"init_vertex": {
-			"Cycle": "init_vertex",
-			"DFS": "init_vertex"
-		},
-		"checkNeighborAction": {
-			"Cycle": "checkNeighborAction",
-			"DFS": "checkNeighborAction"
-		},
 		"GraphSearch": {
 			"DFS": "GraphSearch"
 		},
+		"init_vertex": {
+			"DFS": "init_vertex"
+		},
 		"nodeSearch": {
 			"DFS": "nodeSearch"
+		},
+		"checkNeighborAction": {
+			"DFS": "checkNeighborAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

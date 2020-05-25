@@ -3,7 +3,7 @@
 		"UndirectedWithNeighbors",
 		"TestProg",
 		"Number",
-		"DFS",
+		"BFS",
 		"Unweighted",
 		"Undirected",
 		"WithNeighbors",
@@ -32,7 +32,7 @@
 		"display": {
 			"UndirectedWithNeighbors": "display__wrappee__UndirectedWithNeighbors",
 			"Number": "display__wrappee__Number",
-			"DFS": "display",
+			"BFS": "display",
 			"Base": "display__wrappee__UndirectedWithNeighbors"
 		},
 		"setWeight": {
@@ -63,7 +63,7 @@
 		},
 		"VertexConstructor": {
 			"UndirectedWithNeighbors": "VertexConstructor__wrappee__UndirectedWithNeighbors",
-			"DFS": "VertexConstructor"
+			"BFS": "VertexConstructor"
 		},
 		"assignName": {
 			"UndirectedWithNeighbors": "assignName"
@@ -88,25 +88,25 @@
 		},
 		"preVisitAction": {
 			"Number": "preVisitAction",
-			"DFS": "preVisitAction"
+			"BFS": "preVisitAction"
 		},
 		"GraphSearch": {
-			"DFS": "GraphSearch"
+			"BFS": "GraphSearch"
 		},
 		"init_vertex": {
-			"DFS": "init_vertex"
+			"BFS": "init_vertex"
 		},
 		"nodeSearch": {
-			"DFS": "nodeSearch"
+			"BFS": "nodeSearch"
 		},
 		"postVisitAction": {
-			"DFS": "postVisitAction"
+			"BFS": "postVisitAction"
 		},
 		"nextRegionAction": {
-			"DFS": "nextRegionAction"
+			"BFS": "nextRegionAction"
 		},
 		"checkNeighborAction": {
-			"DFS": "checkNeighborAction"
+			"BFS": "checkNeighborAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

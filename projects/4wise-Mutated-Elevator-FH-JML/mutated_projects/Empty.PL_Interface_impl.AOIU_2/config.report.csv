@@ -1,0 +1,19 @@
+Product\Feature,Base,Weight,Empty,ExecutiveFloor,TwoThirdsFull,Overloaded,__TEST_OUTPUT__
+model_m_ca4_0001,  T  ,  F  ,  F  ,  F  ,  F  ,  F  ,__PASSED__
+model_m_ca4_0002,  T  ,  T  ,  T  ,  T  ,  T  ,  F  ,__FAILED__
+model_m_ca4_0003,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,__PASSED__
+model_m_ca4_0004,  T  ,  T  ,  F  ,  F  ,  T  ,  T  ,__PASSED__
+model_m_ca4_0005,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,__PASSED__
+model_m_ca4_0006,  T  ,  T  ,  F  ,  T  ,  T  ,  T  ,__PASSED__
+model_m_ca4_0007,  T  ,  T  ,  T  ,  T  ,  F  ,  T  ,__FAILED__
+model_m_ca4_0008,  T  ,  T  ,  T  ,  F  ,  T  ,  T  ,__FAILED__
+model_m_ca4_0009,  T  ,  T  ,  F  ,  T  ,  F  ,  T  ,__PASSED__
+model_m_ca4_0010,  T  ,  T  ,  F  ,  T  ,  T  ,  F  ,__PASSED__
+model_m_ca4_0011,  T  ,  T  ,  T  ,  F  ,  F  ,  T  ,__FAILED__
+model_m_ca4_0012,  T  ,  F  ,  T  ,  T  ,  F  ,  F  ,__PASSED__
+model_m_ca4_0013,  T  ,  T  ,  T  ,  F  ,  T  ,  F  ,__PASSED__
+model_m_ca4_0014,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,__PASSED__
+model_m_ca4_0015,  T  ,  T  ,  F  ,  F  ,  T  ,  F  ,__PASSED__
+model_m_ca4_0016,  T  ,  T  ,  T  ,  T  ,  T  ,  T  ,__FAILED__
+model_m_ca4_0017,  T  ,  T  ,  F  ,  T  ,  F  ,  F  ,__PASSED__
+model_m_ca4_0018,  T  ,  F  ,  T  ,  F  ,  F  ,  F  ,__PASSED__

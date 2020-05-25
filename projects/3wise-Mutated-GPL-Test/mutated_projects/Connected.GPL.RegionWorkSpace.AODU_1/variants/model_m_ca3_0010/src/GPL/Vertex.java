@@ -4,10 +4,6 @@ package GPL;
 import java.util.Iterator; 
 
 import java.util.LinkedList; 
-import java.util.Collections; 
-import java.util.Comparator; 
-
-import java.lang.Integer; 
 
 // of Graph
  
@@ -39,10 +35,10 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
 
 	
 
-     //__feature_mapping__ [DFS] [9:13]
-	private void  VertexConstructor__wrappee__DFS( ) 
+     //__feature_mapping__ [BFS] [11:15]
+	private void  VertexConstructor__wrappee__BFS( ) 
     {
-        VertexConstructor__wrappee__DirectedOnlyVertices( );
+        VertexConstructor__wrappee__DirectedOnlyVertices();
         visited = false;
     }
 
@@ -50,7 +46,7 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
  
     //__feature_mapping__ [WeightedOnlyVertices] [14:17]
 	public void VertexConstructor() {
-        VertexConstructor__wrappee__DFS();
+        VertexConstructor__wrappee__BFS();
         weightsList = new LinkedList();
     }
 
@@ -140,32 +136,16 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
         display__wrappee__DirectedOnlyVertices( );
     }
 
-	
-      
-     //__feature_mapping__ [StronglyConnected] [15:19]
-	private void  display__wrappee__StronglyConnected() {
-        System.out.print( " FinishTime -> " + finishTime + " SCCNo -> " 
-                        + strongComponentNumber );
-        display__wrappee__Number();
-    }
+	 // of bfsNodeSearch
 
-	 // white ->0, gray ->1, black->2
-      
-     //__feature_mapping__ [Cycle] [11:14]
-	private void  display__wrappee__Cycle() {
-        System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__StronglyConnected();
-    }
-
-	 // of dftNodeSearch
-
-     //__feature_mapping__ [DFS] [47:53]
-	private void  display__wrappee__DFS( ) {
+     //__feature_mapping__ [BFS] [69:76]
+	private void  display__wrappee__BFS( ) 
+    {
         if ( visited )
-            System.out.print( "  visited" );
+            System.out.print( "  visited " );
         else
             System.out.println( " !visited " );
-        display__wrappee__Cycle( );
+        display__wrappee__Number( );
     }
 
 	
@@ -182,7 +162,7 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
             System.out.print( ( ( Integer )weightsList.get( i ) ).intValue() + ", " );
         }
 
-        display__wrappee__DFS();
+        display__wrappee__BFS();
     }
 
 	
@@ -228,23 +208,11 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
     public int VertexNumber;
 
 	
-    public int finishTime;
-
-	
-    public int strongComponentNumber;
-
-	
-    public int VertexCycle;
-
-	
-    public int VertexColor;
-
-	
     public boolean visited;
 
 	
 
-    //__feature_mapping__ [DFS] [15:19]
+    //__feature_mapping__ [BFS] [17:21]
 	public void init_vertex( WorkSpace w ) 
     {
         visited = false;
@@ -253,31 +221,51 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
 
 	
 
-    //__feature_mapping__ [DFS] [21:45]
+    //__feature_mapping__ [BFS] [23:67]
 	public void nodeSearch( WorkSpace w ) 
     {
-        Vertex v;
+        int     s, c;
+        Vertex  v;
+        Vertex  header;
 
-        // Step 1: Do preVisitAction.
-        //            If we've already visited this node return
+        // Step 1: if preVisitAction is true or if we've already
+        //         visited this node
         w.preVisitAction( ( Vertex ) this );
 
         if ( visited )
-            return;
-
-        // Step 2: else remember that we've visited and
-        //         visit all neighbors
-        visited = true;
-
-        for ( VertexIter  vxiter = getNeighbors(); vxiter.hasNext(); ) 
         {
-            v = vxiter.next( );
-            w.checkNeighborAction( ( Vertex ) this, v );
-            v.nodeSearch( w );
+            return;
         }
 
-        // Step 3: do postVisitAction now
+        // Step 2: Mark as visited, put the unvisited neighbors in the queue
+        //     and make the recursive call on the first element of the queue
+        //     if there is such if not you are done
+        visited = true;
+
+        // Step 3: do postVisitAction now, you are no longer going through the
+        // node again, mark it as black
         w.postVisitAction( ( Vertex ) this );
+
+        // enqueues the vertices not visited
+        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
+        {
+            v = vxiter.next( );
+
+            // if your neighbor has not been visited then enqueue
+            if ( !v.visited ) 
+            {
+                GlobalVarsWrapper.Queue.add( v );
+            }
+
+        } // end of for
+
+        // while there is something in the queue
+        while( GlobalVarsWrapper.Queue.size( )!= 0 )
+        {
+            header = ( Vertex ) GlobalVarsWrapper.Queue.get( 0 );
+            GlobalVarsWrapper.Queue.remove( 0 );
+            header.nodeSearch( w );
+        }
     }
 
 	

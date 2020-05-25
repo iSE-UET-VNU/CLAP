@@ -2,8 +2,8 @@ package GPL;
 
 import java.util.LinkedList; 
 import java.util.Iterator; 
-import java.util.Collections; 
-import java.util.Comparator; 
+
+import java.lang.Integer; 
 
   // *************************************************************************
 
@@ -105,12 +105,11 @@ public   class  Vertex {
         System.out.println();
     }
 
-	
+	 // white ->0, gray ->1, black->2
       
-     //__feature_mapping__ [StronglyConnected] [15:19]
-	private void  display__wrappee__StronglyConnected() {
-        System.out.print( " FinishTime -> " + finishTime + " SCCNo -> " 
-                        + strongComponentNumber );
+     //__feature_mapping__ [Cycle] [11:14]
+	private void  display__wrappee__Cycle() {
+        System.out.print( " VertexCycle# " + VertexCycle + " " );
         display__wrappee__DirectedWithEdges();
     }
 
@@ -122,14 +121,14 @@ public   class  Vertex {
             System.out.print( "  visited" );
         else
             System.out.println( " !visited " );
-        display__wrappee__StronglyConnected( );
+        display__wrappee__Cycle( );
     }
 
 	
-    public int finishTime;
+    public int VertexCycle;
 
 	
-    public int strongComponentNumber;
+    public int VertexColor;
 
 	
     public boolean visited;

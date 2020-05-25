@@ -1,103 +1,134 @@
 package GPL; 
 
+// dja - trying to fix compile problems
 import java.util.Iterator; 
+
 import java.util.LinkedList; 
+import java.util.Collections; 
+import java.util.Comparator; 
 
 import java.lang.Integer; 
 
-  // *************************************************************************
-
-public   class  Vertex {
+// of Graph
+ 
+// The weighted layer needs to extend Vertex to provide a new 
+// LinkedList to hold the  weigths  of the edges
+// ************************************************************
+ 
+public   class  Vertex  implements EdgeIfc, NeighborIfc {
 	
-    public LinkedList neighbors;
+    public LinkedList adjacentVertices;
 
 	
     public String name;
 
 	
-
-    //__feature_mapping__ [UndirectedWithEdges] [13:16]
-	public Vertex( ) 
-    {
-        VertexConstructor( );
+ 
+    //__feature_mapping__ [DirectedOnlyVertices] [14:16]
+	public Vertex() {
+        VertexConstructor();
     }
 
 	
-
-     //__feature_mapping__ [UndirectedWithEdges] [18:22]
-	private void  VertexConstructor__wrappee__UndirectedWithEdges( ) 
-    {
+  
+     //__feature_mapping__ [DirectedOnlyVertices] [18:21]
+	private void  VertexConstructor__wrappee__DirectedOnlyVertices() {
         name      = null;
-        neighbors = new LinkedList( );
+        adjacentVertices = new LinkedList();
     }
 
 	
 
-    //__feature_mapping__ [DFS] [9:13]
-	public void VertexConstructor( ) 
+     //__feature_mapping__ [DFS] [9:13]
+	private void  VertexConstructor__wrappee__DFS( ) 
     {
-        VertexConstructor__wrappee__UndirectedWithEdges( );
+        VertexConstructor__wrappee__DirectedOnlyVertices( );
         visited = false;
     }
 
 	
+ 
+    //__feature_mapping__ [WeightedOnlyVertices] [14:17]
+	public void VertexConstructor() {
+        VertexConstructor__wrappee__DFS();
+        weightsList = new LinkedList();
+    }
 
-    //__feature_mapping__ [UndirectedWithEdges] [24:28]
-	public  Vertex assignName( String name ) 
-    {
+	
+
+    //__feature_mapping__ [DirectedOnlyVertices] [23:26]
+	public  Vertex assignName( String name ) {
         this.name = name;
         return ( Vertex ) this;
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [30:33]
-	public String getName( )
-    {
-        return this.name;
+    //dja: fix for compile errors during performance improvements
+    //__feature_mapping__ [DirectedOnlyVertices] [29:32]
+	public String getName( ) 
+    { 
+        return name; 
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [35:38]
-	public LinkedList getNeighborsObj( )
-    {
- 	  return neighbors;
+ 
+    //__feature_mapping__ [DirectedOnlyVertices] [35:37]
+	public void addAdjacent( Vertex n ) {
+        adjacentVertices.add( n );
     }
 
 	
 
+     //__feature_mapping__ [DirectedOnlyVertices] [39:40]
+	private void  adjustAdorns__wrappee__DirectedOnlyVertices( Vertex the_vertex, int index ) 
+      {}
 
-    //__feature_mapping__ [UndirectedWithEdges] [41:55]
-	public VertexIter getNeighbors( )
+	
+    
+    //__feature_mapping__ [WeightedOnlyVertices] [24:29]
+	public void adjustAdorns( Vertex the_vertex, int index )
     {
-        return new VertexIter( )
+        int the_weight = ( ( Integer )the_vertex.weightsList.get( index ) ).intValue();
+        weightsList.add( new Integer( the_weight ) );
+        adjustAdorns__wrappee__DirectedOnlyVertices( the_vertex, index );
+    }
+
+	
+      
+    // dja - trying to fix compile errors
+    //__feature_mapping__ [DirectedOnlyVertices] [43:58]
+	public VertexIter getNeighbors( ) 
+    {
+        return new VertexIter( ) 
         {
-            private Iterator iter = neighbors.iterator( );
+            private Iterator iter = adjacentVertices.iterator( );
             public Vertex next( ) 
             { 
-              return ( ( Neighbor )iter.next( ) ).end; 
+               return ( Vertex )iter.next( ); 
             }
+
             public boolean hasNext( ) 
-            { 
-              return iter.hasNext( ); 
+            {
+               return iter.hasNext( ); 
             }
         };
     }
 
 	
 
-     //__feature_mapping__ [UndirectedWithEdges] [57:67]
-	private void  display__wrappee__UndirectedWithEdges( ) 
-    {
-        System.out.print( " Node " + name + " connected to: " );
 
-        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
-        {
-            System.out.print( vxiter.next().getName() + ", " );
-        }
+     //__feature_mapping__ [DirectedOnlyVertices] [61:70]
+	private void  display__wrappee__DirectedOnlyVertices() {
+        int s = adjacentVertices.size();
+        int i;
 
-        System.out.println( );
+        System.out.print( "Vertex " + name + " connected to: " );
+
+        for ( i=0; i<s; i++ )
+            System.out.print( ( ( Vertex )adjacentVertices.get( i ) ).name+", " );
+        System.out.println();
     }
 
 	
@@ -106,16 +137,16 @@ public   class  Vertex {
 	private void  display__wrappee__Number( ) 
     {
         System.out.print( " # "+ VertexNumber + " " );
-        display__wrappee__UndirectedWithEdges( );
+        display__wrappee__DirectedOnlyVertices( );
     }
 
 	
-
-     //__feature_mapping__ [Connected] [9:13]
-	private void  display__wrappee__Connected( ) 
-    {
-        System.out.print( " comp# "+ componentNumber + " " );
-        display__wrappee__Number( );
+      
+     //__feature_mapping__ [StronglyConnected] [15:19]
+	private void  display__wrappee__StronglyConnected() {
+        System.out.print( " FinishTime -> " + finishTime + " SCCNo -> " 
+                        + strongComponentNumber );
+        display__wrappee__Number();
     }
 
 	 // white ->0, gray ->1, black->2
@@ -123,13 +154,13 @@ public   class  Vertex {
      //__feature_mapping__ [Cycle] [11:14]
 	private void  display__wrappee__Cycle() {
         System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__Connected();
+        display__wrappee__StronglyConnected();
     }
 
 	 // of dftNodeSearch
 
-    //__feature_mapping__ [DFS] [47:53]
-	public void display( ) {
+     //__feature_mapping__ [DFS] [47:53]
+	private void  display__wrappee__DFS( ) {
         if ( visited )
             System.out.print( "  visited" );
         else
@@ -137,41 +168,70 @@ public   class  Vertex {
         display__wrappee__Cycle( );
     }
 
-	      
-//--------------------
-// differences
-//--------------------
-
-    //__feature_mapping__ [UndirectedWithEdges] [72:75]
-	public void addNeighbor( Neighbor n ) 
+	
+                          
+    //__feature_mapping__ [WeightedOnlyVertices] [31:43]
+	public void display()
     {
-        neighbors.add( n );
+        int s = weightsList.size();
+        int i;
+
+        System.out.print( " Weights : " );
+
+        for ( i=0; i<s; i++ ) {
+            System.out.print( ( ( Integer )weightsList.get( i ) ).intValue() + ", " );
+        }
+
+        display__wrappee__DFS();
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [77:91]
-	public EdgeIter getEdges( )
+//--------------------
+// from EdgeIfc
+//--------------------
+
+    //__feature_mapping__ [DirectedOnlyVertices] [76:76]
+	public Vertex getStart( ) { return null; }
+
+	
+    //__feature_mapping__ [DirectedOnlyVertices] [77:77]
+	public Vertex getEnd( ) { return null; }
+
+	
+
+    //__feature_mapping__ [DirectedOnlyVertices] [79:79]
+	public void setWeight( int weight ){}
+
+	
+    //__feature_mapping__ [DirectedOnlyVertices] [80:80]
+	public int getWeight() { return 0; }
+
+	
+
+    //__feature_mapping__ [DirectedOnlyVertices] [82:85]
+	public Vertex getOtherVertex( Vertex vertex )
     {
-        return new EdgeIter( )
-        {
-            private Iterator iter = neighbors.iterator( );
-            public EdgeIfc next( ) 
-            { 
-              return ( ( EdgeIfc ) ( ( Neighbor )iter.next( ) ).edge );
-            }
-            public boolean hasNext( ) 
-            { 
-              return iter.hasNext( ); 
-            }
-        };
+        return this;
+    }
+
+	
+
+
+
+    //__feature_mapping__ [DirectedOnlyVertices] [89:91]
+	public void adjustAdorns( EdgeIfc the_edge )
+    {
     }
 
 	
     public int VertexNumber;
 
 	
-    public int componentNumber;
+    public int finishTime;
+
+	
+    public int strongComponentNumber;
 
 	
     public int VertexCycle;
@@ -218,6 +278,17 @@ public   class  Vertex {
 
         // Step 3: do postVisitAction now
         w.postVisitAction( ( Vertex ) this );
+    }
+
+	
+    public LinkedList weightsList;
+
+	
+         
+    //__feature_mapping__ [WeightedOnlyVertices] [19:22]
+	public void addWeight( int weight )
+    {
+        weightsList.add( new Integer( weight ) );
     }
 
 

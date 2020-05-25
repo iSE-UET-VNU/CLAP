@@ -1,181 +1,171 @@
 package GPL; 
 
-// dja - trying to fix compile problems
-import java.util.Iterator; 
 import java.util.LinkedList; 
+import java.util.Iterator; 
 
-import java.lang.Integer; 
+// *************************************************************************
 
-  // *************************************************************************
-
-public   class  Vertex  implements EdgeIfc, NeighborIfc {
+public   class  Vertex {
 	
-    public LinkedList adjacentVertices;
+    public LinkedList adjacentNeighbors;
 
 	
     public String name;
 
 	
- 
-    //__feature_mapping__ [DirectedOnlyVertices] [14:16]
-	public Vertex() {
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [13:16]
+	public Vertex() 
+    {
         VertexConstructor();
     }
 
 	
-  
-     //__feature_mapping__ [DirectedOnlyVertices] [18:21]
-	private void  VertexConstructor__wrappee__DirectedOnlyVertices() {
+      
+     //__feature_mapping__ [UndirectedWithNeighbors] [18:22]
+	private void  VertexConstructor__wrappee__UndirectedWithNeighbors() 
+    {
         name      = null;
-        adjacentVertices = new LinkedList();
+        adjacentNeighbors = new LinkedList();
     }
 
 	
 
-    //__feature_mapping__ [DFS] [9:13]
+    //__feature_mapping__ [BFS] [11:15]
 	public void VertexConstructor( ) 
     {
-        VertexConstructor__wrappee__DirectedOnlyVertices( );
+        VertexConstructor__wrappee__UndirectedWithNeighbors();
         visited = false;
     }
 
 	
 
-    //__feature_mapping__ [DirectedOnlyVertices] [23:26]
-	public  Vertex assignName( String name ) {
+    //__feature_mapping__ [UndirectedWithNeighbors] [24:28]
+	public  Vertex assignName( String name ) 
+    {
         this.name = name;
         return ( Vertex ) this;
     }
 
 	
 
-    //dja: fix for compile errors during performance improvements
-    //__feature_mapping__ [DirectedOnlyVertices] [29:32]
-	public String getName( ) 
-    { 
-        return name; 
-    }
-
-	
-
- 
-    //__feature_mapping__ [DirectedOnlyVertices] [35:37]
-	public void addAdjacent( Vertex n ) {
-        adjacentVertices.add( n );
-    }
-
-	
-
-    //__feature_mapping__ [DirectedOnlyVertices] [39:40]
-	public void adjustAdorns( Vertex the_vertex, int index ) 
-      {}
-
-	
-      
-    // dja - trying to fix compile errors
-    //__feature_mapping__ [DirectedOnlyVertices] [43:58]
-	public VertexIter getNeighbors( ) 
+    //__feature_mapping__ [UndirectedWithNeighbors] [30:33]
+	public String getName( )
     {
-        return new VertexIter( ) 
+        return this.name;
+    }
+
+	
+    
+    //__feature_mapping__ [UndirectedWithNeighbors] [35:38]
+	public LinkedList getNeighborsObj( )
+    {
+ 	  return adjacentNeighbors;
+    }
+
+	
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [40:54]
+	public VertexIter getNeighbors( )
+    {
+        return new VertexIter( )
         {
-            private Iterator iter = adjacentVertices.iterator( );
+            private Iterator iter = adjacentNeighbors.iterator( );
             public Vertex next( ) 
             { 
-               return ( Vertex )iter.next( ); 
+                return ( ( Neighbor )iter.next( ) ).neighbor; 
             }
-
             public boolean hasNext( ) 
-            {
-               return iter.hasNext( ); 
+            { 
+                return iter.hasNext( ); 
             }
         };
     }
 
 	
 
+     //__feature_mapping__ [UndirectedWithNeighbors] [56:66]
+	private void  display__wrappee__UndirectedWithNeighbors( ) 
+    {
+        System.out.print( "Node " + name + " connected to: " );
 
-     //__feature_mapping__ [DirectedOnlyVertices] [61:70]
-	private void  display__wrappee__DirectedOnlyVertices() {
-        int s = adjacentVertices.size();
-        int i;
+        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
+        {
+            System.out.print( vxiter.next( ).getName( ) + ", " );
+        }
 
-        System.out.print( "Vertex " + name + " connected to: " );
-
-        for ( i=0; i<s; i++ )
-            System.out.print( ( ( Vertex )adjacentVertices.get( i ) ).name+", " );
         System.out.println();
     }
 
-	 // white ->0, gray ->1, black->2
-      
-     //__feature_mapping__ [Cycle] [11:14]
-	private void  display__wrappee__Cycle() {
-        System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__DirectedOnlyVertices();
+	
+
+     //__feature_mapping__ [Connected] [9:13]
+	private void  display__wrappee__Connected( ) 
+    {
+        System.out.print( " comp# "+ componentNumber + " " );
+        display__wrappee__UndirectedWithNeighbors( );
     }
 
-	 // of dftNodeSearch
+	 // of bfsNodeSearch
 
-    //__feature_mapping__ [DFS] [47:53]
-	public void display( ) {
+    //__feature_mapping__ [BFS] [69:76]
+	public void display( ) 
+    {
         if ( visited )
-            System.out.print( "  visited" );
+            System.out.print( "  visited " );
         else
             System.out.println( " !visited " );
-        display__wrappee__Cycle( );
+        display__wrappee__Connected( );
     }
 
 	
-
 //--------------------
-// from EdgeIfc
+// differences
 //--------------------
 
-    //__feature_mapping__ [DirectedOnlyVertices] [76:76]
-	public Vertex getStart( ) { return null; }
-
-	
-    //__feature_mapping__ [DirectedOnlyVertices] [77:77]
-	public Vertex getEnd( ) { return null; }
-
-	
-
-    //__feature_mapping__ [DirectedOnlyVertices] [79:79]
-	public void setWeight( int weight ){}
-
-	
-    //__feature_mapping__ [DirectedOnlyVertices] [80:80]
-	public int getWeight() { return 0; }
-
-	
-
-    //__feature_mapping__ [DirectedOnlyVertices] [82:85]
-	public Vertex getOtherVertex( Vertex vertex )
+    //__feature_mapping__ [UndirectedWithNeighbors] [71:74]
+	public void addEdge( Neighbor n ) 
     {
-        return this;
+        adjacentNeighbors.add( n );
     }
 
 	
 
-
-
-    //__feature_mapping__ [DirectedOnlyVertices] [89:91]
-	public void adjustAdorns( EdgeIfc the_edge )
+    //__feature_mapping__ [UndirectedWithNeighbors] [76:78]
+	public void adjustAdorns( Neighbor sourceNeighbor )
     {
     }
 
 	
-    public int VertexCycle;
+
+    //__feature_mapping__ [UndirectedWithNeighbors] [80:96]
+	public EdgeIter getEdges( )
+    {
+        return new EdgeIter( )
+        {
+            private Iterator iter = adjacentNeighbors.iterator( );
+            public EdgeIfc next( ) 
+            { 
+                return ( Neighbor ) iter.next( ); 
+
+//              return ( ( EdgeIfc ) ( ( Neighbor )iter.next( ) ).edge );
+            }
+            public boolean hasNext( ) 
+            { 
+              return iter.hasNext( ); 
+            }
+        };
+    }
 
 	
-    public int VertexColor;
+    public int componentNumber;
 
 	
     public boolean visited;
 
 	
 
-    //__feature_mapping__ [DFS] [15:19]
+    //__feature_mapping__ [BFS] [17:21]
 	public void init_vertex( WorkSpace w ) 
     {
         visited = false;
@@ -184,31 +174,51 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
 
 	
 
-    //__feature_mapping__ [DFS] [21:45]
+    //__feature_mapping__ [BFS] [23:67]
 	public void nodeSearch( WorkSpace w ) 
     {
-        Vertex v;
+        int     s, c;
+        Vertex  v;
+        Vertex  header;
 
-        // Step 1: Do preVisitAction.
-        //            If we've already visited this node return
+        // Step 1: if preVisitAction is true or if we've already
+        //         visited this node
         w.preVisitAction( ( Vertex ) this );
 
         if ( visited )
-            return;
-
-        // Step 2: else remember that we've visited and
-        //         visit all neighbors
-        visited = true;
-
-        for ( VertexIter  vxiter = getNeighbors(); vxiter.hasNext(); ) 
         {
-            v = vxiter.next( );
-            w.checkNeighborAction( ( Vertex ) this, v );
-            v.nodeSearch( w );
+            return;
         }
 
-        // Step 3: do postVisitAction now
+        // Step 2: Mark as visited, put the unvisited neighbors in the queue
+        //     and make the recursive call on the first element of the queue
+        //     if there is such if not you are done
+        visited = true;
+
+        // Step 3: do postVisitAction now, you are no longer going through the
+        // node again, mark it as black
         w.postVisitAction( ( Vertex ) this );
+
+        // enqueues the vertices not visited
+        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
+        {
+            v = vxiter.next( );
+
+            // if your neighbor has not been visited then enqueue
+            if ( !v.visited ) 
+            {
+                GlobalVarsWrapper.Queue.add( v );
+            }
+
+        } // end of for
+
+        // while there is something in the queue
+        while( GlobalVarsWrapper.Queue.size( )!= 0 )
+        {
+            header = ( Vertex ) GlobalVarsWrapper.Queue.get( 0 );
+            GlobalVarsWrapper.Queue.remove( 0 );
+            header.nodeSearch( w );
+        }
     }
 
 

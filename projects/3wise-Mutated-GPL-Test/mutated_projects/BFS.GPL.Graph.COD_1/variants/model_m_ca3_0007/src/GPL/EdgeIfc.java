@@ -5,7 +5,7 @@ package GPL;
 public   interface  EdgeIfc {
 	
     //public void setWeight( int weight );
-    //__feature_mapping__ [WeightedOnlyVertices] [8:8]
+    //__feature_mapping__ [WeightedWithNeighbors] [8:8]
 	public int getWeight();
 
 	

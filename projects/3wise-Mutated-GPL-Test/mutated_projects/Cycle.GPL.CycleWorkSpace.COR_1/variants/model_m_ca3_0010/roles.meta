@@ -3,10 +3,7 @@
 		"DirectedOnlyVertices",
 		"TestProg",
 		"Number",
-		"StronglyConnected",
-		"Transpose",
-		"Cycle",
-		"DFS",
+		"BFS",
 		"WeightedOnlyVertices",
 		"Weighted",
 		"Directed",
@@ -19,9 +16,7 @@
 		},
 		"run": {
 			"DirectedOnlyVertices": "run__wrappee__DirectedOnlyVertices",
-			"Number": "run__wrappee__Number",
-			"StronglyConnected": "run__wrappee__StronglyConnected",
-			"Cycle": "run"
+			"Number": "run"
 		},
 		"sortVertices": {
 			"DirectedOnlyVertices": "sortVertices"
@@ -43,15 +38,13 @@
 		"display": {
 			"DirectedOnlyVertices": "display__wrappee__DirectedOnlyVertices",
 			"Number": "display__wrappee__Number",
-			"StronglyConnected": "display__wrappee__StronglyConnected",
-			"Cycle": "display__wrappee__Cycle",
-			"DFS": "display__wrappee__DFS",
+			"BFS": "display__wrappee__BFS",
 			"WeightedOnlyVertices": "display",
 			"Base": "display__wrappee__DirectedOnlyVertices"
 		},
 		"VertexConstructor": {
 			"DirectedOnlyVertices": "VertexConstructor__wrappee__DirectedOnlyVertices",
-			"DFS": "VertexConstructor__wrappee__DFS",
+			"BFS": "VertexConstructor__wrappee__BFS",
 			"WeightedOnlyVertices": "VertexConstructor"
 		},
 		"assignName": {
@@ -99,41 +92,25 @@
 		},
 		"preVisitAction": {
 			"Number": "preVisitAction",
-			"StronglyConnected": "preVisitAction",
-			"Cycle": "preVisitAction",
-			"DFS": "preVisitAction"
-		},
-		"postVisitAction": {
-			"StronglyConnected": "postVisitAction",
-			"Cycle": "postVisitAction",
-			"DFS": "postVisitAction"
-		},
-		"StrongComponents": {
-			"StronglyConnected": "StrongComponents"
-		},
-		"nextRegionAction": {
-			"StronglyConnected": "nextRegionAction",
-			"DFS": "nextRegionAction"
-		},
-		"ComputeTranspose": {
-			"Transpose": "ComputeTranspose"
-		},
-		"CycleCheck": {
-			"Cycle": "CycleCheck"
-		},
-		"init_vertex": {
-			"Cycle": "init_vertex",
-			"DFS": "init_vertex"
-		},
-		"checkNeighborAction": {
-			"Cycle": "checkNeighborAction",
-			"DFS": "checkNeighborAction"
+			"BFS": "preVisitAction"
 		},
 		"GraphSearch": {
-			"DFS": "GraphSearch"
+			"BFS": "GraphSearch"
+		},
+		"init_vertex": {
+			"BFS": "init_vertex"
 		},
 		"nodeSearch": {
-			"DFS": "nodeSearch"
+			"BFS": "nodeSearch"
+		},
+		"postVisitAction": {
+			"BFS": "postVisitAction"
+		},
+		"nextRegionAction": {
+			"BFS": "nextRegionAction"
+		},
+		"checkNeighborAction": {
+			"BFS": "checkNeighborAction"
 		},
 		"addWeight": {
 			"WeightedOnlyVertices": "addWeight"

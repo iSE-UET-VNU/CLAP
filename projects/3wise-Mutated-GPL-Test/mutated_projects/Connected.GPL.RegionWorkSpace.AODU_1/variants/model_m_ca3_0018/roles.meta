@@ -3,9 +3,9 @@
 		"UndirectedWithEdges",
 		"TestProg",
 		"Number",
-		"Connected",
-		"MSTPrim",
-		"BFS",
+		"Cycle",
+		"MSTKruskal",
+		"DFS",
 		"WeightedWithEdges",
 		"Weighted",
 		"Undirected",
@@ -46,17 +46,17 @@
 		"display": {
 			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
 			"Number": "display__wrappee__Number",
-			"Connected": "display__wrappee__Connected",
-			"MSTPrim": "display__wrappee__MSTPrim",
-			"BFS": "display__wrappee__UndirectedWithEdges",
+			"Cycle": "display__wrappee__Cycle",
+			"MSTKruskal": "display__wrappee__MSTKruskal",
+			"DFS": "display__wrappee__UndirectedWithEdges",
 			"WeightedWithEdges": "display",
 			"Base": "display__wrappee__UndirectedWithEdges"
 		},
 		"run": {
 			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
 			"Number": "run__wrappee__Number",
-			"Connected": "run__wrappee__Connected",
-			"MSTPrim": "run"
+			"Cycle": "run__wrappee__Cycle",
+			"MSTKruskal": "run"
 		},
 		"sortEdges": {
 			"UndirectedWithEdges": "sortEdges"
@@ -84,7 +84,7 @@
 		},
 		"VertexConstructor": {
 			"UndirectedWithEdges": "VertexConstructor__wrappee__UndirectedWithEdges",
-			"BFS": "VertexConstructor"
+			"DFS": "VertexConstructor"
 		},
 		"assignName": {
 			"UndirectedWithEdges": "assignName"
@@ -109,34 +109,35 @@
 		},
 		"preVisitAction": {
 			"Number": "preVisitAction",
-			"BFS": "preVisitAction"
-		},
-		"ConnectedComponents": {
-			"Connected": "ConnectedComponents"
+			"Cycle": "preVisitAction",
+			"DFS": "preVisitAction"
 		},
 		"init_vertex": {
-			"Connected": "init_vertex",
-			"BFS": "init_vertex"
+			"Cycle": "init_vertex",
+			"DFS": "init_vertex"
 		},
 		"postVisitAction": {
-			"Connected": "postVisitAction",
-			"BFS": "postVisitAction"
-		},
-		"nextRegionAction": {
-			"Connected": "nextRegionAction",
-			"BFS": "nextRegionAction"
-		},
-		"Prim": {
-			"MSTPrim": "Prim"
-		},
-		"GraphSearch": {
-			"BFS": "GraphSearch"
-		},
-		"nodeSearch": {
-			"BFS": "nodeSearch"
+			"Cycle": "postVisitAction",
+			"DFS": "postVisitAction"
 		},
 		"checkNeighborAction": {
-			"BFS": "checkNeighborAction"
+			"Cycle": "checkNeighborAction",
+			"DFS": "checkNeighborAction"
+		},
+		"CycleCheck": {
+			"Cycle": "CycleCheck"
+		},
+		"Kruskal": {
+			"MSTKruskal": "Kruskal"
+		},
+		"GraphSearch": {
+			"DFS": "GraphSearch"
+		},
+		"nodeSearch": {
+			"DFS": "nodeSearch"
+		},
+		"nextRegionAction": {
+			"DFS": "nextRegionAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

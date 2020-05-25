@@ -1,11 +1,10 @@
 package GPL; 
 
-import java.util.LinkedList; 
 import java.util.Iterator; 
 
-import java.lang.Integer; 
-
-  // *************************************************************************
+import java.util.LinkedList; 
+import java.util.Collections; 
+import java.util.Comparator; 
 
 public   class  Vertex {
 	
@@ -15,18 +14,23 @@ public   class  Vertex {
     public String name;
 
 	
-
-    //__feature_mapping__ [UndirectedWithNeighbors] [13:16]
-	public Vertex() 
-    {
+   
+    //__feature_mapping__ [DirectedWithNeighbors] [13:15]
+	public Vertex() {
         VertexConstructor();
     }
 
 	
-      
-     //__feature_mapping__ [UndirectedWithNeighbors] [18:22]
-	private void  VertexConstructor__wrappee__UndirectedWithNeighbors() 
-    {
+    //__feature_mapping__ [DirectedWithNeighbors] [16:19]
+	public String getName( ) 
+    { 
+        return name; 
+    }
+
+	
+
+     //__feature_mapping__ [DirectedWithNeighbors] [21:24]
+	private void  VertexConstructor__wrappee__DirectedWithNeighbors() {
         name      = null;
         adjacentNeighbors = new LinkedList();
     }
@@ -36,132 +40,123 @@ public   class  Vertex {
     //__feature_mapping__ [DFS] [9:13]
 	public void VertexConstructor( ) 
     {
-        VertexConstructor__wrappee__UndirectedWithNeighbors( );
+        VertexConstructor__wrappee__DirectedWithNeighbors( );
         visited = false;
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithNeighbors] [24:28]
-	public  Vertex assignName( String name ) 
-    {
+    //__feature_mapping__ [DirectedWithNeighbors] [26:29]
+	public  Vertex assignName( String name ) {
         this.name = name;
         return ( Vertex ) this;
     }
 
 	
-
-    //__feature_mapping__ [UndirectedWithNeighbors] [30:33]
-	public String getName( )
-    {
-        return this.name;
-    }
-
-	
-    
-    //__feature_mapping__ [UndirectedWithNeighbors] [35:38]
-	public LinkedList getNeighborsObj( )
-    {
- 	  return adjacentNeighbors;
-    }
-
-	
-
-    //__feature_mapping__ [UndirectedWithNeighbors] [40:54]
-	public VertexIter getNeighbors( )
-    {
-        return new VertexIter( )
-        {
-            private Iterator iter = adjacentNeighbors.iterator( );
-            public Vertex next( ) 
-            { 
-                return ( ( Neighbor )iter.next( ) ).neighbor; 
-            }
-            public boolean hasNext( ) 
-            { 
-                return iter.hasNext( ); 
-            }
-        };
-    }
-
-	
-
-     //__feature_mapping__ [UndirectedWithNeighbors] [56:66]
-	private void  display__wrappee__UndirectedWithNeighbors( ) 
-    {
-        System.out.print( "Node " + name + " connected to: " );
-
-        for ( VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
-        {
-            System.out.print( vxiter.next( ).getName( ) + ", " );
-        }
-
-        System.out.println();
-    }
-
-	 // white ->0, gray ->1, black->2
-      
-     //__feature_mapping__ [Cycle] [11:14]
-	private void  display__wrappee__Cycle() {
-        System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__UndirectedWithNeighbors();
-    }
-
-	 // of dftNodeSearch
-
-    //__feature_mapping__ [DFS] [47:53]
-	public void display( ) {
-        if ( visited )
-            System.out.print( "  visited" );
-        else
-            System.out.println( " !visited " );
-        display__wrappee__Cycle( );
-    }
-
-	
-//--------------------
-// differences
-//--------------------
-
-    //__feature_mapping__ [UndirectedWithNeighbors] [71:74]
-	public void addEdge( Neighbor n ) 
-    {
+   
+    //__feature_mapping__ [DirectedWithNeighbors] [31:33]
+	public void addEdge( Neighbor n ) {
         adjacentNeighbors.add( n );
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithNeighbors] [76:78]
-	public void adjustAdorns( Neighbor sourceNeighbor )
-    {
-    }
 
-	
-
-    //__feature_mapping__ [UndirectedWithNeighbors] [80:96]
-	public EdgeIter getEdges( )
+    //__feature_mapping__ [DirectedWithNeighbors] [36:51]
+	public VertexIter getNeighbors( ) 
     {
-        return new EdgeIter( )
+        return new VertexIter( ) 
         {
             private Iterator iter = adjacentNeighbors.iterator( );
-            public EdgeIfc next( ) 
+            public Vertex next( ) 
             { 
-                return ( Neighbor ) iter.next( ); 
-
-//              return ( ( EdgeIfc ) ( ( Neighbor )iter.next( ) ).edge );
+               return ( ( Neighbor )iter.next( ) ).neighbor; 
             }
+
             public boolean hasNext( ) 
-            { 
-              return iter.hasNext( ); 
+            {
+               return iter.hasNext( ); 
             }
         };
     }
 
 	
-    public int VertexCycle;
+
+     //__feature_mapping__ [DirectedWithNeighbors] [53:54]
+	private void  adjustAdorns__wrappee__DirectedWithNeighbors( Neighbor sourceNeighbor )
+      {}
 
 	
-    public int VertexColor;
+    
+    //__feature_mapping__ [WeightedWithNeighbors] [12:18]
+	public void adjustAdorns( Neighbor sourceNeighbor )
+     {
+        Neighbor targetNeighbor = 
+                ( Neighbor )adjacentNeighbors.getLast();
+        targetNeighbor.weight = sourceNeighbor.weight;
+        adjustAdorns__wrappee__DirectedWithNeighbors( sourceNeighbor );
+    }
+
+	
+      
+     //__feature_mapping__ [DirectedWithNeighbors] [56:66]
+	private void  display__wrappee__DirectedWithNeighbors() 
+    {
+        System.out.print( "Node " + getName( ) + " connected to: " );
+
+        for(VertexIter vxiter = getNeighbors( ); vxiter.hasNext( ); )
+         {
+            Vertex v = vxiter.next( );
+            System.out.print( v.getName( ) + ", " );
+        }
+        System.out.println( );
+    }
+
+	
+
+     //__feature_mapping__ [Number] [9:13]
+	private void  display__wrappee__Number( ) 
+    {
+        System.out.print( " # "+ VertexNumber + " " );
+        display__wrappee__DirectedWithNeighbors( );
+    }
+
+	
+      
+     //__feature_mapping__ [StronglyConnected] [15:19]
+	private void  display__wrappee__StronglyConnected() {
+        System.out.print( " FinishTime -> " + finishTime + " SCCNo -> " 
+                        + strongComponentNumber );
+        display__wrappee__Number();
+    }
+
+	 // of dftNodeSearch
+
+     //__feature_mapping__ [DFS] [47:53]
+	private void  display__wrappee__DFS( ) {
+        if ( visited )
+            System.out.print( "  visited" );
+        else
+            System.out.println( " !visited " );
+        display__wrappee__StronglyConnected( );
+    }
+
+	
+    
+    //__feature_mapping__ [WeightedWithNeighbors] [20:23]
+	public void display()
+    {
+        display__wrappee__DFS();
+    }
+
+	
+    public int VertexNumber;
+
+	
+    public int finishTime;
+
+	
+    public int strongComponentNumber;
 
 	
     public boolean visited;
@@ -202,6 +197,16 @@ public   class  Vertex {
 
         // Step 3: do postVisitAction now
         w.postVisitAction( ( Vertex ) this );
+    }
+
+	
+    //__feature_mapping__ [WeightedWithNeighbors] [4:10]
+	public void addWeight( Vertex end, int theWeight ) 
+    {
+        Neighbor the_neighbor = 
+                ( Neighbor ) ( end.adjacentNeighbors ).removeLast();
+        the_neighbor.weight = theWeight;
+        ( end.adjacentNeighbors ).add( the_neighbor );
     }
 
 

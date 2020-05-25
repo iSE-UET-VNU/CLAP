@@ -1,88 +1,81 @@
 {
 	"features" : [
-		"DirectedOnlyVertices",
+		"DirectedWithNeighbors",
 		"TestProg",
 		"Number",
 		"BFS",
-		"WeightedOnlyVertices",
+		"WeightedWithNeighbors",
 		"Weighted",
 		"Directed",
-		"OnlyVertices",
+		"WithNeighbors",
 		"Base"
 	],
 	"roles": {
-		"getVertices": {
-			"DirectedOnlyVertices": "getVertices"
-		},
 		"run": {
-			"DirectedOnlyVertices": "run__wrappee__DirectedOnlyVertices",
+			"DirectedWithNeighbors": "run__wrappee__DirectedWithNeighbors",
 			"Number": "run"
 		},
 		"sortVertices": {
-			"DirectedOnlyVertices": "sortVertices"
-		},
-		"addAnEdge": {
-			"DirectedOnlyVertices": "addAnEdge",
-			"WeightedOnlyVertices": "addAnEdge"
-		},
-		"addVertex": {
-			"DirectedOnlyVertices": "addVertex"
+			"DirectedWithNeighbors": "sortVertices"
 		},
 		"addEdge": {
-			"DirectedOnlyVertices": "addEdge",
-			"WeightedOnlyVertices": "addEdge"
+			"DirectedWithNeighbors": "addEdge__wrappee__DirectedWithNeighbors",
+			"WeightedWithNeighbors": "addEdge"
+		},
+		"addVertex": {
+			"DirectedWithNeighbors": "addVertex"
 		},
 		"findsVertex": {
-			"DirectedOnlyVertices": "findsVertex"
+			"DirectedWithNeighbors": "findsVertex"
+		},
+		"getVertices": {
+			"DirectedWithNeighbors": "getVertices"
 		},
 		"display": {
-			"DirectedOnlyVertices": "display__wrappee__DirectedOnlyVertices",
+			"DirectedWithNeighbors": "display__wrappee__DirectedWithNeighbors",
 			"Number": "display__wrappee__Number",
 			"BFS": "display__wrappee__BFS",
-			"WeightedOnlyVertices": "display",
-			"Base": "display__wrappee__DirectedOnlyVertices"
+			"WeightedWithNeighbors": "display",
+			"Base": "display__wrappee__DirectedWithNeighbors"
 		},
-		"VertexConstructor": {
-			"DirectedOnlyVertices": "VertexConstructor__wrappee__DirectedOnlyVertices",
-			"BFS": "VertexConstructor__wrappee__BFS",
-			"WeightedOnlyVertices": "VertexConstructor"
-		},
-		"assignName": {
-			"DirectedOnlyVertices": "assignName"
-		},
-		"getName": {
-			"DirectedOnlyVertices": "getName"
-		},
-		"addAdjacent": {
-			"DirectedOnlyVertices": "addAdjacent"
-		},
-		"adjustAdorns": {
-			"DirectedOnlyVertices": "adjustAdorns__wrappee__DirectedOnlyVertices",
-			"WeightedOnlyVertices": "adjustAdorns",
-			"Base": "adjustAdorns__wrappee__DirectedOnlyVertices"
-		},
-		"getNeighbors": {
-			"DirectedOnlyVertices": "getNeighbors"
+		"NeighborConstructor": {
+			"DirectedWithNeighbors": "NeighborConstructor",
+			"WeightedWithNeighbors": "NeighborConstructor"
 		},
 		"getStart": {
-			"DirectedOnlyVertices": "getStart",
+			"DirectedWithNeighbors": "getStart",
 			"Base": "getStart"
 		},
 		"getEnd": {
-			"DirectedOnlyVertices": "getEnd",
+			"DirectedWithNeighbors": "getEnd",
 			"Base": "getEnd"
 		},
 		"setWeight": {
-			"DirectedOnlyVertices": "setWeight",
+			"DirectedWithNeighbors": "setWeight",
+			"WeightedWithNeighbors": "setWeight",
 			"Base": "setWeight"
 		},
-		"getWeight": {
-			"DirectedOnlyVertices": "getWeight",
-			"WeightedOnlyVertices": "getWeight"
-		},
 		"getOtherVertex": {
-			"DirectedOnlyVertices": "getOtherVertex",
+			"DirectedWithNeighbors": "getOtherVertex",
 			"Base": "getOtherVertex"
+		},
+		"adjustAdorns": {
+			"DirectedWithNeighbors": "adjustAdorns__wrappee__DirectedWithNeighbors",
+			"WeightedWithNeighbors": "adjustAdorns",
+			"Base": "adjustAdorns__wrappee__DirectedWithNeighbors"
+		},
+		"getName": {
+			"DirectedWithNeighbors": "getName"
+		},
+		"VertexConstructor": {
+			"DirectedWithNeighbors": "VertexConstructor__wrappee__DirectedWithNeighbors",
+			"BFS": "VertexConstructor"
+		},
+		"assignName": {
+			"DirectedWithNeighbors": "assignName"
+		},
+		"getNeighbors": {
+			"DirectedWithNeighbors": "getNeighbors"
 		},
 		"main": {
 			"TestProg": "main"
@@ -112,8 +105,14 @@
 		"GraphSearch": {
 			"BFS": "GraphSearch"
 		},
+		"getWeight": {
+			"WeightedWithNeighbors": "getWeight"
+		},
+		"addAnEdge": {
+			"WeightedWithNeighbors": "addAnEdge"
+		},
 		"addWeight": {
-			"WeightedOnlyVertices": "addWeight"
+			"WeightedWithNeighbors": "addWeight"
 		},
 		"hasNext": {
 			"Base": "hasNext"

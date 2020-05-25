@@ -1,109 +1,115 @@
 {
 	"features" : [
-		"DirectedWithNeighbors",
+		"DirectedWithEdges",
 		"TestProg",
-		"StronglyConnected",
-		"Transpose",
-		"DFS",
+		"Number",
+		"BFS",
 		"Unweighted",
 		"Directed",
-		"WithNeighbors",
+		"WithEdges",
 		"Base"
 	],
 	"roles": {
-		"run": {
-			"DirectedWithNeighbors": "run__wrappee__DirectedWithNeighbors",
-			"StronglyConnected": "run"
+		"EdgeConstructor": {
+			"DirectedWithEdges": "EdgeConstructor"
 		},
-		"sortVertices": {
-			"DirectedWithNeighbors": "sortVertices"
+		"adjustAdorns": {
+			"DirectedWithEdges": "adjustAdorns",
+			"Base": "adjustAdorns"
 		},
-		"addEdge": {
-			"DirectedWithNeighbors": "addEdge"
+		"setWeight": {
+			"DirectedWithEdges": "setWeight",
+			"Base": "setWeight"
 		},
-		"addVertex": {
-			"DirectedWithNeighbors": "addVertex"
+		"getWeight": {
+			"DirectedWithEdges": "getWeight"
 		},
-		"findsVertex": {
-			"DirectedWithNeighbors": "findsVertex"
-		},
-		"getVertices": {
-			"DirectedWithNeighbors": "getVertices"
-		},
-		"display": {
-			"DirectedWithNeighbors": "display__wrappee__DirectedWithNeighbors",
-			"StronglyConnected": "display__wrappee__StronglyConnected",
-			"DFS": "display",
-			"Base": "display__wrappee__DirectedWithNeighbors"
-		},
-		"NeighborConstructor": {
-			"DirectedWithNeighbors": "NeighborConstructor"
+		"getOtherVertex": {
+			"DirectedWithEdges": "getOtherVertex",
+			"Base": "getOtherVertex"
 		},
 		"getStart": {
-			"DirectedWithNeighbors": "getStart",
+			"DirectedWithEdges": "getStart",
 			"Base": "getStart"
 		},
 		"getEnd": {
-			"DirectedWithNeighbors": "getEnd",
+			"DirectedWithEdges": "getEnd",
 			"Base": "getEnd"
 		},
-		"setWeight": {
-			"DirectedWithNeighbors": "setWeight",
-			"Base": "setWeight"
+		"display": {
+			"DirectedWithEdges": "display__wrappee__DirectedWithEdges",
+			"Number": "display__wrappee__Number",
+			"BFS": "display",
+			"Base": "display__wrappee__DirectedWithEdges"
 		},
-		"getOtherVertex": {
-			"DirectedWithNeighbors": "getOtherVertex",
-			"Base": "getOtherVertex"
+		"run": {
+			"DirectedWithEdges": "run__wrappee__DirectedWithEdges",
+			"Number": "run"
 		},
-		"adjustAdorns": {
-			"DirectedWithNeighbors": "adjustAdorns",
-			"Base": "adjustAdorns"
+		"sortEdges": {
+			"DirectedWithEdges": "sortEdges"
+		},
+		"sortVertices": {
+			"DirectedWithEdges": "sortVertices"
+		},
+		"addEdge": {
+			"DirectedWithEdges": "addEdge"
+		},
+		"addVertex": {
+			"DirectedWithEdges": "addVertex"
+		},
+		"findsVertex": {
+			"DirectedWithEdges": "findsVertex"
+		},
+		"getVertices": {
+			"DirectedWithEdges": "getVertices"
+		},
+		"getEdges": {
+			"DirectedWithEdges": "getEdges"
 		},
 		"getName": {
-			"DirectedWithNeighbors": "getName"
+			"DirectedWithEdges": "getName"
 		},
 		"VertexConstructor": {
-			"DirectedWithNeighbors": "VertexConstructor__wrappee__DirectedWithNeighbors",
-			"DFS": "VertexConstructor"
+			"DirectedWithEdges": "VertexConstructor__wrappee__DirectedWithEdges",
+			"BFS": "VertexConstructor"
 		},
 		"assignName": {
-			"DirectedWithNeighbors": "assignName"
+			"DirectedWithEdges": "assignName"
+		},
+		"addNeighbor": {
+			"DirectedWithEdges": "addNeighbor"
 		},
 		"getNeighbors": {
-			"DirectedWithNeighbors": "getNeighbors"
+			"DirectedWithEdges": "getNeighbors"
 		},
 		"main": {
 			"TestProg": "main"
 		},
+		"NumberVertices": {
+			"Number": "NumberVertices"
+		},
 		"preVisitAction": {
-			"StronglyConnected": "preVisitAction",
-			"DFS": "preVisitAction"
-		},
-		"postVisitAction": {
-			"StronglyConnected": "postVisitAction",
-			"DFS": "postVisitAction"
-		},
-		"StrongComponents": {
-			"StronglyConnected": "StrongComponents"
-		},
-		"nextRegionAction": {
-			"StronglyConnected": "nextRegionAction",
-			"DFS": "nextRegionAction"
-		},
-		"ComputeTranspose": {
-			"Transpose": "ComputeTranspose"
-		},
-		"init_vertex": {
-			"DFS": "init_vertex"
-		},
-		"nodeSearch": {
-			"DFS": "nodeSearch"
-		},
-		"checkNeighborAction": {
-			"DFS": "checkNeighborAction"
+			"Number": "preVisitAction",
+			"BFS": "preVisitAction"
 		},
 		"GraphSearch": {
-			"DFS": "GraphSearch"
+			"BFS": "GraphSearch"
+		},
+		"init_vertex": {
+			"BFS": "init_vertex"
+		},
+		"nodeSearch": {
+			"BFS": "nodeSearch"
+		},
+		"postVisitAction": {
+			"BFS": "postVisitAction"
+		},
+		"nextRegionAction": {
+			"BFS": "nextRegionAction"
+		},
+		"checkNeighborAction": {
+			"BFS": "checkNeighborAction"
 		},
 		"hasNext": {
 			"Base": "hasNext"

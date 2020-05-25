@@ -2,11 +2,11 @@ package GPL;
 
 import java.util.LinkedList; 
 
-// end of Vertex class
- 
-  // *************************************************************************
-  
-public   class  Neighbor  implements EdgeIfc, NeighborIfc {
+// Vertex class
+
+ // *************************************************************************
+
+public  class  Neighbor  implements EdgeIfc, NeighborIfc {
 	
     public  Vertex neighbor;
 
@@ -29,19 +29,12 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
 
 	
 
-    //__feature_mapping__ [WeightedWithNeighbors] [26:29]
-	public void setWeight(int weight)
-    {
-        this.weight = weight;
-    }
+    //__feature_mapping__ [UndirectedWithNeighbors] [24:24]
+	public void setWeight(int weight) {}
 
 	
-
-    //__feature_mapping__ [WeightedWithNeighbors] [31:34]
-	public int getWeight()
-    {
-        return this.weight;
-    }
+    //__feature_mapping__ [UndirectedWithNeighbors] [25:25]
+	public int getWeight() { return 0; }
 
 	
 
@@ -52,19 +45,10 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
 
 	
 
-     //__feature_mapping__ [UndirectedWithNeighbors] [31:34]
-	private void  display__wrappee__UndirectedWithNeighbors()
-    {
-        System.out.print( neighbor.name + " ," );
-    }
-
-	
-
-    //__feature_mapping__ [WeightedWithNeighbors] [20:24]
+    //__feature_mapping__ [UndirectedWithNeighbors] [31:34]
 	public void display()
     {
-        System.out.print( " Weight = " + weight + " " );
-        display__wrappee__UndirectedWithNeighbors();
+        System.out.print( neighbor.name + " ," );
     }
 
 	
@@ -89,25 +73,6 @@ public   class  Neighbor  implements EdgeIfc, NeighborIfc {
     //__feature_mapping__ [UndirectedWithNeighbors] [44:46]
 	public void adjustAdorns( EdgeIfc the_edge )
     {
-    }
-
-	
-    public int weight;
-
-	
-
-    //__feature_mapping__ [WeightedWithNeighbors] [10:12]
-	public Neighbor( Vertex theNeighbor, int theWeight ) {
-        NeighborConstructor( theNeighbor, theWeight );
-    }
-
-	
-
-    //__feature_mapping__ [WeightedWithNeighbors] [14:18]
-	public void NeighborConstructor( Vertex theNeighbor, int theWeight )
-    {
-        NeighborConstructor( theNeighbor );
-        weight = theWeight;
     }
 
 

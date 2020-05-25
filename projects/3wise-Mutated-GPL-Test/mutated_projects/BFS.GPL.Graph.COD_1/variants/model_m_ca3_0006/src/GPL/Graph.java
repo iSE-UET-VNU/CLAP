@@ -1,373 +1,309 @@
-// This is a mutant program.
-// Author : ysma
-
 package GPL; 
 
+//dja - trying to fix logic problems
+import java.util.Iterator; 
 
 import java.util.LinkedList; 
-import java.util.Iterator; 
-import java.util.Collections; 
+//dja: added to fix compile problems when doing the performance improvements
 import java.util.Comparator; 
+import java.util.Collections; 
 
-//dja: add for performance reasons
+//dja: added for performance improvement
 import java.util.HashMap; 
 import java.util.Map; 
 
-import java.lang.Integer; 
-
-
+// ************************************************************
+ 
 public   class  Graph {
 	
-    private LinkedList vertices;
+    public LinkedList vertices;
 
 	
-    private LinkedList edges;
-
-	
-    public static final boolean isDirected = false;
+    public static final boolean isDirected = true;
 
 	
 
-    //dja: add for performance reasons
-    private Map verticesMap;
-
-	
-
-
-    //__feature_mapping__ [UndirectedWithEdges] [26:33]
+    //__feature_mapping__ [DirectedOnlyVertices] [17:19]
 	public Graph() {
         vertices = new LinkedList();
-        edges = new LinkedList();
+    }
 
-	  //dja: add for performance reasons
-        verticesMap = new HashMap( );
+	
+
+    //__feature_mapping__ [DirectedOnlyVertices] [21:37]
+	public VertexIter getVertices( ) 
+    { 
+        // dja - trying to fix logic problems
+        return new VertexIter( ) 
+        {
+                private Iterator iter = vertices.iterator( );
+                public Vertex next( ) 
+                { 
+                    return ( Vertex )iter.next( ); 
+                }
+                public boolean hasNext( ) 
+                { 
+                    return iter.hasNext( ); 
+                }
+            };
 
     }
 
 	
+// dja - fix compile code.
+//    public EdgeIter getEdges() { return null; }
+//    public EdgeIfc addEdge(Vertex start,  Vertex end) { return null; }
+//    public  Vertex findsVertex( String theName ) { return null; }
 
     // Fall back method that stops the execution of programs
-     //__feature_mapping__ [UndirectedWithEdges] [36:36]
-	private void  run__wrappee__UndirectedWithEdges( Vertex s ) {}
-
-	
-    // Executes Connected Components
-     //__feature_mapping__ [Connected] [8:13]
-	private void  run__wrappee__Connected( Vertex s )
-    {
-	     	System.out.println("Connected");
-        ConnectedComponents( );
-        run__wrappee__UndirectedWithEdges( s );
-    }
+     //__feature_mapping__ [DirectedOnlyVertices] [44:44]
+	private void  run__wrappee__DirectedOnlyVertices( Vertex s ) {}
 
 	
 
-    // Executes MSTKruskal
-    //__feature_mapping__ [MSTKruskal] [13:21]
+    // Executes Strongly Connected Components
+    //__feature_mapping__ [StronglyConnected] [11:19]
 	public void run( Vertex s )
      {
-     	System.out.println("MSTKruskal");
-        Graph gaux = Kruskal();
+          	System.out.println("StronglyConnected");
+        Graph gaux = StrongComponents();
 //        Graph.stopProfile();
         gaux.display();
 //        Graph.resumeProfile();
-        run__wrappee__Connected( s );
+        run__wrappee__DirectedOnlyVertices( s );
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [38:40]
-	public void sortEdges(Comparator c) {
-        Collections.sort(edges, c);
-    }
-
-	
-
-    //__feature_mapping__ [UndirectedWithEdges] [42:44]
+    //dja: fix for compile problems during performance improvements
+    //__feature_mapping__ [DirectedOnlyVertices] [47:49]
 	public void sortVertices(Comparator c) {
         Collections.sort(vertices, c);
     }
 
 	
-
-    // Adds an edge without weights if Weighted layer is not present
-    //__feature_mapping__ [UndirectedWithEdges] [47:55]
-	public EdgeIfc addEdge(Vertex start,  Vertex end) {
-        Edge theEdge = new  Edge();
-        theEdge.EdgeConstructor( start, end );
-        edges.add( theEdge );
-        start.addNeighbor( new  Neighbor( end, theEdge ) );
-        end.addNeighbor( new  Neighbor( start, theEdge ) );
-
-        return theEdge;
+    // Adds an edge with weights
+    //__feature_mapping__ [WeightedOnlyVertices] [9:12]
+	public void addAnEdge( Vertex start,  Vertex end, int weight )
+   {
+        addEdge( start,end, weight );
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [57:63]
-	protected void addVertex( Vertex v ) {
+
+
+    //__feature_mapping__ [DirectedOnlyVertices] [59:61]
+	public void addVertex( Vertex v ) {
         vertices.add( v );
+    }
 
-	  //dja: add for performance reasons
-	  verticesMap.put( v.name, v );
+	
 
+    // Adds and edge by setting end as adjacent to start vertices
+    //__feature_mapping__ [DirectedOnlyVertices] [64:67]
+	public EdgeIfc addEdge( Vertex start,  Vertex end ) {
+        start.addAdjacent( end );
+        return( EdgeIfc ) start;
     }
 
 	
 
     // Finds a vertex given its name in the vertices list
-    //__feature_mapping__ [UndirectedWithEdges] [66:85]
-	public  Vertex findsVertex( String theName ) {
+    //__feature_mapping__ [DirectedOnlyVertices] [70:86]
+	public  Vertex findsVertex( String theName )
+      {
+        int i=0;
         Vertex theVertex;
 
         // if we are dealing with the root
         if ( theName==null )
             return null;
 
-	  //dja: removed for performance reasons
-//        for( VertexIter vxiter = getVertices(); vxiter.hasNext(); )
-//        {
-//            theVertex = vxiter.next();
-//            if ( theName.equals( theVertex.getName() ) )
-//                return theVertex;
-//        }
-//        return null;
-
-	  //dja: add for performance reasons
-	  return ( Vertex ) verticesMap.get( theName );
-
-    }
-
-	
-
-
-    //__feature_mapping__ [UndirectedWithEdges] [88:94]
-	public VertexIter getVertices() {
-        return new VertexIter() {
-                private Iterator iter = vertices.iterator();
-                public Vertex next() { return (Vertex)iter.next(); }
-                public boolean hasNext() { return iter.hasNext(); }
-            };
-    }
-
-	
-
-    //__feature_mapping__ [UndirectedWithEdges] [96:102]
-	public EdgeIter getEdges() {
-        return new EdgeIter() {
-                private Iterator iter = edges.iterator();
-                public EdgeIfc next() { return (EdgeIfc)iter.next(); }
-                public boolean hasNext() { return iter.hasNext(); }
-            };
-    }
-
-	
-
-    // Finds an Edge given both of its vertices
-    //__feature_mapping__ [UndirectedWithEdges] [105:122]
-	public  EdgeIfc findsEdge( Vertex theSource,
-                    Vertex theTarget )
-       {
-        EdgeIfc theEdge;
-
-	  // dja: performance improvement
-      //  for( EdgeIter edgeiter = getEdges(); edgeiter.hasNext(); )
-        for( EdgeIter edgeiter = theSource.getEdges(); edgeiter.hasNext(); )
-         {
-            theEdge = edgeiter.next();
-            if ( ( theEdge.getStart().getName().equals( theSource.getName() ) &&
-                  theEdge.getEnd().getName().equals( theTarget.getName() ) ) ||
-                 ( theEdge.getStart().getName().equals( theTarget.getName() ) &&
-                  theEdge.getEnd().getName().equals( theSource.getName() ) ) )
-                return theEdge;
+        for( i=0; i<vertices.size(); i++ )
+            {
+            theVertex = ( Vertex )vertices.get( i );
+            if ( theName.equals( theVertex.name ) )
+                return theVertex;
         }
         return null;
     }
 
 	
 
-    //__feature_mapping__ [UndirectedWithEdges] [124:136]
-	public void display() {
+     //__feature_mapping__ [DirectedOnlyVertices] [88:98]
+	private void  display__wrappee__DirectedOnlyVertices() {
+        int s = vertices.size();
+        int i;
+
         System.out.println( "******************************************" );
         System.out.println( "Vertices " );
-        for ( VertexIter vxiter = getVertices(); vxiter.hasNext() ; )
-            vxiter.next().display();
-
+        for ( i=0; i<s; i++ )
+            ( ( Vertex ) vertices.get( i ) ).display();
         System.out.println( "******************************************" );
-        System.out.println( "Edges " );
-        for ( EdgeIter edgeiter = getEdges(); edgeiter.hasNext(); )
-            edgeiter.next().display();
 
-        System.out.println( "******************************************" );
+    }
+
+	
+    
+    //__feature_mapping__ [WeightedOnlyVertices] [25:28]
+	public void display() 
+   {
+        display__wrappee__DirectedOnlyVertices();
     }
 
 	
 
-    //__feature_mapping__ [Connected] [15:18]
-	public void ConnectedComponents( ) 
-    {
-        GraphSearch( new RegionWorkSpace( ) );
-    }
+    //__feature_mapping__ [StronglyConnected] [21:55]
+	public  Graph StrongComponents() {
 
-	
+        FinishTimeWorkSpace FTWS = new FinishTimeWorkSpace();
 
-    //__feature_mapping__ [MSTKruskal] [23:157]
-	public  Graph Kruskal() {
+        // 1. Computes the finishing times for each vertex
+        GraphSearch( FTWS );
 
-        // 1. A <- Empty set
-        LinkedList A = new LinkedList();
+        // 2. Order in decreasing  & call DFS Transposal
+        sortVertices(
+         new Comparator() {
+            public int compare( Object o1, Object o2 )
+                {
+                Vertex v1 = ( Vertex )o1;
+                Vertex v2 = ( Vertex )o2;
 
-        // 2. for each vertex v E V[G]
-        // 3.    do Make-Set(v)
-
-        for ( VertexIter vxiter = getVertices(); vxiter.hasNext(); )
-        {
-            Vertex v = vxiter.next();
-            v.representative = v; // I am in my set
-            v.members = new LinkedList(); // I have no members in my set
-        }
-
-        // 4. sort the edges of E by nondecreasing weight w
-        // Creates the edges objects
-        //int j;
-        LinkedList Vneighbors = new LinkedList();
-        //Vertex u;
-
-        // Sort the Edges in non decreasing order
-        sortEdges(
-            new Comparator() {
-                public int compare( Object o1, Object o2 )
-                 {
-                Edge e1 = ( Edge )o1;
-                Edge e2 = ( Edge )o2;
-                if ( e1.getWeight() < e2.getWeight() )
+                if ( v1.finishTime > v2.finishTime )
                     return -1;
-                if ( e1.getWeight() == e2.getWeight() )
+
+                if ( v1.finishTime == v2.finishTime )
                     return 0;
                 return 1;
-                }
+            }
         } );
 
-        // 5. for each edge in the nondecresing order
-        Vertex vaux, urep, vrep;
+        // 3. Compute the transpose of G
+        // Done at layer transpose
+        Graph gaux = ComputeTranspose( ( Graph )this );
 
-        for( EdgeIter edgeiter = getEdges(); edgeiter.hasNext(); )
-        {
-            // 6. if Find-Set(u)!=Find-Set(v)
-            EdgeIfc e1 = edgeiter.next();
-            Vertex u = e1.getStart();
-            Vertex v = e1.getEnd();
+        // 4. Traverse the transpose G
+        WorkSpaceTranspose WST = new WorkSpaceTranspose();
+        gaux.GraphSearch( WST );
 
-            if ( ! ( v.representative.getName() ).equals( u.representative.getName() ) )
-              {
-                // 7. A <- A U {(u,v)}
-                A.add( e1 );
+        return gaux;
 
-                // 8. Union(u,v)
-                urep = u.representative;
-                vrep = v.representative;
+    }
 
-                if ( ( urep.members ).size() > ( vrep.members ).size() )
-                    { // we add elements of v to u
-                    for( int j=0; j< ( vrep.members ).size(); j++ )
-                          {
-                        vaux = ( Vertex ) ( vrep.members ).get( j );
-                        vaux.representative = urep;
-                        ( urep.members ).add( vaux );
-                    }
-                    v.representative = urep;
-                    vrep.representative = urep;
-                    ( urep.members ).add( v );
-                    if ( !v.equals( vrep ) )
-                        ( urep.members ).add( vrep );
-                    ( vrep.members ).clear();
-                }
-                else
-                     { // we add elements of u to v
-                    for( int j=0; j< ( urep.members ).size(); j++ )
-                           {
-                        vaux = ( Vertex ) ( urep.members ).get( j );
-                        vaux.representative = vrep;
-                        ( vrep.members ).add( vaux );
-                    }
-                    u.representative = vrep;
-                    urep.representative = vrep;
-                    ( vrep.members ).add( u );
-                    if ( !u.equals( urep ) )
-                        ( vrep.members ).add( urep );
-                    ( urep.members ).clear();
+	
 
-                } // else
-
-            } // of if
-
-        } // of for numedges
-
-        // 9. return A
-        // Creates the new Graph that contains the SSSP
+    //__feature_mapping__ [Transpose] [13:79]
+	public  Graph ComputeTranspose( Graph the_graph )
+   {
+        int i;
         String theName;
+
+        //dja: added for performance improvement
+        Map newVertices = new HashMap( );
+
+        // Creating the new Graph
         Graph newGraph = new  Graph();
 
         // Creates and adds the vertices with the same name
         for ( VertexIter vxiter = getVertices(); vxiter.hasNext(); )
-      {
+        {
             theName = vxiter.next().getName();
-            newGraph.addVertex( new  Vertex().assignName( theName ) );
+            //dja: changes for performance improvement
+            Vertex v = new  Vertex( ).assignName( theName );
+//            newGraph.addVertex( new  Vertex().assignName( theName ) );
+            newGraph.addVertex( v );
+
+            //dja: added for performance improvement
+            newVertices.put( theName, v );
         }
 
-        // Creates the edges from the NewGraph
-        Vertex theStart, theEnd;
-        Vertex theNewStart, theNewEnd;
-        EdgeIfc   theEdge;
+        Vertex theVertex, newVertex;
+        Vertex theNeighbor;
+        Vertex newAdjacent;
+        EdgeIfc newEdge;
 
-        // For each edge in A we find its two vertices
-        // make an edge for the new graph from with the correspoding
-        // new two vertices
-        for( int i=0; i<A.size(); i++ )
-       {
-            // theEdge with its two vertices
-            theEdge = ( Edge )A.get( i );
-            theStart = theEdge.getStart();
-            theEnd = theEdge.getEnd();
+        // adds the transposed edges
+        // dja: added line below for performance improvements
+        VertexIter newvxiter = newGraph.getVertices( );
+        for ( VertexIter vxiter = getVertices(); vxiter.hasNext(); )
+        {
+            // theVertex is the original source vertex
+            // the newAdjacent is the reference in the newGraph to theVertex
+            theVertex = vxiter.next();
 
-            // Find the references in the new Graph
-            theNewStart = newGraph.findsVertex( theStart.getName() );
-            theNewEnd = newGraph.findsVertex( theEnd.getName() );
+            // dja: performance improvement fix
+            // newAdjacent = newGraph.findsVertex( theVertex.getName() );
+            newAdjacent = newvxiter.next( );
 
-            // Creates the new edge with new start and end vertices
-            // in the newGraph
-            // and ajusts the adorns based on the old edge
-            // Adds the new edge to the newGraph
-            // dja - the fix below fixes a bug where the proper adjust adorns gets called
-//            EdgeIfc theNewEdge = newGraph.addEdge( theNewStart, theNewEnd );
-//            theNewEdge.adjustAdorns( theEdge );
-            Edge theNewEdge = ( Edge ) newGraph.addEdge( theNewStart, theNewEnd );
-            theNewEdge.adjustAdorns( ( Edge )  theEdge );
-        }
+            for( VertexIter neighbors = theVertex.getNeighbors(); neighbors.hasNext(); )
+            {
+                // Gets the neighbor object
+                theNeighbor = neighbors.next();
+
+                // the new Vertex is the vertex that was adjacent to theVertex
+                // but now in the new graph
+                // dja: performance improvement fix
+                // newVertex = newGraph.findsVertex( theNeighbor.getName() );
+                newVertex = ( Vertex ) newVertices.get( theNeighbor.getName( ) );
+
+                // Creates a new Edge object and adjusts the adornments
+                newEdge = newGraph.addEdge( newVertex, newAdjacent );
+                //newEdge.adjustAdorns( theNeighbor.edge );
+
+                // Adds the new Neighbor object with the newly formed edge
+                // newNeighbor = new $TEqn.Neighbor(newAdjacent, newEdge);
+                // (newVertex.neighbors).add(newNeighbor);
+
+            } // all adjacentNeighbors
+        } // all the vertices
+
         return newGraph;
 
     }
 
 	
-
-    //__feature_mapping__ [BFS] [13:30]
-	public  void GraphSearch( WorkSpace w )
+    //__feature_mapping__ [DFS] [7:33]
+	public void GraphSearch( WorkSpace w ) 
     {
-        VertexIter vxiter = getVertices();
-        if (vxiter.hasNext() == false) {
-            return;
+        // Step 1: initialize visited member of all nodes
+        VertexIter vxiter = getVertices( );
+        if ( vxiter.hasNext( ) == false )
+        {
+            return; // if there are no vertices return
         }
-        while (vxiter.hasNext()) {
-            Vertex v = vxiter.next();
+
+        // Initializing the vertices
+        while( vxiter.hasNext( ) ) 
+        {
+            Vertex v = vxiter.next( );
             v.init_vertex( w );
         }
-        for (vxiter = getVertices(); vxiter.hasNext();) {
-            Vertex v = vxiter.next();
-            if (v.visited) {
+
+        // Step 2: traverse neighbors of each node
+        for( vxiter = getVertices( ); vxiter.hasNext( ); ) 
+        {
+            Vertex v = vxiter.next( );
+            if ( !v.visited ) 
+            {
                 w.nextRegionAction( v );
                 v.nodeSearch( w );
             }
-        }
+        } 
+    }
+
+	
+ 
+    //__feature_mapping__ [WeightedOnlyVertices] [14:23]
+	public void addEdge( Vertex start,  Vertex end, int weight )
+   {
+        addEdge( start,end ); // adds the start and end as adjacent
+        start.addWeight( weight ); // the direction layer takes care of that
+                
+        // if the graph is undirected you have to include 
+        // the weight of the edge coming back
+        if ( isDirected==false )
+            end.addWeight( weight );
     }
 
 

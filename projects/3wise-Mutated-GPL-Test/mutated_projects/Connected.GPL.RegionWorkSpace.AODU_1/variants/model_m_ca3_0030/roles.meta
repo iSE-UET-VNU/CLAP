@@ -1,102 +1,81 @@
 {
 	"features" : [
-		"UndirectedWithEdges",
+		"DirectedOnlyVertices",
 		"TestProg",
 		"Cycle",
-		"MSTPrim",
 		"DFS",
-		"WeightedWithEdges",
-		"Weighted",
-		"Undirected",
-		"WithEdges",
+		"Unweighted",
+		"Directed",
+		"OnlyVertices",
 		"Base"
 	],
 	"roles": {
-		"EdgeConstructor": {
-			"UndirectedWithEdges": "EdgeConstructor",
-			"WeightedWithEdges": "EdgeConstructor"
-		},
-		"adjustAdorns": {
-			"UndirectedWithEdges": "adjustAdorns__wrappee__UndirectedWithEdges",
-			"WeightedWithEdges": "adjustAdorns",
-			"Base": "adjustAdorns__wrappee__UndirectedWithEdges"
-		},
-		"setWeight": {
-			"UndirectedWithEdges": "setWeight",
-			"WeightedWithEdges": "setWeight",
-			"Base": "setWeight"
-		},
-		"getWeight": {
-			"UndirectedWithEdges": "getWeight",
-			"WeightedWithEdges": "getWeight"
-		},
-		"getOtherVertex": {
-			"UndirectedWithEdges": "getOtherVertex",
-			"Base": "getOtherVertex"
-		},
-		"getStart": {
-			"UndirectedWithEdges": "getStart",
-			"Base": "getStart"
-		},
-		"getEnd": {
-			"UndirectedWithEdges": "getEnd",
-			"Base": "getEnd"
-		},
-		"display": {
-			"UndirectedWithEdges": "display__wrappee__UndirectedWithEdges",
-			"Cycle": "display__wrappee__Cycle",
-			"MSTPrim": "display__wrappee__MSTPrim",
-			"DFS": "display__wrappee__UndirectedWithEdges",
-			"WeightedWithEdges": "display",
-			"Base": "display__wrappee__UndirectedWithEdges"
+		"getVertices": {
+			"DirectedOnlyVertices": "getVertices"
 		},
 		"run": {
-			"UndirectedWithEdges": "run__wrappee__UndirectedWithEdges",
-			"Cycle": "run__wrappee__Cycle",
-			"MSTPrim": "run"
-		},
-		"sortEdges": {
-			"UndirectedWithEdges": "sortEdges"
+			"DirectedOnlyVertices": "run__wrappee__DirectedOnlyVertices",
+			"Cycle": "run"
 		},
 		"sortVertices": {
-			"UndirectedWithEdges": "sortVertices"
+			"DirectedOnlyVertices": "sortVertices"
 		},
-		"addEdge": {
-			"UndirectedWithEdges": "addEdge"
+		"addAnEdge": {
+			"DirectedOnlyVertices": "addAnEdge"
 		},
 		"addVertex": {
-			"UndirectedWithEdges": "addVertex"
+			"DirectedOnlyVertices": "addVertex"
+		},
+		"addEdge": {
+			"DirectedOnlyVertices": "addEdge"
 		},
 		"findsVertex": {
-			"UndirectedWithEdges": "findsVertex"
+			"DirectedOnlyVertices": "findsVertex"
 		},
-		"getVertices": {
-			"UndirectedWithEdges": "getVertices"
-		},
-		"getEdges": {
-			"UndirectedWithEdges": "getEdges"
-		},
-		"findsEdge": {
-			"UndirectedWithEdges": "findsEdge"
+		"display": {
+			"DirectedOnlyVertices": "display__wrappee__DirectedOnlyVertices",
+			"Cycle": "display__wrappee__Cycle",
+			"DFS": "display",
+			"Base": "display__wrappee__DirectedOnlyVertices"
 		},
 		"VertexConstructor": {
-			"UndirectedWithEdges": "VertexConstructor__wrappee__UndirectedWithEdges",
+			"DirectedOnlyVertices": "VertexConstructor__wrappee__DirectedOnlyVertices",
 			"DFS": "VertexConstructor"
 		},
 		"assignName": {
-			"UndirectedWithEdges": "assignName"
+			"DirectedOnlyVertices": "assignName"
 		},
 		"getName": {
-			"UndirectedWithEdges": "getName"
+			"DirectedOnlyVertices": "getName"
 		},
-		"getNeighborsObj": {
-			"UndirectedWithEdges": "getNeighborsObj"
+		"addAdjacent": {
+			"DirectedOnlyVertices": "addAdjacent"
+		},
+		"adjustAdorns": {
+			"DirectedOnlyVertices": "adjustAdorns",
+			"Base": "adjustAdorns"
 		},
 		"getNeighbors": {
-			"UndirectedWithEdges": "getNeighbors"
+			"DirectedOnlyVertices": "getNeighbors"
 		},
-		"addNeighbor": {
-			"UndirectedWithEdges": "addNeighbor"
+		"getStart": {
+			"DirectedOnlyVertices": "getStart",
+			"Base": "getStart"
+		},
+		"getEnd": {
+			"DirectedOnlyVertices": "getEnd",
+			"Base": "getEnd"
+		},
+		"setWeight": {
+			"DirectedOnlyVertices": "setWeight",
+			"Base": "setWeight"
+		},
+		"getWeight": {
+			"DirectedOnlyVertices": "getWeight"
+		},
+		"getOtherVertex": {
+			"DirectedOnlyVertices": "getOtherVertex",
+			"Base": "getOtherVertex"
 		},
 		"main": {
 			"TestProg": "main"
@@ -119,9 +98,6 @@
 		},
 		"CycleCheck": {
 			"Cycle": "CycleCheck"
-		},
-		"Prim": {
-			"MSTPrim": "Prim"
 		},
 		"GraphSearch": {
 			"DFS": "GraphSearch"

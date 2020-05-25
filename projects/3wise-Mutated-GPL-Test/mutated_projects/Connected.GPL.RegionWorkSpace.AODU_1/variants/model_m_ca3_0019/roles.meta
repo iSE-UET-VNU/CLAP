@@ -2,6 +2,7 @@
 	"features" : [
 		"DirectedOnlyVertices",
 		"TestProg",
+		"Number",
 		"StronglyConnected",
 		"Transpose",
 		"DFS",
@@ -16,6 +17,7 @@
 		},
 		"run": {
 			"DirectedOnlyVertices": "run__wrappee__DirectedOnlyVertices",
+			"Number": "run__wrappee__Number",
 			"StronglyConnected": "run"
 		},
 		"sortVertices": {
@@ -35,6 +37,7 @@
 		},
 		"display": {
 			"DirectedOnlyVertices": "display__wrappee__DirectedOnlyVertices",
+			"Number": "display__wrappee__Number",
 			"StronglyConnected": "display__wrappee__StronglyConnected",
 			"DFS": "display",
 			"Base": "display__wrappee__DirectedOnlyVertices"
@@ -81,7 +84,11 @@
 		"main": {
 			"TestProg": "main"
 		},
+		"NumberVertices": {
+			"Number": "NumberVertices"
+		},
 		"preVisitAction": {
+			"Number": "preVisitAction",
 			"StronglyConnected": "preVisitAction",
 			"DFS": "preVisitAction"
 		},

@@ -108,12 +108,21 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
     }
 
 	
+
+     //__feature_mapping__ [Number] [9:13]
+	private void  display__wrappee__Number( ) 
+    {
+        System.out.print( " # "+ VertexNumber + " " );
+        display__wrappee__DirectedOnlyVertices( );
+    }
+
+	
       
      //__feature_mapping__ [StronglyConnected] [15:19]
 	private void  display__wrappee__StronglyConnected() {
         System.out.print( " FinishTime -> " + finishTime + " SCCNo -> " 
                         + strongComponentNumber );
-        display__wrappee__DirectedOnlyVertices();
+        display__wrappee__Number();
     }
 
 	 // of dftNodeSearch
@@ -165,6 +174,9 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
 	public void adjustAdorns( EdgeIfc the_edge )
     {
     }
+
+	
+    public int VertexNumber;
 
 	
     public int finishTime;

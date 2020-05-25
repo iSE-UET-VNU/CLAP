@@ -1,6 +1,5 @@
 package GPL; 
 
-//dja - trying to fix logic problems
 import java.util.Iterator; 
 
 import java.util.LinkedList; 
@@ -8,52 +7,28 @@ import java.util.LinkedList;
 import java.util.Comparator; 
 import java.util.Collections; 
 
-// ************************************************************
+// ***********************************************************************
  
 public   class  Graph {
 	
     public LinkedList vertices;
 
 	
-    public static final boolean isDirected = true;
+    public static boolean isDirected = true;
 
 	
 
-    //__feature_mapping__ [DirectedOnlyVertices] [17:19]
+    //__feature_mapping__ [DirectedWithNeighbors] [17:19]
 	public Graph() {
         vertices = new LinkedList();
     }
 
 	
-
-    //__feature_mapping__ [DirectedOnlyVertices] [21:37]
-	public VertexIter getVertices( ) 
-    { 
-        // dja - trying to fix logic problems
-        return new VertexIter( ) 
-        {
-                private Iterator iter = vertices.iterator( );
-                public Vertex next( ) 
-                { 
-                    return ( Vertex )iter.next( ); 
-                }
-                public boolean hasNext( ) 
-                { 
-                    return iter.hasNext( ); 
-                }
-            };
-
-    }
-
-	
-// dja - fix compile code.
-//    public EdgeIter getEdges() { return null; }
-//    public EdgeIfc addEdge(Vertex start,  Vertex end) { return null; }
-//    public  Vertex findsVertex( String theName ) { return null; }
-
+ 
     // Fall back method that stops the execution of programs
-     //__feature_mapping__ [DirectedOnlyVertices] [44:44]
-	private void  run__wrappee__DirectedOnlyVertices( Vertex s ) {}
+     //__feature_mapping__ [DirectedWithNeighbors] [22:23]
+	private void  run__wrappee__DirectedWithNeighbors( Vertex s )
+      { }
 
 	
     // Executes Number Vertices
@@ -62,86 +37,136 @@ public   class  Graph {
      {
        	System.out.println("Number");
         NumberVertices( );
-        run__wrappee__DirectedOnlyVertices( s );
+        run__wrappee__DirectedWithNeighbors( s );
     }
 
 	
 
     //dja: fix for compile problems during performance improvements
-    //__feature_mapping__ [DirectedOnlyVertices] [47:49]
+    //__feature_mapping__ [DirectedWithNeighbors] [26:28]
 	public void sortVertices(Comparator c) {
         Collections.sort(vertices, c);
     }
 
 	
-    // Adds an edge with weights
-    //__feature_mapping__ [WeightedOnlyVertices] [9:12]
-	public void addAnEdge( Vertex start,  Vertex end, int weight )
-   {
-        addEdge( start,end, weight );
+
+
+    // Adds an edge without weights if Weighted layer is not present
+//    public void addAnEdge( Vertex start,  Vertex end, int weight )
+  //    {
+    //    addEdge( start, new  Neighbor( end ) );
+//    }
+
+    // Adds an edge without weights if Weighted layer is not present
+    //__feature_mapping__ [DirectedWithNeighbors] [38:43]
+	public EdgeIfc addEdge( Vertex start,  Vertex end )
+    {
+	  Neighbor e = new Neighbor( end );
+        addEdge( start, e );
+        return e;
     }
 
 	
 
-
-
-    //__feature_mapping__ [DirectedOnlyVertices] [59:61]
+        
+    //__feature_mapping__ [DirectedWithNeighbors] [46:48]
 	public void addVertex( Vertex v ) {
         vertices.add( v );
     }
 
 	
-
-    // Adds and edge by setting end as adjacent to start vertices
-    //__feature_mapping__ [DirectedOnlyVertices] [64:67]
-	public EdgeIfc addEdge( Vertex start,  Vertex end ) {
-        start.addAdjacent( end );
-        return( EdgeIfc ) start;
+   
+     //__feature_mapping__ [DirectedWithNeighbors] [50:52]
+	private void  addEdge__wrappee__DirectedWithNeighbors( Vertex start,  Neighbor theNeighbor ) {
+        start.addEdge( theNeighbor );
     }
 
 	
+      
+    //__feature_mapping__ [WeightedWithNeighbors] [12:26]
+	public void addEdge( Vertex start,  Neighbor theNeighbor )
+    {
+        addEdge__wrappee__DirectedWithNeighbors( start,theNeighbor );
+          
+        // At this point the edges are added.
+        // If there is an adorn like weight it has to be added to
+        // the neighbor already present there
+        if ( isDirected==false ) 
+      {
+            // It has to add ONLY the weight object to the neighbor
+            Vertex end = theNeighbor.neighbor;
+            end.addWeight( end,theNeighbor.weight );
+        
+        } // of else
+    }
 
+	
+    
     // Finds a vertex given its name in the vertices list
-    //__feature_mapping__ [DirectedOnlyVertices] [70:86]
+    //__feature_mapping__ [DirectedWithNeighbors] [55:75]
 	public  Vertex findsVertex( String theName )
       {
-        int i=0;
-        Vertex theVertex;
+        Vertex theVertex = null;
 
         // if we are dealing with the root
         if ( theName==null )
+        {
             return null;
-
-        for( i=0; i<vertices.size(); i++ )
-            {
-            theVertex = ( Vertex )vertices.get( i );
-            if ( theName.equals( theVertex.name ) )
-                return theVertex;
         }
-        return null;
+
+        for(VertexIter vxiter = getVertices( ); vxiter.hasNext( ); )
+        {
+            theVertex = vxiter.next( );
+            if ( theName.equals( theVertex.getName( ) ) )
+            {
+                return theVertex;
+            }
+        }
+
+        return theVertex;
     }
 
 	
 
-     //__feature_mapping__ [DirectedOnlyVertices] [88:98]
-	private void  display__wrappee__DirectedOnlyVertices() {
-        int s = vertices.size();
-        int i;
+    //__feature_mapping__ [DirectedWithNeighbors] [77:91]
+	public VertexIter getVertices( ) 
+    {
+        return new VertexIter( ) 
+        {
+                private Iterator iter = vertices.iterator( );
+                public Vertex next( ) 
+                { 
+                    return (Vertex)iter.next( ); 
+                }
+                public boolean hasNext( ) 
+                { 
+                    return iter.hasNext( ); 
+                }
+            };
+    }
 
+	
+
+    
+     //__feature_mapping__ [DirectedWithNeighbors] [94:104]
+	private void  display__wrappee__DirectedWithNeighbors( ) 
+    {
         System.out.println( "******************************************" );
         System.out.println( "Vertices " );
-        for ( i=0; i<s; i++ )
-            ( ( Vertex ) vertices.get( i ) ).display();
+        for ( VertexIter vxiter = getVertices( ); vxiter.hasNext( ) ; )
+        {
+            vxiter.next( ).display( );
+        }
         System.out.println( "******************************************" );
 
     }
 
 	
     
-    //__feature_mapping__ [WeightedOnlyVertices] [25:28]
+    //__feature_mapping__ [WeightedWithNeighbors] [28:31]
 	public void display() 
-   {
-        display__wrappee__DirectedOnlyVertices();
+    {
+        display__wrappee__DirectedWithNeighbors();
     }
 
 	
@@ -183,17 +208,11 @@ public   class  Graph {
     }
 
 	
- 
-    //__feature_mapping__ [WeightedOnlyVertices] [14:23]
-	public void addEdge( Vertex start,  Vertex end, int weight )
-   {
-        addEdge( start,end ); // adds the start and end as adjacent
-        start.addWeight( weight ); // the direction layer takes care of that
-                
-        // if the graph is undirected you have to include 
-        // the weight of the edge coming back
-        if ( isDirected==false )
-            end.addWeight( weight );
+    // Adds an edge with weights
+    //__feature_mapping__ [WeightedWithNeighbors] [7:10]
+	public void addAnEdge( Vertex start,  Vertex end, int weight )
+    {
+        addEdge( start, new  Neighbor( end, weight ) );
     }
 
 

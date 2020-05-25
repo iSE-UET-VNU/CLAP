@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList; 
 
 import java.lang.Integer; 
+import java.util.Collections; 
+import java.util.Comparator; 
 
 // of Graph
  
@@ -96,12 +98,30 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
         System.out.println();
     }
 
+	
+
+     //__feature_mapping__ [Connected] [9:13]
+	private void  display__wrappee__Connected( ) 
+    {
+        System.out.print( " comp# "+ componentNumber + " " );
+        display__wrappee__UndirectedOnlyVertices( );
+    }
+
 	 // white ->0, gray ->1, black->2
       
      //__feature_mapping__ [Cycle] [11:14]
 	private void  display__wrappee__Cycle() {
         System.out.print( " VertexCycle# " + VertexCycle + " " );
-        display__wrappee__UndirectedOnlyVertices();
+        display__wrappee__Connected();
+    }
+
+	 // weight so far from s to it
+            
+     //__feature_mapping__ [MSTPrim] [14:18]
+	private void  display__wrappee__MSTPrim( ) 
+    {
+        System.out.print( " Pred " + pred + " Key " + key + " " );
+        display__wrappee__Cycle( );
     }
 
 	 // of dftNodeSearch
@@ -112,7 +132,7 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
             System.out.print( "  visited" );
         else
             System.out.println( " !visited " );
-        display__wrappee__Cycle( );
+        display__wrappee__MSTPrim( );
     }
 
 	
@@ -234,10 +254,19 @@ public   class  Vertex  implements EdgeIfc, NeighborIfc {
     }
 
 	
+    public int componentNumber;
+
+	
     public int VertexCycle;
 
 	
     public int VertexColor;
+
+	
+    public String pred;
+
+	 // the predecessor vertex if any
+    public int key;
 
 	
     public boolean visited;

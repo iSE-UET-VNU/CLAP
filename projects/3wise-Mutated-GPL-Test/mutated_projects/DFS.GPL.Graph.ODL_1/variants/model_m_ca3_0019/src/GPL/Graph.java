@@ -62,6 +62,16 @@ public   class  Graph {
 	private void  run__wrappee__DirectedOnlyVertices( Vertex s ) {}
 
 	
+    // Executes Number Vertices
+     //__feature_mapping__ [Number] [8:13]
+	private void  run__wrappee__Number( Vertex s )
+     {
+       	System.out.println("Number");
+        NumberVertices( );
+        run__wrappee__DirectedOnlyVertices( s );
+    }
+
+	
 
     // Executes Strongly Connected Components
     //__feature_mapping__ [StronglyConnected] [11:19]
@@ -72,7 +82,7 @@ public   class  Graph {
 //        Graph.stopProfile();
         gaux.display();
 //        Graph.resumeProfile();
-        run__wrappee__DirectedOnlyVertices( s );
+        run__wrappee__Number( s );
     }
 
 	
@@ -145,6 +155,14 @@ public   class  Graph {
             ( ( Vertex ) vertices.get( i ) ).display();
         System.out.println( "******************************************" );
 
+    }
+
+	
+
+    //__feature_mapping__ [Number] [15:18]
+	public void NumberVertices( ) 
+    {
+        GraphSearch( new NumberWorkSpace( ) );
     }
 
 	
