@@ -1,1 +1,0 @@
-ODL_12:59:void_checkNeighborAction(Vertex,Vertex):vsource.VertexColor == GRAY => GRAY

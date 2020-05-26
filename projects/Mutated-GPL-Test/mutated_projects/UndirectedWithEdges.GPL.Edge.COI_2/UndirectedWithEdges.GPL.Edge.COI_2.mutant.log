@@ -1,1 +1,0 @@
-COI_2:39:Vertex_getOtherVertex(Vertex): vertex == end  =>  !(vertex == end)

@@ -1,1 +1,0 @@
-SDL_2:24:void_preVisitAction(Vertex): if (v.visited != true) {     FinishCounter++; }  =>  

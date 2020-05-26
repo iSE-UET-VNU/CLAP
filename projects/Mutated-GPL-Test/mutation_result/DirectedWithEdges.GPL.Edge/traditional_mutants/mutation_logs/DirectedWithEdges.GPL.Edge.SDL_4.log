@@ -1,1 +1,0 @@
-SDL_4:45:Vertex_getOtherVertex(Vertex): if (vertex == start) {     return end; } else {     if (vertex == end) {         return start;     } else {         return null;     } }  =>   if (true) {     return end; } else {     if (vertex == end) {         return start;     } else {         return null;     } }

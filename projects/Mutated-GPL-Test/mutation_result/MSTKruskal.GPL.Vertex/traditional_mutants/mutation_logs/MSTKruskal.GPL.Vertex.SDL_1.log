@@ -1,1 +1,0 @@
-SDL_1:23:void_display(): if (representative == null) {     System.out.print( \"Rep null \" ); } else {     System.out.print( \" Rep \" + representative.getName() + \" \" ); } original();  =>   original();

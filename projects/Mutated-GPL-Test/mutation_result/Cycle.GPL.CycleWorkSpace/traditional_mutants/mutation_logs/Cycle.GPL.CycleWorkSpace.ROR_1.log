@@ -1,1 +1,0 @@
-ROR_1:40:void_preVisitAction(Vertex): v.visited != true  =>   v.visited == true

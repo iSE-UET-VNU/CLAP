@@ -1,5 +1,0 @@
-Neighbor(Vertex,int)
-void_NeighborConstructor(Vertex,int)
-void_display()
-void_setWeight(int)
-int_getWeight()

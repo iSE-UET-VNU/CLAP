@@ -1,1 +1,0 @@
-SDL_1:18:void_VertexConstructor(): original(); weightsList = new LinkedList();  =>   weightsList = new LinkedList();

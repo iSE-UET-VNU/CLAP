@@ -1,4 +1,0 @@
-void_VertexConstructor()
-void_addWeight(int)
-void_adjustAdorns(Vertex,int)
-void_display()

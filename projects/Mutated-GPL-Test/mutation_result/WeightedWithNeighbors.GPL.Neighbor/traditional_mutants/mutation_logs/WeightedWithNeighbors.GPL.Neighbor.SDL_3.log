@@ -1,1 +1,0 @@
-SDL_3:20:void_NeighborConstructor(Vertex,int): NeighborConstructor( theNeighbor ); weight = theWeight;  =>   NeighborConstructor( theNeighbor );
