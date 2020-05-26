@@ -129,10 +129,9 @@ def check_interaction_bug_from_report(mutated_project_dir):
         for i, row in enumerate(reader):
             feature_was_enabled = row[feature_column_index].strip() == "T"
             all_test_passed = row[-1] == "__PASSED__"
-            if not exist_failing_configuration and not all_test_passed:
+            if not all_test_passed:
                 exist_failing_configuration = True
             if feature_was_enabled and all_test_passed:
                 is_interaction_bug = True
-                break
 
     return exist_failing_configuration and is_interaction_bug
