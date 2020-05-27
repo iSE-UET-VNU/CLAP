@@ -5,7 +5,7 @@ from RankingManager import TARANTULA, OCHIAI
 
 if __name__ == "__main__":
 
-    project_names = ["Test"]
+    project_names = ["2wise-Mutated-Elevator-FH-JML", "3wise-Mutated-Elevator-FH-JML"]
 
     filtering_coverage_rate_list = [0.5]
 

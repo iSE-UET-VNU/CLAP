@@ -107,20 +107,13 @@ def write_results_to_file(row, sheet, ranking_results):
 
     return row
 
-def log_run_time(log_file_name, threads, kind_of_log):
-    log_file_path = join_path(RUNTIME_LOG_FOLDER, log_file_name + ".txt")
-    file = open(log_file_path, "a")
-    file.write(kind_of_log + "\n")
-    for t in threads:
-        file.write(t[THREAD_MUTATED_PROJECT]+ ": " + str(t[THREAD_RUN_TIME]) + "\n")
-    file.close()
 
-def detect_spcs(project_name, filtering_coverage_rate, experiment_file_name):
+def detect_spcs(project_name, filtering_coverage_rate):
     project_dir = get_project_dir(project_name)
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     mutated_projects = list_dir(mutated_projects_dir)
 
-    threads = []
+    spc_threads = []
     for i in range(0, len(mutated_projects)):
         current_thread = {}
         current_project = project_name + "_" + mutated_projects[i]
@@ -133,21 +126,21 @@ def detect_spcs(project_name, filtering_coverage_rate, experiment_file_name):
                                                            args=(mutated_project_dir, filtering_coverage_rate))
         current_thread[THREAD_FUNCTION].start()
         current_thread[THREAD_START_TIME] = time.time()
-        threads.append(current_thread)
+        spc_threads.append(current_thread)
 
     for i in range(0, len(mutated_projects)):
-        threads[i][THREAD_FUNCTION].join()
-        threads[i][THREAD_RUN_TIME] = time.time() - threads[i][THREAD_START_TIME]
-
-    log_run_time(experiment_file_name, threads, LOG_SPC_DETECTION_RUNTIME)
+        spc_threads[i][THREAD_FUNCTION].join()
+        spc_threads[i][THREAD_RUN_TIME] = time.time() - spc_threads[i][THREAD_START_TIME]
 
 
-def slicing(project_name, experiment_file_name):
+
+
+def slicing(project_name):
     project_dir = get_project_dir(project_name)
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     mutated_projects = list_dir(mutated_projects_dir)
 
-    threads = []
+    slicing_threads = []
     for i in range(0, len(mutated_projects)):
         current_thread = {}
         current_project = project_name + "_" + mutated_projects[i]
@@ -161,13 +154,11 @@ def slicing(project_name, experiment_file_name):
                                                            args=(str(spc_log_file_path),))
         current_thread[THREAD_FUNCTION].start()
         current_thread[THREAD_START_TIME] = time.time()
-        threads.append(current_thread)
+        slicing_threads.append(current_thread)
 
     for i in range(0, len(mutated_projects)):
-        threads[i][THREAD_FUNCTION].join()
-        threads[i][THREAD_RUN_TIME] = time.time() - threads[i][THREAD_START_TIME]
-
-    log_run_time(experiment_file_name, threads, LOG_SLICING_RUNTIME)
+        slicing_threads[i][THREAD_FUNCTION].join()
+        slicing_threads[i][THREAD_RUN_TIME] = time.time() - slicing_threads[i][THREAD_START_TIME]
 
 
 def ranking_with_coverage_rate( project_name, filtering_coverage_rate, ranking_types):
@@ -187,8 +178,8 @@ def ranking_with_coverage_rate( project_name, filtering_coverage_rate, ranking_t
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     mutated_projects = list_dir(mutated_projects_dir)
 
-    detect_spcs(project_name, filtering_coverage_rate, experiment_file_name)
-    slicing(project_name, experiment_file_name)
+    detect_spcs(project_name, filtering_coverage_rate)
+    slicing(project_name)
     for mutated_project_name in mutated_projects:
         try:
             ranking_project = project_name + "_" + mutated_project_name
