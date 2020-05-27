@@ -1,4 +1,0 @@
-RegionWorkSpace()
-void_init_vertex(Vertex)
-void_postVisitAction(Vertex)
-void_nextRegionAction(Vertex)

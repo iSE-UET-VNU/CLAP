@@ -1,1 +1,0 @@
-COR_1:55:void_checkNeighborAction(Vertex,Vertex): vsource.VertexColor == GRAY && vtarget.VertexColor == GRAY  =>   vsource.VertexColor == GRAY || vtarget.VertexColor == GRAY

@@ -1,1 +1,0 @@
-COI_13:59:void_checkNeighborAction(Vertex,Vertex): vsource.VertexCycle != vtarget.VertexCycle + 1  =>  !(vsource.VertexCycle != vtarget.VertexCycle + 1)

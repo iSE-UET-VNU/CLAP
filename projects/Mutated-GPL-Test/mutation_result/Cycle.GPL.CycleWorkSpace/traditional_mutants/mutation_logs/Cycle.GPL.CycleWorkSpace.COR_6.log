@@ -1,1 +1,0 @@
-COR_6:59:void_checkNeighborAction(Vertex,Vertex): vsource.VertexColor == GRAY && vtarget.VertexColor == GRAY && vsource.VertexCycle != vtarget.VertexCycle + 1  =>   (vsource.VertexColor == GRAY && vtarget.VertexColor == GRAY) ^ vsource.VertexCycle != vtarget.VertexCycle + 1

@@ -1,1 +1,0 @@
-SDL_7:37:int_getWeight(): return this.weight;  =>   return 0;

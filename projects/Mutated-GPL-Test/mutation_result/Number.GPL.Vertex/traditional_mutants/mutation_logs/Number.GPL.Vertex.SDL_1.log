@@ -1,1 +1,0 @@
-SDL_1:15:void_display(): System.out.print( \" # \" + VertexNumber + \" \" ); original();  =>   original();

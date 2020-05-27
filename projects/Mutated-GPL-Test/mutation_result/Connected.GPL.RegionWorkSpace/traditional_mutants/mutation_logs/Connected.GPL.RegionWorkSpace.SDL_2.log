@@ -1,1 +1,0 @@
-SDL_2:19:void_init_vertex(Vertex): v.componentNumber = -1;  =>  

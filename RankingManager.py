@@ -1,8 +1,9 @@
 import logging
 import math
 import os
+import time
 import xml.etree.ElementTree as ET
-from cmath import sqrt
+
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir
@@ -21,6 +22,9 @@ RANKING_SPC_SPECTRUM = "spc_spectrum"
 RANKING_SPC_SPECTRUM_DETAIL = "spc_spectrum_detail"
 RANKING_SPC_SPECTRUM_INTERACTION = "spc_spectrum_interaction"
 RANKING_SPC_SPECTRUM_INTERACTION_DETAIL = "spc_spectrum_interaction_detail"
+RANKING_SPECTRUM_TIME = "spectrum_ranking_time"
+RANKING_SPC_SPECTRUM_TIME = "spc_spectrum_ranking_time"
+RANKING_SPC_SPECTRUM_INTERACTION_TIME = "spc_spectrum_interaction_ranking_time"
 
 TARANTULA = "TARATULA"
 OCHIAI = "OCHIAI"
@@ -31,21 +35,26 @@ def ranking( buggy_statement, mutated_project_dir, suspicious_stms_list, ranking
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], ranking_type)
 
-        spectrum_ranked_list = spectrum_ranking(statement_infor, ranking_type)
+        spectrum_ranked_list, spectrum_raking_time = spectrum_ranking(statement_infor, ranking_type)
         buggy_stm_spectrum_ranked = search_rank(buggy_statement, spectrum_ranked_list)
 
-        spc_spectrum_ranked_list = spc_spectrum_ranking(statement_infor, ranking_type)
+        spc_spectrum_ranked_list, spc_spectrum_raking_time = spc_spectrum_ranking(statement_infor, ranking_type)
         buggy_stm_spc_spectrum_ranked = search_rank(buggy_statement, spc_spectrum_ranked_list)
 
-        spc_interaction_spectrum_ranked_list = spc_interaction_spectrum_raking(statement_infor, ranking_type)
+        spc_interaction_spectrum_ranked_list, spc_spectrum_interaction_raking_time = spc_interaction_spectrum_raking(statement_infor, ranking_type)
         buggy_stm_spc_interaction_spectrum_ranked = search_rank(buggy_statement, spc_interaction_spectrum_ranked_list)
 
         ranking_results[variant] = {RANKING_SPECTRUM: buggy_stm_spectrum_ranked,
                                     RANKING_SPECTRUM_DETAIL: spectrum_ranked_list,
+                                    RANKING_SPECTRUM_TIME: spectrum_raking_time,
                                     RANKING_SPC_SPECTRUM: buggy_stm_spc_spectrum_ranked,
                                     RANKING_SPC_SPECTRUM_DETAIL: spc_spectrum_ranked_list,
+                                    RANKING_SPC_SPECTRUM_TIME: spc_spectrum_raking_time,
                                     RANKING_SPC_SPECTRUM_INTERACTION: buggy_stm_spc_interaction_spectrum_ranked,
-                                    RANKING_SPC_SPECTRUM_INTERACTION_DETAIL: spc_interaction_spectrum_ranked_list}
+                                    RANKING_SPC_SPECTRUM_INTERACTION_DETAIL: spc_interaction_spectrum_ranked_list,
+                                    RANKING_SPC_SPECTRUM_INTERACTION_TIME: spc_spectrum_interaction_raking_time
+                                    }
+
 
     return ranking_results
 
@@ -144,6 +153,7 @@ def ochiai_spectrum_calculation(statement_infor, stm_id, total_failed_tests):
     return statement_infor[stm_id][STM_FAILED_TEST_COUNT]/math.sqrt(total_failed_tests*(statement_infor[stm_id][STM_FAILED_TEST_COUNT] + statement_infor[stm_id][STM_PASSED_TEST_COUNT]))
 
 def spectrum_ranking(statement_infor, ranking_type):
+    start_time = time.time()
     spectrum_ranked_list = []
     if(ranking_type == TARANTULA):
         for (key, value) in statement_infor.items():
@@ -157,11 +167,12 @@ def spectrum_ranking(statement_infor, ranking_type):
             if spectrum_ranked_list[i][1] < spectrum_ranked_list[j][1]:
                 spectrum_ranked_list[i], spectrum_ranked_list[j] = \
                     spectrum_ranked_list[j], spectrum_ranked_list[i]
-
-    return spectrum_ranked_list
+    ranking_time = time.time() - start_time
+    return spectrum_ranked_list, ranking_time
 
 
 def spc_spectrum_ranking(statement_infor, ranking_type):
+    start_time = time.time()
     spc_spectrum_ranked_list = []
 
     if (ranking_type == TARANTULA):
@@ -179,10 +190,13 @@ def spc_spectrum_ranking(statement_infor, ranking_type):
                 spc_spectrum_ranked_list[i], spc_spectrum_ranked_list[j] = \
                     spc_spectrum_ranked_list[j], spc_spectrum_ranked_list[i]
 
-    return spc_spectrum_ranked_list
+    ranking_time = time.time() - start_time
+
+    return spc_spectrum_ranked_list, ranking_time
 
 
 def spc_interaction_spectrum_raking(statement_infor, ranking_type):
+    start_time = time.time()
     spc_interaction_spectrum_ranked_list = []
 
     if(ranking_type == TARANTULA):
@@ -209,7 +223,9 @@ def spc_interaction_spectrum_raking(statement_infor, ranking_type):
 
                 spc_interaction_spectrum_ranked_list[i], spc_interaction_spectrum_ranked_list[j] = \
                     spc_interaction_spectrum_ranked_list[j], spc_interaction_spectrum_ranked_list[i]
-    return spc_interaction_spectrum_ranked_list
+
+    ranking_time = time.time() - start_time
+    return spc_interaction_spectrum_ranked_list, ranking_time
 
 
 def search_rank(stm, ranked_list):

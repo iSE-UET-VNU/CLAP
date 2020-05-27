@@ -1,1 +1,0 @@
-SDL_1:20:void_display(): System.out.print( \" VertexCycle# \" + VertexCycle + \" \" ); original();  =>   original();

@@ -16,25 +16,32 @@ VARIANT_COL = 1
 SPECTRUM_COL = 2
 SPECTRUM_SPACE_COL = 3
 SPECTRUM_DETAIL_COL = 4
-SPC_SPECTRUM_COL = 5
-SPC_SPECTRUM_SPACE_COL = 6
-SPC_SPECTRUM_DETAIL_COL = 7
-SPC_SPECTRUM_INTERACTION_COL = 8
-SPC_SPECTRUM_INTERACTION_SPACE_COL = 9
-SPC_SPECTRUM_INTERACTION_DETAIL_COL = 10
-RUM_TIME_COL = 11
+SPECTRUM_TIME_COL = 5
+SPC_SPECTRUM_COL = 6
+SPC_SPECTRUM_SPACE_COL = 7
+SPC_SPECTRUM_DETAIL_COL = 8
+SPC_SPECTRUM_TIME_COL = 9
+SPC_SPECTRUM_INTERACTION_COL = 10
+SPC_SPECTRUM_INTERACTION_SPACE_COL = 11
+SPC_SPECTRUM_INTERACTION_DETAIL_COL = 12
+SPC_SPECTRUM_INTERACTION_TIME_COL = 13
+RUM_TIME_COL = 14
 
 MUTATED_PROJECT_HEADER = "MUTATED_PROJECT"
 VARIANT_HEADER = "VARIANT"
 SPECTRUM_HEADER = "SPECTRUM"
 SPECTRUM_SPACE_HEADER = "SPECTRUM_SPACE"
 SPECTRUM_DETAIL_HEADER = "SPECTRUM_DETAIL"
+SPECTRUM_TIME_HEADER = "SPECTRUM_RANKING_TIME"
 SPC_SPECTRUM_HEADER = "SPC_SPECTRUM"
 SPC_SPECTRUM_SPACE_HEADER = "SPC_SPECTRUM_SPACE"
 SPC_SPECTRUM_DETAIL_HEADER = "SPC_SPECTRUM_DETAIL"
+SPC_SPECTRUM_TIME_HEADER = "SPC_SPECTRUM_RANKING_TIME"
 SPC_SPECTRUM_INTERACTION_HEADER = "SPC_SPECTRUM_INTERACTION"
 SPC_SPECTRUM_INTERACTION_SPACE_HEADER = "SPC_SPECTRUM_INTERACTION_SPACE"
 SPC_SPECTRUM_INTERACTION_DETAIL_HEADER = "SPC_SPECTRUM_INTERACTION_DETAIL"
+SPC_SPECTRUM_INTERACTION_TIME_HEADER = "SPC_SPECTRUM_INTERACTION_RANKING_TIME"
+
 RUM_TIME_HEADER = "RUN_TIME"
 
 def write_header_in_result_file(row, sheet):
@@ -43,12 +50,15 @@ def write_header_in_result_file(row, sheet):
     sheet.write(row, SPECTRUM_COL, SPECTRUM_HEADER)
     sheet.write(row, SPECTRUM_SPACE_COL, SPECTRUM_SPACE_HEADER)
     sheet.write(row, SPECTRUM_DETAIL_COL, SPECTRUM_DETAIL_HEADER)
+    sheet.write(row, SPECTRUM_TIME_COL, SPECTRUM_TIME_HEADER)
     sheet.write(row, SPC_SPECTRUM_COL, SPC_SPECTRUM_HEADER)
     sheet.write(row, SPC_SPECTRUM_SPACE_COL, SPC_SPECTRUM_SPACE_HEADER)
     sheet.write(row, SPC_SPECTRUM_DETAIL_COL, SPC_SPECTRUM_DETAIL_HEADER)
+    sheet.write(row, SPC_SPECTRUM_TIME_COL, SPC_SPECTRUM_TIME_HEADER)
     sheet.write(row, SPC_SPECTRUM_INTERACTION_COL, SPC_SPECTRUM_INTERACTION_HEADER)
     sheet.write(row, SPC_SPECTRUM_INTERACTION_SPACE_COL, SPC_SPECTRUM_INTERACTION_SPACE_HEADER)
     sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL, SPC_SPECTRUM_INTERACTION_DETAIL_HEADER)
+    sheet.write(row, SPC_SPECTRUM_INTERACTION_TIME_COL, SPC_SPECTRUM_INTERACTION_TIME_HEADER)
     sheet.write(row, RUM_TIME_COL, RUM_TIME_HEADER)
 
 def write_results_to_file(row, sheet, ranking_results):
@@ -63,12 +73,17 @@ def write_results_to_file(row, sheet, ranking_results):
 
         sheet.write(row, SPECTRUM_SPACE_COL, len(ranking_results[item][RankingManager.RANKING_SPECTRUM_DETAIL]))
         sheet.write(row, SPECTRUM_DETAIL_COL, str(ranking_results[item][RankingManager.RANKING_SPECTRUM_DETAIL][0:spectrum_rank]))
+        sheet.write(row, SPECTRUM_TIME_COL,
+                    str(ranking_results[item][RankingManager.RANKING_SPECTRUM_TIME]))
 
         spc_spectrum_rank = ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM]
         sheet.write(row, SPC_SPECTRUM_COL,spc_spectrum_rank)
         sheet.write(row, SPC_SPECTRUM_SPACE_COL, len(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_DETAIL]))
         sheet.write(row, SPC_SPECTRUM_DETAIL_COL,
                     str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_DETAIL][0:spc_spectrum_rank]))
+        sheet.write(row, SPC_SPECTRUM_TIME_COL,
+                    str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_TIME]))
+
 
         spc_spectrum_interaction_rank = ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_INTERACTION]
         sheet.write(row, SPC_SPECTRUM_INTERACTION_COL, spc_spectrum_interaction_rank)
@@ -76,6 +91,9 @@ def write_results_to_file(row, sheet, ranking_results):
                                                                      RankingManager.RANKING_SPC_SPECTRUM_INTERACTION_DETAIL]))
         sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL,
                     str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_INTERACTION_DETAIL][0:spc_spectrum_interaction_rank]))
+        sheet.write(row, SPC_SPECTRUM_INTERACTION_TIME_COL,
+                    str(ranking_results[item][RankingManager.RANKING_SPC_SPECTRUM_INTERACTION_TIME]))
+
         row += 1
 
     return row

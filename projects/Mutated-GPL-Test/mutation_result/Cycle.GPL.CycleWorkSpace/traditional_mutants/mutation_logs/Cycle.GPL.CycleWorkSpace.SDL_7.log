@@ -1,1 +1,0 @@
-SDL_7:42:void_preVisitAction(Vertex): v.VertexCycle = counter++; v.VertexColor = GRAY;  =>   v.VertexColor = GRAY;

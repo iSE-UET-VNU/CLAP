@@ -1,4 +1,0 @@
-Product\Feature,DirectedWithEdges,DirectedWithNeighbors,DirectedOnlyVertices,UndirectedWithEdges,UndirectedWithNeighbors,UndirectedOnlyVertices,TestProg,Number,Connected,StronglyConnected,Transpose,Cycle,MSTPrim,MSTKruskal,BFS,DFS,WeightedWithEdges,WeightedWithNeighbors,WeightedOnlyVertices,Weighted,Unweighted,Directed,Undirected,OnlyVertices,WithNeighbors,WithEdges,Base,__TEST_OUTPUT__
-model_m_ca2_0001,  F  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  T  ,__PASSED__
-model_m_ca2_0002,  F  ,  F  ,  T  ,  F  ,  F  ,  F  ,  T  ,  T  ,  F  ,  T  ,  T  ,  F  ,  F  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,__FAILED__
-model_m_ca2_0003,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  F  ,  T  ,  T  ,  T  ,  F  ,  F  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  T  ,  F  ,  F  ,  T  ,  F  ,  T  ,__PASSED__

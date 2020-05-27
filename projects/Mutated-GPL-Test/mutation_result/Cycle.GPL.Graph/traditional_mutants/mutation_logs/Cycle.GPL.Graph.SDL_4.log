@@ -1,1 +1,0 @@
-SDL_4:24:boolean_CycleCheck(): return c.AnyCycles;  =>   return true;

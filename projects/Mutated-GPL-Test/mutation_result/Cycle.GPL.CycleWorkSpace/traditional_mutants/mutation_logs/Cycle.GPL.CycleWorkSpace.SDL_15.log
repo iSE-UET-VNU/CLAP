@@ -1,1 +1,0 @@
-SDL_15:59:void_checkNeighborAction(Vertex,Vertex): if (vsource.VertexColor == GRAY && vtarget.VertexColor == GRAY && vsource.VertexCycle != vtarget.VertexCycle + 1) {     AnyCycles = true; }  =>  
