@@ -26,7 +26,7 @@ RANKING_SPECTRUM_TIME = "spectrum_ranking_time"
 RANKING_SPC_SPECTRUM_TIME = "spc_spectrum_ranking_time"
 RANKING_SPC_SPECTRUM_INTERACTION_TIME = "spc_spectrum_interaction_ranking_time"
 
-TARANTULA = "TARATULA"
+TARANTULA = "TARANTULA"
 OCHIAI = "OCHIAI"
 
 def ranking( buggy_statement, mutated_project_dir, suspicious_stms_list, ranking_type):

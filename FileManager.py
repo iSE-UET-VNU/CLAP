@@ -36,6 +36,8 @@ FAILED_TEST_COVERAGE_FOLDER_NAME = "failed"
 PASSED_TEST_COVERAGE_FOLDER_NAME = "passed"
 
 EXPERIMENT_RESULT_FOLDER = os.path.abspath("experiment_results")
+RUNTIME_LOG_FOLDER = os.path.abspath("runtime_logs")
+
 
 logger = get_logger(__name__)
 
