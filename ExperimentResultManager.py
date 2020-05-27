@@ -156,8 +156,7 @@ def slicing(project_name, experiment_file_name):
 
         mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_projects[i])
         spc_log_file_path = get_spc_log_file_path(mutated_project_dir)
-        print("spc_log_file_path")
-        print(spc_log_file_path)
+
         current_thread[THREAD_FUNCTION] = threading.Thread(target=SlicingManager.do_slice,
                                                            args=(str(spc_log_file_path),))
         current_thread[THREAD_FUNCTION].start()

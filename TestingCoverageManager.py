@@ -36,5 +36,5 @@ def statement_coverage_of_variants(project_dir):
         variant_dir = join_path(variants_dir, variant)
         testing_coverage = statement_coverage(variant_dir)
         stm_coverage_variants[variant] = testing_coverage
-    print(stm_coverage_variants)
+
     return stm_coverage_variants
