@@ -9,8 +9,9 @@ import ModelManager
 from FileManager import get_model_file_path, get_project_dir
 
 if __name__ == "__main__":
-    project_name = "Elevator-FH-JML"
-    project_dir = get_project_dir(project_name)
+    base_dir = "/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/"
+    project_name = "GPL-FH-Java"
+    project_dir = get_project_dir(project_name, base_dir)
 
     # get model file
     model_file_path = get_model_file_path(project_dir)

@@ -64,8 +64,11 @@ def get_model_file_path(project_dir):
     return model_file_path
 
 
-def get_project_dir(project_name):
-    return join_path(PROJECT_DIR, project_name)
+def get_project_dir(project_name, base_dir = None):
+    if not base_dir:
+        return join_path(PROJECT_DIR, project_name)
+    else:
+        return join_path(base_dir, project_name)
 
 
 def get_project_name(project_dir):
