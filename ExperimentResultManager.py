@@ -1,11 +1,9 @@
 import logging
-import threading
 import time
 
 import SPCsManager
 import SlicingManager
-from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, list_dir, \
-    get_spc_log_file_path, RUNTIME_LOG_FOLDER
+from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, list_dir
 import MutantManager
 import RankingManager
 from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
@@ -44,8 +42,7 @@ SPC_SPECTRUM_INTERACTION_SPACE_HEADER = "SPC_SPECTRUM_INTERACTION_SPACE"
 SPC_SPECTRUM_INTERACTION_DETAIL_HEADER = "SPC_SPECTRUM_INTERACTION_DETAIL"
 SPC_SPECTRUM_INTERACTION_TIME_HEADER = "SPC_SPECTRUM_INTERACTION_RANKING_TIME"
 
-LOG_SPC_DETECTION_RUNTIME = "LOG_SPC_DETECTION_RUNTIME"
-LOG_SLICING_RUNTIME = "LOG_SLICING_RUNTIME"
+
 
 def write_header_in_result_file(row, sheet):
     sheet.write(row, MUTATED_PROJECT_COL, MUTATED_PROJECT_HEADER)
@@ -62,6 +59,7 @@ def write_header_in_result_file(row, sheet):
     sheet.write(row, SPC_SPECTRUM_INTERACTION_SPACE_COL, SPC_SPECTRUM_INTERACTION_SPACE_HEADER)
     sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL, SPC_SPECTRUM_INTERACTION_DETAIL_HEADER)
     sheet.write(row, SPC_SPECTRUM_INTERACTION_TIME_COL, SPC_SPECTRUM_INTERACTION_TIME_HEADER)
+
 
 def write_results_to_file(row, sheet, ranking_results):
 
@@ -100,61 +98,14 @@ def write_results_to_file(row, sheet, ranking_results):
 
     return row
 
+def ranking_with_coverage_rate(base_dir, project_name, filtering_coverage_rate, ranking_types):
 
-def detect_spcs(project_name, filtering_coverage_rate):
-    project_dir = get_project_dir(project_name)
-    mutated_projects_dir = get_mutated_projects_dir(project_dir)
-    mutated_projects = list_dir(mutated_projects_dir)
-
-    spc_threads = []
-    for i in range(0, len(mutated_projects)):
-
-        current_project = project_name + "_" + mutated_projects[i]
-
-        logging.info("Find SPC in ... %s", current_project)
-
-        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_projects[i])
-
-        spc_threads.append(threading.Thread(target=SPCsManager.find_SPCs,
-                                                           args=(mutated_project_dir, filtering_coverage_rate)))
-        spc_threads[i].start()
-    for i in range(0, len(mutated_projects)):
-        spc_threads[i].join()
-
-
-
-
-def slicing(project_name):
-    project_dir = get_project_dir(project_name)
-    mutated_projects_dir = get_mutated_projects_dir(project_dir)
-    mutated_projects = list_dir(mutated_projects_dir)
-
-    slicing_threads = []
-    for i in range(0, len(mutated_projects)):
-
-        current_project = project_name + "_" + mutated_projects[i]
-
-        logging.info("slicing ... %s", current_project)
-
-        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_projects[i])
-        spc_log_file_path = get_spc_log_file_path(mutated_project_dir)
-
-        slicing_threads.append(threading.Thread(target=SlicingManager.do_slice,
-                                                           args=(str(spc_log_file_path),)))
-        slicing_threads[i].start()
-
-    for i in range(0, len(mutated_projects)):
-        slicing_threads[i].join()
-
-
-def ranking_with_coverage_rate( project_name, filtering_coverage_rate, ranking_types):
     sheet = []
-    project_dir = get_project_dir(project_name)
+    project_dir = get_project_dir(project_name, base_dir)
     row = 0
 
-    experiment_file_name =  project_name + "_coverage" + str(filtering_coverage_rate) + "_"+ str(time.time())
-    experiment_file_path = join_path(EXPERIMENT_RESULT_FOLDER, experiment_file_name+  ".xlsx")
-    wb= Workbook(experiment_file_path)
+    experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER, project_name + "_coverage" + str(filtering_coverage_rate) + "_"+ str(time.time()) + ".xlsx")
+    wb= Workbook(experiment_file_name)
 
     for i in range(0, len(ranking_types)):
         sheet.append(wb.add_worksheet(ranking_types[i]))
@@ -164,15 +115,18 @@ def ranking_with_coverage_rate( project_name, filtering_coverage_rate, ranking_t
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     mutated_projects = list_dir(mutated_projects_dir)
 
-    detect_spcs(project_name, filtering_coverage_rate)
-    slicing(project_name)
     for mutated_project_name in mutated_projects:
         try:
             ranking_project = project_name + "_" + mutated_project_name
 
             logging.info("Ranking... %s", ranking_project)
+
+
             mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
+            spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+
+            SlicingManager.do_slice(spc_log_file_path)
             suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
             buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
 
@@ -189,3 +143,63 @@ def ranking_with_coverage_rate( project_name, filtering_coverage_rate, ranking_t
 
     wb.close()
 
+def num_of_bugs(df):
+    bugs = 0
+    for i in range(0, len(df[SPECTRUM_HEADER])):
+        if (not pd.isna(df[SPECTRUM_HEADER][i]) and not pd.isna(df[MUTATED_PROJECT_HEADER][i])):
+            bugs += 1
+    return bugs
+
+def summary_experiment_result(file_name):
+    df = pd.read_excel(file_name)
+
+    spectrum_sum = 0
+    spectrum_quantity = 0
+    spectrum_space_sum = 0
+    for i in range(0,len(df[SPECTRUM_HEADER])):
+        if(not pd.isna(df[SPECTRUM_HEADER][i])):
+
+            spectrum_sum += df[SPECTRUM_HEADER][i]
+            spectrum_space_sum += df[SPECTRUM_SPACE_HEADER][i]
+            spectrum_quantity += 1
+
+    if(spectrum_quantity != 0):
+        print("spectrum_avg", spectrum_sum/spectrum_quantity)
+        print("spectrum_space_avg", spectrum_space_sum / spectrum_quantity)
+    else:
+        print("spectrum_avg", 0)
+        print("spectrum_space_avg", 0)
+
+    spc_spectrum_sum = 0
+    spc_spectrum_quantity = 0
+    spc_spectrum_space_sum = 0
+    for i in range(0, len(df[SPC_SPECTRUM_HEADER])):
+        if (not pd.isna(df[SPC_SPECTRUM_HEADER][i])):
+            spc_spectrum_sum += df[SPC_SPECTRUM_HEADER][i]
+            spc_spectrum_space_sum += df[SPC_SPECTRUM_SPACE_HEADER][i]
+            spc_spectrum_quantity += 1
+
+    if (spc_spectrum_quantity != 0):
+        print("spc_spectrum_avg", spc_spectrum_sum / spc_spectrum_quantity)
+        print("spc_spectrum_space_avg", spc_spectrum_space_sum / spc_spectrum_quantity)
+    else:
+        print("spc_spectrum_avg", 0)
+        print("spc_spectrum_space_avg", 0)
+
+    spc_spectrum_interaction_sum = 0
+    spc_spectrum_interaction_quantity = 0
+    spc_spectrum_interaction_space_sum = 0
+    for i in range(0, len(df[SPC_SPECTRUM_INTERACTION_HEADER])):
+        if (not pd.isna(df[SPC_SPECTRUM_INTERACTION_HEADER][i])):
+            spc_spectrum_interaction_sum += df[SPC_SPECTRUM_INTERACTION_HEADER][i]
+            spc_spectrum_interaction_space_sum += df[SPC_SPECTRUM_INTERACTION_SPACE_HEADER][i]
+            spc_spectrum_interaction_quantity += 1
+
+    if (spc_spectrum_interaction_quantity != 0):
+        print("spc_spectrum_interaction_avg", spc_spectrum_interaction_sum / spc_spectrum_interaction_quantity)
+        print("spc_spectrum_interaction_space_avg", spc_spectrum_interaction_space_sum / spc_spectrum_interaction_quantity)
+    else:
+        print("spc_spectrum_interaction_avg", 0)
+        print("spc_spectrum_interaction_space_avg", 0)
+
+    print("num_of_bugs", num_of_bugs(df))
