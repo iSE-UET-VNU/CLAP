@@ -44,13 +44,6 @@ SPC_SPECTRUM_INTERACTION_SPACE_HEADER = "SPC_SPECTRUM_INTERACTION_SPACE"
 SPC_SPECTRUM_INTERACTION_DETAIL_HEADER = "SPC_SPECTRUM_INTERACTION_DETAIL"
 SPC_SPECTRUM_INTERACTION_TIME_HEADER = "SPC_SPECTRUM_INTERACTION_RANKING_TIME"
 
-
-
-THREAD_MUTATED_PROJECT = "MUTATED_PROJECT"
-THREAD_FUNCTION = "FUNCTION"
-THREAD_START_TIME = "START_TIME"
-THREAD_RUN_TIME = "RUN_TIME"
-
 LOG_SPC_DETECTION_RUNTIME = "LOG_SPC_DETECTION_RUNTIME"
 LOG_SLICING_RUNTIME = "LOG_SLICING_RUNTIME"
 
@@ -115,22 +108,18 @@ def detect_spcs(project_name, filtering_coverage_rate):
 
     spc_threads = []
     for i in range(0, len(mutated_projects)):
-        current_thread = {}
+
         current_project = project_name + "_" + mutated_projects[i]
-        current_thread[THREAD_MUTATED_PROJECT] = current_project
+
         logging.info("Find SPC in ... %s", current_project)
 
         mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_projects[i])
 
-        current_thread[THREAD_FUNCTION] = threading.Thread(target=SPCsManager.find_SPCs,
-                                                           args=(mutated_project_dir, filtering_coverage_rate))
-        current_thread[THREAD_FUNCTION].start()
-        current_thread[THREAD_START_TIME] = time.time()
-        spc_threads.append(current_thread)
-
+        spc_threads.append(threading.Thread(target=SPCsManager.find_SPCs,
+                                                           args=(mutated_project_dir, filtering_coverage_rate)))
+        spc_threads[i].start()
     for i in range(0, len(mutated_projects)):
-        spc_threads[i][THREAD_FUNCTION].join()
-        spc_threads[i][THREAD_RUN_TIME] = time.time() - spc_threads[i][THREAD_START_TIME]
+        spc_threads[i].join()
 
 
 
@@ -142,23 +131,20 @@ def slicing(project_name):
 
     slicing_threads = []
     for i in range(0, len(mutated_projects)):
-        current_thread = {}
+
         current_project = project_name + "_" + mutated_projects[i]
-        current_thread[THREAD_MUTATED_PROJECT] = current_project
+
         logging.info("slicing ... %s", current_project)
 
         mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_projects[i])
         spc_log_file_path = get_spc_log_file_path(mutated_project_dir)
 
-        current_thread[THREAD_FUNCTION] = threading.Thread(target=SlicingManager.do_slice,
-                                                           args=(str(spc_log_file_path),))
-        current_thread[THREAD_FUNCTION].start()
-        current_thread[THREAD_START_TIME] = time.time()
-        slicing_threads.append(current_thread)
+        slicing_threads.append(threading.Thread(target=SlicingManager.do_slice,
+                                                           args=(str(spc_log_file_path),)))
+        slicing_threads[i].start()
 
     for i in range(0, len(mutated_projects)):
-        slicing_threads[i][THREAD_FUNCTION].join()
-        slicing_threads[i][THREAD_RUN_TIME] = time.time() - slicing_threads[i][THREAD_START_TIME]
+        slicing_threads[i].join()
 
 
 def ranking_with_coverage_rate( project_name, filtering_coverage_rate, ranking_types):
