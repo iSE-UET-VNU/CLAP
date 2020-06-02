@@ -1,0 +1,55 @@
+huent@duongtd-Ubuntu:~/PycharmProjects/InputPreparation$ python3 Main_Ranking.py
+2020-05-29 21:05:31 [INFO] [ExperimentResultManager] Ranking... 3wise-Mutated-GPL-Test3_Cycle.GPL.Graph.ODL_1
+2020-05-29 21:05:31 [INFO] [SPCsManager] Loading config report file [Cycle.GPL.Graph.ODL_1/config.report.csv]
+2020-05-29 21:05:31 [INFO] [SPCsManager] Finding SPCs and write to [Cycle.GPL.Graph.ODL_1/spc.log]
+2020-05-30 00:17:31 [INFO] [SPCsManager] [Runtime] SPC runtime /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Cycle.GPL.Graph.ODL_1: 11520.131774187088
+2020-05-30 00:17:31 [INFO] [SlicingManager] Running slicing from spc file [Cycle.GPL.Graph.ODL_1/spc.log]
+java -Dspc_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Cycle.GPL.Graph.ODL_1/spc.log -Dslicing_output_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Cycle.GPL.Graph.ODL_1/slicing.log -jar /home/huent/PycharmProjects/InputPreparation/plugins/feature-slicing.jar
+2020-05-30 00:17:31 [DEBUG] [Helpers] Writing log [feature-slicing.jar] to [/home/huent/PycharmProjects/InputPreparation/logs/1590772651_9588071954580aeb70da7801dc4f37c0.log]
+2020-05-30 00:18:08 [INFO] [SlicingManager] Wrote slicing output to file [Cycle.GPL.Graph.ODL_1/slicing.log]
+2020-05-30 00:18:08 [INFO] [SlicingManager] [Runtime] slicing /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Cycle.GPL.Graph.ODL_1/slicing.log: 36.5657742023468
+2020-05-30 00:18:08 [INFO] [ExperimentResultManager] Ranking... 3wise-Mutated-GPL-Test3_DirectedWithEdges.GPL.Edge.ROR_2
+2020-05-30 00:18:08 [INFO] [SPCsManager] Loading config report file [DirectedWithEdges.GPL.Edge.ROR_2/config.report.csv]
+2020-05-30 00:18:08 [INFO] [SPCsManager] Finding SPCs and write to [DirectedWithEdges.GPL.Edge.ROR_2/spc.log]
+2020-05-30 01:12:42 [INFO] [SPCsManager] [Runtime] SPC runtime /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DirectedWithEdges.GPL.Edge.ROR_2: 3274.5212831497192
+2020-05-30 01:12:42 [INFO] [SlicingManager] Running slicing from spc file [DirectedWithEdges.GPL.Edge.ROR_2/spc.log]
+java -Dspc_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DirectedWithEdges.GPL.Edge.ROR_2/spc.log -Dslicing_output_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DirectedWithEdges.GPL.Edge.ROR_2/slicing.log -jar /home/huent/PycharmProjects/InputPreparation/plugins/feature-slicing.jar
+2020-05-30 01:12:42 [DEBUG] [Helpers] Writing log [feature-slicing.jar] to [/home/huent/PycharmProjects/InputPreparation/logs/1590775963_3ff5048f7b56103c859e578d99dee17c.log]
+2020-05-30 01:13:01 [INFO] [SlicingManager] Wrote slicing output to file [DirectedWithEdges.GPL.Edge.ROR_2/slicing.log]
+2020-05-30 01:13:01 [INFO] [SlicingManager] [Runtime] slicing /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DirectedWithEdges.GPL.Edge.ROR_2/slicing.log: 18.287755727767944
+2020-05-30 01:13:01 [INFO] [ExperimentResultManager] Ranking... 3wise-Mutated-GPL-Test3_Number.GPL.NumberWorkSpace.LOI_1
+2020-05-30 01:13:01 [INFO] [SPCsManager] Loading config report file [Number.GPL.NumberWorkSpace.LOI_1/config.report.csv]
+2020-05-30 01:13:01 [INFO] [SPCsManager] Finding SPCs and write to [Number.GPL.NumberWorkSpace.LOI_1/spc.log]
+2020-05-30 05:30:08 [INFO] [SPCsManager] [Runtime] SPC runtime /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.NumberWorkSpace.LOI_1: 15427.383808135986
+2020-05-30 05:30:08 [INFO] [SlicingManager] Running slicing from spc file [Number.GPL.NumberWorkSpace.LOI_1/spc.log]
+java -Dspc_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.NumberWorkSpace.LOI_1/spc.log -Dslicing_output_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.NumberWorkSpace.LOI_1/slicing.log -jar /home/huent/PycharmProjects/InputPreparation/plugins/feature-slicing.jar
+2020-05-30 05:30:08 [DEBUG] [Helpers] Writing log [feature-slicing.jar] to [/home/huent/PycharmProjects/InputPreparation/logs/1590791409_222c6c4d829e98a785d5b364d55f502c.log]
+2020-05-30 05:31:05 [INFO] [SlicingManager] Wrote slicing output to file [Number.GPL.NumberWorkSpace.LOI_1/slicing.log]
+2020-05-30 05:31:05 [INFO] [SlicingManager] [Runtime] slicing /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.NumberWorkSpace.LOI_1/slicing.log: 56.9178421497345
+2020-05-30 05:31:06 [INFO] [ExperimentResultManager] Ranking... 3wise-Mutated-GPL-Test3_Number.GPL.Vertex.AOIS_1
+2020-05-30 05:31:06 [INFO] [SPCsManager] Loading config report file [Number.GPL.Vertex.AOIS_1/config.report.csv]
+2020-05-30 05:31:06 [INFO] [SPCsManager] [Runtime] SPC runtime /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.Vertex.AOIS_1: 0.1962442398071289
+2020-05-30 05:31:06 [INFO] [SlicingManager] Running slicing from spc file [Number.GPL.Vertex.AOIS_1/spc.log]
+java -Dspc_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.Vertex.AOIS_1/spc.log -Dslicing_output_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.Vertex.AOIS_1/slicing.log -jar /home/huent/PycharmProjects/InputPreparation/plugins/feature-slicing.jar
+2020-05-30 05:31:06 [DEBUG] [Helpers] Writing log [feature-slicing.jar] to [/home/huent/PycharmProjects/InputPreparation/logs/1590791466_f62167021ee3db4465f62ce6ba6d0f1c.log]
+2020-05-30 05:31:06 [INFO] [SlicingManager] Wrote slicing output to file [Number.GPL.Vertex.AOIS_1/slicing.log]
+2020-05-30 05:31:06 [INFO] [SlicingManager] [Runtime] slicing /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/Number.GPL.Vertex.AOIS_1/slicing.log: 0.1277472972869873
+2020-05-30 05:31:06 [INFO] [ExperimentResultManager] Ranking... 3wise-Mutated-GPL-Test3_DFS.GPL.Graph.ODL_1
+2020-05-30 05:31:06 [INFO] [SPCsManager] Loading config report file [DFS.GPL.Graph.ODL_1/config.report.csv]
+2020-05-30 05:31:06 [INFO] [SPCsManager] Finding SPCs and write to [DFS.GPL.Graph.ODL_1/spc.log]
+2020-05-30 14:28:41 [INFO] [SPCsManager] [Runtime] SPC runtime /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DFS.GPL.Graph.ODL_1: 32255.290519475937
+2020-05-30 14:28:41 [INFO] [SlicingManager] Running slicing from spc file [DFS.GPL.Graph.ODL_1/spc.log]
+java -Dspc_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DFS.GPL.Graph.ODL_1/spc.log -Dslicing_output_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DFS.GPL.Graph.ODL_1/slicing.log -jar /home/huent/PycharmProjects/InputPreparation/plugins/feature-slicing.jar
+2020-05-30 14:28:41 [DEBUG] [Helpers] Writing log [feature-slicing.jar] to [/home/huent/PycharmProjects/InputPreparation/logs/1590823722_c92a99c6a2f050f61bfe06041c0ae1c8.log]
+2020-05-30 14:28:43 [INFO] [SlicingManager] Wrote slicing output to file [DFS.GPL.Graph.ODL_1/slicing.log]
+2020-05-30 14:28:43 [INFO] [SlicingManager] [Runtime] slicing /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/DFS.GPL.Graph.ODL_1/slicing.log: 1.5035908222198486
+2020-05-30 14:28:43 [INFO] [ExperimentResultManager] Ranking... 3wise-Mutated-GPL-Test3_StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1
+2020-05-30 14:28:43 [INFO] [SPCsManager] Loading config report file [StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/config.report.csv]
+2020-05-30 14:28:43 [INFO] [SPCsManager] Finding SPCs and write to [StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/spc.log]
+2020-05-30 16:53:22 [INFO] [SPCsManager] [Runtime] SPC runtime /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1: 8678.8340883255
+2020-05-30 16:53:22 [INFO] [SlicingManager] Running slicing from spc file [StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/spc.log]
+java -Dspc_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/spc.log -Dslicing_output_path=/home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/slicing.log -jar /home/huent/PycharmProjects/InputPreparation/plugins/feature-slicing.jar
+2020-05-30 16:53:22 [DEBUG] [Helpers] Writing log [feature-slicing.jar] to [/home/huent/PycharmProjects/InputPreparation/logs/1590832402_d27494cffea0817ddb7d7c470396b530.log]
+2020-05-30 16:53:51 [INFO] [SlicingManager] Wrote slicing output to file [StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/slicing.log]
+2020-05-30 16:53:51 [INFO] [SlicingManager] [Runtime] slicing /home/huent/Documents/Trang/3wise-Mutated-GPL-Test3/mutated_projects/StronglyConnected.GPL.FinishTimeWorkSpace.AORS_1/slicing.log: 29.56940484046936
+huent@duongtd-Ubuntu:~/PycharmProjects/InputPreparation$
