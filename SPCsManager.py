@@ -4,7 +4,8 @@ import time
 
 from more_itertools import powerset
 
-from FileManager import get_model_configs_report_path, get_variants_dir, join_path, get_src_dir, get_spc_log_file_path,get_file_name_with_parent
+from FileManager import get_model_configs_report_path, get_variants_dir, join_path, get_src_dir, get_spc_log_file_path, \
+    get_file_name_with_parent, is_path_exist
 from Helpers import get_logger, sleep
 from TestingCoverageManager import statement_coverage_of_variants
 
@@ -13,18 +14,22 @@ logger = get_logger(__name__)
 
 def find_SPCs(mutated_project_dir, filtering_coverage_rate):
     start_time = time.time()
+    spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
+    if is_path_exist(spc_log_file_path):
+        logger.info(f"Used Old SPC log file [{spc_log_file_path}]")
+        return spc_log_file_path
+
     config_report_path = get_model_configs_report_path(mutated_project_dir)
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     feature_names, variant_names, passed_configs, failed_configs = load_configs(config_report_path, variants_testing_coverage, filtering_coverage_rate)
-    spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, mutated_project_dir, filtering_coverage_rate)
+    spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, spc_log_file_path)
     logging.info("[Runtime] SPC runtime %s: %s", mutated_project_dir, time.time() - start_time)
     return spc_log_file_path
 
 
-def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, project_dir, filtering_coverage_rate):
+def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, spc_log_file_path):
     SPC_set = []
-    spc_log_file_path = get_spc_log_file_path(project_dir, filtering_coverage_rate)
     if(len(passed_configs) == 0 or len(failed_configs) == 0):
         spc_file = open(spc_log_file_path, "w")
         spc_file.close()
