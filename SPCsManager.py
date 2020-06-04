@@ -17,21 +17,21 @@ def find_SPCs(mutated_project_dir, filtering_coverage_rate):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     feature_names, variant_names, passed_configs, failed_configs = load_configs(config_report_path, variants_testing_coverage, filtering_coverage_rate)
-    spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, mutated_project_dir)
+    spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, mutated_project_dir, filtering_coverage_rate)
     logging.info("[Runtime] SPC runtime %s: %s", mutated_project_dir, time.time() - start_time)
     return spc_log_file_path
 
 
-def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, project_dir):
+def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, project_dir, filtering_coverage_rate):
     SPC_set = []
-    spc_log_file_path = get_spc_log_file_path(project_dir)
+    spc_log_file_path = get_spc_log_file_path(project_dir, filtering_coverage_rate)
     if(len(passed_configs) == 0 or len(failed_configs) == 0):
         spc_file = open(spc_log_file_path, "w")
         spc_file.close()
         return spc_log_file_path
     else:
         logger.info(f"Finding SPCs and write to [{get_file_name_with_parent(spc_log_file_path)}]")
-        with open(get_spc_log_file_path(project_dir), "w+") as spc_log_file:
+        with open(spc_log_file_path, "w+") as spc_log_file:
             for current_failed_config in failed_configs:
                 switches = []
                 for current_passed_config in passed_configs:

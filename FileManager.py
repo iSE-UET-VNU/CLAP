@@ -12,7 +12,7 @@ PROJECT_DIR = os.path.abspath("projects")
 MODE_FILE_NAME = "model.m"
 CONFIG_FOLDER_NAME = "configs"
 CONFIGS_REPORT_FILE_NAME = "config.report.csv"
-SPC_LOG_FILE_NAME = "spc.log"
+SPC_LOG_FILE_NAME = "spc_{}.log"
 SLICING_LOG_FILE_NAME = "slicing.log"
 PROJECT_LOCK_FILE_NAME = "project.lock"
 
@@ -95,8 +95,8 @@ def get_variants_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
 
 
-def get_spc_log_file_path(project_dir):
-    return join_path(project_dir, SPC_LOG_FILE_NAME)
+def get_spc_log_file_path(project_dir, filtering_coverage_rate):
+    return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(filtering_coverage_rate*100)))
 
 
 def get_slicing_log_file_path(project_dir):
