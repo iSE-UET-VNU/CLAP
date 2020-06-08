@@ -5,7 +5,7 @@ from FileManager import get_plugin_path, get_file_name_without_ext, get_test_dir
     get_compiled_source_classes_dir, \
     get_compiled_test_classes_dir, get_file_name, get_src_dir, get_test_coverage_dir, get_variant_dir, is_path_exist, \
     join_path, get_model_configs_report_path, delete_dir, get_variants_dir, list_dir
-from Helpers import get_logger, execute_shell_command
+from Helpers import get_logger, execute_shell_command, hash_md5
 
 logger = get_logger(__name__)
 
@@ -19,7 +19,8 @@ JUNIT_PLUGIN_PATH = get_plugin_path(JUNIT_PLUGIN_NAME)
 def generate_junit_test_cases(variant_dir):
     logger.info(f"Generating JUnit Test for variant [{get_file_name_without_ext(variant_dir)}]")
     compiled_classes_dir = get_compiled_source_classes_dir(variant_dir)
-    delete_dir("./.evosuite")
+    evosuite_temp_path = join_path(".evosuite_" + hash_md5(variant_dir))
+    delete_dir(evosuite_temp_path)
     test_cases_dir = get_test_dir(variant_dir)
     output_log = execute_shell_command(f'java -jar {EVOSUITE_PLUGIN_PATH}', extra_args=[
         {"-projectCP": compiled_classes_dir},
@@ -28,6 +29,7 @@ def generate_junit_test_cases(variant_dir):
         {"-continuous": "execute"},
         {"-Dctg_memory": "4000"},
         {"-Dctg_cores": "4"},
+        {"-Dctg_dir": evosuite_temp_path},
         {"-Dctg_export_folder": test_cases_dir},
     ], log_to_file=True)
 

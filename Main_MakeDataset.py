@@ -9,8 +9,8 @@ import ModelManager
 from FileManager import get_model_file_path, get_project_dir
 
 if __name__ == "__main__":
-    base_dir = "/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/"
-    project_name = "GPL-FH-Java"
+    base_dir = None
+    project_name = "Email-FH-JML"
     project_dir = get_project_dir(project_name, base_dir)
 
     # get model file
@@ -25,6 +25,9 @@ if __name__ == "__main__":
                                                                                    feature_order_file_path,
                                                                                    sampling_output_file_path)
 
+    # clone ant directory
+    cloned_ant_name = AntManager.clone_ant_plugin()
+
     # compose and compile original feature's source code
     variant_dirs = []
     for config_path in config_output_paths:
@@ -33,7 +36,7 @@ if __name__ == "__main__":
         variant_dirs.append(variant_dir)
 
         TestManager.generate_junit_test_cases(variant_dir)
-        TestManager.run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=True, halt_on_error=True)
+        TestManager.run_junit_test_cases_with_coverage(variant_dir, halt_on_failure=True, halt_on_error=True, custom_ant=cloned_ant_name)
 
     TestManager.write_test_output_to_configs_report(project_dir)
 
