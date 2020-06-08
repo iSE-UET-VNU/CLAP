@@ -13,4 +13,4 @@ if __name__ == "__main__":
         is_interaction_bug = MutantManager.check_interaction_bug_from_report(mutated_project_dir)
         if is_interaction_bug:
             print(
-                f"{get_file_name(mutated_project_dir)} - [{get_buggy_statement(mutated_project_name, mutated_project_dir)}]")
+                f"[{get_buggy_statement(mutated_project_name, mutated_project_dir)}] - {get_file_name(mutated_project_dir)}")
