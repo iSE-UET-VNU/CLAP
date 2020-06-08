@@ -134,4 +134,4 @@ def check_bug_from_report(mutated_project_dir, must_interaction_bug=True):
             if feature_was_enabled and all_test_passed:
                 is_interaction_bug = True
 
-    return exist_failing_configuration and (must_interaction_bug and is_interaction_bug)
+    return (not must_interaction_bug and exist_failing_configuration) or (exist_failing_configuration and is_interaction_bug)
