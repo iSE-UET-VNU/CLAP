@@ -116,7 +116,7 @@ def get_feature_name_from_mutated_project_name(mutated_project_dir):
     return get_project_name(mutated_project_dir).split(".", 1)[0]
 
 
-def check_interaction_bug_from_report(mutated_project_dir):
+def check_bug_from_report(mutated_project_dir, must_interaction_bug=True):
     # logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
     configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
     feature_name = get_feature_name_from_mutated_project_name(mutated_project_dir)
@@ -134,4 +134,4 @@ def check_interaction_bug_from_report(mutated_project_dir):
             if feature_was_enabled and all_test_passed:
                 is_interaction_bug = True
 
-    return exist_failing_configuration and is_interaction_bug
+    return exist_failing_configuration and (must_interaction_bug and is_interaction_bug)
