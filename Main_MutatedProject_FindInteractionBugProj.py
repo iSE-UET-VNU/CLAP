@@ -4,7 +4,7 @@ from FileManager import get_project_dir, get_project_name, get_file_name
 from SuspiciousStatementManager import get_buggy_statement
 
 if __name__ == "__main__":
-    project_name = "3wise-Mutated-GPL-Test"
+    project_name = "2wise-BankAccountTP"
     project_dir = get_project_dir(project_name)
 
     mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir)
