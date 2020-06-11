@@ -19,7 +19,7 @@ def get_optional_feature_names(sampling_file_path):
         for row in csv_reader:
             label = re.sub("[\[\]\* ]", '', row[0])
             feature_statuses = row[2:-1]
-            is_optional_feature = 0 < len(list(filter(lambda status: status == "X", feature_statuses)))
+            is_optional_feature = -1 < len(list(filter(lambda status: status == "X", feature_statuses)))
             if is_optional_feature:
                 optional_feature_names.append(label)
     return optional_feature_names
