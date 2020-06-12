@@ -6,7 +6,7 @@ from more_itertools import powerset
 
 from FileManager import get_model_configs_report_path, get_variants_dir, join_path, get_src_dir, get_spc_log_file_path, \
     get_file_name_with_parent, is_path_exist
-from Helpers import get_logger, sleep
+from Helpers import get_logger
 from TestingCoverageManager import statement_coverage_of_variants
 
 logger = get_logger(__name__)
