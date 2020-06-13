@@ -141,11 +141,11 @@ def check_bug_from_report(mutated_project_dir, must_interaction_bug=True):
                 exist_failing_configuration = True
             if feature_was_enabled and test_passed:
                 is_interaction_bug = True
-    hashed_bug = hash_md5(hash_data)
-    if hash_md5(hash_data) in BUG_CONTAINER:
-        return None, False
-    else:
-        BUG_CONTAINER[hashed_bug] = True
+    # hashed_bug = hash_md5(hash_data)
+    # if hash_md5(hash_data) in BUG_CONTAINER:
+    #     return None, False
+    # else:
+    #     BUG_CONTAINER[hashed_bug] = True
     is_bug_satisfied = (not must_interaction_bug and exist_failing_configuration) or (
             exist_failing_configuration and is_interaction_bug)
-    return buggy_statement, is_bug_satisfied and BUG_CONTAINER
+    return buggy_statement, is_bug_satisfied
