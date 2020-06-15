@@ -10,6 +10,8 @@ LOG_DIR = os.path.abspath("logs")
 PROJECT_DIR = os.path.abspath("projects")
 
 MODE_FILE_NAME = "model.m"
+FEATURE_ORDER_FILE_NAME = "features.order"
+LIB_FOLDER_NAME = "lib"
 CONFIG_FOLDER_NAME = "configs"
 CONFIGS_REPORT_FILE_NAME = "config.report.csv"
 SPC_LOG_FILE_NAME = "spc_{}.log"
@@ -38,7 +40,6 @@ PASSED_TEST_COVERAGE_FOLDER_NAME = "passed"
 EXPERIMENT_RESULT_FOLDER = os.path.abspath("experiment_results")
 RUNTIME_LOG_FOLDER = os.path.abspath("runtime_logs")
 
-
 logger = get_logger(__name__)
 
 
@@ -46,8 +47,10 @@ def mkdir_if_not_exist(input_dir):
     if not is_path_exist(input_dir):
         os.makedirs(input_dir)
 
+
 def get_experimental_result_file(file_name):
     return join_path(EXPERIMENT_RESULT_FOLDER, file_name)
+
 
 def get_plugin_path(file_name):
     return join_path(PLUGIN_DIR, file_name)
@@ -64,7 +67,12 @@ def get_model_file_path(project_dir):
     return model_file_path
 
 
-def get_project_dir(project_name, base_dir = None):
+def get_feature_order_file_path(project_dir):
+    feature_order_file_path = join_path(project_dir, FEATURE_ORDER_FILE_NAME)
+    return feature_order_file_path
+
+
+def get_project_dir(project_name, base_dir=None):
     if not base_dir:
         return join_path(PROJECT_DIR, project_name)
     else:
@@ -91,12 +99,17 @@ def get_model_configs_report_path(project_dir):
     return join_path(project_dir, CONFIGS_REPORT_FILE_NAME)
 
 
+def get_dependency_lib_dirs(project_dir):
+    libs_dir = get_project_sub_dir_by_folder_name(project_dir, LIB_FOLDER_NAME)
+    return list_dir(libs_dir, full_path=True)
+
+
 def get_variants_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
 
 
 def get_spc_log_file_path(project_dir, filtering_coverage_rate):
-    return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(filtering_coverage_rate*100)))
+    return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(filtering_coverage_rate * 100)))
 
 
 def get_slicing_log_file_path(project_dir):
@@ -148,6 +161,12 @@ def get_mutated_projects_dir(project_dir):
 
 def get_feature_source_code_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, FEATURE_FOLDER_NAME)
+
+
+def get_implemented_features(project_dir):
+    features_dir = get_feature_source_code_dir(project_dir)
+    implemented_features = list_dir(features_dir)
+    return implemented_features
 
 
 def is_project_locked(project_dir):

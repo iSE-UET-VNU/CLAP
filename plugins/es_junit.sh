@@ -29,7 +29,12 @@ else
     ANT_FOLDER_NAME=apache-ant-1.10.7
 fi;
 
+if [ "${15}" = "-lib_path" ]; then
+    LIB_PATH=${16};
+fi;
+
+
 BASEDIR=$(dirname "$0")
 ANT_PATH="$BASEDIR/$ANT_FOLDER_NAME";
 
-$ANT_PATH/bin/ant clover.all -buildfile $ANT_PATH/junit_build.xml -Dsrc $SRC_DIR -Dtest $TEST_DIR -Dbuild.classes $SRC_CLASSES_DIR -Dbuild.testclasses $TEST_CLASSES_DIR -Dreport.coveragedir $COVERAGE_DIR -Djunit.haltonfailure=$JUNIT_HALT_ON_FALURE
+$ANT_PATH/bin/ant clover.all -buildfile $ANT_PATH/junit_build.xml -Dsrc $SRC_DIR -Dtest $TEST_DIR -Dbuild.classes $SRC_CLASSES_DIR -Dbuild.testclasses $TEST_CLASSES_DIR -Dreport.coveragedir $COVERAGE_DIR -Djunit.haltonfailure=$JUNIT_HALT_ON_FALURE -Dlib_path=$LIB_PATH
