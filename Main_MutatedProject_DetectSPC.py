@@ -12,4 +12,4 @@ if __name__ == "__main__":
     mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
     spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, 0.5)
-    # SlicingManager.do_slice(spc_log_file_path)
+    SlicingManager.do_slice(spc_log_file_path, 0.5)
