@@ -22,15 +22,18 @@ def find_SPCs(mutated_project_dir, filtering_coverage_rate):
     config_report_path = get_model_configs_report_path(mutated_project_dir)
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
-    feature_names, variant_names, passed_configs, failed_configs = load_configs(config_report_path, variants_testing_coverage, filtering_coverage_rate)
-    spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, spc_log_file_path)
+    feature_names, variant_names, passed_configs, failed_configs = load_configs(config_report_path,
+                                                                                variants_testing_coverage,
+                                                                                filtering_coverage_rate)
+    spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir,
+                                    spc_log_file_path)
     logging.info("[Runtime] SPC runtime %s: %s", mutated_project_dir, time.time() - start_time)
     return spc_log_file_path
 
 
 def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, spc_log_file_path):
     SPC_set = []
-    if(len(passed_configs) == 0 or len(failed_configs) == 0):
+    if (len(passed_configs) == 0 or len(failed_configs) == 0):
         spc_file = open(spc_log_file_path, "w")
         spc_file.close()
         return spc_log_file_path
@@ -46,17 +49,22 @@ def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, va
                 switched_feature_selections = union_all_switched_feature_selections(switches)
                 cached_spc = []
                 for current_SPC in powerset(switched_feature_selections):
-                    if(len(current_SPC) > 7):
+                    if (len(current_SPC) > 7):
                         break
                     if len(current_SPC) <= 0:
                         continue
                     current_SPC = set(current_SPC)
-                    if satisfy_spc_minimality(current_SPC, SPC_set) and satisfy_spc_necessity(current_SPC, passed_configs,
+                    if satisfy_spc_minimality(current_SPC, SPC_set) and satisfy_spc_necessity(current_SPC,
+                                                                                              passed_configs,
                                                                                               failed_configs):
                         combined_spc = combine_spc_with_feature_names(feature_names, current_SPC)
                         if combined_spc.strip() and combined_spc not in cached_spc:
-                            minimized_failed_config = find_minimized_failed_config_contains_spc(current_SPC, failed_configs)
-                            spc_log_file.write(f"{combined_spc}; {get_src_dir(join_path(variants_dir, variant_names[tuple(minimized_failed_config)]))}\n")
+                            # minimized_failed_config = find_minimized_failed_config_contains_spc(current_SPC,
+                            #                                                                     failed_configs)
+                            spc_failed_configs = find_failed_configs_contains_spc(current_SPC,
+                                                                                                failed_configs)
+                            for spc_config in spc_failed_configs:
+                                spc_log_file.write(f"{combined_spc}; {get_src_dir(join_path(variants_dir, variant_names[tuple(spc_config)]))}\n")
                             # print()
                             # print(f"{combined_spc}")
                             cached_spc.append(combined_spc)
@@ -83,6 +91,20 @@ def find_minimized_failed_config_contains_spc(current_SPC, failed_configs):
     if not minimized_failed_config:
         raise Exception("Not found any failed config contains SPC {}".format(current_SPC))
     return minimized_failed_config
+
+
+def find_failed_configs_contains_spc(current_SPC, failed_configs):
+    needing_failed_configs = []
+    for fc in failed_configs:
+        valid_fs = []
+        for spc_fs in current_SPC:
+            feature_position, config_fs = split_positioned_feature_selection(spc_fs)
+            if fc[feature_position] == config_fs:
+                valid_fs.append(True)
+        if len(valid_fs) == len(current_SPC):
+            needing_failed_configs.append(fc)
+
+    return needing_failed_configs
 
 
 def combine_spc_set_with_feature_names(feature_names, SPC_set):
@@ -188,4 +210,3 @@ def load_configs(config_report_path, variants_testing_coverage, filtering_covera
                 failed_configs.append(current_config)
                 variant_names[tuple(current_config)] = current_variant_name
         return feature_names, variant_names, passed_configs, failed_configs
-
