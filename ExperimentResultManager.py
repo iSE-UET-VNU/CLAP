@@ -1,98 +1,106 @@
 import logging
+import os
 import time
 
 import SPCsManager
 import SlicingManager
+from FeaturesRankingManager import features_ranking
 from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, list_dir
 import MutantManager
 import RankingManager
-from RankingManager import RANKING_SPECTRUM_DETAIL, RANKING_SPECTRUM, RANKING_SPECTRUM_TIME, RANKING_SPC_SPECTRUM, \
-    RANKING_SPC_SPECTRUM_INTERACTION_DETAIL, RANKING_SPC_SPECTRUM_DETAIL, RANKING_SPC_SPECTRUM_INTERACTION
+from RankingManager import  RANKING_SPC_F, RANKING_SPC_F_P, SPC_SEARCH_SPACE, RANKING_SPECTRUM, SPECTRUM_SEARCH_SPACE, RANKING_SPC_LAYER
+
 from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
 from xlsxwriter import Workbook
 import pandas as pd
 
 MUTATED_PROJECT_COL = 0
-VARIANT_COL = 1
-SPECTRUM_COL = 2
-SPECTRUM_SPACE_COL = 3
-SPECTRUM_DETAIL_COL = 4
-SPECTRUM_TIME_COL = 5
-SPC_SPECTRUM_COL = 6
-SPC_SPECTRUM_SPACE_COL = 7
-SPC_SPECTRUM_DETAIL_COL = 8
-SPC_SPECTRUM_INTERACTION_COL = 9
-SPC_SPECTRUM_INTERACTION_SPACE_COL = 10
-SPC_SPECTRUM_INTERACTION_DETAIL_COL = 11
 
+SPC_FAILING_ONLY_COL = 1
+SPC_BOTH_COL = 2
+SPC_LAYER_COL = 3
+SPC_SPACE_COL = 4
+SPECTRUM_COL = 6
+SPECTRUM_SPACE_COL = 7
+FEATURE_COL = 9
+FEATURE_STM_COL = 10
+FEATURE_SPACE_COL = 11
+
+SYSTEM_HEADER = "SYSTEM"
+K_WISE_HEADER = "K_WISE"
 MUTATED_PROJECT_HEADER = "MUTATED_PROJECT"
-VARIANT_HEADER = "VARIANT"
+SPC_FAILING_ONLY_HEADER = "SPC_FAILING_ONLY"
+SPC_BOTH_HEADER = "SPC_BOTH"
+SPC_LAYER_HEADER = "SPC_LAYER"
+SPC_SPACE_HEADER = "SPC_SPACE"
 SPECTRUM_HEADER = "SPECTRUM"
 SPECTRUM_SPACE_HEADER = "SPECTRUM_SPACE"
-SPECTRUM_DETAIL_HEADER = "SPECTRUM_DETAIL"
-SPECTRUM_TIME_HEADER = "SPECTRUM_RANKING_TIME"
-SPC_SPECTRUM_HEADER = "SPC_SPECTRUM"
-SPC_SPECTRUM_SPACE_HEADER = "SPC_SPECTRUM_SPACE"
-SPC_SPECTRUM_DETAIL_HEADER = "SPC_SPECTRUM_DETAIL"
-SPC_SPECTRUM_INTERACTION_HEADER = "SPC_SPECTRUM_INTERACTION"
-SPC_SPECTRUM_INTERACTION_SPACE_HEADER = "SPC_SPECTRUM_INTERACTION_SPACE"
-SPC_SPECTRUM_INTERACTION_DETAIL_HEADER = "SPC_SPECTRUM_INTERACTION_DETAIL"
+FEATURE_HEADER = "FEATURE"
+FEATURE_STM_HEADER = "FEATURE_STM"
+FEATURE_SPACE_HEADER = "FEATURE_SPACE"
 
+FEATURE_RANK = "feature_rank"
+FEATURE_STM_RANK = "feature_stm_rank"
+FEATURE_SPACE = "feature_space"
 
 def write_header_in_result_file(row, sheet):
     sheet.write(row, MUTATED_PROJECT_COL, MUTATED_PROJECT_HEADER)
-    sheet.write(row, VARIANT_COL, VARIANT_HEADER)
+    sheet.write(row, SPC_FAILING_ONLY_COL, SPC_FAILING_ONLY_HEADER)
+    sheet.write(row, SPC_BOTH_COL, SPC_BOTH_HEADER)
+    sheet.write(row, SPC_LAYER_COL, SPC_LAYER_HEADER)
+    sheet.write(row, SPC_SPACE_COL, SPC_SPACE_HEADER)
     sheet.write(row, SPECTRUM_COL, SPECTRUM_HEADER)
     sheet.write(row, SPECTRUM_SPACE_COL, SPECTRUM_SPACE_HEADER)
-    sheet.write(row, SPECTRUM_DETAIL_COL, SPECTRUM_DETAIL_HEADER)
-    sheet.write(row, SPECTRUM_TIME_COL, SPECTRUM_TIME_HEADER)
-    sheet.write(row, SPC_SPECTRUM_COL, SPC_SPECTRUM_HEADER)
-    sheet.write(row, SPC_SPECTRUM_SPACE_COL, SPC_SPECTRUM_SPACE_HEADER)
-    sheet.write(row, SPC_SPECTRUM_DETAIL_COL, SPC_SPECTRUM_DETAIL_HEADER)
-    sheet.write(row, SPC_SPECTRUM_INTERACTION_COL, SPC_SPECTRUM_INTERACTION_HEADER)
-    sheet.write(row, SPC_SPECTRUM_INTERACTION_SPACE_COL, SPC_SPECTRUM_INTERACTION_SPACE_HEADER)
-    sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL, SPC_SPECTRUM_INTERACTION_DETAIL_HEADER)
+    sheet.write(row, FEATURE_COL, FEATURE_HEADER)
+    sheet.write(row, FEATURE_STM_COL, FEATURE_STM_HEADER)
+    sheet.write(row, FEATURE_SPACE_COL, FEATURE_SPACE_HEADER)
 
 
 def write_results_to_file(row, sheet, ranking_results):
-    for item in ranking_results:
-        if ranking_results[item][RANKING_SPC_SPECTRUM] != None:
-            sheet.write(row, VARIANT_COL, item)
-            spectrum_rank = ranking_results[item][RANKING_SPECTRUM]
-            sheet.write(row, SPECTRUM_COL, spectrum_rank)
 
-            sheet.write(row, SPECTRUM_SPACE_COL, len(ranking_results[item][RANKING_SPECTRUM_DETAIL]))
-            sheet.write(row, SPECTRUM_DETAIL_COL, str(ranking_results[item][RANKING_SPECTRUM_DETAIL][0:spectrum_rank]))
-            sheet.write(row, SPECTRUM_TIME_COL,
-                        str(ranking_results[item][RANKING_SPECTRUM_TIME]))
+    spc_spectrum_rank1 = ranking_results[RANKING_SPC_F]
+    sheet.write(row, SPC_FAILING_ONLY_COL, spc_spectrum_rank1)
 
-            spc_spectrum_rank = ranking_results[item][RANKING_SPC_SPECTRUM]
-            sheet.write(row, SPC_SPECTRUM_COL, spc_spectrum_rank)
-            sheet.write(row, SPC_SPECTRUM_SPACE_COL, len(ranking_results[item][RANKING_SPC_SPECTRUM_DETAIL]))
-            sheet.write(row, SPC_SPECTRUM_DETAIL_COL,
-                        str(ranking_results[item][RANKING_SPC_SPECTRUM_DETAIL][0:spc_spectrum_rank]))
+    spc_spectrum_rank2 = ranking_results[RANKING_SPC_F_P]
+    sheet.write(row, SPC_BOTH_COL, spc_spectrum_rank2)
 
-            spc_spectrum_interaction_rank = ranking_results[item][RANKING_SPC_SPECTRUM_INTERACTION]
-            sheet.write(row, SPC_SPECTRUM_INTERACTION_COL, spc_spectrum_interaction_rank)
-            sheet.write(row, SPC_SPECTRUM_INTERACTION_SPACE_COL, len(ranking_results[item][
-                                                                         RANKING_SPC_SPECTRUM_INTERACTION_DETAIL]))
-            sheet.write(row, SPC_SPECTRUM_INTERACTION_DETAIL_COL,
-                        str(ranking_results[item][RANKING_SPC_SPECTRUM_INTERACTION_DETAIL][
-                            0:spc_spectrum_interaction_rank]))
+    spc_layer_rank = ranking_results[RANKING_SPC_LAYER]
+    sheet.write(row, SPC_LAYER_COL, spc_layer_rank)
 
-            row += 1
+    spc_space = ranking_results[SPC_SEARCH_SPACE]
+    sheet.write(row, SPC_SPACE_COL, spc_space)
+
+    spectrum_rank = ranking_results[RANKING_SPECTRUM]
+    sheet.write(row, SPECTRUM_COL, spectrum_rank)
+
+    spectrum_space = ranking_results[SPECTRUM_SEARCH_SPACE]
+    sheet.write(row, SPECTRUM_SPACE_COL, spectrum_space)
+
+    feature_rank = ranking_results[FEATURE_RANK]
+    sheet.write(row, FEATURE_COL, feature_rank)
+
+    feature_stm_rank = ranking_results[FEATURE_STM_RANK]
+    sheet.write(row, FEATURE_STM_COL, feature_stm_rank)
+
+    feature_space = ranking_results[FEATURE_SPACE]
+    sheet.write(row, FEATURE_SPACE_COL, feature_space)
+    row += 1
 
     return row
 
 
-def ranking_with_coverage_rate(base_dir, project_name, filtering_coverage_rate, ranking_types):
+def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, ranking_types):
     sheet = []
     project_dir = get_project_dir(project_name, base_dir)
     row = 0
-
-    experiment_file_name = join_path(EXPERIMENT_RESULT_FOLDER,
-                                     project_name + "_coverage" + str(filtering_coverage_rate) + "_" + str(
-                                         time.time()) + ".xlsx")
+    system_result_dir = join_path(EXPERIMENT_RESULT_FOLDER, system)
+    if not os.path.exists(system_result_dir):
+        os.makedirs(system_result_dir)
+    project_result_dir = join_path(system_result_dir, project_name)
+    if not os.path.exists(project_result_dir):
+        os.makedirs(project_result_dir)
+    experiment_file_name = join_path(project_result_dir,
+                                     str(filtering_coverage_rate) + ".xlsx")
     wb = Workbook(experiment_file_name)
 
     for i in range(0, len(ranking_types)):
@@ -114,7 +122,8 @@ def ranking_with_coverage_rate(base_dir, project_name, filtering_coverage_rate, 
         spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
 
         SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate)
-        suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
+        suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
+
         buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
 
         row_temp = row
@@ -122,8 +131,11 @@ def ranking_with_coverage_rate(base_dir, project_name, filtering_coverage_rate, 
             ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
                                                      suspicious_stms_list, ranking_types[i])
 
+            ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, ranking_types[i])
             sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
             row = write_results_to_file(row_temp, sheet[i], ranking_results)
+
+
 
     # except:
     #   logging.info(" Exception in ranking %s", mutated_project_name)

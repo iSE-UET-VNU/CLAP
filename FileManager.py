@@ -47,9 +47,14 @@ def mkdir_if_not_exist(input_dir):
     if not is_path_exist(input_dir):
         os.makedirs(input_dir)
 
+def get_experimetal_result_system_dir(system_name):
+    return join_path(EXPERIMENT_RESULT_FOLDER, system_name)
 
-def get_experimental_result_file(file_name):
-    return join_path(EXPERIMENT_RESULT_FOLDER, file_name)
+def get_experimetal_result_k_wise(system_dir, k_wise):
+    return join_path(system_dir, k_wise)
+
+def get_experimental_result_file(k_wise_dir, file_name):
+    return join_path(k_wise_dir, file_name)
 
 
 def get_plugin_path(file_name):

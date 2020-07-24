@@ -1,11 +1,11 @@
 from os.path import isfile
 
-from FileManager import join_path, SLICING_LOG_FILE_NAME
+from FileManager import join_path, SLICING_LOG_FILE_NAME, get_slicing_log_file_path
 import json
 
 
-def get_suspicious_statement(mutated_project_dir):
-    slicing_info_file_path = join_path(mutated_project_dir, SLICING_LOG_FILE_NAME)
+def get_suspicious_statement(mutated_project_dir, filtering_coverage_rate):
+    slicing_info_file_path = get_slicing_log_file_path(mutated_project_dir, filtering_coverage_rate)
 
     if (isfile(slicing_info_file_path)):
         slicing_info_file = open(slicing_info_file_path, "r")

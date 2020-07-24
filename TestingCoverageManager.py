@@ -1,7 +1,10 @@
 import logging
 import os
 import xml.etree.ElementTree as ET
-from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, list_dir
+
+import MutantManager
+from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, \
+    list_dir, get_project_dir, get_mutated_projects_dir
 
 
 def statement_coverage(variant_dir):
@@ -36,5 +39,5 @@ def statement_coverage_of_variants(project_dir):
         variant_dir = join_path(variants_dir, variant)
         testing_coverage = statement_coverage(variant_dir)
         stm_coverage_variants[variant] = testing_coverage
-
     return stm_coverage_variants
+

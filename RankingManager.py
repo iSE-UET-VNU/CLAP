@@ -5,58 +5,200 @@ import time
 import xml.etree.ElementTree as ET
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
-    get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir
+    get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
+    get_variants_dir
 
 # keywords
+from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
+    dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2_SCORE, OP2, BARINEL, BARINEL_SCORE, DSTAR, \
+    DSTAR_SCORE
+
 FAILED_TEST_COUNT = 'failed_test_count'
 PASSED_TEST_COUNT = 'passed_test_count'
 SUSPICIOUS = 'suspicious'
-TARANTULA_SCORE = "tarantula_score"
-OCHIAI_SCORE = "ochiai_score"
-OP2_SCORE = "op2_score"
-DSTAR_SCORE = "dstar_score"
-BARINEL_SCORE = "barinel_score"
-NUM_INTERACTIONS = 'num_interactions'
+COUNT = "count"
+PASSING_COUNT = "passing_count"
 
+RANKING_SPC_F = "spc_spectrum_failing_only"
+RANKING_SPC_F_P = "spc_spectrum_both"
+RANKING_SPC_LAYER = "spc_spectrum_layer"
+SPC_SEARCH_SPACE = "spc_search_space"
 RANKING_SPECTRUM = "spectrum"
-RANKING_SPECTRUM_DETAIL = "spectrum_detail"
-RANKING_SPC_SPECTRUM = "spc_spectrum"
-RANKING_SPC_SPECTRUM_DETAIL = "spc_spectrum_detail"
-RANKING_SPC_SPECTRUM_INTERACTION = "spc_spectrum_interaction"
-RANKING_SPC_SPECTRUM_INTERACTION_DETAIL = "spc_spectrum_interaction_detail"
-RANKING_SPECTRUM_TIME = "spectrum_ranking_time"
+SPECTRUM_SEARCH_SPACE = "spectrum_search_space"
 
-TARANTULA = "tarantula"
-OCHIAI = "ochiai"
-OP2 = "op2"
-BARINEL = "barinel"
-DSTAR = "dstar"
 
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, ranking_type):
-    ranking_results = {}
+    overall_suspiciousness = {}
     for variant in suspicious_stms_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], ranking_type)
+        overall_suspiciousness[variant] = statement_infor
 
-        spectrum_ranked_list, spectrum_raking_time = spectrum_ranking(statement_infor, ranking_type)
-        buggy_stm_spectrum_ranked = search_rank(buggy_statement, spectrum_ranked_list)
+    #Ranking with spc
+    overall_results_f = ranking_failing_only(overall_suspiciousness, ranking_type)
+    spc_ranked_list_f = spc_spectrum_ranking(overall_results_f, ranking_type)
+    buggy_stm_spc_spectrum_ranked1 = search_rank(buggy_statement, spc_ranked_list_f)
 
-        spc_spectrum_ranked_list = spc_spectrum_ranking(statement_infor, ranking_type)
-        buggy_stm_spc_spectrum_ranked = search_rank(buggy_statement, spc_spectrum_ranked_list)
+    overall_results_f_p = ranking_failing_and_passing(overall_suspiciousness, mutated_project_dir, ranking_type)
+    spc_ranked_list_f_p = spc_spectrum_ranking(overall_results_f_p, ranking_type)
+    buggy_stm_spc_spectrum_ranked2 = search_rank(buggy_statement, spc_ranked_list_f_p)
 
-        spc_interaction_spectrum_ranked_list = spc_interaction_spectrum_raking(statement_infor, ranking_type)
-        buggy_stm_spc_interaction_spectrum_ranked = search_rank(buggy_statement, spc_interaction_spectrum_ranked_list)
+    overall_results_f_p_by_layer = ranking_failing_and_passing_by_layer(overall_suspiciousness, mutated_project_dir, ranking_type)
+    spc_spectrum_ranked_list = spc_spectrum_ranking_by_layer(overall_results_f_p_by_layer, ranking_type)
+    buggy_stm_spc_spectrum_ranked_by_layer = search_rank_by_layer(buggy_statement, spc_spectrum_ranked_list)
 
-        ranking_results[variant] = {RANKING_SPECTRUM: buggy_stm_spectrum_ranked,
-                                    RANKING_SPECTRUM_DETAIL: spectrum_ranked_list,
-                                    RANKING_SPECTRUM_TIME: spectrum_raking_time,
-                                    RANKING_SPC_SPECTRUM: buggy_stm_spc_spectrum_ranked,
-                                    RANKING_SPC_SPECTRUM_DETAIL: spc_spectrum_ranked_list,
-                                    RANKING_SPC_SPECTRUM_INTERACTION: buggy_stm_spc_interaction_spectrum_ranked,
-                                    RANKING_SPC_SPECTRUM_INTERACTION_DETAIL: spc_interaction_spectrum_ranked_list,
-                                    }
+    #spectrum ranking only
+    stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_information_for_spectrum_ranking(mutated_project_dir)
+    stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests, ranking_type)
+    spectrum_ranked_list = spectrum_ranking(stm_info_for_spectrum, ranking_type)
+    buggy_stm_spectrum_ranked = search_rank(buggy_statement, spectrum_ranked_list)
+
+    ranking_results = { RANKING_SPC_F: buggy_stm_spc_spectrum_ranked1,
+                        RANKING_SPC_F_P: buggy_stm_spc_spectrum_ranked2,
+                        RANKING_SPC_LAYER: buggy_stm_spc_spectrum_ranked_by_layer,
+                        SPC_SEARCH_SPACE: len(spc_spectrum_ranked_list),
+                        RANKING_SPECTRUM: buggy_stm_spectrum_ranked,
+                        SPECTRUM_SEARCH_SPACE: len(spectrum_ranked_list)
+                       }
+
     return ranking_results
+
+def get_information_for_spectrum_ranking(mutated_project_dir):
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variants_list = os.listdir(variants_dir)
+    total_failed_tests = 0
+    total_passed_tests = 0
+    stm_info_for_spectrum = {}
+    for variant in variants_list:
+        variant_dir = get_variant_dir(mutated_project_dir, variant)
+        test_coverage_dir = get_test_coverage_dir(variant_dir)
+
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+
+        if os.path.isfile(spectrum_failed_coverage_file_dir):
+            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
+                                                                      spectrum_failed_coverage_file_dir,
+                                                                      FAILED_TEST_COUNT)
+
+        if os.path.isfile(spectrum_passed_coverage_file_dir):
+            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
+                                                                      spectrum_passed_coverage_file_dir,
+                                                                      PASSED_TEST_COUNT)
+
+        ftests, ptests = count_tests(test_coverage_dir)
+        total_failed_tests += ftests
+        total_passed_tests += ptests
+    return stm_info_for_spectrum, total_passed_tests, total_failed_tests
+
+
+def read_coverage_info_for_spectrum(statement_infor, coverage_file, kind_of_test_count):
+    try:
+        tree = ET.parse(coverage_file)
+        root = tree.getroot()
+        project = root.find("project")
+
+        for package in project:
+            for file in package:
+                for line in file:
+                    id = line.get('featureClass') + "." + line.get('featureLineNum')
+                    if id not in statement_infor:
+                        statement_infor[id] = {}
+                        statement_infor[id][FAILED_TEST_COUNT] = 0
+                        statement_infor[id][PASSED_TEST_COUNT] = 0
+                    statement_infor[id][kind_of_test_count] = max(int(line.get('count')),
+                                                                  statement_infor[id][kind_of_test_count])
+        return statement_infor
+    except:
+        logging.info("Exception when parsing %s", coverage_file)
+
+
+def ranking_failing_only(overall_suspiciousness, ranking_type):
+    score_type = ranking_type + "_score"
+    overall_results = {}
+
+    for variant in overall_suspiciousness.keys():
+        for stm in overall_suspiciousness[variant]:
+            if stm not in overall_results.keys():
+                overall_results[stm] = {}
+                overall_results[stm][SUSPICIOUS] = overall_suspiciousness[variant][stm][SUSPICIOUS]
+                overall_results[stm][COUNT] = 1
+                overall_results[stm][score_type] = overall_suspiciousness[variant][stm][score_type]
+            else:
+                if overall_results[stm][SUSPICIOUS] == False:
+                    overall_results[stm][SUSPICIOUS] = overall_suspiciousness[variant][stm][SUSPICIOUS]
+
+                overall_results[stm][COUNT] += 1
+                overall_results[stm][score_type] += overall_suspiciousness[variant][stm][score_type]
+
+    return calculate_average_supiciousness(overall_results, ranking_type)
+
+def calculate_average_supiciousness(overall_results, ranking_type):
+    score_type = ranking_type + "_score"
+    score_average = ranking_type + "_average"
+
+    for stm in overall_results:
+        overall_results[stm][score_average] = overall_results[stm][score_type] / overall_results[stm][COUNT]
+
+    return overall_results
+
+def ranking_failing_and_passing(overall_suspiciousness, mutated_project_dir, ranking_type):
+    passing_coverage_info = {}
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variants_list = os.listdir(variants_dir)
+    for variant in variants_list:
+        if variant not in overall_suspiciousness.keys():
+            read_coverage_info_for_ranking_with_passing_products(passing_coverage_info, variant, mutated_project_dir)
+
+    overall_results2 = ranking_failing_only(overall_suspiciousness, ranking_type)
+
+    for stm in overall_results2:
+        for variant in passing_coverage_info:
+            if stm in passing_coverage_info[variant]:
+                overall_results2[stm][COUNT] += 1
+
+    return calculate_average_supiciousness(overall_results2, ranking_type)
+
+def ranking_failing_and_passing_by_layer(overall_suspiciousness, mutated_project_dir, ranking_type):
+    passing_coverage_info = {}
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variants_list = os.listdir(variants_dir)
+    for variant in variants_list:
+        if variant not in overall_suspiciousness.keys():
+            read_coverage_info_for_ranking_with_passing_products(passing_coverage_info, variant, mutated_project_dir)
+
+    overall_results2 = ranking_failing_only(overall_suspiciousness, ranking_type)
+
+    for stm in overall_results2:
+        overall_results2[stm][PASSING_COUNT] = 0
+        for variant in passing_coverage_info:
+            if stm in passing_coverage_info[variant]:
+                overall_results2[stm][PASSING_COUNT] += 1
+
+    return calculate_average_supiciousness(overall_results2, ranking_type)
+
+
+def read_coverage_info_for_ranking_with_passing_products(passing_coverage_info, variant, mutated_project_dir):
+    variant_dir = get_variant_dir(mutated_project_dir, variant)
+    test_coverage_dir = get_test_coverage_dir(variant_dir)
+    spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+    passing_coverage_info[variant] = []
+    try:
+        tree = ET.parse(spectrum_passed_coverage_file_dir)
+        root = tree.getroot()
+        project = root.find("project")
+
+        for package in project:
+            for file in package:
+                for line in file:
+                    id = line.get('featureClass') + "." + line.get('featureLineNum')
+                    if id not in passing_coverage_info and int(line.get('count')) > 0:
+                        passing_coverage_info[variant].append(id)
+
+        return passing_coverage_info
+    except:
+        logging.info("Exception when parsing %s", spectrum_passed_coverage_file_dir)
 
 
 def suspiciousness_calculation(variant_dir, suspicious_stms_list, ranking_type):
@@ -77,6 +219,7 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, ranking_type):
     (total_failed_tests, total_passed_tests) = count_tests(test_coverage_dir)
 
     statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, ranking_type)
+
     return statement_infor
 
 
@@ -112,11 +255,8 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 
                         if id in suspicious_stms_list.keys():
                             statement_infor[id][SUSPICIOUS] = True
-                            statement_infor[id][NUM_INTERACTIONS] = suspicious_stms_list[id]['num_interactions']
                         else:
                             statement_infor[id][SUSPICIOUS] = False
-                            statement_infor[id][NUM_INTERACTIONS] = 0
-
                     statement_infor[id][kind_of_test_count] = max(int(line.get('count')),
                                                                   statement_infor[id][kind_of_test_count])
         return statement_infor
@@ -127,89 +267,45 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, ranking_type):
     for id in statement_infor.keys():
         if ranking_type == TARANTULA:
-            statement_infor[id][TARANTULA_SCORE] = tarantula_calculation(statement_infor, id, total_failed_tests,
+            statement_infor[id][TARANTULA_SCORE] = tarantula_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
                                                                          total_passed_tests)
         elif ranking_type == OCHIAI:
-            statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor, id,
+            statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                                    total_failed_tests)
         elif ranking_type == OP2:
-            statement_infor[id][OP2_SCORE] = op2_calculation(statement_infor, id,
+            statement_infor[id][OP2_SCORE] = op2_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                              total_passed_tests)
         elif ranking_type == BARINEL:
-            statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor, id)
+            statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT])
         elif ranking_type == DSTAR:
-            statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor, id, total_failed_tests)
+            statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests)
     return statement_infor
 
 
-def tarantula_calculation(statement_infor, stm_id, total_failed_tests, total_passed_tests):
-    if total_failed_tests == 0 or total_passed_tests == 0:
-        return -1
-
-    if statement_infor[stm_id][FAILED_TEST_COUNT] == 0 and statement_infor[stm_id][PASSED_TEST_COUNT] == 0:
-        return -1
-
-    return (statement_infor[stm_id][FAILED_TEST_COUNT] / total_failed_tests) / \
-           ((statement_infor[stm_id][FAILED_TEST_COUNT] / total_failed_tests) +
-            (statement_infor[stm_id][PASSED_TEST_COUNT] / total_passed_tests))
-
-
-def ochiai_calculation(statement_infor, stm_id, total_failed_tests):
-    if total_failed_tests == 0:
-        return -1
-    if statement_infor[stm_id][FAILED_TEST_COUNT] == 0 and statement_infor[stm_id][PASSED_TEST_COUNT] == 0:
-        return -1
-    return statement_infor[stm_id][FAILED_TEST_COUNT] / math.sqrt(total_failed_tests * (
-                statement_infor[stm_id][FAILED_TEST_COUNT] + statement_infor[stm_id][PASSED_TEST_COUNT]))
-
-
-def op2_calculation(statement_infor, stm_id, total_passed_tests):
-    if total_passed_tests == 0:
-        return -1
-    return statement_infor[stm_id][FAILED_TEST_COUNT] - (statement_infor[stm_id][PASSED_TEST_COUNT]) / (
-                total_passed_tests + 1)
-
-
-def barinel_calculation(statement_infor, stm_id):
-    if statement_infor[stm_id][FAILED_TEST_COUNT] == 0 and statement_infor[stm_id][PASSED_TEST_COUNT] == 0:
-        return -1
-    return 1 - statement_infor[stm_id][PASSED_TEST_COUNT] / (
-                statement_infor[stm_id][PASSED_TEST_COUNT] + statement_infor[stm_id][FAILED_TEST_COUNT])
-
-
-def dstar_calculation(statement_infor, stm_id, total_failed_tests):
-    temp = statement_infor[stm_id][PASSED_TEST_COUNT] + (
-                total_failed_tests - statement_infor[stm_id][FAILED_TEST_COUNT])
-    if temp == 0:
-        return -1
-    return (statement_infor[stm_id][FAILED_TEST_COUNT] * statement_infor[stm_id][FAILED_TEST_COUNT]) / temp
-
-
-def spectrum_ranking(statement_infor, ranking_type):
-    start_time = time.time()
+def spectrum_ranking(statements_infor, ranking_type):
     spectrum_ranked_list = []
 
     score_type = ranking_type + "_score"
-    for (key, value) in statement_infor.items():
-        spectrum_ranked_list.append((key, statement_infor[key][score_type]))
+    for (key, value) in statements_infor.items():
+        spectrum_ranked_list.append((key, statements_infor[key][score_type]))
 
     for i in range(0, len(spectrum_ranked_list) - 1):
         for j in range(i + 1, len(spectrum_ranked_list)):
             if spectrum_ranked_list[i][1] < spectrum_ranked_list[j][1]:
                 spectrum_ranked_list[i], spectrum_ranked_list[j] = \
                     spectrum_ranked_list[j], spectrum_ranked_list[i]
-    ranking_time = time.time() - start_time
-    return spectrum_ranked_list, ranking_time
+
+    return spectrum_ranked_list
 
 
-def spc_spectrum_ranking(statement_infor, ranking_type):
+def spc_spectrum_ranking(statements_infor, ranking_type):
     spc_spectrum_ranked_list = []
-    score_type = ranking_type + "_score"
+    score_type = ranking_type + "_average"
 
-    for (key, value) in statement_infor.items():
-        if statement_infor[key][SUSPICIOUS]:
-            spc_spectrum_ranked_list.append((key, statement_infor[key][score_type]))
-
+    for (key, value) in statements_infor.items():
+        if statements_infor[key][SUSPICIOUS]:
+            spc_spectrum_ranked_list.append((key, statements_infor[key][score_type]))
+    print(spc_spectrum_ranked_list)
     for i in range(0, len(spc_spectrum_ranked_list) - 1):
         for j in range(i + 1, len(spc_spectrum_ranked_list)):
             if spc_spectrum_ranked_list[i][1] < spc_spectrum_ranked_list[j][1]:
@@ -218,34 +314,45 @@ def spc_spectrum_ranking(statement_infor, ranking_type):
 
     return spc_spectrum_ranked_list
 
+def spc_spectrum_ranking_by_layer(statements_infor, ranking_type):
+    spc_spectrum_ranked_list = []
+    score_type = ranking_type + "_average"
 
-def spc_interaction_spectrum_raking(statement_infor, ranking_type):
-    spc_interaction_spectrum_ranked_list = []
+    for (key, value) in statements_infor.items():
+        if statements_infor[key][SUSPICIOUS]:
+            spc_spectrum_ranked_list.append((key, statements_infor[key][score_type], statements_infor[key][PASSING_COUNT]))
 
-    score_type = ranking_type + "_score"
-
-    for (key, value) in statement_infor.items():
-        if statement_infor[key][SUSPICIOUS]:
-            spc_interaction_spectrum_ranked_list.append(
-                (key, statement_infor[key][score_type], statement_infor[key][NUM_INTERACTIONS]))
-
-    for i in range(0, len(spc_interaction_spectrum_ranked_list) - 1):
-        for j in range(i + 1, len(spc_interaction_spectrum_ranked_list)):
-            if spc_interaction_spectrum_ranked_list[i][1] < spc_interaction_spectrum_ranked_list[j][1]:
-
-                spc_interaction_spectrum_ranked_list[i], spc_interaction_spectrum_ranked_list[j] = \
-                    spc_interaction_spectrum_ranked_list[j], spc_interaction_spectrum_ranked_list[i]
-
-            elif (spc_interaction_spectrum_ranked_list[i][1] == spc_interaction_spectrum_ranked_list[j][1] and
-                  spc_interaction_spectrum_ranked_list[i][2] < spc_interaction_spectrum_ranked_list[j][2]):
-
-                spc_interaction_spectrum_ranked_list[i], spc_interaction_spectrum_ranked_list[j] = \
-                    spc_interaction_spectrum_ranked_list[j], spc_interaction_spectrum_ranked_list[i]
-
-    return spc_interaction_spectrum_ranked_list
-
+    for i in range(0, len(spc_spectrum_ranked_list) - 1):
+        for j in range(i + 1, len(spc_spectrum_ranked_list)):
+            if spc_spectrum_ranked_list[i][1] < spc_spectrum_ranked_list[j][1]:
+                spc_spectrum_ranked_list[i], spc_spectrum_ranked_list[j] = \
+                    spc_spectrum_ranked_list[j], spc_spectrum_ranked_list[i]
+            elif spc_spectrum_ranked_list[i][1] == spc_spectrum_ranked_list[j][1]:
+                if spc_spectrum_ranked_list[i][2] > spc_spectrum_ranked_list[j][2]:
+                    spc_spectrum_ranked_list[i], spc_spectrum_ranked_list[j] = \
+                        spc_spectrum_ranked_list[j], spc_spectrum_ranked_list[i]
+    return spc_spectrum_ranked_list
 
 def search_rank(stm, ranked_list):
-    for item in ranked_list:
-        if item[0] == stm:
-            return ranked_list.index(item) + 1
+    for i in range(0, len(ranked_list)):
+        if ranked_list[i][0] == stm:
+            j = i
+            while( j < len(ranked_list) - 1):
+               if ranked_list[j][1] == ranked_list[j + 1][1]:
+                   j += 1
+               else:
+                   break
+            return j + 1
+    return -1
+
+def search_rank_by_layer(stm, ranked_list):
+    for i in range(0, len(ranked_list)):
+        if ranked_list[i][0] == stm:
+            j = i
+            while( j < len(ranked_list) - 1):
+               if ranked_list[j][1] == ranked_list[j + 1][1] and ranked_list[j][2] == ranked_list[j + 1][2]:
+                   j += 1
+               else:
+                   break
+            return j + 1
+    return -1
