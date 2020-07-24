@@ -113,7 +113,7 @@ def ranking_with_coverage_rate(base_dir, project_name, filtering_coverage_rate, 
 
         spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
 
-        SlicingManager.do_slice(spc_log_file_path)
+        SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate)
         suspicious_stms_list = get_suspicious_statement(mutated_project_dir)
         buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
 
