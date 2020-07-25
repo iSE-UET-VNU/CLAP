@@ -89,7 +89,7 @@ def write_results_to_file(row, sheet, ranking_results):
     return row
 
 
-def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, ranking_types):
+def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, search_rank_type):
     sheet = []
     project_dir = get_project_dir(project_name, base_dir)
     row = 0
@@ -100,11 +100,11 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
     if not os.path.exists(project_result_dir):
         os.makedirs(project_result_dir)
     experiment_file_name = join_path(project_result_dir,
-                                     str(filtering_coverage_rate) + ".xlsx")
+                                     str(filtering_coverage_rate)+ "_" + search_rank_type + ".xlsx")
     wb = Workbook(experiment_file_name)
 
-    for i in range(0, len(ranking_types)):
-        sheet.append(wb.add_worksheet(ranking_types[i]))
+    for i in range(0, len(spectrum_expressions)):
+        sheet.append(wb.add_worksheet(spectrum_expressions[i]))
         write_header_in_result_file(row, sheet[i])
 
     row += 1
@@ -127,15 +127,13 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
         buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
 
         row_temp = row
-        for i in range(0, len(ranking_types)):
+        for i in range(0, len(spectrum_expressions)):
             ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                     suspicious_stms_list, ranking_types[i])
+                                                     suspicious_stms_list, spectrum_expressions[i], search_rank_type)
 
-            ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, ranking_types[i])
+            ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], search_rank_type)
             sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
             row = write_results_to_file(row_temp, sheet[i], ranking_results)
-
-
 
     # except:
     #   logging.info(" Exception in ranking %s", mutated_project_name)

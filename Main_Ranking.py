@@ -1,7 +1,7 @@
 import threading
 
 from ExperimentResultManager import ranking_with_coverage_rate
-from RankingManager import TARANTULA, OCHIAI, OP2, BARINEL, DSTAR
+from RankingManager import TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, WORST_CASE, BEST_CASE
 
 if __name__ == "__main__":
 
@@ -15,6 +15,6 @@ if __name__ == "__main__":
             #ranking_with_coverage_rate(base_dir, project_names[project_index], filtering_coverage_rate_list[coverage_index], [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR])
             ranking_with_coverage_rate(base_dir, system_name, project_names[project_index],
                                        filtering_coverage_rate_list[coverage_index],
-                                       [TARANTULA, OCHIAI])
+                                       [TARANTULA, OCHIAI], BEST_CASE)
 
 

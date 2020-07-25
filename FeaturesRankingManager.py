@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
     SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME
+from RankingManager import WORST_CASE
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2, OP2_SCORE, BARINEL, BARINEL_SCORE, DSTAR, \
@@ -16,7 +17,7 @@ STATEMENT_ID = "stm_id"
 VARIANTS_FAILED = "variants_failed"
 VARIANTS_PASSED = "variants_passed"
 
-def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, ranking_type):
+def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, spectrum_expression, rank_type):
     total_variants = 0
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     features_info = {}
@@ -28,30 +29,34 @@ def features_ranking(buggy_statement, mutated_project_dir, failling_variants, fi
 
     total_passes = total_variants - len(failling_variants)
     total_fails = len(failling_variants)
-    features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, ranking_type)
-    feature_rank, stm_rank = search_rank(buggy_statement, features_info, ranking_type)
+    features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
+    if rank_type == WORST_CASE:
+        feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)
+    else:
+        feature_rank, stm_rank = search_rank_best_case(buggy_statement, features_info, spectrum_expression)
+
     search_space = total_ranking_statements(features_info)
     return feature_rank, stm_rank, search_space
 
-def features_suspiciousness_calculation(features_info, total_passes, total_fails, ranking_type):
+def features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression):
     for id in features_info.keys():
-        if ranking_type == TARANTULA:
+        if spectrum_expression == TARANTULA:
             features_info[id][TARANTULA_SCORE] = tarantula_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
                                                                          total_fails,
                                                                          total_passes)
-        elif ranking_type == OCHIAI:
+        elif spectrum_expression == OCHIAI:
             features_info[id][OCHIAI_SCORE] = ochiai_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
                                                                          total_fails)
-        elif ranking_type == OP2:
+        elif spectrum_expression == OP2:
             features_info[id][OP2_SCORE] = op2_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
                                                                          total_passes)
-        elif ranking_type == BARINEL:
+        elif spectrum_expression == BARINEL:
             features_info[id][BARINEL_SCORE] = barinel_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]))
-        elif ranking_type == DSTAR:
+        elif spectrum_expression == DSTAR:
             features_info[id][DSTAR_SCORE] = dstar_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
                                                                          total_fails)
@@ -105,8 +110,8 @@ def read_coverage_info(variant, coverage_info, coverage_file, kind_of_test_count
     except:
         logging.info("Exception when parsing %s", coverage_file)
 
-def search_rank(buggy_stm, features_info, ranking_type):
-    ranking_score_type = ranking_type + "_score"
+def search_rank_worst_case(buggy_stm, features_info, spectrum_expression):
+    ranking_score_type = spectrum_expression + "_score"
     score = 0
     for feature in features_info:
         if buggy_stm in features_info[feature][STATEMENT_ID]:
@@ -120,6 +125,23 @@ def search_rank(buggy_stm, features_info, ranking_type):
             feature_rank += 1
             stm_rank += len(features_info[feature][STATEMENT_ID])
     return feature_rank, stm_rank
+
+def search_rank_best_case(buggy_stm, features_info, spectrum_expression):
+    ranking_score_type = spectrum_expression + "_score"
+    score = 0
+    for feature in features_info:
+        if buggy_stm in features_info[feature][STATEMENT_ID]:
+            score = features_info[feature][ranking_score_type]
+            break
+
+    feature_rank = 0
+    stm_rank = 0
+    for feature in features_info:
+        if features_info[feature][ranking_score_type] > score:
+            feature_rank += 1
+            stm_rank += len(features_info[feature][STATEMENT_ID])
+    return feature_rank + 1, stm_rank + 1
+
 
 def total_ranking_statements(features_info):
     stms = 0
