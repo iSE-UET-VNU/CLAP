@@ -29,7 +29,11 @@ SPECTRUM_SEARCH_SPACE = "spectrum_search_space"
 WORST_CASE = "worst_case"
 BEST_CASE = "best_case"
 
+buggy_stm = ""
+
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, rank_type):
+    global buggy_stm;
+    buggy_stm = buggy_statement
     overall_suspiciousness = {}
     for variant in suspicious_stms_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
@@ -108,6 +112,7 @@ def get_information_for_spectrum_ranking(mutated_project_dir):
 
 
 def read_coverage_info_for_spectrum(statement_infor, coverage_file, kind_of_test_count):
+    data = {}
     try:
         tree = ET.parse(coverage_file)
         root = tree.getroot()
@@ -117,12 +122,18 @@ def read_coverage_info_for_spectrum(statement_infor, coverage_file, kind_of_test
             for file in package:
                 for line in file:
                     id = line.get('featureClass') + "." + line.get('featureLineNum')
-                    if id not in statement_infor:
-                        statement_infor[id] = {}
-                        statement_infor[id][FAILED_TEST_COUNT] = 0
-                        statement_infor[id][PASSED_TEST_COUNT] = 0
-                    statement_infor[id][kind_of_test_count] = max(int(line.get('count')),
-                                                                  statement_infor[id][kind_of_test_count])
+                    if id not in data:
+                        data[id] = {}
+                        data[id][FAILED_TEST_COUNT] = 0
+                        data[id][PASSED_TEST_COUNT] = 0
+                    data[id][kind_of_test_count] = max(int(line.get('count')),
+                                                                  data[id][kind_of_test_count])
+
+        for id in data.keys():
+            if id not in statement_infor:
+                statement_infor[id] = data[id]
+            else:
+                statement_infor[id][kind_of_test_count] += data[id][kind_of_test_count]
         return statement_infor
     except:
         logging.info("Exception when parsing %s", coverage_file)
@@ -292,7 +303,9 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
         elif spectrum_expression == BARINEL:
             statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT])
         elif spectrum_expression == DSTAR:
+
             statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests)
+
     return statement_infor
 
 

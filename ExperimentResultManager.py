@@ -93,7 +93,8 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
     sheet = []
     project_dir = get_project_dir(project_name, base_dir)
     row = 0
-    system_result_dir = join_path(EXPERIMENT_RESULT_FOLDER, system)
+    search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, search_rank_type)
+    system_result_dir = join_path(search_rank_type_dir, system)
     if not os.path.exists(system_result_dir):
         os.makedirs(system_result_dir)
     project_result_dir = join_path(system_result_dir, project_name)
