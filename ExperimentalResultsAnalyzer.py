@@ -135,7 +135,7 @@ def calculate_average_in_a_file_and_write_to_console(experimental_file_dir, num_
                 excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
             print("spc_layer_average:", spc_layer_average)
 
-            spc_layer_exam = (spc_both_average / num_of_program_stms) * 100
+            spc_layer_exam = (spc_layer_average / num_of_program_stms) * 100
             print("spc_layer_exam:", spc_layer_exam)
 
             spc_space = calculate_average_value_of_a_list(
@@ -305,7 +305,7 @@ def summary_for_same_bugs(files_list, num_of_program_stms):
                 list(data[spectrum_expression_type][SPC_FAILING_ONLY_HEADER]))
             sheet.write(row, SPC_LAYER_COL, spc_layer_average)
 
-            spc_layer_exam = (spc_both_average / num_of_program_stms) * 100
+            spc_layer_exam = (spc_layer_average / num_of_program_stms) * 100
             sheet.write(row, SPC_LAYER_EXAM_COL, spc_layer_exam)
 
             spc_space = calculate_average_value_of_a_list(
