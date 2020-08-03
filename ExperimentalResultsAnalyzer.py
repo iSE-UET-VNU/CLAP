@@ -106,74 +106,6 @@ def calculate_average_value_of_a_list(value_list, condition_list):
         return 0
     return sum/count
 
-def calculate_average_in_a_file_and_write_to_console(experimental_file_dir, num_of_program_stms):
-    excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
-
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR]:
-        if(spectrum_expression_type == DSTAR):
-            num_of_bugs = num_of_detected_bug(excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("num_of_bugs:", num_of_bugs)
-
-            spc_failing_average = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("spc_failing_average:", spc_failing_average)
-
-            spc_failing_exam = (spc_failing_average / num_of_program_stms) * 100
-            print("spc_failing_exam", spc_failing_exam)
-
-
-            spc_both_average = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][SPC_BOTH_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-
-            spc_both_exam = (spc_both_average / num_of_program_stms) * 100
-            print("spc_both_exam:", spc_both_exam)
-
-            spc_layer_average = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][SPC_LAYER_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("spc_layer_average:", spc_layer_average)
-
-            spc_layer_exam = (spc_layer_average / num_of_program_stms) * 100
-            print("spc_layer_exam:", spc_layer_exam)
-
-            spc_space = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][SPC_SPACE_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("spc_space:", spc_space)
-
-
-            spectrum_average = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][SPECTRUM_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("spectrum_average:", spectrum_average)
-
-            spectrum_exam = (spectrum_average / num_of_program_stms) * 100
-            print("spectrum_exam:", spectrum_exam)
-
-            spectrum_space = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("spectrum_space:", spectrum_space)
-
-            feature_average = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][FEATURE_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("feature_average:", feature_average)
-
-            feature_stm_average = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][FEATURE_STM_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("feature_stm_average:", feature_stm_average)
-
-            feature_stm_exam = (feature_stm_average / num_of_program_stms) * 100
-            print("feature_stm_exam:", feature_stm_exam)
-
-            feature_space = calculate_average_value_of_a_list(
-                excel_data_df[spectrum_expression_type][FEATURE_SPACE_HEADER],
-                excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
-            print("feature_space:", feature_space)
 
 def calculate_average_in_a_file(experimental_file_dir, num_of_program_stms, row, sheet):
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
@@ -203,7 +135,7 @@ def calculate_average_in_a_file(experimental_file_dir, num_of_program_stms, row,
             excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
         sheet.write(row, SPC_LAYER_COL, spc_layer_average)
 
-        spc_layer_exam = (spc_both_average / num_of_program_stms) * 100
+        spc_layer_exam = (spc_layer_average / num_of_program_stms) * 100
         sheet.write(row, SPC_LAYER_EXAM_COL, spc_layer_exam)
 
         spc_space = calculate_average_value_of_a_list(

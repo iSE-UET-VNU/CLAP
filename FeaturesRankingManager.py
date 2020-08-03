@@ -9,7 +9,11 @@ from RankingManager import WORST_CASE
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2, OP2_SCORE, BARINEL, BARINEL_SCORE, DSTAR, \
-    DSTAR_SCORE
+    DSTAR_SCORE, RUSSELL_RAO, RUSSELL_RAO_SCORE, russell_rao_calculation, SIMPLE_MATCHING, simple_matching_calculation, \
+    ROGERS_TANIMOTO_SCORE, SIMPLE_MATCHING_SCORE, ROGERS_TANIMOTO, rogers_tanimoto_calculation, AMPLE, AMPLE_SCORE, \
+    ample_calculation, JACCARD_SCORE, JACCARD, jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, SCOTT, \
+    SCOTT_SCORE, scott_calculation, ROGOT1, ROGOT1_SCORE, rogot1_calculation, GEOMETRIC_MEAN, GEOMETRIC_MEAN_SCORE, \
+    geometric_mean_calculation, M2, M2_SCORE, m2_calculation
 
 from TestingCoverageManager import statement_coverage_of_variants
 
@@ -60,6 +64,40 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
             features_info[id][DSTAR_SCORE] = dstar_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
                                                                          total_fails)
+        elif spectrum_expression == DSTAR:
+            features_info[id][DSTAR_SCORE] = dstar_calculation(len(features_info[id][VARIANTS_FAILED]),
+                                                                         len(features_info[id][VARIANTS_PASSED]),
+                                                                         total_fails)
+        elif spectrum_expression == RUSSELL_RAO:
+            features_info[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(len(features_info[id][VARIANTS_FAILED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == SIMPLE_MATCHING:
+            features_info[id][SIMPLE_MATCHING_SCORE] = simple_matching_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == ROGERS_TANIMOTO:
+            features_info[id][ROGERS_TANIMOTO_SCORE] = rogers_tanimoto_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == AMPLE:
+            features_info[id][AMPLE_SCORE] = ample_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == JACCARD:
+            features_info[id][JACCARD_SCORE] = jaccard_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails)
+        elif spectrum_expression == COHEN:
+            features_info[id][COHEN_SCORE] = cohen_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == SCOTT:
+            features_info[id][SCOTT_SCORE] = scott_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == ROGOT1:
+            features_info[id][ROGOT1_SCORE] = rogot1_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == GEOMETRIC_MEAN:
+            features_info[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == M2:
+            features_info[id][M2_SCORE] = m2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
     return features_info
 
 def get_coverage_infor_of_variants(variant, variant_dir, failling_variants,  features_coverage_info):

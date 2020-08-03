@@ -11,7 +11,13 @@ from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_
 # keywords
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2_SCORE, OP2, BARINEL, BARINEL_SCORE, DSTAR, \
-    DSTAR_SCORE
+    DSTAR_SCORE, op2_modified_calculation, dstar_modified_calculation, RUSSELL_RAO, RUSSELL_RAO_SCORE, \
+    russell_rao_calculation, SIMPLE_MATCHING, simple_matching_calculation, ROGERS_TANIMOTO, SIMPLE_MATCHING_SCORE, \
+    ROGERS_TANIMOTO_SCORE, rogers_tanimoto_calculation, AMPLE_SCORE, AMPLE, ample_calculation, JACCARD, JACCARD_SCORE, \
+    jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, cohen_modified_calculation, SCOTT_SCORE, SCOTT, \
+    scott_calculation, scott_modified_calculation, ROGOT1_SCORE, ROGOT1, rogot1_calculation, \
+    rogot1_modified_calculation, GEOMETRIC_MEAN_SCORE, GEOMETRIC_MEAN, geometric_mean_calculation, M2, M2_SCORE, \
+    m2_calculation
 
 FAILED_TEST_COUNT = 'failed_test_count'
 PASSED_TEST_COUNT = 'passed_test_count'
@@ -29,11 +35,10 @@ SPECTRUM_SEARCH_SPACE = "spectrum_search_space"
 WORST_CASE = "worst_case"
 BEST_CASE = "best_case"
 
-buggy_stm = ""
+
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, rank_type):
-    global buggy_stm;
-    buggy_stm = buggy_statement
+
     overall_suspiciousness = {}
     for variant in suspicious_stms_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
@@ -65,7 +70,7 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
 
     #spectrum ranking only
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_information_for_spectrum_ranking(mutated_project_dir)
-    stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests, spectrum_expression)
+    stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests, spectrum_expression, SPC = 0)
     spectrum_ranked_list = spectrum_ranking(stm_info_for_spectrum, spectrum_expression)
     if rank_type == WORST_CASE:
         buggy_stm_spectrum_ranked = search_rank_worst_case(buggy_statement, spectrum_ranked_list)
@@ -243,7 +248,7 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
 
     (total_failed_tests, total_passed_tests) = count_tests(test_coverage_dir)
 
-    statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression)
+    statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression, SPC = 1)
 
     return statement_infor
 
@@ -289,7 +294,7 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
         logging.info("Exception when parsing %s", coverage_file)
 
 
-def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression):
+def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression, SPC):
     for id in statement_infor.keys():
         if spectrum_expression == TARANTULA:
             statement_infor[id][TARANTULA_SCORE] = tarantula_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
@@ -297,15 +302,68 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
         elif spectrum_expression == OCHIAI:
             statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                                    total_failed_tests)
-        elif spectrum_expression == OP2:
+        elif spectrum_expression == OP2 and SPC == 1:
+            statement_infor[id][OP2_SCORE] = op2_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                             statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
+                                                             total_passed_tests)
+        elif spectrum_expression == OP2 and SPC == 0:
             statement_infor[id][OP2_SCORE] = op2_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                              total_passed_tests)
         elif spectrum_expression == BARINEL:
             statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT])
-        elif spectrum_expression == DSTAR:
+        elif spectrum_expression == DSTAR and SPC == 1:
+            statement_infor[id][DSTAR_SCORE] = dstar_modified_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests)
 
-            statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests)
-
+        elif spectrum_expression == DSTAR and SPC == 0:
+            statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                          statement_infor[id][PASSED_TEST_COUNT],
+                                                                          total_failed_tests)
+        elif spectrum_expression == RUSSELL_RAO:
+            statement_infor[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == SIMPLE_MATCHING:
+            statement_infor[id][SIMPLE_MATCHING_SCORE] = simple_matching_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ROGERS_TANIMOTO:
+            statement_infor[id][ROGERS_TANIMOTO_SCORE] = rogers_tanimoto_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == AMPLE:
+            statement_infor[id][AMPLE_SCORE] = ample_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == JACCARD:
+            statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                 statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests)
+        elif spectrum_expression == COHEN and SPC == 0:
+            statement_infor[id][COHEN_SCORE] = cohen_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == COHEN and SPC == 1:
+            statement_infor[id][COHEN_SCORE] = cohen_modified_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == SCOTT and SPC == 0:
+            statement_infor[id][SCOTT_SCORE] = scott_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                 statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == SCOTT and SPC == 1:
+            statement_infor[id][SCOTT_SCORE] = scott_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                          statement_infor[id][PASSED_TEST_COUNT],
+                                                                          total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ROGOT1 and SPC == 0:
+            statement_infor[id][ROGOT1_SCORE] = rogot1_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                 statement_infor[id][PASSED_TEST_COUNT],
+                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ROGOT1 and SPC == 1:
+            statement_infor[id][ROGOT1_SCORE] = rogot1_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                          statement_infor[id][PASSED_TEST_COUNT],
+                                                                          total_failed_tests, total_passed_tests)
+        elif spectrum_expression == GEOMETRIC_MEAN:
+            statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == M2:
+            statement_infor[id][M2_SCORE] = m2_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                          statement_infor[id][PASSED_TEST_COUNT],
+                                                                          total_failed_tests, total_passed_tests)
     return statement_infor
 
 
