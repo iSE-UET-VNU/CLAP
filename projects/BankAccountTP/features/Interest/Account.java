@@ -5,11 +5,8 @@ class Account {
 
 	int interest = 0;
 
-	/*@
-	  @ ensures (balance >= 0 ==> \result >= 0) 
-	  @   && (balance <= 0 ==> \result <= 0);
-	  @*/
-	/*@ pure @*/ int calculateInterest() {
+
+	int calculateInterest() {
 		return balance * INTEREST_RATE / 36500;
 	}
 
