@@ -122,8 +122,8 @@ def combine_spc_with_feature_names(feature_names, current_SPC):
         current_feature_name = feature_names[feature_position]
         if fs is True:
             new_SPC[current_feature_name] = fs
-        # else:
-        #     new_SPC["_" + current_feature_name] = fs
+        else:
+            new_SPC["#" + current_feature_name] = fs
     return ",".join(new_SPC.keys())
 
 
