@@ -81,7 +81,7 @@ def op2_modified_calculation(fails, passes, total_failed_tests, total_passed_tes
         return 0
     elif fails == 0:
         return 0
-    return fails/total_failed_tests - passes / (total_passed_tests + 1)
+    return (fails - passes / (total_passed_tests + 1))/total_failed_tests
 
 
 def barinel_calculation(fails, passes):
