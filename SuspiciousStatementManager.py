@@ -50,7 +50,8 @@ def read_coverage_file(mutated_project_dir):
                     for file in package:
                         for line in file:
                             id = line.get('featureClass') + "." + line.get('featureLineNum')
-                            if id not in data[variant] and int(line.get('count') != 0):
+                            if id not in data[variant] and int(line.get('count')) != 0:
+                               
                                 data[variant].append(id)
             except:
                 logging.info("Exception when parsing %s", coverage_file)
