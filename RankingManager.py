@@ -247,7 +247,6 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
                                                                   PASSED_TEST_COUNT, suspicious_stms_list)
 
     (total_failed_tests, total_passed_tests) = count_tests(test_coverage_dir)
-
     statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression, SPC = 1)
 
     return statement_infor
@@ -356,10 +355,17 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][ROGOT1_SCORE] = rogot1_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                           statement_infor[id][PASSED_TEST_COUNT],
                                                                           total_failed_tests, total_passed_tests)
-        elif spectrum_expression == GEOMETRIC_MEAN:
+        elif spectrum_expression == GEOMETRIC_MEAN and SPC == 0:
+
             statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
                                                                      total_failed_tests, total_passed_tests)
+        elif spectrum_expression == GEOMETRIC_MEAN and SPC == 1:
+
+            statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+
         elif spectrum_expression == M2:
             statement_infor[id][M2_SCORE] = m2_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                           statement_infor[id][PASSED_TEST_COUNT],

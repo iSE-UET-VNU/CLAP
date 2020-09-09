@@ -201,7 +201,7 @@ def rogot1_modified_calculation(fails, passes, total_failed_tests, total_passes_
 
 def geometric_mean_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp = (fails+passes)*(total_failed_tests-fails + total_passes_tests - passes)*total_failed_tests*total_passes_tests
-    if temp == 0:
+    if temp <= 0:
         return 0
     else:
         return (fails*(total_passes_tests-passes) - (total_failed_tests-fails)*passes) / math.sqrt(temp)

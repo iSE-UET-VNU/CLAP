@@ -7,9 +7,9 @@ from Spectrum_Expression import RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, A
 
 if __name__ == "__main__":
 
-    base_dir = "/Users/thu-trangnguyen/Documents/Research/configurable_system/Experiment/projects/Elevator_Test"
-    system_name = "Elevator_Test"
-    project_names = ["4wise"]
+    base_dir = "/home/huent/Documents/Trang/GPL"
+    system_name = "GPL"
+    project_names = ["1wise", "2wise",  "3wise", "4wise"]
 
     filtering_coverage_rate_list = [0.5, 0.8, 0.95]
     for coverage_index in range(0, len(filtering_coverage_rate_list)):
