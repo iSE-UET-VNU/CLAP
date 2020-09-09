@@ -36,8 +36,18 @@ WORST_CASE = "worst_case"
 BEST_CASE = "best_case"
 
 
+def suspicious_stms_of_the_system(suspicious_stms_list):
+    stm_set = []
+    for variant in suspicious_stms_list:
+        for stm in suspicious_stms_list[variant]:
+            if stm not in stm_set:
+                stm_set.append(stm)
+    return len(stm_set)
+
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, rank_type):
+
+    num_suspicious_stm = suspicious_stms_of_the_system(suspicious_stms_list)
 
     overall_suspiciousness = {}
     for variant in suspicious_stms_list:
@@ -80,7 +90,7 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
     ranking_results = { RANKING_SPC_F: buggy_stm_spc_spectrum_ranked1,
                         RANKING_SPC_F_P: buggy_stm_spc_spectrum_ranked2,
                         RANKING_SPC_LAYER: buggy_stm_spc_spectrum_ranked_by_layer,
-                        SPC_SEARCH_SPACE: len(spc_spectrum_ranked_list),
+                        SPC_SEARCH_SPACE: num_suspicious_stm,
                         RANKING_SPECTRUM: buggy_stm_spectrum_ranked,
                         SPECTRUM_SEARCH_SPACE: len(spectrum_ranked_list)
                        }
