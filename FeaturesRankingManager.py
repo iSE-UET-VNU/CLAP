@@ -13,7 +13,8 @@ from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_c
     ROGERS_TANIMOTO_SCORE, SIMPLE_MATCHING_SCORE, ROGERS_TANIMOTO, rogers_tanimoto_calculation, AMPLE, AMPLE_SCORE, \
     ample_calculation, JACCARD_SCORE, JACCARD, jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, SCOTT, \
     SCOTT_SCORE, scott_calculation, ROGOT1, ROGOT1_SCORE, rogot1_calculation, GEOMETRIC_MEAN, GEOMETRIC_MEAN_SCORE, \
-    geometric_mean_calculation, M2, M2_SCORE, m2_calculation
+    geometric_mean_calculation, M2, M2_SCORE, m2_calculation, SOKAL_SCORE, SOKAL, WONG1_SCORE, WONG1, wong1_calculation, \
+    sokal_calculation
 
 from TestingCoverageManager import statement_coverage_of_variants
 
@@ -97,6 +98,11 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
                                                                  total_fails, total_passes)
         elif spectrum_expression == M2:
             features_info[id][M2_SCORE] = m2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == WONG1:
+            features_info[id][WONG1_SCORE] = wong1_calculation(len(features_info[id][VARIANTS_FAILED]))
+        elif spectrum_expression == SOKAL:
+            features_info[id][SOKAL_SCORE] = sokal_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
     return features_info
 

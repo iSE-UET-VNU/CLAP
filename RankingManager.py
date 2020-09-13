@@ -14,10 +14,11 @@ from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_c
     DSTAR_SCORE, op2_modified_calculation, dstar_modified_calculation, RUSSELL_RAO, RUSSELL_RAO_SCORE, \
     russell_rao_calculation, SIMPLE_MATCHING, simple_matching_calculation, ROGERS_TANIMOTO, SIMPLE_MATCHING_SCORE, \
     ROGERS_TANIMOTO_SCORE, rogers_tanimoto_calculation, AMPLE_SCORE, AMPLE, ample_calculation, JACCARD, JACCARD_SCORE, \
-    jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, cohen_modified_calculation, SCOTT_SCORE, SCOTT, \
-    scott_calculation, scott_modified_calculation, ROGOT1_SCORE, ROGOT1, rogot1_calculation, \
-    rogot1_modified_calculation, GEOMETRIC_MEAN_SCORE, GEOMETRIC_MEAN, geometric_mean_calculation, M2, M2_SCORE, \
-    m2_calculation
+    jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, SCOTT_SCORE, SCOTT, \
+    scott_calculation, ROGOT1_SCORE, ROGOT1, rogot1_calculation, GEOMETRIC_MEAN_SCORE, GEOMETRIC_MEAN, \
+    geometric_mean_calculation, M2, M2_SCORE, \
+    m2_calculation, WONG1, wong1_calculation, WONG1_SCORE, SOKAL_SCORE, SOKAL, sokal_calculation, \
+    wong1_modified_calculation
 
 FAILED_TEST_COUNT = 'failed_test_count'
 PASSED_TEST_COUNT = 'passed_test_count'
@@ -343,34 +344,29 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests)
-        elif spectrum_expression == COHEN and SPC == 0:
+        elif spectrum_expression == COHEN:
             statement_infor[id][COHEN_SCORE] = cohen_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-        elif spectrum_expression == COHEN and SPC == 1:
-            statement_infor[id][COHEN_SCORE] = cohen_modified_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == SCOTT and SPC == 0:
+        #elif spectrum_expression == COHEN and SPC == 1:
+        #   statement_infor[id][COHEN_SCORE] = cohen_modified_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+        #                                                         total_failed_tests, total_passed_tests)
+        elif spectrum_expression == SCOTT:
             statement_infor[id][SCOTT_SCORE] = scott_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-        elif spectrum_expression == SCOTT and SPC == 1:
-            statement_infor[id][SCOTT_SCORE] = scott_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                          statement_infor[id][PASSED_TEST_COUNT],
-                                                                          total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ROGOT1 and SPC == 0:
+        #elif spectrum_expression == SCOTT and SPC == 1:
+        #    statement_infor[id][SCOTT_SCORE] = scott_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
+         #                                                                 statement_infor[id][PASSED_TEST_COUNT],
+         #                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ROGOT1:
             statement_infor[id][ROGOT1_SCORE] = rogot1_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ROGOT1 and SPC == 1:
-            statement_infor[id][ROGOT1_SCORE] = rogot1_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                          statement_infor[id][PASSED_TEST_COUNT],
-                                                                          total_failed_tests, total_passed_tests)
-        elif spectrum_expression == GEOMETRIC_MEAN and SPC == 0:
-
-            statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                     statement_infor[id][PASSED_TEST_COUNT],
-                                                                     total_failed_tests, total_passed_tests)
-        elif spectrum_expression == GEOMETRIC_MEAN and SPC == 1:
+        #elif spectrum_expression == ROGOT1 and SPC == 1:
+        #    statement_infor[id][ROGOT1_SCORE] = rogot1_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
+         #                                                                 statement_infor[id][PASSED_TEST_COUNT],
+         #                                                                 total_failed_tests, total_passed_tests)
+        elif spectrum_expression == GEOMETRIC_MEAN:
 
             statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
@@ -380,6 +376,14 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][M2_SCORE] = m2_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                           statement_infor[id][PASSED_TEST_COUNT],
                                                                           total_failed_tests, total_passed_tests)
+        elif spectrum_expression == WONG1 and SPC == 0:
+            statement_infor[id][WONG1_SCORE] = wong1_calculation(statement_infor[id][FAILED_TEST_COUNT])
+        elif spectrum_expression == WONG1 and SPC == 1:
+            statement_infor[id][WONG1_SCORE] = wong1_modified_calculation(statement_infor[id][FAILED_TEST_COUNT], total_failed_tests)
+        elif spectrum_expression == SOKAL:
+            statement_infor[id][SOKAL_SCORE] = sokal_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
     return statement_infor
 
 
