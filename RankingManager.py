@@ -48,6 +48,9 @@ def suspicious_stms_of_the_system(suspicious_stms_list):
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, rank_type):
 
+    #without isolation
+    suspicious_stms_list = get_all_stms_of_the_system(mutated_project_dir)
+
     num_suspicious_stm = suspicious_stms_of_the_system(suspicious_stms_list)
 
     overall_suspiciousness = {}
@@ -97,6 +100,37 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
                        }
 
     return ranking_results
+
+def get_all_stms_of_the_system(mutated_project_dir):
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variants_list = os.listdir(variants_dir)
+    stm_list = {}
+    for variant in variants_list:
+        variant_dir = get_variant_dir(mutated_project_dir, variant)
+        test_coverage_dir = get_test_coverage_dir(variant_dir)
+        coverage_files = []
+        coverage_files.append(join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME))
+        coverage_files.append(join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME))
+
+        for file in coverage_files:
+            if os.path.isfile(file):
+                data = {}
+                try:
+                    tree = ET.parse(file)
+                    root = tree.getroot()
+                    project = root.find("project")
+
+                    for package in project:
+                        for file in package:
+                            for line in file:
+                                id = line.get('featureClass') + "." + line.get('featureLineNum')
+                                if id not in data:
+                                    data[id] = {'num_interactions': 0}
+                except:
+                    logging.info("Exception when parsing %s", file)
+                stm_list[variant] = data
+
+    return stm_list
 
 def get_information_for_spectrum_ranking(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
@@ -347,25 +381,15 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
         elif spectrum_expression == COHEN:
             statement_infor[id][COHEN_SCORE] = cohen_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-        #elif spectrum_expression == COHEN and SPC == 1:
-        #   statement_infor[id][COHEN_SCORE] = cohen_modified_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
-        #                                                         total_failed_tests, total_passed_tests)
+
         elif spectrum_expression == SCOTT:
             statement_infor[id][SCOTT_SCORE] = scott_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-        #elif spectrum_expression == SCOTT and SPC == 1:
-        #    statement_infor[id][SCOTT_SCORE] = scott_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
-         #                                                                 statement_infor[id][PASSED_TEST_COUNT],
-         #                                                                 total_failed_tests, total_passed_tests)
         elif spectrum_expression == ROGOT1:
             statement_infor[id][ROGOT1_SCORE] = rogot1_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-        #elif spectrum_expression == ROGOT1 and SPC == 1:
-        #    statement_infor[id][ROGOT1_SCORE] = rogot1_modified_calculation(statement_infor[id][FAILED_TEST_COUNT],
-         #                                                                 statement_infor[id][PASSED_TEST_COUNT],
-         #                                                                 total_failed_tests, total_passed_tests)
         elif spectrum_expression == GEOMETRIC_MEAN:
 
             statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
