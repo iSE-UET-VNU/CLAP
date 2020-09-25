@@ -5,7 +5,8 @@ from ExperimentResultManager import SPC_FAILING_ONLY_HEADER, SPC_BOTH_HEADER, SP
     SPECTRUM_HEADER, SPECTRUM_SPACE_HEADER, FEATURE_HEADER, FEATURE_STM_HEADER, FEATURE_SPACE_HEADER, \
     MUTATED_PROJECT_HEADER
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
-from Spectrum_Expression import TARANTULA, OCHIAI, OP2, BARINEL, DSTAR
+from Spectrum_Expression import TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, \
+    AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL
 from xlsxwriter import Workbook
 
 SYSTEM_COL_HEADER = "SYSTEM"
@@ -110,7 +111,7 @@ def calculate_average_value_of_a_list(value_list, condition_list):
 def calculate_average_in_a_file(experimental_file_dir, num_of_program_stms, row, sheet):
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
 
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR]:
+    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL]:
         num_of_bugs = num_of_detected_bug(excel_data_df[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
         sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
 
@@ -192,13 +193,13 @@ def summary_for_same_bugs(files_list, num_of_program_stms):
         excel_data = pandas.read_excel(files_list[file], sheet_name=None)
         overall_info[file] = excel_data
 
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR]:
+    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL]:
         for file in overall_info.keys():
             data = overall_info[file]
             data[spectrum_expression_type] = data[spectrum_expression_type][data[spectrum_expression_type][SPC_FAILING_ONLY_HEADER] != -1]
             overall_info[file] = data
 
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR]:
+    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL]:
         for file in overall_info.keys():
             data = overall_info[file]
             for bug in data[spectrum_expression_type][MUTATED_PROJECT_HEADER]:
@@ -212,7 +213,7 @@ def summary_for_same_bugs(files_list, num_of_program_stms):
     for file in overall_info.keys():
         sheet.write(row, K_WISE_COL, file)
         data = overall_info[file]
-        for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR]:
+        for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2]:
             num_of_bugs = num_of_detected_bug(data[spectrum_expression_type][SPC_FAILING_ONLY_HEADER])
             sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
 

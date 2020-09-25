@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
     SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME
-from RankingManager import WORST_CASE
+
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2, OP2_SCORE, BARINEL, BARINEL_SCORE, DSTAR, \
@@ -22,7 +22,7 @@ STATEMENT_ID = "stm_id"
 VARIANTS_FAILED = "variants_failed"
 VARIANTS_PASSED = "variants_passed"
 
-def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, spectrum_expression, rank_type):
+def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, spectrum_expression):
     total_variants = 0
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     features_info = {}
@@ -35,10 +35,9 @@ def features_ranking(buggy_statement, mutated_project_dir, failling_variants, fi
     total_passes = total_variants - len(failling_variants)
     total_fails = len(failling_variants)
     features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
-    if rank_type == WORST_CASE:
-        feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)
-    else:
-        feature_rank, stm_rank = search_rank_best_case(buggy_statement, features_info, spectrum_expression)
+
+    feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)
+
 
     search_space = total_ranking_statements(features_info)
     return feature_rank, stm_rank, search_space
