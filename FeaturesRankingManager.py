@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
     SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME
-from RankingManager import WORST_CASE
+
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2, OP2_SCORE, BARINEL, BARINEL_SCORE, DSTAR, \
@@ -13,7 +13,8 @@ from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_c
     ROGERS_TANIMOTO_SCORE, SIMPLE_MATCHING_SCORE, ROGERS_TANIMOTO, rogers_tanimoto_calculation, AMPLE, AMPLE_SCORE, \
     ample_calculation, JACCARD_SCORE, JACCARD, jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, SCOTT, \
     SCOTT_SCORE, scott_calculation, ROGOT1, ROGOT1_SCORE, rogot1_calculation, GEOMETRIC_MEAN, GEOMETRIC_MEAN_SCORE, \
-    geometric_mean_calculation, M2, M2_SCORE, m2_calculation
+    geometric_mean_calculation, M2, M2_SCORE, m2_calculation, SOKAL_SCORE, SOKAL, WONG1_SCORE, WONG1, wong1_calculation, \
+    sokal_calculation
 
 from TestingCoverageManager import statement_coverage_of_variants
 
@@ -21,7 +22,7 @@ STATEMENT_ID = "stm_id"
 VARIANTS_FAILED = "variants_failed"
 VARIANTS_PASSED = "variants_passed"
 
-def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, spectrum_expression, rank_type):
+def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, spectrum_expression):
     total_variants = 0
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     features_info = {}
@@ -34,10 +35,9 @@ def features_ranking(buggy_statement, mutated_project_dir, failling_variants, fi
     total_passes = total_variants - len(failling_variants)
     total_fails = len(failling_variants)
     features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
-    if rank_type == WORST_CASE:
-        feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)
-    else:
-        feature_rank, stm_rank = search_rank_best_case(buggy_statement, features_info, spectrum_expression)
+
+    feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)
+
 
     search_space = total_ranking_statements(features_info)
     return feature_rank, stm_rank, search_space
@@ -97,6 +97,11 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
                                                                  total_fails, total_passes)
         elif spectrum_expression == M2:
             features_info[id][M2_SCORE] = m2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == WONG1:
+            features_info[id][WONG1_SCORE] = wong1_calculation(len(features_info[id][VARIANTS_FAILED]))
+        elif spectrum_expression == SOKAL:
+            features_info[id][SOKAL_SCORE] = sokal_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
     return features_info
 

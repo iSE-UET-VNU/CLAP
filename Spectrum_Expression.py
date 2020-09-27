@@ -16,7 +16,8 @@ SCOTT = "scott"
 ROGOT1 = "rogot1"
 GEOMETRIC_MEAN = "geometric_mean"
 M2 = "m2"
-
+WONG1 = "wong1"
+SOKAL = "sokal"
 
 
 TARANTULA_SCORE = "tarantula_score"
@@ -49,6 +50,10 @@ GEOMETRIC_MEAN_SCORE = "geometric_mean_score"
 GEOMETRIC_MEAN_AVERAGE = "geometric_mean_average"
 M2_SCORE = "m2_score"
 M2_AVERAGE = "m2_average"
+WONG1_SCORE = "wong1_score"
+WONG1_AVERAGE = "wong1_average"
+SOKAL_SCORE = "sokal_score"
+SOKAL_AVERAGE = "sokal_average"
 
 
 def tarantula_calculation(fails, passes, total_failed_tests, total_passed_tests):
@@ -79,8 +84,8 @@ def op2_calculation(fails, passes, total_passed_tests):
 def op2_modified_calculation(fails, passes, total_failed_tests, total_passed_tests):
     if total_failed_tests == 0:
         return 0
-    elif fails == 0:
-        return 0
+    #elif fails == 0:
+    #   return 0
     return (fails - passes / (total_passed_tests + 1))/total_failed_tests
 
 
@@ -102,15 +107,10 @@ def dstar_modified_calculation(fails, passes, total_failed_tests):
     temp =  passes + (total_failed_tests - fails)
     if fails == 0:
         return 0
-    elif total_failed_tests == fails:
-        return 1
-    suspiciousness =  (fails * fails) / (temp * temp)
-    if suspiciousness > 1:
-        return 1
-    else:
-        return suspiciousness
+    elif temp == 0:
+        return 1000
+    return ((fails * fails) / (total_failed_tests * total_failed_tests))/temp
 
-#new
 def russell_rao_calculation(fails, total_failed_tests, total_passes_tests):
     if total_failed_tests + total_passes_tests == 0:
         return 0
@@ -151,14 +151,14 @@ def cohen_calculation(fails, passes, total_failed_tests, total_passed_tests):
     else:
         return (2*fails*(total_passed_tests-passes) - 2*(total_failed_tests - fails)*passes)/temp
 
-def cohen_modified_calculation(fails, passes, total_failed_tests, total_passed_tests):
-    temp = (fails + passes)*(total_passed_tests) + total_failed_tests*(total_failed_tests-fails+total_passed_tests-passes)
-    if temp == 0:
-        return 0
-    elif 2*fails*(total_passed_tests-passes) - 2*(total_failed_tests - fails)*passes < 0:
-        return 0
-    else:
-        return (2*fails*(total_passed_tests-passes) - 2*(total_failed_tests - fails)*passes)/temp
+#def cohen_modified_calculation(fails, passes, total_failed_tests, total_passed_tests):
+#    temp = (fails + passes)*(total_passed_tests) + total_failed_tests*(total_failed_tests-fails+total_passed_tests-passes)
+#    if temp == 0:
+#        return 0
+#    elif 2*fails*(total_passed_tests-passes) - 2*(total_failed_tests - fails)*passes < 0:
+#        return 0
+#    else:
+#        return (2*fails*(total_passed_tests-passes) - 2*(total_failed_tests - fails)*passes)/temp
 
 def scott_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp = (2*fails + total_failed_tests - fails + passes) * (2*(total_passes_tests - passes) + total_failed_tests - fails + passes)
@@ -167,15 +167,15 @@ def scott_calculation(fails, passes, total_failed_tests, total_passes_tests):
     else:
         return (4*fails*(total_passes_tests-passes) - 4*(total_failed_tests-fails)*passes - (total_failed_tests - fails - passes)* (total_failed_tests - fails - passes))/temp
 
-def scott_modified_calculation(fails, passes, total_failed_tests, total_passes_tests):
-    temp1 = 4*fails*(total_passes_tests-passes) - 4*(total_failed_tests-fails)*passes - (total_failed_tests - fails - passes)* (total_failed_tests - fails - passes)
-    temp2 = (2*fails + total_failed_tests - fails + passes) * (2*(total_passes_tests - passes) + total_failed_tests - fails + passes)
-    if temp2 == 0:
-        return 0
-    elif temp1 < 0:
-        return 0
-    else:
-        return temp1/temp2
+#def scott_modified_calculation(fails, passes, total_failed_tests, total_passes_tests):
+#    temp1 = 4*fails*(total_passes_tests-passes) - 4*(total_failed_tests-fails)*passes - (total_failed_tests - fails - passes)* (total_failed_tests - fails - passes)
+#    temp2 = (2*fails + total_failed_tests - fails + passes) * (2*(total_passes_tests - passes) + total_failed_tests - fails + passes)
+#    if temp2 == 0:
+#        return 0
+#    elif temp1 < 0:
+#        return 0
+#    else:
+#        return temp1/temp2
 
 def rogot1_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp1 = 2*fails + total_failed_tests - fails + passes
@@ -188,20 +188,20 @@ def rogot1_calculation(fails, passes, total_failed_tests, total_passes_tests):
     else:
         return (fails/temp1 + (total_passes_tests-passes)/temp2)/2
 
-def rogot1_modified_calculation(fails, passes, total_failed_tests, total_passes_tests):
-    temp1 = 2*fails + total_failed_tests - fails + passes
-    temp2 = 2*(total_passes_tests-passes) + total_failed_tests - fails + passes
+#def rogot1_modified_calculation(fails, passes, total_failed_tests, total_passes_tests):
+#    temp1 = 2*fails + total_failed_tests - fails + passes
+#    temp2 = 2*(total_passes_tests-passes) + total_failed_tests - fails + passes
 
-    if temp1 == 0:
-        return 0
-    if temp1 != 0 and temp2 == 0:
-        return fails/(2*temp1)
-    else:
-        return (fails/temp1 + (total_passes_tests-passes)/temp2)
+#    if temp1 == 0:
+#        return 0
+#    if temp1 != 0 and temp2 == 0:
+#        return fails/(2*temp1)
+#    else:
+#        return (fails/temp1 + (total_passes_tests-passes)/temp2)
 
 def geometric_mean_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp = (fails+passes)*(total_failed_tests-fails + total_passes_tests - passes)*total_failed_tests*total_passes_tests
-    if temp == 0:
+    if temp <= 0:
         return 0
     else:
         return (fails*(total_passes_tests-passes) - (total_failed_tests-fails)*passes) / math.sqrt(temp)
@@ -212,3 +212,23 @@ def m2_calculation(fails, passes, total_failed_tests, total_passes_tests):
         return 0
     else:
         return fails/temp
+
+def  wong1_calculation(fails):
+    return fails
+
+def wong1_modified_calculation(fails, total_failed_tests):
+    if total_failed_tests == 0:
+        return 0
+    else:
+        return fails/total_failed_tests
+
+def sokal_calculation(fails, passes, total_failed_tests, total_passes_tests):
+    temp = 2*(fails + total_passes_tests - passes) + (total_failed_tests - fails) + passes
+    if temp == 0:
+        return 0
+    else:
+        return 2*(fails + total_passes_tests - passes)/temp
+
+
+
+
