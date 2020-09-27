@@ -4,6 +4,7 @@ from FileManager import get_project_dir
 from Helpers import get_version_by_time
 
 if __name__ == "__main__":
+    # version = "20200928_011024"
     version = get_version_by_time()
     base_dir = "/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/InputPreparation/projects/"
     project_name = "Elevator-FH-JML"
