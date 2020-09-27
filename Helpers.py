@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 import subprocess
@@ -26,6 +27,14 @@ def hash_md5(input_str):
 
 def get_current_timestamp():
     return round(time.time())
+
+
+def get_current_timestamp():
+    return round(time.time())
+
+
+def get_version_by_time():
+    return datetime.datetime.today().strftime('%Y%m%d_%H%M%S')
 
 
 def find_plugin_name(command):
