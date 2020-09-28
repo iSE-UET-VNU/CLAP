@@ -113,6 +113,11 @@ def get_variants_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
 
 
+def get_all_variants_dirs(project_dir):
+    variants_dir = get_variants_dir(project_dir)
+    return list_dir(variants_dir, full_path=True)
+
+
 def get_spc_log_file_path(project_dir, filtering_coverage_rate):
     return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(filtering_coverage_rate * 100)))
 
@@ -172,6 +177,20 @@ def get_implemented_features(project_dir):
     features_dir = get_feature_source_code_dir(project_dir)
     implemented_features = list_dir(features_dir)
     return implemented_features
+
+
+def get_passed_spectrum_coverage_file_path_with_version(variant_dir, version=""):
+    return get_spectrum_coverage_file_path_with_version(variant_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME, version)
+
+
+def get_failed_spectrum_coverage_file_path_with_version(variant_dir, version=""):
+    return get_spectrum_coverage_file_path_with_version(variant_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, version)
+
+
+def get_spectrum_coverage_file_path_with_version(variant_dir, original_coverage_file_name, version=""):
+    if version:
+        version = version + "__"
+    return join_path(get_test_coverage_dir(variant_dir), version + original_coverage_file_name)
 
 
 def is_project_locked(project_dir):
