@@ -23,15 +23,15 @@ SUSPICIOUS = 'suspicious'
 COUNT = "count"
 PASSING_COUNT = "passing_count"
 
-RANKING_SPC_F = "spc_spectrum_failing_only"
-RANKING_SPC_LAYER = "spc_spectrum_layer"
-SPC_SEARCH_SPACE = "spc_search_space"
-RANKING_SPECTRUM = "spectrum"
+VARCOP_SPC_FAILING = "spc_spectrum_failing_only"
+VARCOP_SPC_LAYER = "spc_spectrum_layer"
+VARCOP_SPC_SEARCH_SPACE = "spc_search_space"
+SPECTRUM = "spectrum"
 SPECTRUM_SEARCH_SPACE = "spectrum_search_space"
 
-WITHOUT_ISOLATION_F = "WITHOUT_ISOLATION_F"
-WITHOUT_ISOLATION_LAYER = "WITHOUT_ISOLATION_LAYER"
-WITHOUT_ISOLATION_SPACE = "WITHOUT_ISOLATION_SPACE"
+VARCOP_FAILING = "WITHOUT_ISOLATION_F"
+VARCOP_LAYER = "WITHOUT_ISOLATION_LAYER"
+VARCOP_SEARCH_SPACE = "WITHOUT_ISOLATION_SPACE"
 
 def suspicious_stms_of_the_system(suspicious_stms_list):
     stm_set = []
@@ -81,13 +81,13 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
     #spectrum ranking only
     buggy_stm_spectrum_ranked, spectrum_space = rank_by_tranditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement)
 
-    ranking_results = { RANKING_SPC_F: buggy_stm_ranked,
-                        RANKING_SPC_LAYER: buggy_stm_ranked_by_layer,
-                        SPC_SEARCH_SPACE: num_suspicious_stm,
-                        WITHOUT_ISOLATION_F: buggy_stm_ranked2,
-                        WITHOUT_ISOLATION_LAYER: buggy_stm_ranked_by_layer2,
-                        WITHOUT_ISOLATION_SPACE: num_suspicious_stm2,
-                        RANKING_SPECTRUM: buggy_stm_spectrum_ranked,
+    ranking_results = { VARCOP_SPC_FAILING: buggy_stm_ranked,
+                        VARCOP_SPC_LAYER: buggy_stm_ranked_by_layer,
+                        VARCOP_SPC_SEARCH_SPACE: num_suspicious_stm,
+                        VARCOP_FAILING: buggy_stm_ranked2,
+                        VARCOP_LAYER: buggy_stm_ranked_by_layer2,
+                        VARCOP_SEARCH_SPACE: num_suspicious_stm2,
+                        SPECTRUM: buggy_stm_spectrum_ranked,
                         SPECTRUM_SEARCH_SPACE: spectrum_space
                        }
 
@@ -147,7 +147,7 @@ def rank_by_tranditional_spectrum(mutated_project_dir, spectrum_expression, bugg
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_information_for_spectrum_ranking(
         mutated_project_dir)
     stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests,
-                                                 spectrum_expression, SPC=0)
+                                                 spectrum_expression)
     spectrum_ranked_list = spectrum_ranking(stm_info_for_spectrum, spectrum_expression)
 
     buggy_stm_spectrum_ranked = search_rank_worst_case(buggy_statement, spectrum_ranked_list)
@@ -241,16 +241,6 @@ def read_coverage_info_for_spectrum(statement_infor, coverage_file, kind_of_test
         logging.info("Exception when parsing %s", coverage_file)
 
 
-def calculate_average_supiciousness(overall_results, spectrum_expression):
-    score_type = spectrum_expression + "_score"
-    score_average = spectrum_expression + "_average"
-
-    for stm in overall_results:
-        overall_results[stm][score_average] = overall_results[stm][score_type] / overall_results[stm][COUNT]
-
-    return overall_results
-
-
 def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expression):
     statement_infor = {}
     test_coverage_dir = get_test_coverage_dir(variant_dir)
@@ -267,7 +257,7 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
                                                                   PASSED_TEST_COUNT, suspicious_stms_list)
 
     (total_failed_tests, total_passed_tests) = count_tests(test_coverage_dir)
-    statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression, SPC = 1)
+    statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression)
 
     return statement_infor
 
@@ -313,7 +303,7 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
         logging.info("Exception when parsing %s", coverage_file)
 
 
-def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression, SPC):
+def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression):
     for id in statement_infor.keys():
         if spectrum_expression == TARANTULA:
             statement_infor[id][TARANTULA_SCORE] = tarantula_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
