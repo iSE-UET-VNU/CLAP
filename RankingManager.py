@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
-    get_variants_dir
+    get_variants_dir, get_all_variants_dirs
 
 # keywords
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
@@ -32,6 +32,7 @@ SPECTRUM_SEARCH_SPACE = "spectrum_search_space"
 VARCOP_FAILING = "WITHOUT_ISOLATION_F"
 VARCOP_LAYER = "WITHOUT_ISOLATION_LAYER"
 VARCOP_SEARCH_SPACE = "WITHOUT_ISOLATION_SPACE"
+
 
 def suspicious_stms_of_the_system(suspicious_stms_list):
     stm_set = []
@@ -88,7 +89,7 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
                         VARCOP_LAYER: buggy_stm_ranked_by_layer2,
                         VARCOP_SEARCH_SPACE: num_suspicious_stm2,
                         SPECTRUM: buggy_stm_spectrum_ranked,
-                        SPECTRUM_SEARCH_SPACE: spectrum_space
+                        SPECTRUM_SEARCH_SPACE: spectrum_space,
                        }
 
     return ranking_results
@@ -186,12 +187,13 @@ def get_all_stms_of_the_system(mutated_project_dir):
 
 def get_information_for_spectrum_ranking(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = os.listdir(variants_dir)
+    #variants_list = os.listdir(variants_dir)
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
-    for variant in variants_list:
-        variant_dir = get_variant_dir(mutated_project_dir, variant)
+    variants_list = get_all_variants_dirs(mutated_project_dir)
+    for variant_dir in variants_list:
+        #variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
 
         spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
@@ -261,18 +263,35 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
 
     return statement_infor
 
+def count_test_in_file(file_dir):
+    try:
+        tree = ET.parse(file_dir)
+        root = tree.getroot()
+        project = root.find("tests")
+        return int(project.get("count"))
+    except:
+        logging.info("Exception when parsing %s", file_dir)
+
 
 def count_tests(dir):
-    failed_test_dir = join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
-    passed_test_dir = join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
-
+    spectrum_failed_coverage_file_dir = join_path(dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+    spectrum_passed_coverage_file_dir = join_path(dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
     num_of_failed_tests = 0
     num_of_passed_tests = 0
-    if os.path.isdir(failed_test_dir):
-        num_of_failed_tests = len(os.listdir(failed_test_dir))
+    if os.path.isfile(spectrum_failed_coverage_file_dir):
+        num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
+    if os.path.isfile(spectrum_passed_coverage_file_dir):
+        num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
 
-    if os.path.isdir(passed_test_dir):
-        num_of_passed_tests = len(os.listdir(passed_test_dir))
+
+    #failed_test_dir = join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
+    #passed_test_dir = join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
+
+    #if os.path.isdir(failed_test_dir):
+     #   num_of_failed_tests = len(os.listdir(failed_test_dir))
+
+    #if os.path.isdir(passed_test_dir):
+    #    num_of_passed_tests = len(os.listdir(passed_test_dir))
 
     return num_of_failed_tests, num_of_passed_tests
 
