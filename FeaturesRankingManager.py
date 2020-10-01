@@ -22,18 +22,22 @@ STATEMENT_ID = "stm_id"
 VARIANTS_FAILED = "variants_failed"
 VARIANTS_PASSED = "variants_passed"
 
-def features_ranking(buggy_statement, mutated_project_dir, failling_variants, filter_coverage_rate, spectrum_expression):
+def features_ranking(buggy_statement, mutated_project_dir, failing_variants, filter_coverage_rate, spectrum_expression):
     total_variants = 0
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     features_info = {}
     for variant in variants_testing_coverage:
-        if variants_testing_coverage[variant] >= filter_coverage_rate or variant in failling_variants:
+        if variants_testing_coverage[variant] >= filter_coverage_rate or variant in failing_variants:
             total_variants += 1
             variant_dir = get_variant_dir(mutated_project_dir, variant)
-            features_info = get_coverage_infor_of_variants(variant, variant_dir, failling_variants,  features_info)
+            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants,  features_info)
 
-    total_passes = total_variants - len(failling_variants)
-    total_fails = len(failling_variants)
+
+    total_passes = total_variants - len(failing_variants)
+    total_fails = len(failing_variants)
+    # there are no passing variants with test coverage > threshold
+    if (total_passes == 0):
+        return -2, -2, -2
     features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
 
     feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)
