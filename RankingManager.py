@@ -3,6 +3,7 @@ import os
 import xml.etree.ElementTree as ET
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME,\
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
     get_variants_dir, get_all_variants_dirs
 
@@ -163,10 +164,18 @@ def get_all_stms_of_the_system(mutated_project_dir):
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
         coverage_files = []
-        coverage_files.append(join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME))
-        coverage_files.append(join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME))
+        failed_file = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        if not os.path.isfile(failed_file):
+            failed_file = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        passed_file = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+        if not os.path.isfile(passed_file):
+            passed_file = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+        coverage_files.append(failed_file)
+        coverage_files.append(passed_file)
 
         for file in coverage_files:
+
+
             if os.path.isfile(file):
                 data = {}
                 try:
@@ -196,8 +205,12 @@ def get_information_for_spectrum_ranking(mutated_project_dir):
         #variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
 
-        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+        if not os.path.isfile(spectrum_failed_coverage_file_dir):
+            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        if not os.path.isfile(spectrum_passed_coverage_file_dir):
+            spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
         if os.path.isfile(spectrum_failed_coverage_file_dir):
             stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
@@ -247,8 +260,12 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
     statement_infor = {}
     test_coverage_dir = get_test_coverage_dir(variant_dir)
 
-    spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-    spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+    spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+    spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+    if not os.path.isfile(spectrum_failed_coverage_file_dir):
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+    if not os.path.isfile(spectrum_passed_coverage_file_dir):
+        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
     if os.path.isfile(spectrum_failed_coverage_file_dir):
         statement_infor = read_statement_infor_from_coverage_file(statement_infor, spectrum_failed_coverage_file_dir,
@@ -272,16 +289,36 @@ def count_test_in_file(file_dir):
     except:
         logging.info("Exception when parsing %s", file_dir)
 
+def count_tests_original(test_dir):
+    num_tests = 0
+    #num_of_passed_tests = 0
+    #failed_test_dir = join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
+    #passed_test_dir = join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
+
+    if os.path.isdir(test_dir):
+       num_tests = len(os.listdir(test_dir))
+
+    #if os.path.isdir(passed_test_dir):
+    #    num_of_passed_tests = len(os.listdir(passed_test_dir))
+
+    return num_tests
 
 def count_tests(dir):
-    spectrum_failed_coverage_file_dir = join_path(dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-    spectrum_passed_coverage_file_dir = join_path(dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+    spectrum_failed_coverage_file_dir = join_path(dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+    spectrum_passed_coverage_file_dir = join_path(dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+
+
     num_of_failed_tests = 0
     num_of_passed_tests = 0
     if os.path.isfile(spectrum_failed_coverage_file_dir):
         num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
+    elif os.path.isfile(join_path(dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)):
+        num_of_failed_tests = count_tests_original(join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME))
+
     if os.path.isfile(spectrum_passed_coverage_file_dir):
         num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
+    elif os.path.isfile(join_path(dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)):
+        num_of_passed_tests = count_tests_original(join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME))
 
 
     #failed_test_dir = join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME)

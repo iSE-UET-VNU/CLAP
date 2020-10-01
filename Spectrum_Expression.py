@@ -57,7 +57,7 @@ SOKAL_AVERAGE = "sokal_average"
 
 
 def tarantula_calculation(fails, passes, total_failed_tests, total_passed_tests):
-    if total_failed_tests == 0 and total_passed_tests == 0:
+    if total_failed_tests == 0 or total_passed_tests == 0:
         return 0
 
     if fails == 0:
