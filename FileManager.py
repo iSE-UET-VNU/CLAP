@@ -32,8 +32,8 @@ FEATURE_FOLDER_NAME = "features"
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
 MUTATED_PROJECTS_FOLDER_NAME = "mutated_projects"
 
-SPECTRUM_FAILED_COVERAGE_FILE_NAME = "spectrum_failed_coverage.xml"
-SPECTRUM_PASSED_COVERAGE_FILE_NAME = "spectrum_passed_coverage.xml"
+SPECTRUM_FAILED_COVERAGE_FILE_NAME = "v2__spectrum_failed_coverage.xml"
+SPECTRUM_PASSED_COVERAGE_FILE_NAME = "v2__spectrum_passed_coverage.xml"
 FAILED_TEST_COVERAGE_FOLDER_NAME = "failed"
 PASSED_TEST_COVERAGE_FOLDER_NAME = "passed"
 

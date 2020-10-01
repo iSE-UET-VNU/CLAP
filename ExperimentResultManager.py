@@ -8,20 +8,20 @@ from FeaturesRankingManager import features_ranking
 from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, list_dir
 import MutantManager
 import RankingManager
-from RankingManager import  RANKING_SPC_F, SPC_SEARCH_SPACE, RANKING_SPECTRUM, SPECTRUM_SEARCH_SPACE, RANKING_SPC_LAYER
+from RankingManager import  VARCOP_SPC_FAILING, VARCOP_SPC_SEARCH_SPACE, SPECTRUM, SPECTRUM_SEARCH_SPACE, VARCOP_SPC_LAYER, VARCOP_FAILING, VARCOP_LAYER, VARCOP_SEARCH_SPACE
 
 from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement
 from xlsxwriter import Workbook
-import pandas as pd
+
 
 MUTATED_PROJECT_COL = 0
 
-SPC_FAILING_ONLY_COL = 1
-SPC_LAYER_COL = 2
-SPC_SPACE_COL = 3
-WITHOUT_ISOLATION_F_COL = 4
-WITHOUT_ISOLATION_LAYER_COL = 5
-WITHOUT_ISOLATION_SPACE_COL = 6
+VARCOP_SPC_FAILING_COL = 1
+VARCOP_SPC_LAYER_COL = 2
+VARCOP_SPC_SPACE_COL = 3
+VARCOP_FAILING_COL = 4
+VARCOP_LAYER_COL = 5
+VARCOP_SPACE_COL = 6
 SPECTRUM_COL = 7
 SPECTRUM_SPACE_COL = 8
 FEATURE_COL = 9
@@ -31,12 +31,12 @@ FEATURE_SPACE_COL = 11
 SYSTEM_HEADER = "SYSTEM"
 K_WISE_HEADER = "K_WISE"
 MUTATED_PROJECT_HEADER = "MUTATED_PROJECT"
-SPC_FAILING_ONLY_HEADER = "SPC_FAILING_ONLY"
-SPC_LAYER_HEADER = "SPC_LAYER"
-SPC_SPACE_HEADER = "SPC_SPACE"
-WITHOUT_ISOLATION_F_HEADER = "WITHOUT_ISOLATION_F"
-WITHOUT_ISOLATION_LAYER_HEADER = "WITHOUT_ISOLATION_LAYER"
-WITHOUT_ISOLATION_SPACE_HEADER = "WITHOUT_ISOLATION_SPACE"
+VARCOP_SPC_FAILING_HEADER = "SPC_FAILING_ONLY"
+VARCOP_SPC_LAYER_HEADER = "SPC_LAYER"
+VARCOP_SPC_SPACE_HEADER = "SPC_SPACE"
+VARCOP_FAILING_HEADER = "WITHOUT_ISOLATION_F"
+VARCOP_LAYER_HEADER = "WITHOUT_ISOLATION_LAYER"
+VARCOP_SPACE_HEADER = "WITHOUT_ISOLATION_SPACE"
 SPECTRUM_HEADER = "SPECTRUM"
 SPECTRUM_SPACE_HEADER = "SPECTRUM_SPACE"
 FEATURE_HEADER = "FEATURE"
@@ -49,12 +49,12 @@ FEATURE_SPACE = "feature_space"
 
 def write_header_in_result_file(row, sheet):
     sheet.write(row, MUTATED_PROJECT_COL, MUTATED_PROJECT_HEADER)
-    sheet.write(row, SPC_FAILING_ONLY_COL, SPC_FAILING_ONLY_HEADER)
-    sheet.write(row, SPC_LAYER_COL, SPC_LAYER_HEADER)
-    sheet.write(row, SPC_SPACE_COL, SPC_SPACE_HEADER)
-    sheet.write(row, WITHOUT_ISOLATION_F_COL, WITHOUT_ISOLATION_F_HEADER)
-    sheet.write(row, WITHOUT_ISOLATION_LAYER_COL, WITHOUT_ISOLATION_LAYER_HEADER)
-    sheet.write(row, WITHOUT_ISOLATION_SPACE_COL, WITHOUT_ISOLATION_SPACE_HEADER)
+    sheet.write(row, VARCOP_SPC_FAILING_COL, VARCOP_SPC_FAILING_HEADER)
+    sheet.write(row, VARCOP_SPC_LAYER_COL, VARCOP_SPC_LAYER_HEADER)
+    sheet.write(row, VARCOP_SPC_SPACE_COL, VARCOP_SPC_SPACE_HEADER)
+    sheet.write(row, VARCOP_FAILING_COL, VARCOP_FAILING_HEADER)
+    sheet.write(row, VARCOP_LAYER_COL, VARCOP_LAYER_HEADER)
+    sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE_HEADER)
     sheet.write(row, SPECTRUM_COL, SPECTRUM_HEADER)
     sheet.write(row, SPECTRUM_SPACE_COL, SPECTRUM_SPACE_HEADER)
     sheet.write(row, FEATURE_COL, FEATURE_HEADER)
@@ -64,25 +64,25 @@ def write_header_in_result_file(row, sheet):
 
 def write_results_to_file(row, sheet, ranking_results):
 
-    spc_spectrum_rank1 = ranking_results[RANKING_SPC_F]
-    sheet.write(row, SPC_FAILING_ONLY_COL, spc_spectrum_rank1)
+    spc_spectrum_rank1 = ranking_results[VARCOP_SPC_FAILING]
+    sheet.write(row, VARCOP_SPC_FAILING_COL, spc_spectrum_rank1)
 
-    spc_layer_rank = ranking_results[RANKING_SPC_LAYER]
-    sheet.write(row, SPC_LAYER_COL, spc_layer_rank)
+    spc_layer_rank = ranking_results[VARCOP_SPC_LAYER]
+    sheet.write(row, VARCOP_SPC_LAYER_COL, spc_layer_rank)
 
-    spc_space = ranking_results[SPC_SEARCH_SPACE]
-    sheet.write(row, SPC_SPACE_COL, spc_space)
+    spc_space = ranking_results[VARCOP_SPC_SEARCH_SPACE]
+    sheet.write(row, VARCOP_SPC_SPACE_COL, spc_space)
 
-    without_isolation_F = ranking_results[RankingManager.WITHOUT_ISOLATION_F]
-    sheet.write(row, WITHOUT_ISOLATION_F_COL, without_isolation_F)
+    without_isolation_F = ranking_results[VARCOP_FAILING]
+    sheet.write(row, VARCOP_FAILING_COL, without_isolation_F)
 
-    without_isolation_layer = ranking_results[RankingManager.WITHOUT_ISOLATION_LAYER]
-    sheet.write(row, WITHOUT_ISOLATION_LAYER_COL, without_isolation_layer)
+    without_isolation_layer = ranking_results[VARCOP_LAYER]
+    sheet.write(row, VARCOP_LAYER_COL, without_isolation_layer)
 
-    without_isolation_space = ranking_results[RankingManager.WITHOUT_ISOLATION_SPACE]
-    sheet.write(row, WITHOUT_ISOLATION_SPACE_COL, without_isolation_space)
+    without_isolation_space = ranking_results[VARCOP_SEARCH_SPACE]
+    sheet.write(row, VARCOP_SPACE_COL, without_isolation_space)
 
-    spectrum_rank = ranking_results[RANKING_SPECTRUM]
+    spectrum_rank = ranking_results[SPECTRUM]
     sheet.write(row, SPECTRUM_COL, spectrum_rank)
 
     spectrum_space = ranking_results[SPECTRUM_SEARCH_SPACE]
