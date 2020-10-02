@@ -22,7 +22,7 @@ if __name__ == "__main__":
     kwises = ["1wise", "2wise", "3wise", "4wise", "5wise"]
 
     summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
-                                 "count_tests_original.xlsx")
+                                 "count_tests_v5.xlsx")
     wb = Workbook(summary_file_dir)
     sheet = wb.add_worksheet("sheet1")
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
                         sheet.write(row, 4, variant_dir)
                         test_coverage_dir = get_test_coverage_dir(variant_dir)
                         #fails, passes = count_tests(test_coverage_dir)
-                        fails, passes = count_tests_original(test_coverage_dir)
+                        fails, passes = count_tests(test_coverage_dir)
                         sheet.write(row, 5, fails)
                         sheet.write(row, 6, passes)
                         row += 1

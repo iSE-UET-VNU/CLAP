@@ -9,7 +9,7 @@ from Spectrum_Expression import RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, A
 if __name__ == "__main__":
 
     base_dir = "/home/huent/Documents/Trang/"
-    system_names = ["BankAccountTP", "Elevator", "Email", "ExamDB"]
+    system_names = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL"]
     project_names = ["1wise", "2wise", "3wise", "4wise", "5wise"]
 
     filtering_coverage_rate_list = [0.5, 0.8, 0.95]

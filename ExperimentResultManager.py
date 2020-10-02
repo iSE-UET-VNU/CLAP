@@ -101,54 +101,56 @@ def write_results_to_file(row, sheet, ranking_results):
     return row
 
 
-def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions,):
-    sheet = []
-    project_dir = get_project_dir(project_name, base_dir)
-    row = 0
-    search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, "v3_reduce_fails")
-    system_result_dir = join_path(search_rank_type_dir, system)
-    if not os.path.exists(system_result_dir):
-        os.makedirs(system_result_dir)
-    project_result_dir = join_path(system_result_dir, project_name)
-    if not os.path.exists(project_result_dir):
-        os.makedirs(project_result_dir)
-    experiment_file_name = join_path(project_result_dir,
-                                     str(filtering_coverage_rate)+ "_" + ".xlsx")
-    wb = Workbook(experiment_file_name)
+def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions):
+    aggerate_type = ["2"]
+    for t in aggerate_type:
+        sheet = []
+        project_dir = get_project_dir(project_name, base_dir)
+        row = 0
+        search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, "v5_reduce_both_" + t)
+        system_result_dir = join_path(search_rank_type_dir, system)
+        if not os.path.exists(system_result_dir):
+            os.makedirs(system_result_dir)
+        project_result_dir = join_path(system_result_dir, project_name)
+        if not os.path.exists(project_result_dir):
+            os.makedirs(project_result_dir)
+        experiment_file_name = join_path(project_result_dir,
+                                         str(filtering_coverage_rate)+ "_" + ".xlsx")
+        wb = Workbook(experiment_file_name)
 
-    for i in range(0, len(spectrum_expressions)):
-        sheet.append(wb.add_worksheet(spectrum_expressions[i]))
-        write_header_in_result_file(row, sheet[i])
-
-    row += 1
-    mutated_projects_dir = get_mutated_projects_dir(project_dir)
-    mutated_projects = list_dir(mutated_projects_dir)
-
-    for mutated_project_name in mutated_projects:
-        # try:
-        ranking_project = project_name + "_" + mutated_project_name
-
-        logging.info("Ranking... %s", ranking_project)
-
-        mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
-
-        #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
-
-        #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate)
-        suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
-
-        buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
-
-        row_temp = row
         for i in range(0, len(spectrum_expressions)):
-            ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                     suspicious_stms_list, spectrum_expressions[i])
+            sheet.append(wb.add_worksheet(spectrum_expressions[i]))
+            write_header_in_result_file(row, sheet[i])
 
-            ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i])
-            sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
-            row = write_results_to_file(row_temp, sheet[i], ranking_results)
+        row += 1
+        mutated_projects_dir = get_mutated_projects_dir(project_dir)
+        mutated_projects = list_dir(mutated_projects_dir)
 
-    # except:
-    #   logging.info(" Exception in ranking %s", mutated_project_name)
+        for mutated_project_name in mutated_projects:
+            # try:
+            ranking_project = project_name + "_" + mutated_project_name
 
-    wb.close()
+            logging.info("Ranking... %s", ranking_project)
+
+            mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
+
+            #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+
+            #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate)
+            suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
+
+            buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
+
+            row_temp = row
+            for i in range(0, len(spectrum_expressions)):
+                ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
+                                                         suspicious_stms_list, spectrum_expressions[i], t)
+
+                ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i])
+                sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
+                row = write_results_to_file(row_temp, sheet[i], ranking_results)
+
+        # except:
+        #   logging.info(" Exception in ranking %s", mutated_project_name)
+
+        wb.close()
