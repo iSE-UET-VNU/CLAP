@@ -3,11 +3,14 @@ import os
 import xml.etree.ElementTree as ET
 
 import MutantManager
-from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, \
+from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, \
     list_dir, get_project_dir, get_mutated_projects_dir
 
 
-def statement_coverage(variant_dir):
+def statement_coverage(variant_dir, spectrum_coverage_prefix):
+    global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
+
     test_coverage_dir = get_test_coverage_dir(variant_dir)
     spectrum_passed_coverage_file = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
     if not os.path.isfile(spectrum_passed_coverage_file):
@@ -34,12 +37,12 @@ def statement_coverage(variant_dir):
     return coverage_rate
 
 
-def statement_coverage_of_variants(project_dir):
+def statement_coverage_of_variants(project_dir, spectrum_coverage_prefix):
     stm_coverage_variants = {}
     variants_dir = get_variants_dir(project_dir)
     for variant in list_dir(variants_dir):
         variant_dir = join_path(variants_dir, variant)
-        testing_coverage = statement_coverage(variant_dir)
+        testing_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         stm_coverage_variants[variant] = testing_coverage
     return stm_coverage_variants
 

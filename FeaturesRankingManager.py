@@ -4,8 +4,7 @@ import os
 import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
-    SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
-    NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME
 
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
@@ -23,15 +22,15 @@ STATEMENT_ID = "stm_id"
 VARIANTS_FAILED = "variants_failed"
 VARIANTS_PASSED = "variants_passed"
 
-def features_ranking(buggy_statement, mutated_project_dir, failing_variants, filter_coverage_rate, spectrum_expression):
+def features_ranking(buggy_statement, mutated_project_dir, failing_variants, filter_coverage_rate, spectrum_expression, spectrum_coverage_prefix):
     total_variants = 0
-    variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
+    variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir, spectrum_coverage_prefix)
     features_info = {}
     for variant in variants_testing_coverage:
         if variants_testing_coverage[variant] >= filter_coverage_rate or variant in failing_variants:
             total_variants += 1
             variant_dir = get_variant_dir(mutated_project_dir, variant)
-            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants,  features_info)
+            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants,  features_info, spectrum_coverage_prefix)
 
 
     total_passes = total_variants - len(failing_variants)
@@ -110,7 +109,11 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
                                                                  total_fails, total_passes)
     return features_info
 
-def get_coverage_infor_of_variants(variant, variant_dir, failling_variants,  features_coverage_info):
+def get_coverage_infor_of_variants(variant, variant_dir, failling_variants,  features_coverage_info, spectrum_coverage_prefix):
+    global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_FAILED_COVERAGE_FILE_NAME
 
     test_coverage_dir = get_test_coverage_dir(variant_dir)
 

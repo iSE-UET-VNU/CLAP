@@ -3,7 +3,6 @@ import os
 import xml.etree.ElementTree as ET
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
-    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME,\
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
     get_variants_dir, get_all_variants_dirs
 
@@ -57,8 +56,9 @@ def rank_for_a_suspicious_list(mutated_project_dir, buggy_statement, all_stms_of
         ranked_list = overall_suspiciousness_score2(all_stms_of_the_system, suspicious_stms_list,
                                                     overall_suspiciousness, spectrum_expression)
 
-    buggy_stm_ranked = search_buggy_stms(buggy_statement, ranked_list)
-    buggy_stm_ranked_by_layer = search_buggy_stms_by_layer(buggy_statement, ranked_list)
+
+    buggy_stm_ranked = search_rank_worst_case(buggy_statement, ranked_list)
+    buggy_stm_ranked_by_layer = search_rank_worst_case_by_layer(buggy_statement, ranked_list)
     return buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm
 
 def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
@@ -68,7 +68,11 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
     return suspicious_stms_list
 
 
-def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, type):
+def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, type, spectrum_coverage_prefix):
+    global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_FAILED_COVERAGE_FILE_NAME
 
     all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir)
 
@@ -216,8 +220,6 @@ def get_all_stms_of_the_system(mutated_project_dir):
         coverage_files.append(passed_file)
 
         for file in coverage_files:
-
-
             if os.path.isfile(file):
                 data = {}
                 try:
@@ -237,14 +239,11 @@ def get_all_stms_of_the_system(mutated_project_dir):
     return stm_list
 
 def get_information_for_spectrum_ranking(mutated_project_dir):
-    variants_dir = get_variants_dir(mutated_project_dir)
-    #variants_list = os.listdir(variants_dir)
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
     variants_list = get_all_variants_dirs(mutated_project_dir)
     for variant_dir in variants_list:
-        #variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
 
         spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
@@ -333,15 +332,11 @@ def count_test_in_file(file_dir):
 
 def count_tests_original(test_dir):
     num_tests = 0
-    #num_of_passed_tests = 0
-    #failed_test_dir = join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
-    #passed_test_dir = join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
 
     if os.path.isdir(test_dir):
        num_tests = len(os.listdir(test_dir))
 
-    #if os.path.isdir(passed_test_dir):
-    #    num_of_passed_tests = len(os.listdir(passed_test_dir))
+
 
     return num_tests
 
@@ -362,15 +357,6 @@ def count_tests(dir):
     elif os.path.isfile(join_path(dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)):
         num_of_passed_tests = count_tests_original(join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME))
 
-
-    #failed_test_dir = join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
-    #passed_test_dir = join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
-
-    #if os.path.isdir(failed_test_dir):
-     #   num_of_failed_tests = len(os.listdir(failed_test_dir))
-
-    #if os.path.isdir(passed_test_dir):
-    #    num_of_passed_tests = len(os.listdir(passed_test_dir))
 
     return num_of_failed_tests, num_of_passed_tests
 
@@ -474,13 +460,8 @@ def spectrum_ranking(statements_infor, spectrum_expression):
     for (key, value) in statements_infor.items():
         spectrum_ranked_list.append((key, statements_infor[key][score_type]))
 
-    for i in range(0, len(spectrum_ranked_list) - 1):
-        for j in range(i + 1, len(spectrum_ranked_list)):
-            if spectrum_ranked_list[i][1] < spectrum_ranked_list[j][1]:
-                spectrum_ranked_list[i], spectrum_ranked_list[j] = \
-                    spectrum_ranked_list[j], spectrum_ranked_list[i]
-
-    return spectrum_ranked_list
+        # 0 is the position of key, 1 is the position of score
+        return descending_sort(data=spectrum_ranked_list, sorted_element=1)
 
 
 def varcop_ranking(statements_infor, spectrum_expression):
@@ -490,13 +471,7 @@ def varcop_ranking(statements_infor, spectrum_expression):
     for (key, value) in statements_infor.items():
         ranked_list.append((key, statements_infor[key][score_type], statements_infor[key]["num_passing_product"]))
 
-    for i in range(0, len(ranked_list) - 1):
-        for j in range(i + 1, len(ranked_list)):
-            if ranked_list[i][1] < ranked_list[j][1]:
-                ranked_list[i], ranked_list[j] = \
-                    ranked_list[j], ranked_list[i]
-
-    return ranked_list
+    return ascending_sort(data = ranked_list, sorted_element = 1)
 
 
 def spc_spectrum_ranking(statements_infor, spectrum_expression):
@@ -507,14 +482,26 @@ def spc_spectrum_ranking(statements_infor, spectrum_expression):
         if statements_infor[key][SUSPICIOUS]:
             spc_spectrum_ranked_list.append((key, statements_infor[key][score_type]))
 
-    for i in range(0, len(spc_spectrum_ranked_list) - 1):
-        for j in range(i + 1, len(spc_spectrum_ranked_list)):
-            if spc_spectrum_ranked_list[i][1] < spc_spectrum_ranked_list[j][1]:
-                spc_spectrum_ranked_list[i], spc_spectrum_ranked_list[j] = \
-                    spc_spectrum_ranked_list[j], spc_spectrum_ranked_list[i]
+    #0 is the position of key, 1 is the position of score
+    return descending_sort(data = spc_spectrum_ranked_list, sorted_element = 1)
 
-    return spc_spectrum_ranked_list
+def descending_sort(data, sorted_element):
+    for i in range(0, len(data) - 1):
+        for j in range(i + 1, len(data)):
+            if data[i][sorted_element] < data[j][sorted_element]:
+                data[i], data[j] = \
+                    data[j], data[i]
 
+    return data
+
+def ascending_sort(data, sorted_element):
+    for i in range(0, len(data) - 1):
+        for j in range(i + 1, len(data)):
+            if data[i][sorted_element] > data[j][sorted_element]:
+                data[i], data[j] = \
+                    data[j], data[i]
+
+    return data
 
 
 def search_rank_worst_case(stm, ranked_list):
@@ -530,26 +517,14 @@ def search_rank_worst_case(stm, ranked_list):
     return -1
 
 
-def search_buggy_stms(stm, ranked_list):
-    for i in range(len(ranked_list)- 1, 0, -1):
+def search_rank_worst_case_by_layer(stm, ranked_list):
+    for i in range(0, len(ranked_list)):
         if ranked_list[i][0] == stm:
-            j = i;
-            while( j >= 0):
-                if ranked_list[j][1] == ranked_list[j-1][1]:
-                    j -= 1
+            j = i
+            while (j < len(ranked_list) - 1):
+                if ranked_list[j][1] == ranked_list[j + 1][1] and ranked_list[j][2] == ranked_list[j+1][2]:
+                    j += 1
                 else:
-                    break;
-            return len(ranked_list) - j
-    return -1
-
-def search_buggy_stms_by_layer(stm, ranked_list):
-    for i in range(len(ranked_list)- 1, 0, -1):
-        if ranked_list[i][0] == stm:
-            j = i;
-            while( j >= 0):
-                if ranked_list[j][1] == ranked_list[j-1][1] and ranked_list[j][2] == ranked_list[j-1][2]:
-                    j -= 1
-                else:
-                    break;
-            return len(ranked_list) - j
+                    break
+            return j + 1
     return -1

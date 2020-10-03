@@ -47,6 +47,9 @@ FEATURE_RANK = "feature_rank"
 FEATURE_STM_RANK = "feature_stm_rank"
 FEATURE_SPACE = "feature_space"
 
+AGGREATION_PRODUCT_RELATED = 1
+AGGREATION_ALL_PRODUCT = 2
+
 def write_header_in_result_file(row, sheet):
     sheet.write(row, MUTATED_PROJECT_COL, MUTATED_PROJECT_HEADER)
     sheet.write(row, VARCOP_SPC_FAILING_COL, VARCOP_SPC_FAILING_HEADER)
@@ -101,13 +104,15 @@ def write_results_to_file(row, sheet, ranking_results):
     return row
 
 
-def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions):
-    aggerate_type = ["2"]
-    for t in aggerate_type:
+def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
+
+    score_aggregations = [AGGREATION_PRODUCT_RELATED, AGGREATION_ALL_PRODUCT]
+    result_folder = "v5_reduce_both_"
+    for t in score_aggregations:
         sheet = []
         project_dir = get_project_dir(project_name, base_dir)
         row = 0
-        search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, "v5_reduce_both_" + t)
+        search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder + str(t))
         system_result_dir = join_path(search_rank_type_dir, system)
         if not os.path.exists(system_result_dir):
             os.makedirs(system_result_dir)
@@ -144,9 +149,9 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
             row_temp = row
             for i in range(0, len(spectrum_expressions)):
                 ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                         suspicious_stms_list, spectrum_expressions[i], t)
+                                                         suspicious_stms_list, spectrum_expressions[i], t, spectrum_coverage_prefix)
 
-                ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i])
+                ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
                 sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
                 row = write_results_to_file(row_temp, sheet[i], ranking_results)
 

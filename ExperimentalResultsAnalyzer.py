@@ -56,8 +56,10 @@ def summary_result(evaluation_type, system_names, num_of_program_stms):
     row += 1
     evaluation_type_result_dir = join_path(EXPERIMENT_RESULT_FOLDER, evaluation_type)
     for system in system_names:
+        print(system)
         sheet.write(row, SYSTEM_COL, system)
         system_result_dir = join_path(evaluation_type_result_dir, system)
+        print(os.listdir(system_result_dir))
         for k_wise in os.listdir(system_result_dir):
             sheet.write(row, K_WISE_COL, k_wise)
             k_wise_result_dir = join_path(system_result_dir, k_wise)
