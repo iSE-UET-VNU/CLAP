@@ -2,6 +2,7 @@ import logging
 import os
 import xml.etree.ElementTree as ET
 
+
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
     get_variants_dir, get_all_variants_dirs
@@ -34,6 +35,9 @@ VARCOP_LAYER = "WITHOUT_ISOLATION_LAYER"
 VARCOP_SEARCH_SPACE = "WITHOUT_ISOLATION_SPACE"
 
 
+AGGREATION_PRODUCT_RELATED = 1
+AGGREATION_ALL_PRODUCT = 2
+
 def suspicious_stms_of_the_system(suspicious_stms_list):
     stm_set = []
     for variant in suspicious_stms_list:
@@ -49,7 +53,7 @@ def rank_for_a_suspicious_list(mutated_project_dir, buggy_statement, all_stms_of
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], spectrum_expression)
         overall_suspiciousness[variant] = spc_spectrum_ranking(statement_infor, spectrum_expression)
-    if(type == 1):
+    if(type == AGGREATION_PRODUCT_RELATED):
         ranked_list = overall_suspiciousness_score(all_stms_of_the_system, suspicious_stms_list,
                                                      overall_suspiciousness, spectrum_expression)
     else:
@@ -336,8 +340,6 @@ def count_tests_original(test_dir):
     if os.path.isdir(test_dir):
        num_tests = len(os.listdir(test_dir))
 
-
-
     return num_tests
 
 def count_tests(dir):
@@ -460,8 +462,8 @@ def spectrum_ranking(statements_infor, spectrum_expression):
     for (key, value) in statements_infor.items():
         spectrum_ranked_list.append((key, statements_infor[key][score_type]))
 
-        # 0 is the position of key, 1 is the position of score
-        return descending_sort(data=spectrum_ranked_list, sorted_element=1)
+    # 0 is the position of key, 1 is the position of score
+    return descending_sort(data=spectrum_ranked_list, sorted_element=1)
 
 
 def varcop_ranking(statements_infor, spectrum_expression):

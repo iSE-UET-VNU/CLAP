@@ -47,8 +47,6 @@ FEATURE_RANK = "feature_rank"
 FEATURE_STM_RANK = "feature_stm_rank"
 FEATURE_SPACE = "feature_space"
 
-AGGREATION_PRODUCT_RELATED = 1
-AGGREATION_ALL_PRODUCT = 2
 
 def write_header_in_result_file(row, sheet):
     sheet.write(row, MUTATED_PROJECT_COL, MUTATED_PROJECT_HEADER)
@@ -106,7 +104,7 @@ def write_results_to_file(row, sheet, ranking_results):
 
 def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
 
-    score_aggregations = [AGGREATION_PRODUCT_RELATED, AGGREATION_ALL_PRODUCT]
+    score_aggregations = [RankingManager.AGGREATION_PRODUCT_RELATED, RankingManager.AGGREATION_ALL_PRODUCT]
     result_folder = "v5_reduce_both_"
     for t in score_aggregations:
         sheet = []
