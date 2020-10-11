@@ -16,7 +16,15 @@ from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_c
     jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, SCOTT_SCORE, SCOTT, \
     scott_calculation, ROGOT1_SCORE, ROGOT1, rogot1_calculation, GEOMETRIC_MEAN_SCORE, GEOMETRIC_MEAN, \
     geometric_mean_calculation, M2, M2_SCORE, \
-    m2_calculation, WONG1, wong1_calculation, WONG1_SCORE, SOKAL_SCORE, SOKAL, sokal_calculation
+    m2_calculation, WONG1, wong1_calculation, WONG1_SCORE, SOKAL_SCORE, SOKAL, sokal_calculation, \
+    sorensen_dice_calculation, SORENSEN_DICE, SORENSEN_DICE_SCORE, DICE, DICE_SCORE, dice_calculation, HUMANN, \
+    HUMANN_SCORE, humman_calculation, M1, M1_SCORE, m1_calculation, WONG2, WONG2_SCORE, wong2_calculation, WONG3, \
+    WONG3_SCORE, wong3_calculation, ZOLTAR, ZOLTAR_SCORE, zoltar_calculation, OVERLAP, OVERLAP_SCORE, \
+    overlap_calculation, EUCLID, EUCLID_SCORE, euclid_calculation, ROGOT2, ROGOT2_SCORE, rogot2_calculation, HAMMING, \
+    HAMMING_SCORE, hamming_calculation, FLEISS, FLEISS_SCORE, fleiss_calculation, ANDERBERG, ANDERBERG_SCORE, \
+    anderberg_calculation, GOODMAN, GOODMAN_SCORE, goodman_calculation, HARMONIC_MEAN, HARMONIC_MEAN_SCORE, \
+    harmonic_mean_calculation, KULCZYNSKI1, KULCZYNSKI1_SCORE, kulczynski1_calculation, KULCZYNSKI2, KULCZYNSKI2_SCORE, \
+    kulczynski2_calculation
 
 FAILED_TEST_COUNT = 'failed_test_count'
 PASSED_TEST_COUNT = 'passed_test_count'
@@ -54,10 +62,10 @@ def rank_for_a_suspicious_list(mutated_project_dir, buggy_statement, all_stms_of
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], spectrum_expression)
         overall_suspiciousness[variant] = spc_spectrum_ranking(statement_infor, spectrum_expression)
     if(type == AGGREATION_PRODUCT_RELATED):
-        ranked_list = overall_suspiciousness_score(all_stms_of_the_system, suspicious_stms_list,
+        ranked_list = overall_score_in_related_products(all_stms_of_the_system, suspicious_stms_list,
                                                      overall_suspiciousness, spectrum_expression)
     else:
-        ranked_list = overall_suspiciousness_score2(all_stms_of_the_system, suspicious_stms_list,
+        ranked_list = overall_score_in_all_products(all_stms_of_the_system, suspicious_stms_list,
                                                     overall_suspiciousness, spectrum_expression)
 
 
@@ -114,7 +122,7 @@ def get_stms_from_list_varints(stms_in_list_variants):
                 all_stms_list.append(stm)
     return all_stms_list
 
-def overall_suspiciousness_score2(all_stms_of_the_system, suspicious_stms_list, overall_suspiciousness, spectrum_expression):
+def overall_score_in_related_products(all_stms_of_the_system, suspicious_stms_list, overall_suspiciousness, spectrum_expression):
     score_type = spectrum_expression + "_score"
     all_stms_list = get_stms_from_list_varints(suspicious_stms_list)
     all_stms_score_list = {}
@@ -153,7 +161,7 @@ def overall_suspiciousness_score2(all_stms_of_the_system, suspicious_stms_list, 
 
     return varcop_ranking(all_stms_score_list, spectrum_expression)
 
-def overall_suspiciousness_score(all_stms_of_the_system, suspicious_stms_list, overall_suspiciousness, spectrum_expression):
+def overall_score_in_all_products(all_stms_of_the_system, suspicious_stms_list, overall_suspiciousness, spectrum_expression):
     score_type = spectrum_expression + "_score"
     all_stms_list = get_stms_from_list_varints(suspicious_stms_list)
     all_stms_score_list = {}
@@ -452,6 +460,95 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][SOKAL_SCORE] = sokal_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
                                                                      total_failed_tests, total_passed_tests)
+        #new
+        elif spectrum_expression == SORENSEN_DICE:
+
+            statement_infor[id][SORENSEN_DICE_SCORE] = sorensen_dice_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == DICE:
+
+            statement_infor[id][DICE_SCORE] = dice_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == HUMANN:
+
+            statement_infor[id][HUMANN_SCORE] = humman_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == M1:
+
+            statement_infor[id][M1_SCORE] = m1_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == WONG2:
+
+            statement_infor[id][WONG2_SCORE] = wong2_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == WONG3:
+
+            statement_infor[id][WONG3_SCORE] = wong3_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ZOLTAR:
+
+            statement_infor[id][ZOLTAR_SCORE] = zoltar_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == OVERLAP:
+
+            statement_infor[id][OVERLAP_SCORE] = overlap_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == EUCLID:
+
+            statement_infor[id][EUCLID_SCORE] = euclid_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ROGOT2:
+
+            statement_infor[id][ROGOT2_SCORE] = rogot2_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == HAMMING:
+
+            statement_infor[id][HAMMING_SCORE] = hamming_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == FLEISS:
+
+            statement_infor[id][FLEISS_SCORE] = fleiss_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == ANDERBERG:
+
+            statement_infor[id][ANDERBERG_SCORE] = anderberg_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == GOODMAN:
+
+            statement_infor[id][GOODMAN_SCORE] = goodman_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == HARMONIC_MEAN:
+
+            statement_infor[id][HARMONIC_MEAN_SCORE] = harmonic_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == KULCZYNSKI1:
+
+            statement_infor[id][KULCZYNSKI1_SCORE] = kulczynski1_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+        elif spectrum_expression == KULCZYNSKI2:
+
+            statement_infor[id][KULCZYNSKI2_SCORE] = kulczynski2_calculation(statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests, total_passed_tests)
+
+
+
     return statement_infor
 
 

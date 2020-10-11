@@ -105,7 +105,7 @@ def write_results_to_file(row, sheet, ranking_results):
 def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
 
     score_aggregations = [RankingManager.AGGREATION_PRODUCT_RELATED, RankingManager.AGGREATION_ALL_PRODUCT]
-    result_folder = "v5_reduce_both_"
+    result_folder = "test"
     for t in score_aggregations:
         sheet = []
         project_dir = get_project_dir(project_name, base_dir)

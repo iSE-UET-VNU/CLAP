@@ -14,7 +14,14 @@ from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_c
     ample_calculation, JACCARD_SCORE, JACCARD, jaccard_calculation, COHEN, COHEN_SCORE, cohen_calculation, SCOTT, \
     SCOTT_SCORE, scott_calculation, ROGOT1, ROGOT1_SCORE, rogot1_calculation, GEOMETRIC_MEAN, GEOMETRIC_MEAN_SCORE, \
     geometric_mean_calculation, M2, M2_SCORE, m2_calculation, SOKAL_SCORE, SOKAL, WONG1_SCORE, WONG1, wong1_calculation, \
-    sokal_calculation
+    sokal_calculation, sorensen_dice_calculation, SORENSEN_DICE_SCORE, SORENSEN_DICE, DICE_SCORE, DICE, \
+    dice_calculation, humman_calculation, HUMANN_SCORE, HUMANN, M1_SCORE, M1, m1_calculation, wong2_calculation, \
+    WONG2_SCORE, WONG2, WONG3_SCORE, WONG3, wong3_calculation, zoltar_calculation, ZOLTAR_SCORE, ZOLTAR, \
+    overlap_calculation, OVERLAP_SCORE, OVERLAP, EUCLID_SCORE, EUCLID, euclid_calculation, rogot2_calculation, \
+    ROGOT2_SCORE, ROGOT2, hamming_calculation, HAMMING, HAMMING_SCORE, FLEISS_SCORE, FLEISS, fleiss_calculation, \
+    anderberg_calculation, ANDERBERG_SCORE, ANDERBERG, goodman_calculation, GOODMAN_SCORE, GOODMAN, HARMONIC_MEAN_SCORE, \
+    HARMONIC_MEAN, harmonic_mean_calculation, kulczynski1_calculation, KULCZYNSKI1_SCORE, KULCZYNSKI1, \
+    kulczynski2_calculation, KULCZYNSKI2_SCORE, KULCZYNSKI2
 
 from TestingCoverageManager import statement_coverage_of_variants
 
@@ -107,6 +114,59 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
         elif spectrum_expression == SOKAL:
             features_info[id][SOKAL_SCORE] = sokal_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
+        #new
+        elif spectrum_expression == SORENSEN_DICE:
+            features_info[id][SORENSEN_DICE_SCORE] = sorensen_dice_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == DICE:
+            features_info[id][DICE_SCORE] = dice_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == HUMANN:
+            features_info[id][HUMANN_SCORE] = humman_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == M1:
+            features_info[id][M1_SCORE] = m1_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == WONG2:
+            features_info[id][WONG2_SCORE] = wong2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == WONG3:
+            features_info[id][WONG3_SCORE] = wong3_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == ZOLTAR:
+            features_info[id][ZOLTAR_SCORE] = zoltar_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == OVERLAP:
+            features_info[id][OVERLAP_SCORE] = overlap_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == EUCLID:
+            features_info[id][EUCLID_SCORE] = euclid_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == ROGOT2:
+            features_info[id][ROGOT2_SCORE] = rogot2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == HAMMING:
+            features_info[id][HAMMING_SCORE] = hamming_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == FLEISS:
+            features_info[id][FLEISS_SCORE] = fleiss_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == ANDERBERG:
+            features_info[id][ANDERBERG_SCORE] = anderberg_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == GOODMAN:
+            features_info[id][GOODMAN_SCORE] = goodman_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == HARMONIC_MEAN:
+            features_info[id][HARMONIC_MEAN_SCORE] = harmonic_mean_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == KULCZYNSKI1:
+            features_info[id][KULCZYNSKI1_SCORE] = kulczynski1_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+        elif spectrum_expression == KULCZYNSKI2:
+            features_info[id][KULCZYNSKI2_SCORE] = kulczynski2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
+
     return features_info
 
 def get_coverage_infor_of_variants(variant, variant_dir, failling_variants,  features_coverage_info, spectrum_coverage_prefix):

@@ -5,8 +5,10 @@ from ExperimentResultManager import VARCOP_SPC_FAILING_HEADER, VARCOP_SPC_LAYER_
     SPECTRUM_HEADER, SPECTRUM_SPACE_HEADER, FEATURE_HEADER, FEATURE_STM_HEADER, FEATURE_SPACE_HEADER, \
     MUTATED_PROJECT_HEADER, VARCOP_FAILING_HEADER, VARCOP_LAYER_HEADER, VARCOP_SPACE_HEADER
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
-from Spectrum_Expression import TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, \
-    AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL
+from Spectrum_Expression import RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, \
+    GEOMETRIC_MEAN, M2, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, WONG1, SOKAL, KULCZYNSKI2, GOODMAN, HARMONIC_MEAN, \
+    EUCLID, KULCZYNSKI1, WONG2, M1, WONG3, ROGOT2, HAMMING, FLEISS, ANDERBERG, ZOLTAR, OVERLAP, SORENSEN_DICE, DICE, \
+    HUMANN
 from xlsxwriter import Workbook
 
 SYSTEM_COL_HEADER = "SYSTEM"
@@ -43,6 +45,14 @@ FEATURE_COL = 18
 FEATURE_STM_COL = 19
 FEATURE_STM_EXAM_COL = 20
 FEATURE_SPACE_COL = 21
+
+SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
+                                                RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
+                                                COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
+                                                WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
+                                                M1, WONG2, WONG3, ZOLTAR, OVERLAP,
+                                                EUCLID, ROGOT2, HAMMING, FLEISS, ANDERBERG,
+                                                GOODMAN, HARMONIC_MEAN, KULCZYNSKI1, KULCZYNSKI2]
 
 def summary_result(evaluation_type, system_names, num_of_program_stms):
 
@@ -128,9 +138,10 @@ def calculate_average_exam(value_list, condition_list, num_of_program_stms):
     return (sum / count)* 100
 
 def calculate_average_in_a_file(experimental_file_dir, num_of_program_stms, row, sheet):
+    print(experimental_file_dir)
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
 
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL]:
+    for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         num_of_bugs = num_of_detected_bug(excel_data_df[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER])
         sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
 
@@ -232,13 +243,13 @@ def summary_for_same_bugs(files_list, num_of_program_stms):
         excel_data = pandas.read_excel(files_list[file], sheet_name=None)
         overall_info[file] = excel_data
 
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL]:
+    for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         for file in overall_info.keys():
             data = overall_info[file]
             data[spectrum_expression_type] = data[spectrum_expression_type][data[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER] != -1]
             overall_info[file] = data
 
-    for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL]:
+    for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         for file in overall_info.keys():
             data = overall_info[file]
             for bug in data[spectrum_expression_type][MUTATED_PROJECT_HEADER]:
@@ -252,7 +263,7 @@ def summary_for_same_bugs(files_list, num_of_program_stms):
     for file in overall_info.keys():
         sheet.write(row, K_WISE_COL, file)
         data = overall_info[file]
-        for spectrum_expression_type in [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2]:
+        for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
             num_of_bugs = num_of_detected_bug(data[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER])
             sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
 
