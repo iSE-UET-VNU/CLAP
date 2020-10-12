@@ -42,6 +42,7 @@ def features_ranking(buggy_statement, mutated_project_dir, failing_variants, fil
 
     total_passes = total_variants - len(failing_variants)
     total_fails = len(failing_variants)
+
     # there are no passing variants with test coverage > threshold
     if (total_passes == 0):
         return -2, -2, -2
@@ -180,14 +181,17 @@ def get_coverage_infor_of_variants(variant, variant_dir, failling_variants,  fea
     spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
     spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
+    if not os.path.isfile(spectrum_failed_coverage_file_dir):
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+
+    if not os.path.isfile(spectrum_passed_coverage_file_dir):
+        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+
     if variant in failling_variants:
-        if not os.path.isfile(spectrum_failed_coverage_file_dir):
-            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+
         if os.path.isfile(spectrum_failed_coverage_file_dir):
             features_coverage_info = read_coverage_info(variant, features_coverage_info, spectrum_failed_coverage_file_dir, VARIANTS_FAILED)
 
-        if not os.path.isfile(spectrum_passed_coverage_file_dir):
-            spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
         if os.path.isfile(spectrum_passed_coverage_file_dir):
             features_coverage_info = read_coverage_info(variant, features_coverage_info, spectrum_passed_coverage_file_dir, VARIANTS_FAILED)
     else:
