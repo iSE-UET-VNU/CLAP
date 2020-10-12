@@ -37,7 +37,7 @@ def statement_coverage(variant_dir, spectrum_coverage_prefix):
     return coverage_rate
 
 
-def statement_coverage_of_variants(project_dir, spectrum_coverage_prefix):
+def statement_coverage_of_variants(project_dir, spectrum_coverage_prefix=""):
     stm_coverage_variants = {}
     variants_dir = get_variants_dir(project_dir)
     for variant in list_dir(variants_dir):

@@ -47,11 +47,14 @@ def mkdir_if_not_exist(input_dir):
     if not is_path_exist(input_dir):
         os.makedirs(input_dir)
 
+
 def get_experimetal_result_system_dir(system_name):
     return join_path(EXPERIMENT_RESULT_FOLDER, system_name)
 
+
 def get_experimetal_result_k_wise(system_dir, k_wise):
     return join_path(system_dir, k_wise)
+
 
 def get_experimental_result_file(k_wise_dir, file_name):
     return join_path(k_wise_dir, file_name)
@@ -180,17 +183,32 @@ def get_implemented_features(project_dir):
 
 
 def get_passed_spectrum_coverage_file_path_with_version(variant_dir, version=""):
-    return get_spectrum_coverage_file_path_with_version(variant_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME, version)
+    return get_spectrum_coverage_file_path_with_version(variant_dir,
+                                                        get_spectrum_passed_coverage_file_name_with_version(version))
 
 
 def get_failed_spectrum_coverage_file_path_with_version(variant_dir, version=""):
-    return get_spectrum_coverage_file_path_with_version(variant_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, version)
+    return get_spectrum_coverage_file_path_with_version(variant_dir,
+                                                        get_spectrum_failed_coverage_file_name_with_version(version))
+
+
+def get_spectrum_passed_coverage_file_name_with_version(version=""):
+    return get_spectrum_coverage_file_name_with_version(SPECTRUM_PASSED_COVERAGE_FILE_NAME, version)
+
+
+def get_spectrum_failed_coverage_file_name_with_version(version=""):
+    return get_spectrum_coverage_file_name_with_version(SPECTRUM_FAILED_COVERAGE_FILE_NAME, version)
 
 
 def get_spectrum_coverage_file_path_with_version(variant_dir, original_coverage_file_name, version=""):
+    return join_path(get_test_coverage_dir(variant_dir),
+                     get_spectrum_coverage_file_name_with_version(original_coverage_file_name, version))
+
+
+def get_spectrum_coverage_file_name_with_version(original_coverage_file_name, version=""):
     if version:
         version = version + "__"
-    return join_path(get_test_coverage_dir(variant_dir), version + original_coverage_file_name)
+    return version + original_coverage_file_name
 
 
 def is_project_locked(project_dir):
