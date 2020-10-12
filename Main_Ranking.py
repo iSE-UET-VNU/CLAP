@@ -10,13 +10,13 @@ from Spectrum_Expression import RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, A
 
 if __name__ == "__main__":
 
-    base_dir = "/Users/thu-trangnguyen/Documents/Research/configurable_system/Experiment/projects/"
-    system_names = ["ExamDB_Test"]
+    base_dir = "/home/huent/Documents/Trang/"
+    system_names = ["Elevator", "Email", "ExamDB", "BankAccountTP"]
     project_names = ["1wise", "2wise", "3wise", "4wise", "5wise"]
 
-    spectrum_coverage_prefix = "v3__"
+    spectrum_coverage_prefix = "v99__"
 
-    filtering_coverage_rate_list = [0.95]
+    filtering_coverage_rate_list = [0.8]
     for coverage_index in range(0, len(filtering_coverage_rate_list)):
         for system in system_names:
              system_dir = join_path(base_dir, system)
