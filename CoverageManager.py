@@ -13,7 +13,7 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 def rebuild_spectrum_coverage_for_mutated_project(mutated_project_dir, version=""):
     if not version:
         version = get_version_by_time()
-    random = True
+    random = False
     variant_dirs = get_all_variants_dirs(mutated_project_dir)
     for variant_dir in variant_dirs:
         rebuild_spectrum_coverage_for_variant(variant_dir, version=version, random=random)
