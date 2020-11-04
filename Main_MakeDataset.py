@@ -10,7 +10,7 @@ from FileManager import get_model_file_path, get_project_dir, get_dependency_lib
 
 if __name__ == "__main__":
     base_dir = None
-    project_name = "BankAccountTP"
+    project_name = "Elevator-FH-JML-MB"
     project_dir = get_project_dir(project_name, base_dir)
 
     # get model file
@@ -38,11 +38,11 @@ if __name__ == "__main__":
         AntManager.compile_source_classes(lib_paths=lib_paths, variant_dir=variant_dir)
         variant_dirs.append(variant_dir)
 
-        TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
-        TestManager.run_junit_test_cases_with_coverage(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
-                                                       halt_on_error=True, custom_ant=cloned_ant_name)
+        # TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
+        # TestManager.run_junit_test_cases_with_coverage(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
+        #                                                halt_on_error=True, custom_ant=cloned_ant_name)
 
-    TestManager.write_test_output_to_configs_report(project_dir)
+    # TestManager.write_test_output_to_configs_report(project_dir)
 
     # generate mutants and inject them to "optional" features
     optional_feature_names = ConfigManager.get_optional_feature_names(sampling_output_file_path)
@@ -52,6 +52,6 @@ if __name__ == "__main__":
     for mutated_project_dir in mutated_project_dirs:
         for config_path, variant_dir in zip(config_output_paths, variant_dirs):
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
-            TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
+            # TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
 
-        ConfigManager.copy_configs_report(project_dir, mutated_project_dir)
+        # ConfigManager.copy_configs_report(project_dir, mutated_project_dir)

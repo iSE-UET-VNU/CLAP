@@ -41,13 +41,13 @@ def count_mutants(mutant_paths):
 
 
 def make_mutants(current_project_dir, optional_feature_names):
-    projects_dir, project_name = split_path(current_project_dir)
-    execute_shell_command(
-        f'java -Dmujava_home={projects_dir} -Dallowed_features={",".join(optional_feature_names)} -cp {PLUGIN_PATH} mujava.cli.genmutes',
-        extra_args=[
-            {"-all": ""},
-            {project_name: ""},
-        ])
+    # projects_dir, project_name = split_path(current_project_dir)
+    # execute_shell_command(
+    #     f'java -Dmujava_home={projects_dir} -Dallowed_features={",".join(optional_feature_names)} -cp {PLUGIN_PATH} mujava.cli.genmutes',
+    #     extra_args=[
+    #         {"-all": ""},
+    #         {project_name: ""},
+    #     ])
     mutation_result_dir = get_mutation_result_dir(current_project_dir)
     mutant_paths = get_all_mutant_paths(mutation_result_dir)
     mutant_count = count_mutants(mutant_paths)
@@ -55,12 +55,38 @@ def make_mutants(current_project_dir, optional_feature_names):
     return mutant_paths
 
 
+def mixing_multiple_bugs(mutant_paths, num_of_bugs=1):
+    if num_of_bugs == 0:
+        return []
+    elif num_of_bugs == 1:
+        return [(source_file_path,) for source_file_path in mutant_paths]
+    else:
+        mixed_mutant_path_tuples = []
+        for source_file_path in mutant_paths:
+            mutant_path_parts = source_file_path.rsplit("/", 5)
+            operator_index = mutant_path_parts[4]
+            full_class_name = mutant_path_parts[1]
+            current_bug_name = f"{full_class_name}.{operator_index}"
+            mutation_log_file = join_path(*mutant_path_parts[:-3], "mutation_logs", f"{current_bug_name}.log")
+            line_number = None
+            with open(mutation_log_file) as f:
+                #COI_2:57:boolean_isDestinationReached(): destinationReached  =>  !destinationReached
+                mutated_line_hint = f.readlines(1)[0]
+                line_number = mutated_line_hint.split(":", 2)[1]
+            if not line_number:
+                raise Exception("Can't find mutated hint in file {}".format(mutation_log_file))
+            global_bug_id = "{}.{}".format(full_class_name, line_number)
+            print(global_bug_id)
+
+
+
 def generate_mutants(project_dir, optional_feature_names):
     logger.info(f"Mutating features [{get_file_name_without_ext(project_dir)}]")
     assign_current_project_as_new_session(project_dir)
     mutant_paths = make_mutants(project_dir, optional_feature_names)
-    mutated_project_dirs = inject_mutants(project_dir, mutant_paths)
-    return mutated_project_dirs
+    mixing_multiple_bugs(mutant_paths, num_of_bugs=2)
+    # mutated_project_dirs = inject_mutants(project_dir, mutant_paths)
+    # return mutated_project_dirs
 
 
 def inject_mutants(project_dir, mutant_paths):
@@ -76,6 +102,8 @@ def inject_mutants(project_dir, mutant_paths):
         class_name += ".java"
         operator_index = mutant_path_parts[4]
         current_project_name = f"{full_class_name}.{operator_index}"
+
+        # current_project_name: Base.ElevatorSystem.Person.AOIS_1
 
         current_mutated_project_dir = join_path(mutated_projects_dir, current_project_name)
         current_mutated_features_dir = get_feature_source_code_dir(project_dir=current_mutated_project_dir)
