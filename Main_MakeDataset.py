@@ -9,13 +9,13 @@ import ModelManager
 from FileManager import get_model_file_path, get_project_dir, get_dependency_lib_dirs
 
 if __name__ == "__main__":
+
+    # ------ START CONFIG ------
     base_dir = None
     project_name = "Elevator-FH-JML-MB"
-
-    # start config
     t_wise = 2
     num_of_seeding_bugs = 2
-    # end config
+    # ------ END CONFIG ------
 
     project_dir = get_project_dir(project_name, base_dir)
 
