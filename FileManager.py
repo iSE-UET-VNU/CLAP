@@ -295,18 +295,21 @@ def escape_path(current_path):
 
 def create_symlink(src, dst):
     if is_path_exist(dst):
-        try:
-            os.unlink(dst)
-        except (IsADirectoryError, PermissionError):
-            pass
+        unlink(dst)
     else:
         mkdir_if_not_exist(get_outer_dir(dst))
     os.symlink(src, escape_path(dst))
 
 
+def unlink(dst):
+    try:
+        os.unlink(dst)
+    except (IsADirectoryError, PermissionError):
+        pass
+
 def create_non_hidden_file_symlink(src, dst):
     if is_path_exist(dst):
-        os.unlink(dst)
+        unlink(dst)
     mkdir_if_not_exist(dst)
     for file in list_dir(src):
         if file.startswith("."):
