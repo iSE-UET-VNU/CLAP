@@ -11,7 +11,12 @@ from FileManager import get_model_file_path, get_project_dir, get_dependency_lib
 if __name__ == "__main__":
     base_dir = None
     project_name = "Elevator-FH-JML-MB"
+
+    # start config
+    t_wise = 2
     num_of_seeding_bugs = 2
+    # end config
+
     project_dir = get_project_dir(project_name, base_dir)
 
     # get model file
@@ -24,7 +29,7 @@ if __name__ == "__main__":
     feature_order_file_path = ModelManager.generate_feature_order_file(project_dir)
 
     # sampling configurations
-    sampling_output_file_path = SamplingManager.sampling(model_file_path, t_wise=2)
+    sampling_output_file_path = SamplingManager.sampling(model_file_path, t_wise=t_wise)
     configs_report_file_path, config_output_paths = ConfigManager.generate_configs(project_dir,
                                                                                    feature_order_file_path,
                                                                                    sampling_output_file_path)
