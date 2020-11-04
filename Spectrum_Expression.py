@@ -346,7 +346,7 @@ def harmonic_mean_calculation(fails, passes, total_failed_tests, total_passes_te
         return (temp2*temp3)/temp
 
 def kulczynski1_calculation(fails, passes, total_failed_tests, total_passes_tests):
-    temp = total_failed_tests - fails + passes
+    temp = (total_failed_tests - fails) + passes
     if temp == 0:
         return 0
     else:
