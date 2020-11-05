@@ -9,8 +9,14 @@ import ModelManager
 from FileManager import get_model_file_path, get_project_dir, get_dependency_lib_dirs
 
 if __name__ == "__main__":
+
+    # ------ START CONFIG ------
     base_dir = None
-    project_name = "BankAccountTP"
+    project_name = "Elevator-FH-JML-MB"
+    t_wise = 2
+    num_of_seeding_bugs = 2
+    # ------ END CONFIG ------
+
     project_dir = get_project_dir(project_name, base_dir)
 
     # get model file
@@ -23,7 +29,7 @@ if __name__ == "__main__":
     feature_order_file_path = ModelManager.generate_feature_order_file(project_dir)
 
     # sampling configurations
-    sampling_output_file_path = SamplingManager.sampling(model_file_path, t_wise=2)
+    sampling_output_file_path = SamplingManager.sampling(model_file_path, t_wise=t_wise)
     configs_report_file_path, config_output_paths = ConfigManager.generate_configs(project_dir,
                                                                                    feature_order_file_path,
                                                                                    sampling_output_file_path)
@@ -46,7 +52,7 @@ if __name__ == "__main__":
 
     # generate mutants and inject them to "optional" features
     optional_feature_names = ConfigManager.get_optional_feature_names(sampling_output_file_path)
-    mutated_project_dirs = MutantManager.generate_mutants(project_dir, optional_feature_names)
+    mutated_project_dirs = MutantManager.generate_mutants(project_dir, optional_feature_names, num_of_seeding_bugs)
 
     # compile mutated feature's source code
     for mutated_project_dir in mutated_project_dirs:
