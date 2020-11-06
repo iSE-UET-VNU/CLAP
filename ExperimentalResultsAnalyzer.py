@@ -50,9 +50,62 @@ SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                                                 RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
                                                 COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
                                                 WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
-                                                M1, WONG2, WONG3, ZOLTAR, OVERLAP,
-                                                EUCLID, ROGOT2, HAMMING, FLEISS, ANDERBERG,
-                                                GOODMAN, HARMONIC_MEAN, KULCZYNSKI1, KULCZYNSKI2]
+                                                 WONG2, WONG3, ZOLTAR, ROGOT2, HAMMING, FLEISS, ANDERBERG,
+                                                GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
+
+def summary_hitx(evaluation_type, system_names, num_of_program_stms):
+    summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
+                                 "hitx_" + evaluation_type + ".xlsx")
+    wb = Workbook(summary_file_dir)
+    sheet = wb.add_worksheet("sheet1")
+
+    row = 0
+    sheet.write(row, 2, "HIT@1")
+    sheet.write(row, 4, "HIT@3")
+    sheet.write(row, 6, "HIT@3")
+    sheet.write(row, 8, "HIT@3")
+    row += 1
+    sheet.write(row, 0, "File")
+    sheet.write(row, 1, "Technique")
+    sheet.write(row, 2, "VarCop")
+    sheet.write(row, 3, "Spectrum")
+    sheet.write(row, 4, "VarCop")
+    sheet.write(row, 5, "Spectrum")
+    sheet.write(row, 6, "VarCop")
+    sheet.write(row, 7, "Spectrum")
+    sheet.write(row, 8, "VarCop")
+    sheet.write(row, 9, "Spectrum")
+    row += 1
+    evaluation_type_result_dir = join_path(EXPERIMENT_RESULT_FOLDER, evaluation_type)
+    for system in system_names:
+        system_result_dir = join_path(evaluation_type_result_dir, system)
+
+        k_wise_result_dir = join_path(system_result_dir, "4wise")
+        experimental_file_dir = join_path(k_wise_result_dir, "0.95_.xlsx")
+        sheet.write(row, 0, experimental_file_dir)
+        print(experimental_file_dir)
+        excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
+
+        for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
+            sheet.write(row, 1, spectrum_expression_type)
+            hit_list = [1, 3, 5, 10]
+            col = 1;
+            for index in range(0, len(hit_list)):
+                col += 1
+                sheet.write(row, col, count_hit_x(excel_data_df[spectrum_expression_type][VARCOP_SPC_LAYER_HEADER], hit_list[index]))
+                col += 1
+                sheet.write(row, col,
+                            count_hit_x(excel_data_df[spectrum_expression_type][SPECTRUM_HEADER],
+                                        hit_list[index]))
+            row += 1
+
+    wb.close()
+def count_hit_x(value_list, x):
+    count = 0
+    for value in value_list:
+        if value <= x:
+            count += 1
+    return count
 
 def summary_result(evaluation_type, system_names, num_of_program_stms):
 
