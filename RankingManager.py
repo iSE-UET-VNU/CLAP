@@ -194,7 +194,10 @@ def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, overall
             if local_score == -1:
                 normalized_score = alpha
             else:
-                normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
+                if(min == max):
+                    normalized_score = beta
+                else:
+                    normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
             normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
