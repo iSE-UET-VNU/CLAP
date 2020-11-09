@@ -64,24 +64,24 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
         elif spectrum_expression == OCHIAI:
             features_info[id][OCHIAI_SCORE] = ochiai_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
-                                                                         total_fails)
+                                                                         total_fails, total_passes)
         elif spectrum_expression == OP2:
             features_info[id][OP2_SCORE] = op2_calculation(len(features_info[id][VARIANTS_FAILED]),
-                                                                         len(features_info[id][VARIANTS_PASSED]),
+                                                                         len(features_info[id][VARIANTS_PASSED]), total_fails,
                                                                          total_passes)
         elif spectrum_expression == BARINEL:
             features_info[id][BARINEL_SCORE] = barinel_calculation(len(features_info[id][VARIANTS_FAILED]),
-                                                                         len(features_info[id][VARIANTS_PASSED]))
+                                                                         len(features_info[id][VARIANTS_PASSED]), total_fails, total_passes)
         elif spectrum_expression == DSTAR:
             features_info[id][DSTAR_SCORE] = dstar_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
-                                                                         total_fails)
+                                                                         total_fails, total_passes)
         elif spectrum_expression == DSTAR:
             features_info[id][DSTAR_SCORE] = dstar_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                          len(features_info[id][VARIANTS_PASSED]),
-                                                                         total_fails)
+                                                                         total_fails, total_passes)
         elif spectrum_expression == RUSSELL_RAO:
-            features_info[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(len(features_info[id][VARIANTS_FAILED]),
+            features_info[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
         elif spectrum_expression == SIMPLE_MATCHING:
             features_info[id][SIMPLE_MATCHING_SCORE] = simple_matching_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
@@ -94,7 +94,7 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
                                                                  total_fails, total_passes)
         elif spectrum_expression == JACCARD:
             features_info[id][JACCARD_SCORE] = jaccard_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
-                                                                 total_fails)
+                                                                 total_fails, total_passes)
         elif spectrum_expression == COHEN:
             features_info[id][COHEN_SCORE] = cohen_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
@@ -111,7 +111,8 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
             features_info[id][M2_SCORE] = m2_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
         elif spectrum_expression == WONG1:
-            features_info[id][WONG1_SCORE] = wong1_calculation(len(features_info[id][VARIANTS_FAILED]))
+            features_info[id][WONG1_SCORE] = wong1_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
+                                                                 total_fails, total_passes)
         elif spectrum_expression == SOKAL:
             features_info[id][SOKAL_SCORE] = sokal_calculation(len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                                                                  total_fails, total_passes)
