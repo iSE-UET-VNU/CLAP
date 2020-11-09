@@ -146,14 +146,11 @@ def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_s
             # if stm appears in the suspicious stms list of the product [variant]
             if stm in suspicious_stms_list[variant]:
                 rank = search_rank_worst_case(stm, local_suspiciousness_of_isolated_stms[variant])
-                print("1_case  ", rank)
             #if stm appers in the product[variant]
             elif stm in all_stms_of_the_system[variant]:
                 rank = search_rank_worst_case(stm, local_suspiciousness_of_all_the_system[variant])
-                print("2_case  ", rank)
             else:
                 rank = len(all_stms)
-                print("3_case  ", rank)
             normalized_score = 1/rank
             normalized_score_list[variant][stm] = normalized_score
 
