@@ -188,18 +188,19 @@ def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_s
     normalized_score_list = {}
     for variant in local_suspiciousness_of_isolated_stms:
         normalized_score_list[variant] = {}
-        max = local_suspiciousness_of_isolated_stms[variant][0][1]
-        min = local_suspiciousness_of_isolated_stms[variant][len(local_suspiciousness_of_isolated_stms[variant])-1][1]
-        for stm in all_suspicious_stm:
-            local_score =  get_local_score(stm, local_suspiciousness_of_isolated_stms[variant])
-            if local_score == -1:
-                normalized_score = alpha
-            else:
-                if(min == max):
-                    normalized_score = beta
+        if(len(local_suspiciousness_of_isolated_stms[variant]) > 0):
+            max = local_suspiciousness_of_isolated_stms[variant][0][1]
+            min = local_suspiciousness_of_isolated_stms[variant][len(local_suspiciousness_of_isolated_stms[variant])-1][1]
+            for stm in all_suspicious_stm:
+                local_score =  get_local_score(stm, local_suspiciousness_of_isolated_stms[variant])
+                if local_score == -1:
+                    normalized_score = alpha
                 else:
-                    normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
-            normalized_score_list[variant][stm] = normalized_score
+                    if(min == max):
+                        normalized_score = beta
+                    else:
+                        normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
+                normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
 def global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression):
