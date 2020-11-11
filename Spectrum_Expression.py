@@ -18,7 +18,6 @@ GEOMETRIC_MEAN = "geometric_mean"
 M2 = "m2"
 WONG1 = "wong1"
 SOKAL = "sokal"
-#new
 SORENSEN_DICE = "sorensen_dice"
 DICE = "dice"
 HUMANN = "humman"
@@ -122,7 +121,7 @@ def tarantula_calculation(fails, passes, total_failed_tests, total_passed_tests)
             (passes / total_passed_tests))
 
 
-def ochiai_calculation(fails, passes, total_failed_tests):
+def ochiai_calculation(fails, passes, total_failed_tests, total_passed_tests):
     if total_failed_tests == 0:
         return 0
     if fails == 0:
@@ -131,17 +130,17 @@ def ochiai_calculation(fails, passes, total_failed_tests):
                 fails + passes))
 
 
-def op2_calculation(fails, passes, total_passed_tests):
+def op2_calculation(fails, passes, total_failed_tests, total_passed_tests):
     return fails - passes / (total_passed_tests + 1)
 
 
-def barinel_calculation(fails, passes):
+def barinel_calculation(fails, passes, total_failed_tests, total_passed_tests):
     if fails == 0 and passes == 0:
         return 0
     return 1 - passes / (passes + fails)
 
 
-def dstar_calculation(fails, passes, total_failed_tests):
+def dstar_calculation(fails, passes, total_failed_tests, total_passed_tests):
     temp = passes + (total_failed_tests - fails)
     if fails == 0:
         return 0
@@ -149,7 +148,7 @@ def dstar_calculation(fails, passes, total_failed_tests):
         return 1000
     return (fails * fails) / temp
 
-def dstar_modified_calculation(fails, passes, total_failed_tests):
+def dstar_modified_calculation(fails, passes, total_failed_tests, total_passed_tests):
     temp =  passes + (total_failed_tests - fails)
     if fails == 0:
         return 0
@@ -157,7 +156,7 @@ def dstar_modified_calculation(fails, passes, total_failed_tests):
         return 1000
     return ((fails * fails) / (total_failed_tests * total_failed_tests))/temp
 
-def russell_rao_calculation(fails, total_failed_tests, total_passes_tests):
+def russell_rao_calculation(fails, passes, total_failed_tests, total_passes_tests):
     if total_failed_tests + total_passes_tests == 0:
         return 0
     else:
@@ -184,7 +183,7 @@ def ample_calculation(fails, passes, total_failed_tests, total_passes_tests):
     else:
         return abs(fails/total_failed_tests - passes/total_passes_tests)
 
-def jaccard_calculation(fails, passes, total_failed_tests):
+def jaccard_calculation(fails, passes, total_failed_tests, total_passes_tests):
     if(total_failed_tests + passes) == 0:
         return 0
     else:
@@ -228,7 +227,7 @@ def m2_calculation(fails, passes, total_failed_tests, total_passes_tests):
     else:
         return fails/temp
 
-def  wong1_calculation(fails):
+def  wong1_calculation(fails, passes, total_failed_tests, total_passes_tests):
     return fails
 
 def sokal_calculation(fails, passes, total_failed_tests, total_passes_tests):

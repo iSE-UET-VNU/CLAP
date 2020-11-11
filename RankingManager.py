@@ -43,10 +43,13 @@ VARCOP_LAYER = "WITHOUT_ISOLATION_LAYER"
 VARCOP_SEARCH_SPACE = "WITHOUT_ISOLATION_SPACE"
 
 
-AGGREATION_AVERAGE_ADDITION = "AGGREATION_AVERAGE_ADDITION"
-AGGREATION_AVERAGE_MULTIPLICATION = "AGGREATION_AVERAGE_MULTIPLICATION"
+AGGREGATION_AVERAGE_ADDITION = "AGGREGATION_AVERAGE_ADDITION"
+AGGREGATION_AVERAGE_MULTIPLICATION = "AGGREGATION_AVERAGE_MULTIPLICATION"
+NORMALIZATION1 = "NORMALIZATION1"
+NORMALIZATION2 = "NORMALIZATION2"
+NORMALIZATION3 = "NORMALIZATION3"
 
-def suspicious_stms_of_the_system(suspicious_stms_list):
+def num_of_suspicious_stms(suspicious_stms_list):
     stm_set = []
     for variant in suspicious_stms_list:
         for stm in suspicious_stms_list[variant]:
@@ -54,21 +57,29 @@ def suspicious_stms_of_the_system(suspicious_stms_list):
                 stm_set.append(stm)
     return len(stm_set)
 
-def rank_for_a_suspicious_list(mutated_project_dir, buggy_statement, all_stms_of_the_system, suspicious_stms_list, spectrum_expression, type):
-    num_suspicious_stm = suspicious_stms_of_the_system(suspicious_stms_list)
-    overall_suspiciousness = {}
+def local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list, spectrum_expression):
+    local_suspiciousness = {}
     for variant in suspicious_stms_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], spectrum_expression)
-        overall_suspiciousness[variant] = spc_spectrum_ranking(statement_infor, spectrum_expression)
-    if(type == AGGREATION_AVERAGE_ADDITION):
-        ranked_list = overall_score_in_all_products_average_addition(all_stms_of_the_system, suspicious_stms_list,
-                                                     overall_suspiciousness, spectrum_expression)
+        local_suspiciousness[variant] = spc_spectrum_ranking(statement_infor, spectrum_expression)
+    return local_suspiciousness
+
+def global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
+    num_suspicious_stm = num_of_suspicious_stms(suspicious_stms_list)
+
+    if(normalized_type == NORMALIZATION1):
+        normalized_score_list = normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
+    elif(normalized_type == NORMALIZATION2):
+        normalized_score_list = normalize_local_score2(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
     else:
-        ranked_list = overall_score_in_all_products_average_multiplication(all_stms_of_the_system, suspicious_stms_list,
-                                                    overall_suspiciousness, spectrum_expression)
+        normalized_score_list = normalize_local_score3(all_stms_of_the_system, suspicious_stms_list,
+                                                       local_suspiciousness_of_isolated_stms)
 
-
+    if(aggregation_type == AGGREGATION_AVERAGE_ADDITION):
+        ranked_list = global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression)
+    else:
+        ranked_list = global_score_aggregation_average_multiplication(all_stms_of_the_system, normalized_score_list, spectrum_expression)
 
     buggy_stm_ranked = search_rank_worst_case(buggy_statement, ranked_list)
     buggy_stm_ranked_by_layer = search_rank_worst_case_by_layer(buggy_statement, ranked_list)
@@ -82,7 +93,7 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
     return suspicious_stms_list
 
 
-def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, type, spectrum_coverage_prefix):
+def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
     NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
     global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
@@ -90,20 +101,19 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
 
     all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir)
 
+    # rank without isolation
+    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, suspicious_stms_list.keys())
+    local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
+    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
     #rank with isolation
-    buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = rank_for_a_suspicious_list(mutated_project_dir, buggy_statement, all_stms_of_the_system, suspicious_stms_list,
-                        spectrum_expression, type)
+    local_suspiciousness_of_isolated_stms = local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list,
+                                                                             spectrum_expression)
+    buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
-
-    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, suspicious_stms_list.keys())
-
-    #rank without isolation
-    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = rank_for_a_suspicious_list(mutated_project_dir, buggy_statement, all_stms_of_the_system, all_suspicious_of_the_system,
-        spectrum_expression, type)
 
     #spectrum ranking only
-    buggy_stm_spectrum_ranked, spectrum_space = rank_by_tranditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement)
+    buggy_stm_spectrum_ranked, spectrum_space = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement)
 
     ranking_results = { VARCOP_SPC_FAILING: buggy_stm_ranked,
                         VARCOP_SPC_LAYER: buggy_stm_ranked_by_layer,
@@ -117,7 +127,7 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
 
     return ranking_results
 
-def get_stms_from_list_varints(stms_in_list_variants):
+def get_stms_from_list_variants(stms_in_list_variants):
     all_stms_list = []
     for variant in stms_in_list_variants:
         for stm in stms_in_list_variants[variant]:
@@ -125,93 +135,113 @@ def get_stms_from_list_varints(stms_in_list_variants):
                 all_stms_list.append(stm)
     return all_stms_list
 
-def overall_score_in_all_products_average_multiplication(all_stms_of_the_system, suspicious_stms_list, overall_suspiciousness, spectrum_expression):
-    score_type = spectrum_expression + "_score"
-    all_stms_list = get_stms_from_list_varints(suspicious_stms_list)
-    all_stms_score_list = {}
-
-    for variant in overall_suspiciousness:
-        for stm in all_stms_list:
-            #if the stm appears in the suspicious stms list of the product [variant]
+def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system):
+    all_suspicious_stm = get_stms_from_list_variants(suspicious_stms_list)
+    all_stms = get_stms_from_list_variants(all_stms_of_the_system)
+    normalized_score_list = {}
+    for variant in local_suspiciousness_of_isolated_stms:
+        normalized_score_list[variant] = {}
+        for stm in all_suspicious_stm:
+            rank = -1
+            # if stm appears in the suspicious stms list of the product [variant]
             if stm in suspicious_stms_list[variant]:
-                rank = search_rank_worst_case(stm, overall_suspiciousness[variant])
-                #if stms is suspicious then its score is the rank of the stm in the suspicious set
-                if(rank != -1):
-                    if stm in all_stms_score_list:
-                        all_stms_score_list[stm][score_type] *= rank
-                    if stm not in all_stms_score_list:
-                        all_stms_score_list[stm] = {}
-                        all_stms_score_list[stm][score_type] = rank
-                # if stms is not suspicious then its score is the size of the product
-                else:
-                    if stm in all_stms_score_list:
-                        all_stms_score_list[stm][score_type] *= len(suspicious_stms_list[variant])
-                    if stm not in all_stms_score_list:
-                        all_stms_score_list[stm] = {}
-                        all_stms_score_list[stm][score_type] = len(suspicious_stms_list[variant])
-            #if the stm does not appear int the product [variant]
-            #then its score is the size of the system's stms list
+                rank = search_rank_worst_case(stm, local_suspiciousness_of_isolated_stms[variant])
+            #if stm appers in the product[variant]
+            elif stm in all_stms_of_the_system[variant]:
+                rank = search_rank_worst_case(stm, local_suspiciousness_of_all_the_system[variant])
             else:
-                if stm in all_stms_score_list:
-                    all_stms_score_list[stm][score_type] *= len(all_stms_list)
-                if stm not in all_stms_score_list:
-                    all_stms_score_list[stm] = {}
-                    all_stms_score_list[stm][score_type] = len(all_stms_list)
+                rank = len(all_stms)
+            normalized_score = 1/rank
+            normalized_score_list[variant][stm] = normalized_score
+
+    return normalized_score_list
+
+def normalize_local_score2(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system):
+    all_suspicious_stm = get_stms_from_list_variants(suspicious_stms_list)
+    all_stms = get_stms_from_list_variants(all_stms_of_the_system)
+    normalized_score_list = {}
+    for variant in local_suspiciousness_of_isolated_stms:
+        normalized_score_list[variant] = {}
+        for stm in all_suspicious_stm:
+            rank = -1
+            # if stm appears in the suspicious stms list of the product [variant]
+            if stm in suspicious_stms_list[variant]:
+                rank = search_rank_worst_case(stm, local_suspiciousness_of_isolated_stms[variant])
+            #if stm appers in the product[variant]
+            elif stm in all_stms_of_the_system[variant]:
+                rank = search_rank_worst_case(stm, local_suspiciousness_of_all_the_system[variant])
+            else:
+                rank = len(all_stms)
+            normalized_score = len(all_stms) + 1 - rank
+            normalized_score_list[variant][stm] = normalized_score
+
+    return normalized_score_list
+
+def get_local_score(stm, ranked_list):
+    for i in range(0, len(ranked_list)):
+        if stm == ranked_list[i][0]:
+            return ranked_list[i][1]
+    else:
+        return -1
+def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
+    all_suspicious_stm = get_stms_from_list_variants(suspicious_stms_list)
+    normalized_score_list = {}
+    for variant in local_suspiciousness_of_isolated_stms:
+        normalized_score_list[variant] = {}
+        if(len(local_suspiciousness_of_isolated_stms[variant]) > 0):
+            max = local_suspiciousness_of_isolated_stms[variant][0][1]
+            min = local_suspiciousness_of_isolated_stms[variant][len(local_suspiciousness_of_isolated_stms[variant])-1][1]
+            for stm in all_suspicious_stm:
+                local_score =  get_local_score(stm, local_suspiciousness_of_isolated_stms[variant])
+                if local_score == -1:
+                    normalized_score = alpha
+                else:
+                    if(min == max):
+                        normalized_score = beta
+                    else:
+                        normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
+                normalized_score_list[variant][stm] = normalized_score
+    return normalized_score_list
+
+def global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression):
+    score_type = spectrum_expression + "_score"
+    all_stms_score_list = {}
+    for variant in normalized_score_list:
+        for stm in normalized_score_list[variant]:
+            if stm in all_stms_score_list:
+                all_stms_score_list[stm][score_type] += normalized_score_list[variant][stm]
+            if stm not in all_stms_score_list:
+                all_stms_score_list[stm] = {}
+                all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
 
     for stm in all_stms_score_list:
         all_stms_score_list[stm]["num_passing_product"] = 0
         for variant in all_stms_of_the_system:
-            if variant not in suspicious_stms_list.keys() and stm in all_stms_of_the_system[variant]:
+            if variant not in normalized_score_list.keys() and stm in all_stms_of_the_system[variant]:
                 all_stms_score_list[stm]["num_passing_product"] += 1
-
     return varcop_ranking(all_stms_score_list, spectrum_expression)
 
-
-def overall_score_in_all_products_average_addition(all_stms_of_the_system, suspicious_stms_list, overall_suspiciousness, spectrum_expression):
+def global_score_aggregation_average_multiplication(all_stms_of_the_system, normalized_score_list, spectrum_expression):
     score_type = spectrum_expression + "_score"
-    all_stms_list = get_stms_from_list_varints(suspicious_stms_list)
     all_stms_score_list = {}
-
-    for variant in overall_suspiciousness:
-
-        for stm in all_stms_list:
-            #if the stm appears in the suspicious stms list of the product [variant]
-            if stm in suspicious_stms_list[variant]:
-                rank = search_rank_worst_case(stm, overall_suspiciousness[variant])
-
-                #if stms is suspicious then its score is the rank of the stm in the suspicious set
-                if(rank != -1):
-                    if stm in all_stms_score_list:
-                        all_stms_score_list[stm][score_type] += rank
-                    if stm not in all_stms_score_list:
-                        all_stms_score_list[stm] = {}
-                        all_stms_score_list[stm][score_type] = rank
-                # if stms is not suspicious then its score is the size of the product
-                else:
-                    if stm in all_stms_score_list:
-                        all_stms_score_list[stm][score_type] += len(suspicious_stms_list[variant])
-                    if stm not in all_stms_score_list:
-                        all_stms_score_list[stm] = {}
-                        all_stms_score_list[stm][score_type] = len(suspicious_stms_list[variant])
-            #if the stm does not appear int the product [variant]
-            #then its score is the size of the system's stms list
-            else:
-                if stm in all_stms_score_list:
-                    all_stms_score_list[stm][score_type] += len(all_stms_list)
-                if stm not in all_stms_score_list:
-                    all_stms_score_list[stm] = {}
-                    all_stms_score_list[stm][score_type] = len(all_stms_list)
+    for variant in normalized_score_list:
+        for stm in normalized_score_list[variant]:
+            if stm in all_stms_score_list:
+                all_stms_score_list[stm][score_type] *= normalized_score_list[variant][stm]
+            if stm not in all_stms_score_list:
+                all_stms_score_list[stm] = {}
+                all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
 
     for stm in all_stms_score_list:
         all_stms_score_list[stm]["num_passing_product"] = 0
         for variant in all_stms_of_the_system:
-            if variant not in suspicious_stms_list.keys() and stm in all_stms_of_the_system[variant]:
+            if variant not in normalized_score_list.keys() and stm in all_stms_of_the_system[variant]:
                 all_stms_score_list[stm]["num_passing_product"] += 1
-
     return varcop_ranking(all_stms_score_list, spectrum_expression)
 
 
-def rank_by_tranditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement):
+
+def rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement):
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_information_for_spectrum_ranking(
         mutated_project_dir)
     stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests,
@@ -414,19 +444,20 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                                                                          total_passed_tests)
         elif spectrum_expression == OCHIAI:
             statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests)
+                                                                   total_failed_tests, total_passed_tests)
         elif spectrum_expression == OP2:
-            statement_infor[id][OP2_SCORE] = op2_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+            statement_infor[id][OP2_SCORE] = op2_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
                                                              total_passed_tests)
         elif spectrum_expression == BARINEL:
-            statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT])
+            statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
+                                                             total_passed_tests)
 
         elif spectrum_expression == DSTAR:
             statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                           statement_infor[id][PASSED_TEST_COUNT],
-                                                                          total_failed_tests)
+                                                                          total_failed_tests, total_passed_tests)
         elif spectrum_expression == RUSSELL_RAO:
-            statement_infor[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(statement_infor[id][FAILED_TEST_COUNT],
+            statement_infor[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
         elif spectrum_expression == SIMPLE_MATCHING:
             statement_infor[id][SIMPLE_MATCHING_SCORE] = simple_matching_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
@@ -440,7 +471,7 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
         elif spectrum_expression == JACCARD:
             statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests)
+                                                                 total_failed_tests, total_passed_tests)
         elif spectrum_expression == COHEN:
             statement_infor[id][COHEN_SCORE] = cohen_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
@@ -464,7 +495,8 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                                                                           statement_infor[id][PASSED_TEST_COUNT],
                                                                           total_failed_tests, total_passed_tests)
         elif spectrum_expression == WONG1:
-            statement_infor[id][WONG1_SCORE] = wong1_calculation(statement_infor[id][FAILED_TEST_COUNT])
+            statement_infor[id][WONG1_SCORE] = wong1_calculation(statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
+                                                                          total_failed_tests, total_passed_tests)
 
         elif spectrum_expression == SOKAL:
             statement_infor[id][SOKAL_SCORE] = sokal_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -580,7 +612,8 @@ def varcop_ranking(statements_infor, spectrum_expression):
     for (key, value) in statements_infor.items():
         ranked_list.append((key, statements_infor[key][score_type], statements_infor[key]["num_passing_product"]))
 
-    return ascending_sort(data = ranked_list, sorted_element = 1)
+    #return ascending_sort(data = ranked_list, sorted_element = 1)
+    return descending_sort(data = ranked_list, sorted_element = 1)
 
 
 def spc_spectrum_ranking(statements_infor, spectrum_expression):

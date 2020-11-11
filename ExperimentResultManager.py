@@ -104,56 +104,58 @@ def write_results_to_file(row, sheet, ranking_results):
 
 def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
 
-    score_aggregations = [RankingManager.AGGREATION_ALL_PRODUCT]
-    result_folder = "20201012_"
-    for t in score_aggregations:
-        sheet = []
-        project_dir = get_project_dir(project_name, base_dir)
-        row = 0
-        search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder + str(t))
-        system_result_dir = join_path(search_rank_type_dir, system)
-        if not os.path.exists(system_result_dir):
-            os.makedirs(system_result_dir)
-        project_result_dir = join_path(system_result_dir, project_name)
-        if not os.path.exists(project_result_dir):
-            os.makedirs(project_result_dir)
-        experiment_file_name = join_path(project_result_dir,
-                                         str(filtering_coverage_rate)+ "_" + ".xlsx")
-        wb = Workbook(experiment_file_name)
+    aggregations = [RankingManager.AGGREGATION_AVERAGE_ADDITION, RankingManager.AGGREGATION_AVERAGE_MULTIPLICATION]
+    normalizations = [RankingManager.NORMALIZATION1, RankingManager.NORMALIZATION2, RankingManager.NORMALIZATION3]
+    result_folder = "Test_"
+    for aggregation_type in aggregations:
+        for normalization_type in normalizations:
+            sheet = []
+            project_dir = get_project_dir(project_name, base_dir)
+            row = 0
+            search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder + str(aggregation_type)) + "_" + str(normalization_type)
+            system_result_dir = join_path(search_rank_type_dir, system)
+            if not os.path.exists(system_result_dir):
+                os.makedirs(system_result_dir)
+            project_result_dir = join_path(system_result_dir, project_name)
+            if not os.path.exists(project_result_dir):
+                os.makedirs(project_result_dir)
+            experiment_file_name = join_path(project_result_dir,
+                                             str(filtering_coverage_rate)+ "_" + ".xlsx")
+            wb = Workbook(experiment_file_name)
 
-        for i in range(0, len(spectrum_expressions)):
-            sheet.append(wb.add_worksheet(spectrum_expressions[i]))
-            write_header_in_result_file(row, sheet[i])
-
-        row += 1
-        mutated_projects_dir = get_mutated_projects_dir(project_dir)
-        mutated_projects = list_dir(mutated_projects_dir)
-
-        for mutated_project_name in mutated_projects:
-            # try:
-            ranking_project = project_name + "_" + mutated_project_name
-
-            logging.info("Ranking... %s", ranking_project)
-
-            mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
-
-            #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
-
-            #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate)
-            suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
-
-            buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
-
-            row_temp = row
             for i in range(0, len(spectrum_expressions)):
-                ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                         suspicious_stms_list, spectrum_expressions[i], t, spectrum_coverage_prefix)
+                sheet.append(wb.add_worksheet(spectrum_expressions[i]))
+                write_header_in_result_file(row, sheet[i])
 
-                ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
-                sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
-                row = write_results_to_file(row_temp, sheet[i], ranking_results)
+            row += 1
+            mutated_projects_dir = get_mutated_projects_dir(project_dir)
+            mutated_projects = list_dir(mutated_projects_dir)
 
-        # except:
-        #   logging.info(" Exception in ranking %s", mutated_project_name)
+            for mutated_project_name in mutated_projects:
+                # try:
+                ranking_project = project_name + "_" + mutated_project_name
 
-        wb.close()
+                logging.info("Ranking... %s", ranking_project)
+
+                mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
+
+                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+
+                #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
+                suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
+
+                buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
+
+                row_temp = row
+                for i in range(0, len(spectrum_expressions)):
+                    ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
+                                                             suspicious_stms_list, spectrum_expressions[i], aggregation_type, normalization_type, spectrum_coverage_prefix)
+
+                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
+                    sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
+                    row = write_results_to_file(row_temp, sheet[i], ranking_results)
+
+            # except:
+            #   logging.info(" Exception in ranking %s", mutated_project_name)
+
+            wb.close()
