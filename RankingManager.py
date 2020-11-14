@@ -66,7 +66,6 @@ def local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list, s
     return local_suspiciousness
 
 def global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
-    num_suspicious_stm = num_of_suspicious_stms(suspicious_stms_list)
 
     if(normalized_type == NORMALIZATION1):
         normalized_score_list = normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
@@ -84,7 +83,7 @@ def global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, su
     buggy_stm_ranked = search_rank_worst_case(buggy_statement, ranked_list)
     buggy_stm_ranked_by_layer = search_rank_worst_case_by_layer(buggy_statement, ranked_list)
 
-    return buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm
+    return buggy_stm_ranked, buggy_stm_ranked_by_layer, len(ranked_list)
 
 def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
     suspicious_stms_list = {}
@@ -135,8 +134,16 @@ def get_stms_from_list_variants(stms_in_list_variants):
                 all_stms_list.append(stm)
     return all_stms_list
 
+def get_stms_from_list_of_local_suspiciousness(local_suspiciousness_list):
+    all_stms = []
+    for variant in local_suspiciousness_list:
+        for item in local_suspiciousness_list[variant]:
+            if item[0] not in all_stms:
+                all_stms.append(item[0])
+    return all_stms
+
 def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system):
-    all_suspicious_stm = get_stms_from_list_variants(suspicious_stms_list)
+    all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     all_stms = get_stms_from_list_variants(all_stms_of_the_system)
     normalized_score_list = {}
     for variant in local_suspiciousness_of_isolated_stms:
@@ -157,8 +164,9 @@ def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_s
     return normalized_score_list
 
 def normalize_local_score2(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system):
-    all_suspicious_stm = get_stms_from_list_variants(suspicious_stms_list)
+    all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     all_stms = get_stms_from_list_variants(all_stms_of_the_system)
+
     normalized_score_list = {}
     for variant in local_suspiciousness_of_isolated_stms:
         normalized_score_list[variant] = {}
@@ -184,7 +192,7 @@ def get_local_score(stm, ranked_list):
     else:
         return -1
 def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
-    all_suspicious_stm = get_stms_from_list_variants(suspicious_stms_list)
+    all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     normalized_score_list = {}
     for variant in local_suspiciousness_of_isolated_stms:
         normalized_score_list[variant] = {}
