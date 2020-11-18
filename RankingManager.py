@@ -65,7 +65,7 @@ def local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list, s
         local_suspiciousness[variant] = spc_spectrum_ranking(statement_infor, spectrum_expression)
     return local_suspiciousness
 
-def global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
+def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
 
     if(normalized_type == NORMALIZATION1):
         normalized_score_list = normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
@@ -80,10 +80,16 @@ def global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, su
     else:
         ranked_list = global_score_aggregation_average_multiplication(all_stms_of_the_system, normalized_score_list, spectrum_expression)
 
+    return ranked_list
+
+def locate_buggy_statement(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
+    ranked_list = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
     buggy_stm_ranked = search_rank_worst_case(buggy_statement, ranked_list)
     buggy_stm_ranked_by_layer = search_rank_worst_case_by_layer(buggy_statement, ranked_list)
 
     return buggy_stm_ranked, buggy_stm_ranked_by_layer, len(ranked_list)
+
+
 
 def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
     suspicious_stms_list = {}
@@ -91,28 +97,81 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
         suspicious_stms_list[variant] = all_stms_of_the_system[variant]
     return suspicious_stms_list
 
+def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix=""):
+    global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_FAILED_COVERAGE_FILE_NAME
+
+
+    all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir)
+    all_buggy_position = {}
+    space = {}
+    # rank without isolation
+    #print("without isolation")
+    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, suspicious_stms_list.keys())
+    local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
+    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    all_buggy_position[VARCOP_LAYER] = locate_multiple_bugs(buggy_statements, ranked_list_without_isolation)
+    space[VARCOP_LAYER] = len(ranked_list_without_isolation)
+    # rank with isolation
+    print("with isolation")
+    local_suspiciousness_of_isolated_stms = local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list,
+                                                                            spectrum_expression)
+    ranked_list_with_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list,
+                                                                     local_suspiciousness_of_isolated_stms,
+                                                                     local_suspiciousness_of_all_the_system,
+                                                                     spectrum_expression, aggregation_type,
+                                                                     normalized_type)
+    space[VARCOP_SPC_LAYER] = len(ranked_list_with_isolation)
+
+    all_buggy_position[VARCOP_SPC_LAYER] = locate_multiple_bugs(buggy_statements, ranked_list_with_isolation)
+    #traditional SBFL
+    ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression)
+    all_buggy_position[SPECTRUM] = locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list_traditional_spectrum)
+    space[SPECTRUM] = len(ranked_list_traditional_spectrum)
+    return all_buggy_position, space
+
+
+def locate_multiple_bugs(buggy_statements, ranked_list):
+    buggy_possitions = {}
+    for stm in buggy_statements:
+        buggy_possitions[stm] = search_rank_worst_case_by_layer(stm, ranked_list)
+    return buggy_possitions
+
+def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
+    buggy_possitions = {}
+    for stm in buggy_statements:
+        buggy_possitions[stm] = search_rank_worst_case(stm, ranked_list)
+    return buggy_possitions
+
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
     NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
     global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
     NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_FAILED_COVERAGE_FILE_NAME
+    global buggy
+
+    buggy = buggy_statement
 
     all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir)
 
     # rank without isolation
+    print("without isolation")
     all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, suspicious_stms_list.keys())
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
-    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = locate_buggy_statement(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
     #rank with isolation
+    print("with isolation")
     local_suspiciousness_of_isolated_stms = local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list,
                                                                              spectrum_expression)
-    buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = global_ranking_a_suspicious_list(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = locate_buggy_statement(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
 
     #spectrum ranking only
-    buggy_stm_spectrum_ranked, spectrum_space = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement)
+    buggy_stm_spectrum_ranked, spectrum_space = traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement)
 
     ranking_results = { VARCOP_SPC_FAILING: buggy_stm_ranked,
                         VARCOP_SPC_LAYER: buggy_stm_ranked_by_layer,
@@ -153,6 +212,9 @@ def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_s
             # if stm appears in the suspicious stms list of the product [variant]
             if stm in suspicious_stms_list[variant]:
                 rank = search_rank_worst_case(stm, local_suspiciousness_of_isolated_stms[variant])
+                # if(stm == buggy):
+                #     print(variant)
+                #     print(rank)
             #if stm appers in the product[variant]
             elif stm in all_stms_of_the_system[variant]:
                 rank = search_rank_worst_case(stm, local_suspiciousness_of_all_the_system[variant])
@@ -249,13 +311,17 @@ def global_score_aggregation_average_multiplication(all_stms_of_the_system, norm
 
 
 
-def rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, buggy_statement):
+def rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression):
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_information_for_spectrum_ranking(
         mutated_project_dir)
     stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests,
                                                  spectrum_expression)
     spectrum_ranked_list = spectrum_ranking(stm_info_for_spectrum, spectrum_expression)
 
+    return spectrum_ranked_list
+
+def traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement):
+    spectrum_ranked_list = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression)
     buggy_stm_spectrum_ranked = search_rank_worst_case(buggy_statement, spectrum_ranked_list)
     space = len(spectrum_ranked_list)
     return buggy_stm_spectrum_ranked, space
