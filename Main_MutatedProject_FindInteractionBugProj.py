@@ -10,4 +10,4 @@ if __name__ == "__main__":
     for mutated_project_dir in mutated_project_dirs:
         has_bug = MutantManager.check_bug_from_report(mutated_project_dir)
         if has_bug:
-            print(f"{get_file_name(mutated_project_dir)}")
+            print(f"{mutated_project_dir}")
