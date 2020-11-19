@@ -1,6 +1,6 @@
 import MutantManager
 
-from FileManager import get_project_dir, get_file_name
+from FileManager import get_project_dir
 
 if __name__ == "__main__":
     project_name = "2wise-BankAccountTP"
