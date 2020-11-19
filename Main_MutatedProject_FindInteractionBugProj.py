@@ -8,6 +8,6 @@ if __name__ == "__main__":
 
     mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir)
     for mutated_project_dir in mutated_project_dirs:
-        buggy_statement, has_bug = MutantManager.check_bug_from_report(mutated_project_dir, must_interaction_bug=False)
+        has_bug = MutantManager.check_bug_from_report(mutated_project_dir)
         if has_bug:
-            print(f"[{buggy_statement}] - {get_file_name(mutated_project_dir)}")
+            print(f"{get_file_name(mutated_project_dir)}")

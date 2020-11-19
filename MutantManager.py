@@ -156,35 +156,19 @@ def get_feature_name_from_mutated_project_name(mutated_project_dir):
     return get_project_name(mutated_project_dir).split(".", 1)[0]
 
 
-BUG_CONTAINER = {}
-
-
-def check_bug_from_report(mutated_project_dir, must_interaction_bug=True):
+def check_bug_from_report(mutated_project_dir):
     # logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
-    mutated_project_name = get_project_name(mutated_project_dir)
-    buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
     configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
-    feature_name = get_feature_name_from_mutated_project_name(mutated_project_dir)
+    exist_passing_configuration = False
     exist_failing_configuration = False
-    is_interaction_bug = False
     with open(configs_report_file_path, "r") as report_csv:
         reader = csv.reader(report_csv)
-        header = next(reader)
-        feature_column_index = header.index(feature_name)
-        hash_data = f"{buggy_statement}_"
+        next(reader)
         for i, row in enumerate(reader):
-            feature_was_enabled = row[feature_column_index].strip() == "T"
             test_passed = row[-1] == "__PASSED__"
-            hash_data += f"{test_passed}_"
-            if not test_passed:
+            if test_passed:
+                exist_passing_configuration = True
+            else:
                 exist_failing_configuration = True
-            if feature_was_enabled and test_passed:
-                is_interaction_bug = True
-    # hashed_bug = hash_md5(hash_data)
-    # if hash_md5(hash_data) in BUG_CONTAINER:
-    #     return None, False
-    # else:
-    #     BUG_CONTAINER[hashed_bug] = True
-    is_bug_satisfied = (not must_interaction_bug and exist_failing_configuration) or (
-            exist_failing_configuration and is_interaction_bug)
-    return buggy_statement, is_bug_satisfied
+    is_bug_satisfied = (exist_passing_configuration and exist_failing_configuration)
+    return is_bug_satisfied
