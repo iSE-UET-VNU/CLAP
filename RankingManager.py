@@ -97,7 +97,7 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
         suspicious_stms_list[variant] = all_stms_of_the_system[variant]
     return suspicious_stms_list
 
-def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix=""):
+def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix="v5_"):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
     NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
     global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
@@ -358,7 +358,7 @@ def get_all_stms_of_the_system(mutated_project_dir):
                                 if id not in data:
                                     data[id] = {'num_interactions': 0}
                 except:
-                    logging.info("Exception when parsing %s", file)
+                   logging.info("Exception when parsing %s", file)
                 stm_list[variant] = data
     return stm_list
 
@@ -453,7 +453,7 @@ def count_test_in_file(file_dir):
         project = root.find("tests")
         return int(project.get("count"))
     except:
-        logging.info("Exception when parsing %s", file_dir)
+         logging.info("Exception when parsing %s", file_dir)
 
 def count_tests_original(test_dir):
     num_tests = 0
