@@ -45,6 +45,8 @@ VARCOP_SEARCH_SPACE = "WITHOUT_ISOLATION_SPACE"
 
 AGGREGATION_AVERAGE_ADDITION = "AGGREGATION_AVERAGE_ADDITION"
 AGGREGATION_AVERAGE_MULTIPLICATION = "AGGREGATION_AVERAGE_MULTIPLICATION"
+AGGREGATION_MIN = "AGGREGATION_MIN"
+AGGREGATION_MAX = "AGGREGATION_MAX"
 NORMALIZATION1 = "NORMALIZATION1"
 NORMALIZATION2 = "NORMALIZATION2"
 NORMALIZATION3 = "NORMALIZATION3"
@@ -77,8 +79,14 @@ def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_lis
 
     if(aggregation_type == AGGREGATION_AVERAGE_ADDITION):
         ranked_list = global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression)
-    else:
+    elif(aggregation_type == AGGREGATION_AVERAGE_MULTIPLICATION):
         ranked_list = global_score_aggregation_average_multiplication(all_stms_of_the_system, normalized_score_list, spectrum_expression)
+    elif(aggregation_type == AGGREGATION_MAX):
+        ranked_list = global_score_aggregation_max(all_stms_of_the_system, normalized_score_list,
+                                                                      spectrum_expression)
+    else:
+        ranked_list = global_score_aggregation_min(all_stms_of_the_system, normalized_score_list,
+                                                   spectrum_expression)
 
     return ranked_list
 
@@ -272,6 +280,44 @@ def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_s
                         normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
+
+def global_score_aggregation_min(all_stms_of_the_system, normalized_score_list, spectrum_expression):
+    score_type = spectrum_expression + "_score"
+    all_stms_score_list = {}
+    for variant in normalized_score_list:
+        for stm in normalized_score_list[variant]:
+            if stm in all_stms_score_list:
+                if(all_stms_score_list[stm][score_type] > normalized_score_list[variant][stm]):
+                    all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
+            if stm not in all_stms_score_list:
+                all_stms_score_list[stm] = {}
+                all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
+
+    for stm in all_stms_score_list:
+        all_stms_score_list[stm]["num_passing_product"] = 0
+        for variant in all_stms_of_the_system:
+            if variant not in normalized_score_list.keys() and stm in all_stms_of_the_system[variant]:
+                all_stms_score_list[stm]["num_passing_product"] += 1
+    return varcop_ranking(all_stms_score_list, spectrum_expression)
+
+def global_score_aggregation_max(all_stms_of_the_system, normalized_score_list, spectrum_expression):
+    score_type = spectrum_expression + "_score"
+    all_stms_score_list = {}
+    for variant in normalized_score_list:
+        for stm in normalized_score_list[variant]:
+            if stm in all_stms_score_list:
+                if (all_stms_score_list[stm][score_type] < normalized_score_list[variant][stm]):
+                    all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
+            if stm not in all_stms_score_list:
+                all_stms_score_list[stm] = {}
+                all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
+
+    for stm in all_stms_score_list:
+        all_stms_score_list[stm]["num_passing_product"] = 0
+        for variant in all_stms_of_the_system:
+            if variant not in normalized_score_list.keys() and stm in all_stms_of_the_system[variant]:
+                all_stms_score_list[stm]["num_passing_product"] += 1
+    return varcop_ranking(all_stms_score_list, spectrum_expression)
 
 def global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression):
     score_type = spectrum_expression + "_score"
