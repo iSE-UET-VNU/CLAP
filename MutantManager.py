@@ -83,6 +83,28 @@ def generate_mutants(project_dir, optional_feature_names, num_of_bugs=1):
     return mutated_project_dirs
 
 
+def filter_mutants(project_dir, bug_ids):
+    mutation_result_dir = get_mutation_result_dir(project_dir)
+    filtered_mutant_paths = []
+    mutant_paths = get_all_mutant_paths(mutation_result_dir)
+    for mutant_path in mutant_paths:
+        mutant_path_parts = mutant_path.rsplit("/", 5)
+        full_class_name = mutant_path_parts[1]
+        operator_index = mutant_path_parts[4]
+        current_bug_id = f"{full_class_name}.{operator_index}"
+        if current_bug_id in bug_ids:
+            filtered_mutant_paths.append(mutant_path)
+    return filtered_mutant_paths
+
+
+def regenerate_filtered_mutants(project_dir, bug_ids):
+    logger.info(f"Remaking mutants [{get_file_name_without_ext(project_dir)}]")
+    filtered_mutant_paths = filter_mutants(project_dir, bug_ids)
+    filtered_mutant_path_tuples = mixing_multiple_bugs(filtered_mutant_paths, num_of_bugs=1)
+    filtered_mutated_project_dirs = inject_mutants(project_dir, filtered_mutant_path_tuples)
+    return filtered_mutated_project_dirs
+
+
 def inject_mutants(project_dir, mutant_path_tuples):
     logger.info(f"Injecting mutants to features [{get_file_name_without_ext(project_dir)}]")
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
@@ -104,7 +126,7 @@ def inject_mutants(project_dir, mutant_path_tuples):
             mutation_log_file = join_path(*mutant_path_parts[:-3], "mutation_logs", f"{bug_name}.log")
             with open(mutation_log_file) as f:
                 # append more line hint to final log file
-                # line log:  ODL_2:32:void_enterElevator(Person):weight += p.getWeight() => weight = p.getWeight()
+                # line log:  Base.EmailSystem.Util.AOIU_1:32:void_enterElevator(Person):weight += 1 => weight = 1
                 mutated_line_hints = f.readlines()[0].split(":", 2)
                 mutated_line_hints[0] = bug_name
                 joined_line_hint = ":".join(mutated_line_hints)
