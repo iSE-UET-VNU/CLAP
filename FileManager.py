@@ -116,9 +116,9 @@ def get_variants_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
 
 
-def get_all_variants_dirs(project_dir):
+def get_all_variants_dirs(project_dir, sort=False):
     variants_dir = get_variants_dir(project_dir)
-    return list_dir(variants_dir, full_path=True)
+    return list_dir(variants_dir, full_path=True, sort=sort)
 
 
 def get_spc_log_file_path(project_dir, filtering_coverage_rate):
@@ -270,10 +270,12 @@ def get_absolute_path(current_path):
     return os.path.abspath(current_path)
 
 
-def list_dir(current_dir, full_path=False):
+def list_dir(current_dir, full_path=False, sort=False):
     files = list(filter(lambda d: not d.startswith("."), os.listdir(current_dir)))
     if full_path:
         files = [join_path(current_dir, file) for file in files]
+    if sort:
+        files.sort()
     return files
 
 
@@ -306,6 +308,7 @@ def unlink(dst):
         os.unlink(dst)
     except (IsADirectoryError, PermissionError):
         pass
+
 
 def create_non_hidden_file_symlink(src, dst):
     if is_path_exist(dst):

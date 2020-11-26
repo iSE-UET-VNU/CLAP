@@ -109,9 +109,9 @@ def generate_configs(project_dir, feature_order_file_path, sampling_output_file_
     return configs_report_file_path, config_output_paths
 
 
-def get_config_paths(project_dir):
+def get_config_paths(project_dir, sort=False):
     config_dir = get_model_configs_dir(project_dir)
-    return list_dir(config_dir, full_path=True)
+    return list_dir(config_dir, full_path=True, sort=sort)
 
 
 def copy_configs_report(src_project_dir, dst_project_dir):
