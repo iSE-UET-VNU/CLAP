@@ -59,6 +59,7 @@ def make_mutants(current_project_dir, optional_feature_names):
 
 
 def mixing_multiple_bugs(mutant_paths, num_of_bugs=1, allow_same_file=False):
+    logger.info(f"Mixing multiple bugs [{num_of_bugs}] from {len(mutant_paths)} mutant files")
     if num_of_bugs == 0:
         return []
     elif num_of_bugs == 1:

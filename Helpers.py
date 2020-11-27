@@ -66,3 +66,9 @@ def execute_shell_command(command, extra_args=None, log_to_file=False):
     if not log_to_file:
         remove_file(log_path)
     return text
+
+
+def natural_sort(l):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    return sorted(l, key=alphanum_key)
