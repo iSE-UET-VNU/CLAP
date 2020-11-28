@@ -29,5 +29,6 @@ if __name__ == "__main__":
                 TestManager.run_junit_test_cases_with_coverage_on_project(mutated_project_dir, cloned_ant_name)
             except RuntimeError:
                 continue
-            TestManager.write_test_output_to_configs_report(mutated_project_dir)
+            else:
+                TestManager.write_test_output_to_configs_report(mutated_project_dir)
         sleep(1800)
