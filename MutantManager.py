@@ -80,7 +80,7 @@ def mixing_multiple_bugs(mutant_paths, num_of_bugs=1, case_limit=None, allow_sam
             current_mixing_tuple = list(product(*cc))
             mixed_mutant_path_tuples.extend(current_mixing_tuple)
         if case_limit > 0:
-            mixed_mutant_path_tuples = random.choices(mixed_mutant_path_tuples, k=bug_limit)
+            mixed_mutant_path_tuples = random.sample(mixed_mutant_path_tuples, k=case_limit)
         return mixed_mutant_path_tuples
 
 
