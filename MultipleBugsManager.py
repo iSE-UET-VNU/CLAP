@@ -94,10 +94,10 @@ def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filterin
             for mutated_project_name in mutated_projects:
                 mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
                 print("project_dir", mutated_project_dir)
-                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
 
-                # spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-                #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
+                spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
+                SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
                 # print(buggy_statements)
@@ -109,7 +109,8 @@ def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filterin
                                                                suspicious_stms_list, spectrum_expressions[sbfl_expression], aggregation_type,
                                                                normalization_type)
                 #
-                     row = write_result_to_file(row_temp, sheet[sbfl_expression], ranking_results, space)
+                     sheet[sbfl_expression].write(row_temp, PROJECT_NAME_COL, mutated_project_name)
+                     row = write_result_to_file(row_temp, sheet[sbfl_expression],  ranking_results, space)
             wb.close()
 
 
