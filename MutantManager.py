@@ -1,5 +1,8 @@
 import csv
-from itertools import combinations
+import json
+import random
+from collections import defaultdict
+from itertools import combinations, product
 
 from FileManager import get_plugin_path, split_path, get_mutation_result_dir, list_dir, join_path, \
     get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir, \
@@ -56,21 +59,28 @@ def make_mutants(current_project_dir, optional_feature_names):
     return mutant_paths
 
 
-def mixing_multiple_bugs(mutant_paths, num_of_bugs=1):
+def mixing_multiple_bugs(mutant_paths, num_of_bugs=1, case_limit=None, allow_same_file=False):
+    logger.info(f"Mixing multiple bugs [{num_of_bugs}] from {len(mutant_paths)} mutant files")
     if num_of_bugs == 0:
         return []
     elif num_of_bugs == 1:
         return [(source_file_path,) for source_file_path in mutant_paths]
     else:
-        deduplicated_bug_dict = {}
+        deduplicated_bug_dict = defaultdict(list)
         for source_file_path in mutant_paths:
             mutant_path_parts = source_file_path.rsplit("/", 5)
-            operator_index = mutant_path_parts[4]
             full_class_name = mutant_path_parts[1]
-            global_bug_id = full_class_name
-            if global_bug_id not in deduplicated_bug_dict:
-                deduplicated_bug_dict[global_bug_id] = source_file_path
-        mixed_mutant_path_tuples = list(combinations(deduplicated_bug_dict.values(), num_of_bugs))
+            if not allow_same_file:
+                if len(deduplicated_bug_dict[full_class_name]) > 0:
+                    continue
+            deduplicated_bug_dict[full_class_name].append(source_file_path)
+        candidate_combinations = list(combinations(deduplicated_bug_dict.values(), num_of_bugs))
+        mixed_mutant_path_tuples = []
+        for cc in candidate_combinations:
+            current_mixing_tuple = list(product(*cc))
+            mixed_mutant_path_tuples.extend(current_mixing_tuple)
+        if 0 < case_limit < len(mixed_mutant_path_tuples):
+            mixed_mutant_path_tuples = random.sample(mixed_mutant_path_tuples, k=case_limit)
         return mixed_mutant_path_tuples
 
 
@@ -97,10 +107,11 @@ def filter_mutants(project_dir, bug_ids):
     return filtered_mutant_paths
 
 
-def regenerate_filtered_mutants(project_dir, bug_ids):
+def regenerate_filtered_mutants(project_dir, bug_ids, num_of_bugs, case_limit):
     logger.info(f"Remaking mutants [{get_file_name_without_ext(project_dir)}]")
     filtered_mutant_paths = filter_mutants(project_dir, bug_ids)
-    filtered_mutant_path_tuples = mixing_multiple_bugs(filtered_mutant_paths, num_of_bugs=1)
+    filtered_mutant_path_tuples = mixing_multiple_bugs(filtered_mutant_paths, num_of_bugs=num_of_bugs,
+                                                       case_limit=case_limit, allow_same_file=True)
     filtered_mutated_project_dirs = inject_mutants(project_dir, filtered_mutant_path_tuples)
     return filtered_mutated_project_dirs
 
