@@ -1,3 +1,4 @@
+package main;
 /**
  * Abstrakte ExamDataBase Klasse. Speichert Benotungsparameter, Teilnehmerdaten
  * und erm&ouml;glicht Abfragen der Datenbasis.

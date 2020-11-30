@@ -1,3 +1,4 @@
+package main;
 public class ExamDataBaseImpl {
 	
     public /*@pure@*/ int getNumParticipants() {

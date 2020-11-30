@@ -1,3 +1,4 @@
+package main;
 public class ExamDataBaseImpl {
 
     public int getGrade(int matrNr) throws ExamDataBaseException{
