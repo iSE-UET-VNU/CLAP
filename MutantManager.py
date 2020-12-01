@@ -217,3 +217,4 @@ def check_bug_from_report(mutated_project_dir):
     if is_bug_satisfied and not BUG_CONTAINER.get(key):
         BUG_CONTAINER[key] = True
         return True
+    return False
