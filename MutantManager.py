@@ -214,6 +214,6 @@ def check_bug_from_report(mutated_project_dir):
                 exist_failing_configuration = True
     key += ";"
     is_bug_satisfied = (exist_passing_configuration and exist_failing_configuration)
-    if is_bug_satisfied and not BUG_CONTAINER[key]:
+    if is_bug_satisfied and not BUG_CONTAINER.get(key):
         BUG_CONTAINER[key] = True
         return True
