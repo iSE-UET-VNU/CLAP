@@ -65,6 +65,15 @@ def get_buggy_statement(mutated_project_name, mutated_project_dir):
     return (".").join(mutated_project_name.split(".")[0:-1]) + "." + mutated_log_file_content[
         buggy_line_number_position_in_log_file]
 
+def get_single_buggy_statement(mutated_project_name, mutated_project_dir):
+    mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
+    mutated_log_file = open(mutated_log_file_path, "r")
+    bug_content = mutated_log_file.readline().split(":")
+    buggy_line_number_position_in_log_file = 1
+    buggy_statement = (".").join(bug_content[0].split(".")[0:-1]) + "." + bug_content[buggy_line_number_position_in_log_file]
+
+    return buggy_statement
+
 def get_multiple_buggy_statements(mutated_project_name, mutated_project_dir):
     mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
     mutated_log_file = open(mutated_log_file_path, "r")
