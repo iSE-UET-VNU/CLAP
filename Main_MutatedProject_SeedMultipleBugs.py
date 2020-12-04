@@ -6,8 +6,11 @@ import VariantComposer
 from FileManager import get_project_dir, find_file_by_wildcard, get_all_variants_dirs
 
 if __name__ == "__main__":
-    project_name = "Elevator-FH-JML"
+    # ------ START CONFIG ------
     base_dir = ""
+    project_name = "Elevator-FH-JML"
+    # ------ END CONFIG ------
+
     project_dir = get_project_dir(project_name, base_dir)
     sampling_output_file_path = find_file_by_wildcard(project_dir, "model.m.ca*.csv")
     config_output_paths = ConfigManager.get_config_paths(project_dir, sort=True)
