@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 import shutil
@@ -232,6 +233,13 @@ def get_outer_dir(current_path, step=1):
     for _ in range(step):
         current_dir = current_dir.parent
     return current_dir
+
+
+def find_file_by_wildcard(base_dir, file_name):
+    related_files = glob.glob(join_path(base_dir, file_name))
+    if len(related_files):
+        return related_files[0]
+    return None
 
 
 def move_file(source, target):

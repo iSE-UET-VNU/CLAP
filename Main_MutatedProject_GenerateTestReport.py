@@ -16,8 +16,7 @@ if __name__ == "__main__":
 
     # run junit test with coverage and write to project's configs report
     while True:
-        mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir)
-        mutated_project_dirs = natural_sort(mutated_project_dirs)
+        mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir, sort=True)
         for mutated_project_dir in mutated_project_dirs:
             if not was_variants_composed(mutated_project_dir):
                 continue

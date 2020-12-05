@@ -1,3 +1,4 @@
+package main;
 public class ExamDataBaseImpl {
 
     public void setBonusPoints(int matrNr, int bonusPoints) 

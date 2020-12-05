@@ -7,8 +7,8 @@ from itertools import combinations, product
 from FileManager import get_plugin_path, split_path, get_mutation_result_dir, list_dir, join_path, \
     get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir, \
     is_path_exist, get_model_configs_report_path, get_project_name, unlink, is_symlink
-from Helpers import get_logger, execute_shell_command, hash_md5
-from SuspiciousStatementManager import get_buggy_statement
+from Helpers import get_logger, execute_shell_command, natural_sort
+from SuspiciousStatementManager import get_multiple_buggy_statements
 
 logger = get_logger(__name__)
 
@@ -172,9 +172,12 @@ def inject_mutants(project_dir, mutant_path_tuples):
     return mutated_project_dirs
 
 
-def get_mutated_project_dirs(project_dir):
+def get_mutated_project_dirs(project_dir, sort=False):
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
-    return list_dir(mutated_projects_dir, full_path=True)
+    mutated_project_dirs = list_dir(mutated_projects_dir, full_path=True)
+    if sort:
+        mutated_project_dirs = natural_sort(mutated_project_dirs)
+    return mutated_project_dirs
 
 
 def get_mutated_project_dir(project_dir, mutated_project_name):
@@ -189,9 +192,14 @@ def get_feature_name_from_mutated_project_name(mutated_project_dir):
     return get_project_name(mutated_project_dir).split(".", 1)[0]
 
 
+BUG_CONTAINER = {}
+
+
 def check_bug_from_report(mutated_project_dir):
-    # logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
     configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
+    mutated_project_name = get_project_name(mutated_project_dir)
+    buggy_statements = sorted(get_multiple_buggy_statements(mutated_project_name, mutated_project_dir))
+    key = ";".join(buggy_statements) + ";"
     exist_passing_configuration = False
     exist_failing_configuration = False
     with open(configs_report_file_path, "r") as report_csv:
@@ -199,9 +207,14 @@ def check_bug_from_report(mutated_project_dir):
         next(reader)
         for i, row in enumerate(reader):
             test_passed = row[-1] == "__PASSED__"
+            key += f"{1 if test_passed else 0}"
             if test_passed:
                 exist_passing_configuration = True
             else:
                 exist_failing_configuration = True
+    key += ";"
     is_bug_satisfied = (exist_passing_configuration and exist_failing_configuration)
-    return is_bug_satisfied
+    if is_bug_satisfied and not BUG_CONTAINER.get(key):
+        BUG_CONTAINER[key] = True
+        return True
+    return False

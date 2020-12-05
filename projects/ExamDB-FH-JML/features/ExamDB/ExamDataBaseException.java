@@ -1,3 +1,4 @@
+package main;
 public class ExamDataBaseException extends Exception{
 	
     public ExamDataBaseException(String message) {
