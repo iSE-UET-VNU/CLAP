@@ -55,6 +55,7 @@ AGGREGATION_STDEV = "AGGREGATION_STDEV"
 NORMALIZATION1 = "NORMALIZATION1"
 NORMALIZATION2 = "NORMALIZATION2"
 NORMALIZATION3 = "NORMALIZATION3"
+NORMALIZATION_NONE = "NORMALIZATION_NONE"
 
 def num_of_suspicious_stms(suspicious_stms_list):
     stm_set = []
@@ -80,8 +81,11 @@ def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_lis
         normalized_score_list = normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
     elif(normalized_type == NORMALIZATION2):
         normalized_score_list = normalize_local_score2(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
-    else:
+    elif(normalized_type == NORMALIZATION3):
         normalized_score_list = normalize_local_score3(all_stms_of_the_system, suspicious_stms_list,
+                                                       local_suspiciousness_of_isolated_stms)
+    else:
+        normalized_score_list = normalize_local_score_none(all_stms_of_the_system, suspicious_stms_list,
                                                        local_suspiciousness_of_isolated_stms)
 
     if(aggregation_type == AGGREGATION_AVERAGE_ADDITION):
@@ -155,6 +159,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
     all_buggy_position[VARCOP_SPC_LAYER] = locate_multiple_bugs(buggy_statements, ranked_list_with_isolation)
     #traditional SBFL
     ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression)
+    #print(ranked_list_traditional_spectrum)
     all_buggy_position[SPECTRUM] = locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list_traditional_spectrum)
     space[SPECTRUM] = len(ranked_list_traditional_spectrum)
     return all_buggy_position, space
@@ -281,6 +286,7 @@ def get_local_score(stm, ranked_list):
             return ranked_list[i][1]
     else:
         return -1
+
 def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
     all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     normalized_score_list = {}
@@ -301,6 +307,21 @@ def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_s
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
+def normalize_local_score_none(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms):
+    all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
+    normalized_score_list = {}
+    for variant in local_suspiciousness_of_isolated_stms:
+        normalized_score_list[variant] = {}
+        if(len(local_suspiciousness_of_isolated_stms[variant]) > 0):
+
+            for stm in all_suspicious_stm:
+                local_score =  get_local_score(stm, local_suspiciousness_of_isolated_stms[variant])
+                if local_score == -1:
+                    normalized_score = 0
+                else:
+                    normalized_score = local_score
+                normalized_score_list[variant][stm] = normalized_score
+    return normalized_score_list
 
 def count_num_of_passing_products_for_a_stm(all_stms_score_list, all_stms_of_the_system, normalized_score_list):
     for stm in all_stms_score_list:
