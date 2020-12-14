@@ -1,15 +1,38 @@
-from ExperimentalResultsAnalyzer import summary_result, summary_for_same_bugs, count_total_bugs, summary_hitx
+import pandas as pandas
+
+from ExperimentalResultsAnalyzer import summary_result, summary_for_same_bugs, count_total_bugs, summary_hitx, \
+    write_all_bugs_to_a_file
+from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
+from Spectrum_Expression import WONG3
 
 if __name__ == "__main__":
-    evaluation_type = "20201104_AGGREATION_AVERAGE_ADDITION"
-    system_names = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL"]
-    #system_names = ["ExamDB_Test"]
-    num_of_program_stms = {"BankAccountTP":143, "Elevator":854, "Email": 439, "ExamDB": 513, "GPL": 1944}
-    summary_result(evaluation_type, system_names, num_of_program_stms)
+    all_bugs_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
+                                  "all_bugs_normalization_2.xlsx")
+    # file_lists = [
+    #     "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/BankAccountTP/4wise/0.95_.xlsx",
+    #     "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/Elevator/4wise/0.95_.xlsx",
+    #     "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/Email/4wise/0.95_.xlsx",
+    #     "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/ExamDB/4wise/0.95_.xlsx",
+    #     "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/GPL/4wise/0.95_.xlsx"
+    # ]
+    # write_all_bugs_to_a_file(all_bugs_file_dir, file_lists)
+    #
+    # summary_file = join_path(EXPERIMENT_RESULT_FOLDER,
+    #                              "summary_normalization_2.xlsx")
+    # summary_result(all_bugs_file_dir, summary_file)
 
-    #summary_hitx(evaluation_type, system_names, num_of_program_stms)
 
-    files_list = {"1wise":"/Users/thu-trangnguyen/Documents/project/InputPreparation/experiment_results/20201012/GPL/1wise/0.8_.xlsx", "2wise":"/Users/thu-trangnguyen/Documents/project/InputPreparation/experiment_results/20201012/GPL/2wise/0.8_.xlsx", "3wise":"/Users/thu-trangnguyen/Documents/project/InputPreparation/experiment_results/20201012/GPL/3wise/0.8_.xlsx", "4wise":"/Users/thu-trangnguyen/Documents/project/InputPreparation/experiment_results/20201012/GPL/4wise/0.8_.xlsx"}
-    #summary_for_same_bugs(files_list, 1944)
-    #print(count_total_bugs(files_list))
-    #calculate()487_average_in_a_file_and_write_to_console("/Users/thu-trangnguyen/Documents/project/InputPreparation/experiment_results/Email1/4wise/0.95.xlsx", 439)
+    #num_of_program_stms = {"BankAccountTP": 143, "Elevator": 854, "Email": 439, "ExamDB": 513, "GPL": 1944}
+    # summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
+    #                              "summary_same_bug.xlsx")
+    # files_list = {
+    #     "1wise": "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/BankAccountTP/1wise/0.95_.xlsx",
+    #     "2wise": "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/BankAccountTP/2wise/0.95_.xlsx",
+    #     "3wise": "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/BankAccountTP/3wise/0.95_.xlsx",
+    #     "4wise": "/Users/trangnt/Documents/Projects/experiment_results/AGGREGATION_AVERAGE_ADDITION_NORMALIZATION1/BankAccountTP/4wise/0.95_.xlsx"
+    #     }
+    # summary_for_same_bugs(summary_file_dir, files_list, 143)
+
+    hitx_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
+                                 "hitx_.xlsx")
+    summary_hitx(hitx_file_dir, all_bugs_file_dir)
