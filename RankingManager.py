@@ -27,6 +27,7 @@ from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_c
     anderberg_calculation, GOODMAN, GOODMAN_SCORE, goodman_calculation, HARMONIC_MEAN, HARMONIC_MEAN_SCORE, \
     harmonic_mean_calculation, KULCZYNSKI1, KULCZYNSKI1_SCORE, kulczynski1_calculation, KULCZYNSKI2, KULCZYNSKI2_SCORE, \
     kulczynski2_calculation
+from TestingCoverageManager import statement_coverage
 
 FAILED_TEST_COUNT = 'failed_test_count'
 PASSED_TEST_COUNT = 'passed_test_count'
@@ -68,11 +69,9 @@ def num_of_suspicious_stms(suspicious_stms_list):
 def local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list, spectrum_expression):
     local_suspiciousness = {}
     for variant in suspicious_stms_list:
-        #print(variant)
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_infor = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], spectrum_expression)
         local_suspiciousness[variant] = spc_spectrum_ranking(statement_infor, spectrum_expression)
-        #print(local_suspiciousness[variant])
     return local_suspiciousness
 
 def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
@@ -127,7 +126,7 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
         suspicious_stms_list[variant] = all_stms_of_the_system[variant]
     return suspicious_stms_list
 
-def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix="v5_"):
+def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix="v5_", coverage_rate = 0.0):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
     NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
     global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
@@ -135,14 +134,15 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
     global buggy
     buggy = buggy_statements
 
-    all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir)
+    all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate)
     all_buggy_position = {}
     space = {}
     # rank without isolation
     #print("without isolation")
-    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, suspicious_stms_list.keys())
+    failing_variants = get_failing_variants(mutated_project_dir)
+    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
-    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, all_stms_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
     all_buggy_position[VARCOP_LAYER] = locate_multiple_bugs(buggy_statements, ranked_list_without_isolation)
     space[VARCOP_LAYER] = len(ranked_list_without_isolation)
     # rank with isolation
@@ -158,7 +158,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
 
     all_buggy_position[VARCOP_SPC_LAYER] = locate_multiple_bugs(buggy_statements, ranked_list_with_isolation)
     #traditional SBFL
-    ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression)
+    ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, spectrum_coverage_prefix, coverage_rate)
     #print(ranked_list_traditional_spectrum)
     all_buggy_position[SPECTRUM] = locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list_traditional_spectrum)
     space[SPECTRUM] = len(ranked_list_traditional_spectrum)
@@ -177,8 +177,24 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
         buggy_possitions[stm] = search_rank_worst_case(stm, ranked_list)
     return buggy_possitions
 
+def get_failing_variants(mutated_project_dir):
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variants_list = os.listdir(variants_dir)
+    failing_variants = []
+    for variant in variants_list:
+        variant_dir = get_variant_dir(mutated_project_dir, variant)
+        test_coverage_dir = get_test_coverage_dir(variant_dir)
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
 
-def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix):
+        if not os.path.isfile(spectrum_failed_coverage_file_dir):
+            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        # if variant is a failing variant
+        if (os.path.isfile(spectrum_failed_coverage_file_dir)):
+             failing_variants.append(variant)
+    return failing_variants
+
+
+def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix, coverage_rate):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
     NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
     global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
@@ -187,13 +203,15 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
 
     buggy = buggy_statement
 
-    all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir)
+    all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate)
+
 
     # rank without isolation
     #print("without isolation")
-    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, suspicious_stms_list.keys())
+    failing_variants = get_failing_variants(mutated_project_dir)
+    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
-    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = locate_buggy_statement(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = locate_buggy_statement(buggy_statement, all_stms_of_the_system, all_stms_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
 
     #rank with isolation
@@ -204,7 +222,7 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
 
 
     #spectrum ranking only
-    buggy_stm_spectrum_ranked, spectrum_space = traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement)
+    buggy_stm_spectrum_ranked, spectrum_space = traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement, spectrum_coverage_prefix, coverage_rate)
 
     ranking_results = { VARCOP_SPC_FAILING: buggy_stm_ranked,
                         VARCOP_SPC_LAYER: buggy_stm_ranked_by_layer,
@@ -284,8 +302,7 @@ def get_local_score(stm, ranked_list):
     for i in range(0, len(ranked_list)):
         if stm == ranked_list[i][0]:
             return ranked_list[i][1]
-    else:
-        return -1
+    return -1
 
 def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
     all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
@@ -457,35 +474,40 @@ def global_score_aggregation_average_multiplication(all_stms_of_the_system, norm
 
 
 
-def rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression):
-    stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_information_for_spectrum_ranking(
-        mutated_project_dir)
+def rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, spectrum_coverage_prefix, coverage_rate):
+    stm_info_for_spectrum, total_passed_tests, total_failed_tests =get_information_for_spectrum_ranking(mutated_project_dir, spectrum_coverage_prefix, coverage_rate)
     stm_info_for_spectrum = spectrum_calculation(stm_info_for_spectrum, total_failed_tests, total_passed_tests,
                                                  spectrum_expression)
     spectrum_ranked_list = spectrum_ranking(stm_info_for_spectrum, spectrum_expression)
 
     return spectrum_ranked_list
 
-def traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement):
-    spectrum_ranked_list = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression)
+def traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement, spectrum_coverage_prefix, coverage_rate):
+    spectrum_ranked_list = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, spectrum_coverage_prefix, coverage_rate)
     buggy_stm_spectrum_ranked = search_rank_worst_case(buggy_statement, spectrum_ranked_list)
     space = len(spectrum_ranked_list)
     return buggy_stm_spectrum_ranked, space
 
-def get_all_stms_of_the_system(mutated_project_dir):
+def get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_list = os.listdir(variants_dir)
     stm_list = {}
     for variant in variants_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
-        coverage_files = []
+        stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         failed_file = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
         if not os.path.isfile(failed_file):
             failed_file = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
         passed_file = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
         if not os.path.isfile(passed_file):
             passed_file = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+
+        if(not os.path.isfile(failed_file) and stm_coverage < coverage_rate):
+            continue
+
+        coverage_files = []
+
         coverage_files.append(failed_file)
         coverage_files.append(passed_file)
 
@@ -508,21 +530,26 @@ def get_all_stms_of_the_system(mutated_project_dir):
                 stm_list[variant] = data
     return stm_list
 
-def get_information_for_spectrum_ranking(mutated_project_dir):
+def get_information_for_spectrum_ranking(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
     variants_list = get_all_variants_dirs(mutated_project_dir)
     for variant_dir in variants_list:
+        stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
 
         spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
         spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+
         if not os.path.isfile(spectrum_failed_coverage_file_dir):
             spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
         if not os.path.isfile(spectrum_passed_coverage_file_dir):
             spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
+        # if variant is a passing variant and stm_coverage < coverage_rate
+        if (not os.path.isfile(spectrum_failed_coverage_file_dir) and stm_coverage < coverage_rate):
+            continue
         if os.path.isfile(spectrum_failed_coverage_file_dir):
             stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
                                                                       spectrum_failed_coverage_file_dir,

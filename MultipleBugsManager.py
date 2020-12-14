@@ -107,7 +107,7 @@ def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filterin
                 for sbfl_expression in range(0, len(spectrum_expressions)):
                      ranking_results, space = ranking_multiple_bugs(buggy_statements, mutated_project_dir,
                                                                suspicious_stms_list, spectrum_expressions[sbfl_expression], aggregation_type,
-                                                               normalization_type)
+                                                               normalization_type, coverage_rate=0.0)
                 #
                      sheet[sbfl_expression].write(row_temp, PROJECT_NAME_COL, mutated_project_name)
                      row = write_result_to_file(row_temp, sheet[sbfl_expression],  ranking_results, space)
