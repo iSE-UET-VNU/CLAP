@@ -4,7 +4,8 @@ import os
 import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
-    SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_all_variants_dirs, get_variants_dir
+    SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_all_variants_dirs, get_variants_dir, \
+    list_dir
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2, OP2_SCORE, BARINEL, BARINEL_SCORE, DSTAR, \
@@ -31,7 +32,7 @@ VARIANTS_PASSED = "variants_passed"
 
 def get_failing_variants(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = os.listdir(variants_dir)
+    variants_list = list_dir(variants_dir)
     failing_variants = []
     for variant in variants_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)

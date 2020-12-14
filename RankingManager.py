@@ -7,7 +7,7 @@ import numpy
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
-    get_variants_dir, get_all_variants_dirs
+    get_variants_dir, get_all_variants_dirs, list_dir
 
 # keywords
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
@@ -179,7 +179,7 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
 
 def get_failing_variants(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = os.listdir(variants_dir)
+    variants_list = list_dir(variants_dir)
     failing_variants = []
     for variant in variants_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
@@ -490,7 +490,7 @@ def traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expressi
 
 def get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
     variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = os.listdir(variants_dir)
+    variants_list = list_dir(variants_dir)
     stm_list = {}
     for variant in variants_list:
         variant_dir = get_variant_dir(mutated_project_dir, variant)
@@ -632,7 +632,7 @@ def count_tests_original(test_dir):
     num_tests = 0
 
     if os.path.isdir(test_dir):
-       num_tests = len(os.listdir(test_dir))
+       num_tests = len(list_dir(test_dir))
 
     return num_tests
 
