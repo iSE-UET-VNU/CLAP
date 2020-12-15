@@ -7,7 +7,7 @@ import numpy
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
-    get_variants_dir, get_all_variants_dirs, list_dir
+    get_variants_dir, get_all_variants_dirs, list_dir, get_failing_variants
 
 # keywords
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
@@ -46,8 +46,8 @@ VARCOP_LAYER = "WITHOUT_ISOLATION_LAYER"
 VARCOP_SEARCH_SPACE = "WITHOUT_ISOLATION_SPACE"
 
 
-AGGREGATION_AVERAGE_ADDITION = "AGGREGATION_AVERAGE_ADDITION"
-AGGREGATION_AVERAGE_MULTIPLICATION = "AGGREGATION_AVERAGE_MULTIPLICATION"
+AGGREGATION_ARITHMETIC_MEAN = "AGGREGATION_ARITHMETIC_MEAN"
+AGGREGATION_GEOMETRIC_MEAN = "AGGREGATION_GEOMETRIC_MEAN"
 AGGREGATION_MIN = "AGGREGATION_MIN"
 AGGREGATION_MAX = "AGGREGATION_MAX"
 AGGREGATION_MEDIAN = "AGGREGATION_MEDIAN"
@@ -76,21 +76,21 @@ def local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list, s
 
 def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
 
-    if(normalized_type == NORMALIZATION1):
-        normalized_score_list = normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
+    if(normalized_type == NORMALIZATION3):
+        normalized_score_list = normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
     elif(normalized_type == NORMALIZATION2):
         normalized_score_list = normalize_local_score2(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system)
-    elif(normalized_type == NORMALIZATION3):
-        normalized_score_list = normalize_local_score3(all_stms_of_the_system, suspicious_stms_list,
+    elif(normalized_type == NORMALIZATION1):
+        normalized_score_list = normalize_local_score1(all_stms_of_the_system, suspicious_stms_list,
                                                        local_suspiciousness_of_isolated_stms)
     else:
         normalized_score_list = normalize_local_score_none(all_stms_of_the_system, suspicious_stms_list,
                                                        local_suspiciousness_of_isolated_stms)
 
-    if(aggregation_type == AGGREGATION_AVERAGE_ADDITION):
-        ranked_list = global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression)
-    elif(aggregation_type == AGGREGATION_AVERAGE_MULTIPLICATION):
-        ranked_list = global_score_aggregation_average_multiplication(all_stms_of_the_system, normalized_score_list, spectrum_expression)
+    if(aggregation_type == AGGREGATION_ARITHMETIC_MEAN):
+        ranked_list = global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_score_list, spectrum_expression)
+    elif(aggregation_type == AGGREGATION_GEOMETRIC_MEAN):
+        ranked_list = global_score_aggregation_geometric_mean(all_stms_of_the_system, normalized_score_list, spectrum_expression)
     elif(aggregation_type == AGGREGATION_MAX):
         ranked_list = global_score_aggregation_max(all_stms_of_the_system, normalized_score_list,
                                                                       spectrum_expression)
@@ -177,22 +177,6 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
         buggy_possitions[stm] = search_rank_worst_case(stm, ranked_list)
     return buggy_possitions
 
-def get_failing_variants(mutated_project_dir):
-    variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = list_dir(variants_dir)
-    failing_variants = []
-    for variant in variants_list:
-        variant_dir = get_variant_dir(mutated_project_dir, variant)
-        test_coverage_dir = get_test_coverage_dir(variant_dir)
-        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-
-        if not os.path.isfile(spectrum_failed_coverage_file_dir):
-            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-        # if variant is a failing variant
-        if (os.path.isfile(spectrum_failed_coverage_file_dir)):
-             failing_variants.append(variant)
-    return failing_variants
-
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix, coverage_rate):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
@@ -252,7 +236,7 @@ def get_stms_from_list_of_local_suspiciousness(local_suspiciousness_list):
                 all_stms.append(item[0])
     return all_stms
 
-def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system):
+def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system):
     all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     all_stms = get_stms_from_list_variants(all_stms_of_the_system)
     normalized_score_list = {}
@@ -304,7 +288,7 @@ def get_local_score(stm, ranked_list):
             return ranked_list[i][1]
     return -1
 
-def normalize_local_score3(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
+def normalize_local_score1(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
     all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     normalized_score_list = {}
     for variant in local_suspiciousness_of_isolated_stms:
@@ -444,7 +428,7 @@ def global_score_aggregation_mode(all_stms_of_the_system, normalized_score_list,
     all_stms_score_list = count_num_of_passing_products_for_a_stm(all_stms_score_list, all_stms_of_the_system, normalized_score_list)
     return varcop_ranking(all_stms_score_list, spectrum_expression)
 
-def global_score_aggregation_average_addition(all_stms_of_the_system, normalized_score_list, spectrum_expression):
+def global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_score_list, spectrum_expression):
     score_type = spectrum_expression + "_score"
     all_stms_score_list = {}
     for variant in normalized_score_list:
@@ -458,7 +442,7 @@ def global_score_aggregation_average_addition(all_stms_of_the_system, normalized
     all_stms_score_list = count_num_of_passing_products_for_a_stm(all_stms_score_list, all_stms_of_the_system, normalized_score_list)
     return varcop_ranking(all_stms_score_list, spectrum_expression)
 
-def global_score_aggregation_average_multiplication(all_stms_of_the_system, normalized_score_list, spectrum_expression):
+def global_score_aggregation_geometric_mean(all_stms_of_the_system, normalized_score_list, spectrum_expression):
     score_type = spectrum_expression + "_score"
     all_stms_score_list = {}
     for variant in normalized_score_list:
@@ -503,6 +487,7 @@ def get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, co
         if not os.path.isfile(passed_file):
             passed_file = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
+        #if variant is a passing coverage and statement coverage is less than the coverage rate
         if(not os.path.isfile(failed_file) and stm_coverage < coverage_rate):
             continue
 

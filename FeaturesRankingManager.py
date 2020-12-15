@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
     SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_all_variants_dirs, get_variants_dir, \
-    list_dir
+    list_dir, get_failing_variants
 
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2, OP2_SCORE, BARINEL, BARINEL_SCORE, DSTAR, \
@@ -29,22 +29,6 @@ STATEMENT_ID = "stm_id"
 VARIANTS_FAILED = "variants_failed"
 VARIANTS_PASSED = "variants_passed"
 
-
-def get_failing_variants(mutated_project_dir):
-    variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = list_dir(variants_dir)
-    failing_variants = []
-    for variant in variants_list:
-        variant_dir = get_variant_dir(mutated_project_dir, variant)
-        test_coverage_dir = get_test_coverage_dir(variant_dir)
-        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-
-        if not os.path.isfile(spectrum_failed_coverage_file_dir):
-            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
-        # if variant is a failing variant
-        if (os.path.isfile(spectrum_failed_coverage_file_dir)):
-             failing_variants.append(variant)
-    return failing_variants
 
 def features_ranking(buggy_statement, mutated_project_dir, filter_coverage_rate, spectrum_expression, spectrum_coverage_prefix):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME

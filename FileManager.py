@@ -286,6 +286,18 @@ def list_dir(current_dir, full_path=False, sort=False):
         files.sort()
     return files
 
+def get_failing_variants(mutated_project_dir):
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variants_list = list_dir(variants_dir)
+    failing_variants = []
+    for variant in variants_list:
+        variant_dir = get_variant_dir(mutated_project_dir, variant)
+        test_coverage_dir = get_test_coverage_dir(variant_dir)
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
+        # if variant is a failing variant
+        if (os.path.isfile(spectrum_failed_coverage_file_dir)):
+             failing_variants.append(variant)
+    return failing_variants
 
 def delete_dir(directory):
     directory = Path(directory)
