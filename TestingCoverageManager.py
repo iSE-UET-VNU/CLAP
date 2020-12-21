@@ -24,9 +24,9 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     # return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
 
     failed_coverage_items, failed_coverage_file_path_mapping = get_all_coverage_flag_items(failed_test_coverage_dir,
-                                                                                           file_mapping_prefix="f")
+                                                                                           file_mapping_prefix=PASSED_COVERAGE_MAPPING_PREFIX)
     passed_coverage_items, passed_coverage_file_path_mapping = get_all_coverage_flag_items(passed_test_coverage_dir,
-                                                                                           file_mapping_prefix="p")
+                                                                                           file_mapping_prefix=FAILED_COVERAGE_MAPPING_PREFIX)
     coverage_file_path_mapping = {**failed_coverage_file_path_mapping, **passed_coverage_file_path_mapping}
     if failed_coverage_items:
         remaining_coverage_items = failed_coverage_items[1:] + passed_coverage_items
@@ -37,6 +37,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         single_coverage_items = [passed_coverage_items[0]] + sorted(passed_coverage_items[1:], reverse=True)
     full_coverage_item = merge_coverage_items(*single_coverage_items)
     print("[Full coverage]", full_coverage_item[0])
+    # print(single_coverage_items[0][0])
     if full_coverage_item[0] < target_coverage:
         raise Exception(f"Raw test suite coverage can not satisfy required value={target_coverage}")
     elif single_coverage_items[0][0] >= target_coverage:
@@ -45,7 +46,6 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
 
     single_coverage_items = [single_coverage_items[0]] + list(
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
-
     # find solution
     has_some_test_failed = len(failed_coverage_items) > 0
     merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
@@ -186,14 +186,15 @@ def print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir):
     failed_coverage_flags = get_statement_coverage_flags(failed_coverage_file_paths)
     print("__FAILED__", "[{}] [{}] {}".format(
         get_statement_coverage_from_flags(failed_coverage_flags) if failed_coverage_flags else "N/A",
-        len(failed_coverage_file_paths),
-        get_all_test_coverage_by_result_dir(failed_test_coverage_dir) if failed_test_coverage_dir else []))
+        len(failed_coverage_file_paths), get_all_test_coverage_by_result_dir(failed_test_coverage_dir, unique=True,
+                                                                             sort=True) if failed_test_coverage_dir else []))
 
     passed_coverage_file_paths = get_all_coverage_file_paths_in_dir(passed_test_coverage_dir)
     passed_coverage_flags = get_statement_coverage_flags(passed_coverage_file_paths)
     print("__PASSED__", "[{}] [{}] {}".format(get_statement_coverage_from_flags(passed_coverage_flags),
                                               len(passed_coverage_file_paths),
-                                              get_all_test_coverage_by_result_dir(passed_test_coverage_dir)))
+                                              get_all_test_coverage_by_result_dir(passed_test_coverage_dir, unique=True,
+                                                                                  sort=True)))
 
     merged_coverage_flags = merge_coverage_flags(passed_coverage_flags, failed_coverage_flags)
     print("___ALL____", "[{}] [{}]".format(get_statement_coverage_from_flags(merged_coverage_flags),
