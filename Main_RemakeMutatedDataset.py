@@ -3,7 +3,7 @@ import ConfigManager
 import TestManager
 import VariantComposer
 
-from FileManager import get_project_dir, get_all_variants_dirs
+from FileManager import get_project_dir, get_all_variant_dirs
 
 if __name__ == "__main__":
     # ------ START CONFIG ------
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     project_dir = get_project_dir(project_name, base_dir)
     config_output_paths = ConfigManager.get_config_paths(project_dir, sort=True)
-    variant_dirs = get_all_variants_dirs(project_dir, sort=True)
+    variant_dirs = get_all_variant_dirs(project_dir, sort=True)
 
     # generate mutants and inject them to "optional" features
     mutated_project_dirs = MutantManager.regenerate_filtered_mutants(project_dir, bug_ids,

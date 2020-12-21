@@ -33,6 +33,7 @@ FEATURE_FOLDER_NAME = "features"
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
 MUTATED_PROJECTS_FOLDER_NAME = "mutated_projects"
 
+TEST_COVERAGE_FILE_NAME_PATTERN = "*.coverage.xml"
 SPECTRUM_FAILED_COVERAGE_FILE_NAME = "spectrum_failed_coverage.xml"
 SPECTRUM_PASSED_COVERAGE_FILE_NAME = "spectrum_passed_coverage.xml"
 FAILED_TEST_COVERAGE_FOLDER_NAME = "failed"
@@ -117,7 +118,7 @@ def get_variants_dir(project_dir):
     return get_project_sub_dir_by_folder_name(project_dir, VARIANT_FOLDER_NAME)
 
 
-def get_all_variants_dirs(project_dir, sort=False):
+def get_all_variant_dirs(project_dir, sort=False):
     variants_dir = get_variants_dir(project_dir)
     return list_dir(variants_dir, full_path=True, sort=sort)
 
@@ -155,6 +156,24 @@ def get_test_results_dir(variant_dir):
 
 def get_test_coverage_dir(variant_dir):
     return get_project_sub_dir_by_folder_name(variant_dir, COVERAGE_FOLDER_NAME, force_mkdir=False)
+
+
+def get_coverage_dir_by_test_result(variant_dir, test_result_folder_name):
+    coverage_dir = get_test_coverage_dir(variant_dir)
+    by_result_coverage_dir = join_path(coverage_dir, test_result_folder_name)
+    return by_result_coverage_dir if is_path_exist(by_result_coverage_dir) else None
+
+
+def get_failed_test_coverage_dir(variant_dir):
+    return get_coverage_dir_by_test_result(variant_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
+
+
+def get_passed_test_coverage_dir(variant_dir):
+    return get_coverage_dir_by_test_result(variant_dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
+
+
+def get_all_coverage_file_paths_in_dir(coverage_dir):
+    return find_all_files_by_wildcard(coverage_dir, TEST_COVERAGE_FILE_NAME_PATTERN)
 
 
 def get_src_dir(variant_dir):
@@ -235,8 +254,12 @@ def get_outer_dir(current_path, step=1):
     return current_dir
 
 
+def find_all_files_by_wildcard(base_dir, file_name):
+    return glob.glob(join_path(base_dir, file_name))
+
+
 def find_file_by_wildcard(base_dir, file_name):
-    related_files = glob.glob(join_path(base_dir, file_name))
+    related_files = find_all_files_by_wildcard(base_dir, file_name)
     if len(related_files):
         return related_files[0]
     return None
@@ -286,6 +309,7 @@ def list_dir(current_dir, full_path=False, sort=False):
         files.sort()
     return files
 
+
 def get_failing_variants(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_list = list_dir(variants_dir)
@@ -296,8 +320,9 @@ def get_failing_variants(mutated_project_dir):
         spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
         # if variant is a failing variant
         if (os.path.isfile(spectrum_failed_coverage_file_dir)):
-             failing_variants.append(variant)
+            failing_variants.append(variant)
     return failing_variants
+
 
 def delete_dir(directory):
     directory = Path(directory)
