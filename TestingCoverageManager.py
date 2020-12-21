@@ -79,7 +79,6 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
     https://stackoverflow.com/questions/16022205/how-do-i-find-the-closest-possible-sum-of-an-arrays-elements-to-a-particular-va
     zero_coverage_item is the variable "opt" in related link, it also has the same dimension as other coverage vectors
     """
-
     zero_coverage_item = (0.0, [False] * len(single_coverage_items[0][1]), [])
     merged_coverage_items = [zero_coverage_item]
     optimal_coverage_delta = target_coverage
@@ -107,7 +106,6 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
             if new_coverage_delta < optimal_coverage_delta:
                 print(f"{new_coverage_value} [{len(merged_coverage_items)}]")
                 optimal_coverage_delta = new_coverage_delta
-
             if validate_item(item=new_merged_item, coverage_delta=new_coverage_delta,
                              must_include_failed_test_file=must_include_failed_test_file):
                 return new_merged_item
@@ -120,9 +118,9 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
 def validate_item(item, coverage_delta, must_include_failed_test_file=False):
     if coverage_delta > 0.02:
         return False
-    if must_include_failed_test_file:
-        return is_item_build_from_failed_test_file(item)
-    return False
+    if must_include_failed_test_file and not is_item_build_from_failed_test_file(item):
+        return False
+    return True
 
 
 def is_item_build_from_failed_test_file(item):
