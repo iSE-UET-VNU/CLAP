@@ -36,8 +36,9 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     else:
         single_coverage_items = [passed_coverage_items[0]] + sorted(passed_coverage_items[1:], reverse=True)
     full_coverage_item = merge_coverage_items(*single_coverage_items)
-    print("[Full coverage]", full_coverage_item[0])
-    # print(single_coverage_items[0][0])
+    has_some_test_failed = len(failed_coverage_items) > 0
+
+    print(f"[Full coverage] {full_coverage_item[0]} - Test Failed Mode: {has_some_test_failed}")
     if full_coverage_item[0] < target_coverage:
         raise Exception(f"Raw test suite coverage can not satisfy required value={target_coverage}")
     elif single_coverage_items[0][0] >= target_coverage:
@@ -47,7 +48,6 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     single_coverage_items = [single_coverage_items[0]] + list(
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
     # find solution
-    has_some_test_failed = len(failed_coverage_items) > 0
     merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
                                                                  must_include_failed_test_file=has_some_test_failed,
                                                                  shallow_mode=True)
