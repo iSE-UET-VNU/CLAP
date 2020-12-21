@@ -78,7 +78,8 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
                 print("Finding {} ...".format(len(merged_coverage_items)), end='\r')
                 sub_merged_coverage_items.append(new_merged_item)
             else:
-                print(new_merged_item)
+                print(f"------- FOUND A SOLUTION [{new_merged_item[0]}] ------")
+                # print(new_merged_item)
                 return new_merged_item
         merged_coverage_items.extend(sub_merged_coverage_items)
     print("******* NO SOLUTION ********")
