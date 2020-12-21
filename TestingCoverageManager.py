@@ -8,8 +8,11 @@ from Helpers import get_logger
 
 logger = get_logger(__name__)
 
-
 # __________START__________ Author: tuanngokien
+
+PASSED_COVERAGE_MAPPING_PREFIX = "F"
+FAILED_COVERAGE_MAPPING_PREFIX = "P"
+
 
 def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passed_test_coverage_dir,
                                                  target_coverage=0.5):
@@ -44,11 +47,14 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
 
     # find solution
+    has_some_test_failed = len(failed_coverage_items) > 0
     merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
+                                                                 must_include_failed_test_file=has_some_test_failed,
                                                                  shallow_mode=True)
     if not merged_item:
         print("%%%%%%% Try to use deep mode to find solution %%%%%%%")
         merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
+                                                                     must_include_failed_test_file=has_some_test_failed,
                                                                      shallow_mode=False)
     if merged_item:
         print(f"------- FOUND A SOLUTION [{merged_item[0]}] ------")
@@ -65,7 +71,8 @@ def build_spectrum_coverage_from_merged_item(merge_item, coverage_file_path_mapp
         print(coverage_file_path_mapping[file_id])
 
 
-def find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage, shallow_mode=True):
+def find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
+                                                   must_include_failed_test_file=False, shallow_mode=True):
     """
     merge coverage items to meet required coverage
     using dynamic programming algorithm
@@ -82,7 +89,10 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
             new_merged_item = merge_coverage_items(merged_item, single_item)
             new_coverage_value = new_merged_item[0]
             if new_coverage_value <= merged_item[0]:
-                continue
+                if not must_include_failed_test_file or (
+                        is_item_build_from_failed_test_file(merged_item) or not is_item_build_from_failed_test_file(
+                    single_item)):
+                    continue
             if shallow_mode:
                 should_continue = False
                 for added_item in sub_merged_coverage_items:
@@ -97,13 +107,30 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
             if new_coverage_delta < optimal_coverage_delta:
                 print(f"{new_coverage_value} [{len(merged_coverage_items)}]")
                 optimal_coverage_delta = new_coverage_delta
-            if new_coverage_delta > 0.01:
-                print("Finding {} ...".format(len(merged_coverage_items)), end='\r')
-                sub_merged_coverage_items.append(new_merged_item)
-            else:
-                # print(new_merged_item)
+
+            if validate_item(item=new_merged_item, coverage_delta=new_coverage_delta,
+                             must_include_failed_test_file=must_include_failed_test_file):
                 return new_merged_item
+            print("Finding {} ...".format(len(merged_coverage_items)), end='\r')
+            sub_merged_coverage_items.append(new_merged_item)
+
         merged_coverage_items.extend(sub_merged_coverage_items)
+
+
+def validate_item(item, coverage_delta, must_include_failed_test_file=False):
+    if coverage_delta > 0.02:
+        return False
+    if must_include_failed_test_file:
+        return is_item_build_from_failed_test_file(item)
+    return False
+
+
+def is_item_build_from_failed_test_file(item):
+    file_ids = item[2]
+    for file_id in file_ids:
+        if file_id[0] == FAILED_COVERAGE_MAPPING_PREFIX:
+            return True
+    return False
 
 
 def merge_coverage_items(*args):
