@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 
 from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, \
     list_dir, get_all_coverage_file_paths_in_dir
+from Helpers import get_logger
 
 logger = get_logger(__name__)
 
