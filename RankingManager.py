@@ -7,7 +7,7 @@ import numpy
 
 from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
-    get_variants_dir, get_all_variants_dirs, list_dir, get_failing_variants
+    get_variants_dir, get_all_variant_dirs, list_dir, get_failing_variants
 
 # keywords
 from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
@@ -519,7 +519,7 @@ def get_information_for_spectrum_ranking(mutated_project_dir, spectrum_coverage_
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
-    variants_list = get_all_variants_dirs(mutated_project_dir)
+    variants_list = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variants_list:
         stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         test_coverage_dir = get_test_coverage_dir(variant_dir)

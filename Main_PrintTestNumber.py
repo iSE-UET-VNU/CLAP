@@ -2,7 +2,7 @@ import os
 
 from xlsxwriter import Workbook
 
-from FileManager import join_path, list_dir, get_mutated_projects_dir, get_test_coverage_dir, get_all_variants_dirs, \
+from FileManager import join_path, list_dir, get_mutated_projects_dir, get_test_coverage_dir, get_all_variant_dirs, \
     EXPERIMENT_RESULT_FOLDER
 from RankingManager import count_tests, count_tests_original
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                  for project in mutated_projects:
                      sheet.write(row, 3, project)
                      project_dir = join_path(mutated_projects_dir, project)
-                     variants_list = get_all_variants_dirs(project_dir)
+                     variants_list = get_all_variant_dirs(project_dir)
                      for variant_dir in variants_list:
                         sheet.write(row, 4, variant_dir)
                         test_coverage_dir = get_test_coverage_dir(variant_dir)
