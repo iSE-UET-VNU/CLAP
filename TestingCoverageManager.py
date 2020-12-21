@@ -44,9 +44,24 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     single_coverage_items = [single_coverage_items[0]] + list(
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
 
+    # find solution
+    merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
+                                                                 shallow_mode=True)
+    if not merged_item:
+        print("Try to use deep mode to find solution")
+        merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
+                                                                     shallow_mode=False)
+    if merged_item:
+        print(f"------- FOUND A SOLUTION [{merged_item[0]}] ------")
+    else:
+        print("******* NO SOLUTION ********")
+        input("Press Enter to continue...")
+
+
+def find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage, shallow_mode=True):
     """
     merge coverage items to meet required coverage
-    using dynamic programming 
+    using dynamic programming algorithm
     https://stackoverflow.com/questions/16022205/how-do-i-find-the-closest-possible-sum-of-an-arrays-elements-to-a-particular-va
     zero_coverage_item is the variable "opt" in related link, it also has the same dimension as other coverage vectors
     """
@@ -61,14 +76,15 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
             new_coverage_value = new_merged_item[0]
             if new_coverage_value <= merged_item[0]:
                 continue
-            # should_continue = False
-            # for added_item in sub_merged_coverage_items:
-            #     temp_item = merge_coverage_items(added_item, new_merged_item)
-            #     if temp_item[0] <= added_item[0]:
-            #         should_continue = True
-            #         break
-            # if should_continue:
-            #     continue
+            if shallow_mode:
+                should_continue = False
+                for added_item in sub_merged_coverage_items:
+                    temp_item = merge_coverage_items(added_item, new_merged_item)
+                    if temp_item[0] <= added_item[0]:
+                        should_continue = True
+                        break
+                if should_continue:
+                    continue
 
             new_coverage_delta = abs(new_coverage_value - target_coverage)
             if new_coverage_delta < optimal_coverage_delta:
@@ -78,12 +94,9 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
                 print("Finding {} ...".format(len(merged_coverage_items)), end='\r')
                 sub_merged_coverage_items.append(new_merged_item)
             else:
-                print(f"------- FOUND A SOLUTION [{new_merged_item[0]}] ------")
                 # print(new_merged_item)
                 return new_merged_item
         merged_coverage_items.extend(sub_merged_coverage_items)
-    print("******* NO SOLUTION ********")
-    input("Press Enter to continue...")
 
 
 def merge_coverage_items(first_item, second_item):
