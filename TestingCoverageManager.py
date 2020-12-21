@@ -56,11 +56,16 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     optimal_coverage_delta = target_coverage
     for single_item in single_coverage_items:
         sub_merged_coverage_items = []
-        for merged_item in merged_coverage_items:
+        for merged_item in merged_coverage_items[::-1]:
             new_merged_item = merge_coverage_items(merged_item, single_item)
             new_coverage_value = new_merged_item[0]
             if new_coverage_value <= merged_item[0]:
                 continue
+            for added_item in sub_merged_coverage_items:
+                temp_item = merge_coverage_items(added_item, new_merged_item)
+                if temp_item[0] <= added_item:
+                    continue
+
             new_coverage_delta = abs(new_coverage_value - target_coverage)
             if new_coverage_delta > 0.01:
                 if new_coverage_delta < optimal_coverage_delta:
