@@ -48,8 +48,9 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     merge coverage items to meet required coverage
     using dynamic programming 
     https://stackoverflow.com/questions/16022205/how-do-i-find-the-closest-possible-sum-of-an-arrays-elements-to-a-particular-va
-    zero_coverage_item is variable "opt" in related link
+    zero_coverage_item is the variable "opt" in related link, it also has the same dimension as other coverage vectors
     """
+
     zero_coverage_item = (0.0, [False] * len(single_coverage_items[0][1]), [])
     merged_coverage_items = [zero_coverage_item]
     optimal_coverage_delta = target_coverage
