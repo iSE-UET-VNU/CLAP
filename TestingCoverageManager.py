@@ -58,6 +58,8 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         for merged_item in merged_coverage_items:
             new_merged_item = merge_coverage_items(merged_item, single_item)
             new_coverage_value = new_merged_item[0]
+            if new_coverage_value <= merged_item[0]:
+                continue
             new_coverage_delta = abs(new_coverage_value - target_coverage)
             if new_coverage_delta > 0.01:
                 if new_coverage_delta < optimal_coverage_delta:
@@ -143,7 +145,7 @@ def get_statement_coverage_flags(coverage_file_paths):
         tree = ET.parse(coverage_file_path)
         root = tree.getroot()
         line_elms = root.findall(".//line[@count]")
-        if len(stm_coverage_flags) == 0:
+        if len(stm_coverage_flags) <= 0:
             stm_coverage_flags = [False] * len(line_elms)
         elif len(stm_coverage_flags) != len(line_elms):
             raise Exception("Inconsistent coverage lines between files {}".format(coverage_file_paths))
