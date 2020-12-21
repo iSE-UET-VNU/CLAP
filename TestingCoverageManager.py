@@ -40,7 +40,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         remaining_coverage_items.sort(reverse=True)
         single_coverage_items = [failed_coverage_items[0]] + remaining_coverage_items
     else:
-        single_coverage_items = passed_coverage_items
+        single_coverage_items = passed_coverage_items.sort(reverse=True)
     single_coverage_items = list(filter(lambda item: item[0] <= target_coverage, single_coverage_items))
 
     """
