@@ -61,10 +61,14 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
             new_coverage_value = new_merged_item[0]
             if new_coverage_value <= merged_item[0]:
                 continue
+            should_continue = False
             for added_item in sub_merged_coverage_items:
                 temp_item = merge_coverage_items(added_item, new_merged_item)
                 if temp_item[0] <= added_item[0]:
-                    continue
+                    should_continue = True
+                    break
+            if should_continue:
+                continue
 
             new_coverage_delta = abs(new_coverage_value - target_coverage)
             if new_coverage_delta > 0.01:
