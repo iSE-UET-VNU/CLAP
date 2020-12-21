@@ -12,6 +12,7 @@ logger = get_logger(__name__)
 
 PASSED_COVERAGE_MAPPING_PREFIX = "F"
 FAILED_COVERAGE_MAPPING_PREFIX = "P"
+ALLOWED_COVERAGE_DELTA = 0.02
 
 
 def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passed_test_coverage_dir,
@@ -21,7 +22,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     locate failed coverage in the first place for exploring satisfied subset more quickly
     """
 
-    # return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
+    return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
 
     failed_coverage_items, failed_coverage_file_path_mapping = get_all_coverage_flag_items(failed_test_coverage_dir,
                                                                                            file_mapping_prefix=PASSED_COVERAGE_MAPPING_PREFIX)
@@ -38,11 +39,13 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     full_coverage_item = merge_coverage_items(*single_coverage_items)
     has_some_test_failed = len(failed_coverage_items) > 0
 
-    print(f"[Full coverage] {full_coverage_item[0]} - Test Failed Mode: {has_some_test_failed}")
+    print(f"[Full coverage] {full_coverage_item[0]} - Failed Test Required Mode: {has_some_test_failed}")
     if full_coverage_item[0] < target_coverage:
         raise Exception(f"Raw test suite coverage can not satisfy required value={target_coverage}")
-    elif single_coverage_items[0][0] >= target_coverage:
-        logger.warning(f"Smallest test case coverage is greater than target coverage={target_coverage}")
+    first_single_item_coverage = single_coverage_items[0][0]
+    if first_single_item_coverage >= target_coverage + ALLOWED_COVERAGE_DELTA:
+        logger.warning(
+            f"Smallest test case coverage is greater than target coverage[{first_single_item_coverage}>{target_coverage}]")
         return
 
     single_coverage_items = [single_coverage_items[0]] + list(
@@ -116,7 +119,7 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
 
 
 def validate_item(item, coverage_delta, must_include_failed_test_file=False):
-    if coverage_delta > 0.02:
+    if coverage_delta > ALLOWED_COVERAGE_DELTA:
         return False
     if must_include_failed_test_file and not is_item_build_from_failed_test_file(item):
         return False
