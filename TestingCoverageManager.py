@@ -22,7 +22,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     locate failed coverage in the first place for exploring satisfied subset more quickly
     """
 
-    return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
+    # return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
 
     failed_coverage_items, failed_coverage_file_path_mapping = get_all_coverage_flag_items(failed_test_coverage_dir,
                                                                                            file_mapping_prefix=PASSED_COVERAGE_MAPPING_PREFIX)
@@ -55,7 +55,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
                                                                  must_include_failed_test_file=has_some_test_failed,
                                                                  shallow_mode=True)
     if not merged_item:
-        print("%%%%%%% Try to use deep mode to find solution %%%%%%%")
+        print("%%%%%%% Try to use deep mode to find sπolution %%%%%%%")
         merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
                                                                      must_include_failed_test_file=has_some_test_failed,
                                                                      shallow_mode=False)
