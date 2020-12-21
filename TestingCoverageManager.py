@@ -40,9 +40,9 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         remaining_coverage_items.sort(reverse=True)
         single_coverage_items = [failed_coverage_items[0]] + remaining_coverage_items
     else:
-        passed_coverage_items.sort(reverse=True)
-        single_coverage_items = passed_coverage_items
-    single_coverage_items = list(filter(lambda item: item[0] <= target_coverage, single_coverage_items))
+        single_coverage_items = passed_coverage_items[0] + sorted(passed_coverage_items[1:], reverse=True)
+    single_coverage_items = single_coverage_items[0] + list(
+        filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
 
     """
     merge coverage items to meet required coverage
@@ -73,7 +73,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
             new_coverage_delta = abs(new_coverage_value - target_coverage)
             if new_coverage_delta > 0.01:
                 if new_coverage_delta < optimal_coverage_delta:
-                    print(new_coverage_value)
+                    print(f"{new_coverage_value} [{len(merged_coverage_items)}]")
                     optimal_coverage_delta = new_coverage_delta
                 else:
                     print("Finding {} ...".format(len(merged_coverage_items)), end='\r')
@@ -82,6 +82,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
                 print(new_merged_item)
                 return new_merged_item
         merged_coverage_items.extend(sub_merged_coverage_items)
+        print("******* NO SOLUTION ********")
 
 
 def merge_coverage_items(first_item, second_item):
