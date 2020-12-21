@@ -6,7 +6,7 @@ from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERA
     list_dir, get_all_coverage_file_paths_in_dir
 
 
-# __START__ Author: tuanngokien
+# __________START__________ Author: tuanngokien
 
 def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passed_test_coverage_dir,
                                                  target_coverage=0.5):
@@ -32,8 +32,11 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     # print("___ALL____", "[{}] [{}]".format(get_statement_coverage_from_flags(merged_coverage_flags), len(failed_coverage_file_paths) + len(passed_coverage_file_paths)),)
     # return
 
-    failed_coverage_items = get_all_coverage_flag_items(failed_test_coverage_dir)
-    passed_coverage_items = get_all_coverage_flag_items(passed_test_coverage_dir)
+    failed_coverage_items, failed_coverage_file_path_mapping = get_all_coverage_flag_items(failed_test_coverage_dir,
+                                                                                           file_mapping_prefix="f")
+    passed_coverage_items, passed_coverage_file_path_mapping = get_all_coverage_flag_items(passed_test_coverage_dir,
+                                                                                           file_mapping_prefix="p")
+    coverage_file_path_mapping = {**failed_coverage_file_path_mapping, **passed_coverage_file_path_mapping}
     if failed_coverage_items:
         remaining_coverage_items = failed_coverage_items[1:] + passed_coverage_items
         # shuffle(remaining_coverage_items)
@@ -41,21 +44,33 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         single_coverage_items = [failed_coverage_items[0]] + remaining_coverage_items
     else:
         single_coverage_items = [passed_coverage_items[0]] + sorted(passed_coverage_items[1:], reverse=True)
+    full_coverage_item = merge_coverage_items(*single_coverage_items)
+    print("[Full coverage]", full_coverage_item[0])
+    if full_coverage_item[0] < target_coverage:
+        raise Exception(f"Raw test suite coverage can not satisfy required value {target_coverage}")
+
     single_coverage_items = [single_coverage_items[0]] + list(
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
-
     # find solution
     merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
                                                                  shallow_mode=True)
     if not merged_item:
-        print("Try to use deep mode to find solution")
+        print("%%%%%%% Try to use deep mode to find solution %%%%%%%")
         merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
                                                                      shallow_mode=False)
     if merged_item:
         print(f"------- FOUND A SOLUTION [{merged_item[0]}] ------")
+        build_spectrum_coverage_from_merged_item(merged_item, coverage_file_path_mapping)
     else:
         print("******* NO SOLUTION ********")
         input("Press Enter to continue...")
+
+
+def build_spectrum_coverage_from_merged_item(merge_item, coverage_file_path_mapping):
+    coverage_value = merge_item[0]
+    file_ids = merge_item[2]
+    for file_id in file_ids:
+        print(coverage_file_path_mapping[file_id])
 
 
 def find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage, shallow_mode=True):
@@ -99,26 +114,26 @@ def find_merged_coverage_item_with_target_coverage(single_coverage_items, target
         merged_coverage_items.extend(sub_merged_coverage_items)
 
 
-def merge_coverage_items(first_item, second_item):
-    new_flags = merge_coverage_flags(first_item[1], second_item[1])
+def merge_coverage_items(*args):
+    new_flags = merge_coverage_flags(*[item[1] for item in args])
     new_coverage_value = get_statement_coverage_from_flags(new_flags)
-    new_coverage_source_files = first_item[2] + second_item[2]
+    new_coverage_source_files = [file_id for item in args for file_id in item[2]]
     return new_coverage_value, new_flags, new_coverage_source_files
 
 
-def get_all_coverage_flag_items(coverage_dir):
-    if not coverage_dir:
-        return []
-    coverage_file_paths = get_all_coverage_file_paths_in_dir(coverage_dir)
-
+def get_all_coverage_flag_items(coverage_dir, file_mapping_prefix="a"):
     """
     each item is formatted as (coverage_value, coverage_flags, file_path).
     eg, (0.56, [False, True, False], ["/root/coverage/passed/ElevatorSystem.Floor_ESTest.test8.coverage.xml"])
     """
+    if not coverage_dir:
+        return []
+    coverage_file_paths = get_all_coverage_file_paths_in_dir(coverage_dir)
 
     coverage_item_containers = []
+    coverage_file_path_mapping = {}
     duplicated_test_flags = []
-    for file_path in coverage_file_paths:
+    for i, file_path in enumerate(coverage_file_paths):
         current_coverage_flags = get_statement_coverage_flags([file_path, ])
         if current_coverage_flags in duplicated_test_flags:
             continue
@@ -126,8 +141,10 @@ def get_all_coverage_flag_items(coverage_dir):
             duplicated_test_flags.append(current_coverage_flags)
         current_coverage_value = get_statement_coverage_from_flags(current_coverage_flags)
         if current_coverage_value > 0:
-            coverage_item_containers.append((current_coverage_value, current_coverage_flags, []))
-    return sorted(coverage_item_containers)
+            file_id = f"{file_mapping_prefix}{i}"
+            coverage_file_path_mapping[file_id] = file_path
+            coverage_item_containers.append((current_coverage_value, current_coverage_flags, [file_id, ]))
+    return sorted(coverage_item_containers), coverage_file_path_mapping
 
 
 def get_all_test_coverage_by_result_dir(test_coverage_dir, unique=False, sort=False):
@@ -149,12 +166,17 @@ def get_statement_coverage(coverage_file_paths, rounded=False):
     return get_statement_coverage_from_flags(stm_coverage_flags, rounded)
 
 
-def merge_coverage_flags(first_flags, second_flags):
+def merge_coverage_flags(*args):
+    flags_container = list(args)
+    if len(flags_container) <= 1:
+        raise Exception("Passing at least 2 flags to merge")
+    first_flags = flags_container[0]
     if not first_flags:
         raise Exception("first_flags must be a not-null coverage vector")
-    elif not second_flags:
-        second_flags = [False] * len(first_flags)
-    return [f or s for f, s in zip(first_flags, second_flags)]
+    for i, flags in enumerate(flags_container):
+        if not flags:
+            flags_container[i] = [False] * len(first_flags)
+    return [any(item) for item in zip(*flags_container)]
 
 
 def get_statement_coverage_from_flags(stm_coverage_flags, rounded=False):
@@ -180,7 +202,7 @@ def get_statement_coverage_flags(coverage_file_paths):
     return stm_coverage_flags
 
 
-# __END__
+# __________END__________
 
 def statement_coverage(variant_dir, spectrum_coverage_prefix):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
