@@ -83,6 +83,7 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
                 return new_merged_item
         merged_coverage_items.extend(sub_merged_coverage_items)
     print("******* NO SOLUTION ********")
+    input("Press Enter to continue...")
 
 
 def merge_coverage_items(first_item, second_item):
