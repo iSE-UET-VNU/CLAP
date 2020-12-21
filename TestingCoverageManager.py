@@ -5,6 +5,8 @@ import xml.etree.ElementTree as ET
 from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, \
     list_dir, get_all_coverage_file_paths_in_dir
 
+logger = get_logger(__name__)
+
 
 # __________START__________ Author: tuanngokien
 
@@ -14,23 +16,8 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     loading coverage items (see function "get_all_coverage_flag_items" for more detail)
     locate failed coverage in the first place for exploring satisfied subset more quickly
     """
-    # failed_coverage_file_paths = get_all_coverage_file_paths_in_dir(
-    #     failed_test_coverage_dir) if failed_test_coverage_dir else []
-    # failed_coverage_flags = get_statement_coverage_flags(failed_coverage_file_paths)
-    # print("__FAILED__", "[{}] [{}] {}".format(
-    #     get_statement_coverage_from_flags(failed_coverage_flags) if failed_coverage_flags else "N/A",
-    #     len(failed_coverage_file_paths),
-    #     get_all_test_coverage_by_result_dir(failed_test_coverage_dir) if failed_test_coverage_dir else []))
-    #
-    # passed_coverage_file_paths = get_all_coverage_file_paths_in_dir(passed_test_coverage_dir)
-    # passed_coverage_flags = get_statement_coverage_flags(passed_coverage_file_paths)
-    # print("__PASSED__", "[{}] [{}] {}".format(get_statement_coverage_from_flags(passed_coverage_flags),
-    #                                           len(passed_coverage_file_paths),
-    #                                           get_all_test_coverage_by_result_dir(passed_test_coverage_dir)))
-    #
-    # merged_coverage_flags = merge_coverage_flags(passed_coverage_flags, failed_coverage_flags)
-    # print("___ALL____", "[{}] [{}]".format(get_statement_coverage_from_flags(merged_coverage_flags), len(failed_coverage_file_paths) + len(passed_coverage_file_paths)),)
-    # return
+
+    # return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
 
     failed_coverage_items, failed_coverage_file_path_mapping = get_all_coverage_flag_items(failed_test_coverage_dir,
                                                                                            file_mapping_prefix="f")
@@ -47,10 +34,14 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     full_coverage_item = merge_coverage_items(*single_coverage_items)
     print("[Full coverage]", full_coverage_item[0])
     if full_coverage_item[0] < target_coverage:
-        raise Exception(f"Raw test suite coverage can not satisfy required value {target_coverage}")
+        raise Exception(f"Raw test suite coverage can not satisfy required value={target_coverage}")
+    elif single_coverage_items[0][0] >= target_coverage:
+        logger.warning(f"Smallest test case coverage is greater than target coverage={target_coverage}")
+        return
 
     single_coverage_items = [single_coverage_items[0]] + list(
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
+
     # find solution
     merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
                                                                  shallow_mode=True)
@@ -127,7 +118,7 @@ def get_all_coverage_flag_items(coverage_dir, file_mapping_prefix="a"):
     eg, (0.56, [False, True, False], ["/root/coverage/passed/ElevatorSystem.Floor_ESTest.test8.coverage.xml"])
     """
     if not coverage_dir:
-        return []
+        return [], {}
     coverage_file_paths = get_all_coverage_file_paths_in_dir(coverage_dir)
 
     coverage_item_containers = []
@@ -159,6 +150,26 @@ def get_all_test_coverage_by_result_dir(test_coverage_dir, unique=False, sort=Fa
     if sort:
         failed_coverages.sort()
     return failed_coverages
+
+
+def print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir):
+    failed_coverage_file_paths = get_all_coverage_file_paths_in_dir(
+        failed_test_coverage_dir) if failed_test_coverage_dir else []
+    failed_coverage_flags = get_statement_coverage_flags(failed_coverage_file_paths)
+    print("__FAILED__", "[{}] [{}] {}".format(
+        get_statement_coverage_from_flags(failed_coverage_flags) if failed_coverage_flags else "N/A",
+        len(failed_coverage_file_paths),
+        get_all_test_coverage_by_result_dir(failed_test_coverage_dir) if failed_test_coverage_dir else []))
+
+    passed_coverage_file_paths = get_all_coverage_file_paths_in_dir(passed_test_coverage_dir)
+    passed_coverage_flags = get_statement_coverage_flags(passed_coverage_file_paths)
+    print("__PASSED__", "[{}] [{}] {}".format(get_statement_coverage_from_flags(passed_coverage_flags),
+                                              len(passed_coverage_file_paths),
+                                              get_all_test_coverage_by_result_dir(passed_test_coverage_dir)))
+
+    merged_coverage_flags = merge_coverage_flags(passed_coverage_flags, failed_coverage_flags)
+    print("___ALL____", "[{}] [{}]".format(get_statement_coverage_from_flags(merged_coverage_flags),
+                                           len(failed_coverage_file_paths) + len(passed_coverage_file_paths)), )
 
 
 def get_statement_coverage(coverage_file_paths, rounded=False):
