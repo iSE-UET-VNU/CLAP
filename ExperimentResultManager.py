@@ -16,18 +16,18 @@ from xlsxwriter import Workbook
 
 
 MUTATED_PROJECT_COL = 0
-
-VARCOP_SPC_FAILING_COL = 1
-VARCOP_SPC_LAYER_COL = 2
-VARCOP_SPC_SPACE_COL = 3
-VARCOP_FAILING_COL = 4
-VARCOP_LAYER_COL = 5
-VARCOP_SPACE_COL = 6
-SPECTRUM_COL = 7
-SPECTRUM_SPACE_COL = 8
-FEATURE_COL = 9
-FEATURE_STM_COL = 10
-FEATURE_SPACE_COL = 11
+BUGGY_STM_COL = 1
+VARCOP_SPC_FAILING_COL = 2
+VARCOP_SPC_LAYER_COL = 3
+VARCOP_SPC_SPACE_COL = 4
+VARCOP_FAILING_COL = 5
+VARCOP_LAYER_COL = 6
+VARCOP_SPACE_COL = 7
+SPECTRUM_COL = 8
+SPECTRUM_SPACE_COL = 9
+FEATURE_COL = 10
+FEATURE_STM_COL = 11
+FEATURE_SPACE_COL = 12
 
 SYSTEM_HEADER = "SYSTEM"
 K_WISE_HEADER = "K_WISE"
@@ -161,6 +161,7 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
                     ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
 
                     sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
+                    sheet[i].write(row_temp, BUGGY_STM_COL, buggy_statement)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
 
             # except:
