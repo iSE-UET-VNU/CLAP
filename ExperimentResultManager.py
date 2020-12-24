@@ -158,8 +158,8 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
                     ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
                                                              suspicious_stms_list, spectrum_expressions[i], aggregation_type, normalization_type, spectrum_coverage_prefix, filtering_coverage_rate)
 
-                    #ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
-                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = 0, 0, 0
+                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
+
                     sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
 
