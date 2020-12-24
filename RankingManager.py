@@ -116,11 +116,18 @@ def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_lis
 
     return ranked_list
 
-def locate_buggy_statement(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
-    ranked_list = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+def locate_buggy_statement(buggy_statement, all_suspicious_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
+    ranked_list = global_ranking_a_suspicious_list(all_suspicious_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    all_suspicious_stms = get_all_suspicious_stm(suspicious_stms_list)
     buggy_stm_ranked = search_rank_worst_case(buggy_statement, ranked_list)
     buggy_stm_ranked_by_layer = search_rank_worst_case_by_layer(buggy_statement, ranked_list)
-
+    if(buggy_stm_ranked_by_layer == -1):
+        without_isolation_ranked_list =  global_ranking_a_suspicious_list(all_suspicious_stms_of_the_system, all_suspicious_stms_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+        buggy_stm_ranked_without_isolation = search_rank_worst_case_by_layer(buggy_statement, without_isolation_ranked_list)
+        buggy_stm_ranked_by_layer = len(all_suspicious_stms) + buggy_stm_ranked_without_isolation
+        for i in range(0, buggy_stm_ranked_without_isolation):
+            if(without_isolation_ranked_list[i][0] in all_suspicious_stms):
+                buggy_stm_ranked_by_layer -= 1
     return buggy_stm_ranked, buggy_stm_ranked_by_layer, len(ranked_list)
 
 
@@ -143,7 +150,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
     all_buggy_position = {}
     space = {}
     # rank without isolation
-    #print("without isolation")
+    print("without isolation")
     failing_variants = get_failing_variants(mutated_project_dir)
     all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
@@ -200,14 +207,14 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
     failing_variants = get_failing_variants(mutated_project_dir)
     all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
-    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = locate_buggy_statement(buggy_statement, all_stms_of_the_system, all_suspicious_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    buggy_stm_ranked2, buggy_stm_ranked_by_layer2, num_suspicious_stm2 = locate_buggy_statement(buggy_statement, all_suspicious_of_the_system, all_suspicious_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
 
     #rank with isolation
     print("with isolation")
     local_suspiciousness_of_isolated_stms = local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list,
                                                                              spectrum_expression)
-    buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = locate_buggy_statement(buggy_statement, all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = locate_buggy_statement(buggy_statement, all_suspicious_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
 
     #spectrum ranking only
