@@ -105,12 +105,10 @@ def write_results_to_file(row, sheet, ranking_results):
 
 def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
 
-    aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
+    aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN, RankingManager.AGGREGATION_GEOMETRIC_MEAN,
+                    RankingManager.AGGREGATION_MEDIAN, RankingManager.AGGREGATION_MAX, RankingManager.AGGREGATION_MIN, RankingManager.AGGREGATION_MODE]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
-    #aggregations = [RankingManager.AGGREGATION_AVERAGE_ADDITION, RankingManager.AGGREGATION_AVERAGE_MULTIPLICATION]
-    #normalizations = [RankingManager.NORMALIZATION1, RankingManager.NORMALIZATION2, RankingManager.NORMALIZATION3]
 
-    #normalizations = [RankingManager.NORMALIZATION3]
     result_folder = ""
     for aggregation_type in aggregations:
         for normalization_type in normalizations:

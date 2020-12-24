@@ -154,7 +154,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
     failing_variants = get_failing_variants(mutated_project_dir)
     all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir, all_suspicious_of_the_system, spectrum_expression)
-    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, all_stms_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
+    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_suspicious_of_the_system, all_suspicious_of_the_system, local_suspiciousness_of_all_the_system, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
     all_buggy_position[VARCOP_LAYER] = locate_multiple_bugs(buggy_statements, ranked_list_without_isolation)
     space[VARCOP_LAYER] = len(ranked_list_without_isolation)
     # rank with isolation
