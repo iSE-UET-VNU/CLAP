@@ -105,13 +105,13 @@ def write_results_to_file(row, sheet, ranking_results):
 
 def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
 
-    aggregations = [RankingManager.AGGREGATION_MEDIAN, RankingManager.AGGREGATION_MODE, RankingManager.AGGREGATION_STDEV]
-    normalizations = [RankingManager.NORMALIZATION1]
+    aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
+    normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
     #aggregations = [RankingManager.AGGREGATION_AVERAGE_ADDITION, RankingManager.AGGREGATION_AVERAGE_MULTIPLICATION]
     #normalizations = [RankingManager.NORMALIZATION1, RankingManager.NORMALIZATION2, RankingManager.NORMALIZATION3]
 
     #normalizations = [RankingManager.NORMALIZATION3]
-    result_folder = "20201127_"
+    result_folder = ""
     for aggregation_type in aggregations:
         for normalization_type in normalizations:
             sheet = []
@@ -144,21 +144,22 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
 
                 mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-                spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate, "")
+                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                 #spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
                 #print(spc_log_file_path)
-                SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
+                #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
-                if(system == "ExamDB" or system == "Elevator"):
-                    buggy_statement = get_single_buggy_statement(mutated_project_name, mutated_project_dir)
-                else:
+                if(system == "GPL"):
                     buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
+                else:
+                    buggy_statement = get_single_buggy_statement(mutated_project_name, mutated_project_dir)
                 row_temp = row
                 for i in range(0, len(spectrum_expressions)):
                     ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                             suspicious_stms_list, spectrum_expressions[i], aggregation_type, normalization_type, spectrum_coverage_prefix)
+                                                             suspicious_stms_list, spectrum_expressions[i], aggregation_type, normalization_type, spectrum_coverage_prefix, filtering_coverage_rate)
 
-                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
+                    #ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
+                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = 0, 0, 0
                     sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
 
