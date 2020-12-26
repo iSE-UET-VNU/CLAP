@@ -11,23 +11,25 @@ import MutantManager
 import RankingManager
 from RankingManager import  VARCOP_SPC_FAILING, VARCOP_SPC_SEARCH_SPACE, SPECTRUM, SPECTRUM_SEARCH_SPACE, VARCOP_SPC_LAYER, VARCOP_FAILING, VARCOP_LAYER, VARCOP_SEARCH_SPACE
 
-from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement, get_single_buggy_statement
+from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement, get_single_buggy_statement, \
+    get_mutation_operator, get_single_mutation_operator
 from xlsxwriter import Workbook
 
 
 MUTATED_PROJECT_COL = 0
-
-VARCOP_SPC_FAILING_COL = 1
-VARCOP_SPC_LAYER_COL = 2
-VARCOP_SPC_SPACE_COL = 3
-VARCOP_FAILING_COL = 4
-VARCOP_LAYER_COL = 5
-VARCOP_SPACE_COL = 6
-SPECTRUM_COL = 7
-SPECTRUM_SPACE_COL = 8
-FEATURE_COL = 9
-FEATURE_STM_COL = 10
-FEATURE_SPACE_COL = 11
+BUGGY_STM_COL = 1
+VARCOP_SPC_FAILING_COL = 2
+VARCOP_SPC_LAYER_COL = 3
+VARCOP_SPC_SPACE_COL = 4
+VARCOP_FAILING_COL = 5
+VARCOP_LAYER_COL = 6
+VARCOP_SPACE_COL = 7
+SPECTRUM_COL = 8
+SPECTRUM_SPACE_COL = 9
+FEATURE_COL = 10
+FEATURE_STM_COL = 11
+FEATURE_SPACE_COL = 12
+MUTATION_OPERATOR_COL = 13
 
 SYSTEM_HEADER = "SYSTEM"
 K_WISE_HEADER = "K_WISE"
@@ -105,12 +107,10 @@ def write_results_to_file(row, sheet, ranking_results):
 
 def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
 
-    aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
+    # aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN, RankingManager.AGGREGATION_GEOMETRIC_MEAN,
+    #                 RankingManager.AGGREGATION_MEDIAN, RankingManager.AGGREGATION_MAX, RankingManager.AGGREGATION_MIN, RankingManager.AGGREGATION_MODE]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
-    #aggregations = [RankingManager.AGGREGATION_AVERAGE_ADDITION, RankingManager.AGGREGATION_AVERAGE_MULTIPLICATION]
-    #normalizations = [RankingManager.NORMALIZATION1, RankingManager.NORMALIZATION2, RankingManager.NORMALIZATION3]
-
-    #normalizations = [RankingManager.NORMALIZATION3]
+    aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     result_folder = ""
     for aggregation_type in aggregations:
         for normalization_type in normalizations:
@@ -144,10 +144,10 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
 
                 mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                 #spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
                 #print(spc_log_file_path)
-                #SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
+                SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
                 if(system == "GPL"):
                     buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
@@ -158,9 +158,10 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
                     ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
                                                              suspicious_stms_list, spectrum_expressions[i], aggregation_type, normalization_type, spectrum_coverage_prefix, filtering_coverage_rate)
 
-                    #ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, suspicious_stms_list.keys(), filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
-                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = 0, 0, 0
+                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
+
                     sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
+                    sheet[i].write(row_temp, BUGGY_STM_COL, buggy_statement)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
 
             # except:

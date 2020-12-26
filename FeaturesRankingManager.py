@@ -53,6 +53,9 @@ def features_ranking(buggy_statement, mutated_project_dir, filter_coverage_rate,
     # there are no passing variants with test coverage > threshold
     if (total_passes == 0):
         return -2, -2, -2
+    #there are no failing variants
+    if(total_fails == 0):
+        return -2, -2, -2
     features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
 
     feature_rank, stm_rank = search_rank_worst_case(buggy_statement, features_info, spectrum_expression)

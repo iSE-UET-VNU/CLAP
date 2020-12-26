@@ -74,6 +74,19 @@ def get_single_buggy_statement(mutated_project_name, mutated_project_dir):
 
     return buggy_statement
 
+def get_mutation_operator(mutated_project_name, mutated_project_dir):
+    mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
+    mutated_log_file = open(mutated_log_file_path, "r")
+    mutated_log_file_content = mutated_log_file.readline().split(":")
+    return  mutated_log_file_content[0]
+
+def get_single_mutation_operator(mutated_project_name, mutated_project_dir):
+    mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
+    mutated_log_file = open(mutated_log_file_path, "r")
+    bug_content = mutated_log_file.readline().split(":")
+    return bug_content[0]
+
+
 def get_multiple_buggy_statements(mutated_project_name, mutated_project_dir):
     mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
     mutated_log_file = open(mutated_log_file_path, "r")
