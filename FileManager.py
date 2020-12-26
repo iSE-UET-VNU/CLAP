@@ -202,13 +202,13 @@ def get_implemented_features(project_dir):
     return implemented_features
 
 
-def get_passed_spectrum_coverage_file_path_with_version(variant_dir, version=""):
-    return get_spectrum_coverage_file_path_with_version(variant_dir,
+def get_passed_spectrum_coverage_file_path_with_version(test_coverage_dir, version=""):
+    return get_spectrum_coverage_file_path_with_version(test_coverage_dir,
                                                         get_spectrum_passed_coverage_file_name_with_version(version))
 
 
-def get_failed_spectrum_coverage_file_path_with_version(variant_dir, version=""):
-    return get_spectrum_coverage_file_path_with_version(variant_dir,
+def get_failed_spectrum_coverage_file_path_with_version(test_coverage_dir, version=""):
+    return get_spectrum_coverage_file_path_with_version(test_coverage_dir,
                                                         get_spectrum_failed_coverage_file_name_with_version(version))
 
 
@@ -220,8 +220,8 @@ def get_spectrum_failed_coverage_file_name_with_version(version=""):
     return get_spectrum_coverage_file_name_with_version(SPECTRUM_FAILED_COVERAGE_FILE_NAME, version)
 
 
-def get_spectrum_coverage_file_path_with_version(variant_dir, original_coverage_file_name, version=""):
-    return join_path(get_test_coverage_dir(variant_dir),
+def get_spectrum_coverage_file_path_with_version(test_coverage_dir, original_coverage_file_name, version=""):
+    return join_path(test_coverage_dir,
                      get_spectrum_coverage_file_name_with_version(original_coverage_file_name, version))
 
 
