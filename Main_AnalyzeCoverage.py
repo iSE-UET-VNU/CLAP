@@ -1,19 +1,21 @@
 import sys
 
+import SpectrumCoverageManager
 import TestingCoverageManager
-from FileManager import list_dir, get_all_variant_dirs, get_passed_test_coverage_dir, get_failed_test_coverage_dir
+from FileManager import list_dir, get_all_variant_dirs, get_passed_test_coverage_dir, get_failed_test_coverage_dir, \
+    get_test_coverage_dir
+from SpectrumCoverageManager import rebuild_failed_spectrum_coverage_from_specific_test_cases, \
+    rebuild_passed_spectrum_coverage_from_specific_test_cases
 
 if __name__ == "__main__":
-    # sys.stdout = open("email_test_coverage.txt", "w")
+    # ------ START CONFIG ------
     base_dir = "/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/dataset/4wise-Email-FH-JML"
+    target_coverage = 0.4
+    # ------ END CONFIG ------
+
     mutated_project_dirs = list_dir(base_dir, full_path=True, sort=True)
-    for mutated_project_dir in mutated_project_dirs[:1]:
-        mutated_variant_dirs = get_all_variant_dirs(mutated_project_dir, sort=True)
-        for mutated_variant_dir in mutated_variant_dirs[:]:
-            if True or "model_m_ca4_0003" in mutated_variant_dir:
-                print("-" * 20)
-                print(mutated_variant_dir)
-                failed_test_coverage_dir = get_failed_test_coverage_dir(mutated_variant_dir)
-                passed_test_coverage_dir = get_passed_test_coverage_dir(mutated_variant_dir)
-                TestingCoverageManager.find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passed_test_coverage_dir)
-    # sys.stdout.close()
+    for mutated_project_dir in mutated_project_dirs[:]:
+        if "_MultipleBugs_.NOB_1.ID_135" not in mutated_project_dir:
+            continue
+        SpectrumCoverageManager.rebuild_spectrum_coverage_with_target_coverage(mutated_project_dir=mutated_project_dir,
+                                                                               target_coverage=target_coverage)
