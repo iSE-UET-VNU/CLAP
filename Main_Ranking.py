@@ -10,13 +10,13 @@ from Spectrum_Expression import RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, A
 
 if __name__ == "__main__":
 
-    base_dir = "/home/huent/Documents/Trang/single_bugs"
-    system_names = ["Debug"]
+    base_dir = "/home/huent/Documents/Trang/"
+    system_names = ["GPL"]
     project_names = ["4wise"]
 
     spectrum_coverage_prefix = "v99__"
 
-    filtering_coverage_rate_list = [0.95]
+    filtering_coverage_rate_list = [0.8]
     for coverage_index in range(0, len(filtering_coverage_rate_list)):
         for system in system_names:
              system_dir = join_path(base_dir, system)
@@ -38,7 +38,7 @@ if __name__ == "__main__":
                     #                            spectrum_coverage_prefix)
                     ranking_with_coverage_rate(system_dir, system, project_names[project_index],
                                               filtering_coverage_rate_list[coverage_index],
-                                              [TARANTULA], spectrum_coverage_prefix)
+                                              [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR], spectrum_coverage_prefix)
 
 
 
