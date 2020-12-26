@@ -37,15 +37,17 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
     else:
         single_coverage_items = [passed_coverage_items[0]] + sorted(passed_coverage_items[1:], reverse=True)
     full_coverage_item = merge_coverage_items(*single_coverage_items)
+    full_coverage_value = full_coverage_item[0]
     has_some_test_failed = len(failed_coverage_items) > 0
 
-    print(f"[Full coverage] {full_coverage_item[0]} - Failed Test Required Mode: {has_some_test_failed}")
+    print(f"[Full coverage] {full_coverage_value} - Failed Test Required Mode: {has_some_test_failed}")
     if full_coverage_item[0] < target_coverage:
-        raise Exception(f"Raw test suite coverage can not satisfy required value={target_coverage}")
+        raise Exception(
+            f"Raw test suite coverage is smaller than required value [{full_coverage_value} < {target_coverage}]")
     first_single_item_coverage = single_coverage_items[0][0]
     if first_single_item_coverage >= target_coverage + ALLOWED_COVERAGE_DELTA:
         logger.warning(
-            f"Smallest test case coverage is greater than target coverage[{first_single_item_coverage}>{target_coverage}]")
+            f"Smallest test case coverage is greater than target coverage [{first_single_item_coverage} > {target_coverage}]")
         return
 
     single_coverage_items = [single_coverage_items[0]] + list(
