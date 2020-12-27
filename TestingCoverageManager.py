@@ -1,34 +1,44 @@
 import logging
 import os
 import xml.etree.ElementTree as ET
+from collections import defaultdict
 
 from FileManager import get_test_coverage_dir, join_path, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_variants_dir, \
-    list_dir, get_all_coverage_file_paths_in_dir
+    list_dir, get_all_coverage_file_paths_in_dir, FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME
 from Helpers import get_logger
 
 logger = get_logger(__name__)
 
 # __________START__________ Author: tuanngokien
 
-PASSED_COVERAGE_MAPPING_PREFIX = "F"
-FAILED_COVERAGE_MAPPING_PREFIX = "P"
+FAILED_COVERAGE_MAPPING_PREFIX = "F"
+PASSED_COVERAGE_MAPPING_PREFIX = "P"
 ALLOWED_COVERAGE_DELTA = 0.02
 
 
 def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passed_test_coverage_dir,
                                                  target_coverage=0.5):
-    """
-    loading coverage items (see function "get_all_coverage_flag_items" for more detail)
-    locate failed coverage in the first place for exploring satisfied subset more quickly
-    """
+    single_coverage_items, coverage_file_path_mapping, has_some_failed_tests = get_all_test_coverage_items(
+        failed_test_coverage_dir=failed_test_coverage_dir, passed_test_coverage_dir=passed_test_coverage_dir)
+    merged_coverage, merged_item = find_merged_item_with_target_coverage(single_coverage_items=single_coverage_items,
+                                                                         has_some_test_failed=has_some_failed_tests,
+                                                                         target_coverage=target_coverage)
+    if merged_item:
+        return extract_single_coverage_file_paths_from_merged_items(merge_item=merged_item,
+                                                                    coverage_file_path_mapping=coverage_file_path_mapping,
+                                                                    failed_test_coverage_dir=failed_test_coverage_dir,
+                                                                    passed_test_coverage_dir=passed_test_coverage_dir)
 
+
+def get_all_test_coverage_items(failed_test_coverage_dir, passed_test_coverage_dir):
     # return print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir)
 
     failed_coverage_items, failed_coverage_file_path_mapping = get_all_coverage_flag_items(failed_test_coverage_dir,
-                                                                                           file_mapping_prefix=PASSED_COVERAGE_MAPPING_PREFIX)
-    passed_coverage_items, passed_coverage_file_path_mapping = get_all_coverage_flag_items(passed_test_coverage_dir,
                                                                                            file_mapping_prefix=FAILED_COVERAGE_MAPPING_PREFIX)
+    passed_coverage_items, passed_coverage_file_path_mapping = get_all_coverage_flag_items(passed_test_coverage_dir,
+                                                                                           file_mapping_prefix=PASSED_COVERAGE_MAPPING_PREFIX)
     coverage_file_path_mapping = {**failed_coverage_file_path_mapping, **passed_coverage_file_path_mapping}
+
     if failed_coverage_items:
         remaining_coverage_items = failed_coverage_items[1:] + passed_coverage_items
         # shuffle(remaining_coverage_items)
@@ -36,9 +46,19 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
         single_coverage_items = [failed_coverage_items[0]] + remaining_coverage_items
     else:
         single_coverage_items = [passed_coverage_items[0]] + sorted(passed_coverage_items[1:], reverse=True)
+    has_some_failed_tests = len(failed_coverage_items) > 0
+    return single_coverage_items, coverage_file_path_mapping, has_some_failed_tests
+
+
+def find_merged_item_with_target_coverage(single_coverage_items, has_some_test_failed=False,
+                                          target_coverage=0.5):
+    """
+    loading coverage items (see function "get_all_coverage_flag_items" for more detail)
+    locate failed coverage in the first place for exploring satisfied subset more quickly
+    """
+
     full_coverage_item = merge_coverage_items(*single_coverage_items)
     full_coverage_value = full_coverage_item[0]
-    has_some_test_failed = len(failed_coverage_items) > 0
 
     print(f"[Full coverage] {full_coverage_value} - Failed Test Required Mode: {has_some_test_failed}")
     if full_coverage_item[0] < target_coverage:
@@ -46,9 +66,8 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
             f"Raw test suite coverage is smaller than required value [{full_coverage_value} < {target_coverage}]")
     first_single_item_coverage = single_coverage_items[0][0]
     if first_single_item_coverage >= target_coverage + ALLOWED_COVERAGE_DELTA:
-        logger.warning(
+        raise Exception(
             f"Smallest test case coverage is greater than target coverage [{first_single_item_coverage} > {target_coverage}]")
-        return
 
     single_coverage_items = [single_coverage_items[0]] + list(
         filter(lambda item: item[0] <= target_coverage, single_coverage_items[1:]))
@@ -57,23 +76,36 @@ def find_optimal_test_cases_with_target_coverage(failed_test_coverage_dir, passe
                                                                  must_include_failed_test_file=has_some_test_failed,
                                                                  shallow_mode=True)
     if not merged_item:
-        print("%%%%%%% Try to use deep mode to find sπolution %%%%%%%")
+        print("%%%%%%% Try to use deep mode to find solution %%%%%%%")
         merged_item = find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
                                                                      must_include_failed_test_file=has_some_test_failed,
                                                                      shallow_mode=False)
     if merged_item:
         print(f"------- FOUND A SOLUTION [{merged_item[0]}] ------")
-        build_spectrum_coverage_from_merged_item(merged_item, coverage_file_path_mapping)
+        return merged_item[0], merged_item
     else:
         print("******* NO SOLUTION ********")
-        input("Press Enter to continue...")
+        return None, None
+        # input("Press Enter to continue...")
 
 
-def build_spectrum_coverage_from_merged_item(merge_item, coverage_file_path_mapping):
-    coverage_value = merge_item[0]
+def extract_single_coverage_file_paths_from_merged_items(merge_item, coverage_file_path_mapping,
+                                                         failed_test_coverage_dir, passed_test_coverage_dir):
     file_ids = merge_item[2]
+    file_path_container = defaultdict(list)
     for file_id in file_ids:
-        print(coverage_file_path_mapping[file_id])
+        absolute_file_path = coverage_file_path_mapping[file_id]
+        if failed_test_coverage_dir and absolute_file_path.startswith(failed_test_coverage_dir):
+            coverage_file_name = absolute_file_path.replace(failed_test_coverage_dir, "").strip("/")
+            file_path_container[FAILED_TEST_COVERAGE_FOLDER_NAME].append(coverage_file_name)
+            continue
+
+        if passed_test_coverage_dir and absolute_file_path.startswith(passed_test_coverage_dir):
+            coverage_file_name = absolute_file_path.replace(passed_test_coverage_dir, "").strip("/")
+            file_path_container[PASSED_TEST_COVERAGE_FOLDER_NAME].append(coverage_file_name)
+            continue
+
+    return dict(file_path_container)
 
 
 def find_merged_coverage_item_with_target_coverage(single_coverage_items, target_coverage,
