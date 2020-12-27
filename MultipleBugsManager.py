@@ -26,20 +26,17 @@ SBFL_SPACE_COL = 9
 
 def write_header_in_result_file(row, sheet):
     sheet.write(row, PROJECT_NAME_COL, "Project")
-    sheet.write(row, ISOLATION_STM_COL, "Isolation")
-    sheet.write(row + 1, ISOLATION_STM_COL, "Isolation_stm")
-    sheet.write(row + 1, ISOLATION_RANK_COL, "Isolation_rank")
-    sheet.write(row+1, ISOLATION_SPACE_COL, "Isolation_space")
+    sheet.write(row, ISOLATION_STM_COL, "Isolation_stm")
+    sheet.write(row, ISOLATION_RANK_COL, "Isolation_rank")
+    sheet.write(row, ISOLATION_SPACE_COL, "Isolation_space")
 
-    sheet.write(row, WITHOUT_ISOLATION_STM_COL, "without_Isolation")
-    sheet.write(row + 1, WITHOUT_ISOLATION_STM_COL, "without_Isolation_stm")
-    sheet.write(row + 1, WITHOUT_ISOLATION_RANK_COL, "without_Isolation_rank")
-    sheet.write(row + 1, WITHOUT_ISOLATION_SPACE_COL, "without_ Isolation_space")
+    sheet.write(row, WITHOUT_ISOLATION_STM_COL, "without_Isolation_stm")
+    sheet.write(row, WITHOUT_ISOLATION_RANK_COL, "without_Isolation_rank")
+    sheet.write(row, WITHOUT_ISOLATION_SPACE_COL, "without_ Isolation_space")
 
-    sheet.write(row, SBFL_STM_COL, "SBFL")
-    sheet.write(row + 1, SBFL_STM_COL, "SBFL_stm")
-    sheet.write(row + 1, SBFL_RANK_COL, "SBFL_rank")
-    sheet.write(row + 1, SBFL_SPACE_COL, "SBFL_space")
+    sheet.write(row, SBFL_STM_COL, "SBFL_stm")
+    sheet.write(row, SBFL_RANK_COL, "SBFL_rank")
+    sheet.write(row, SBFL_SPACE_COL, "SBFL_space")
 
 def write_result_to_file(row, sheet, ranking_results, space):
 
@@ -64,7 +61,7 @@ def write_result_to_file(row, sheet, ranking_results, space):
         sheet.write(temp, SBFL_RANK_COL, ranking_results[SPECTRUM][stm])
         sheet.write(temp, SBFL_SPACE_COL, space[SPECTRUM])
         temp += 1
-    row = temp + 1
+    row = temp
     return row
 
 def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filtering_coverage_rate):
@@ -91,7 +88,7 @@ def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filterin
             for i in range(0, len(spectrum_expressions)):
                 sheet.append(wb.add_worksheet(spectrum_expressions[i]))
                 write_header_in_result_file(row, sheet[i])
-            row += 2
+            row += 1
             num_of_bugs = 0
             for mutated_project_name in mutated_projects:
                 num_of_bugs += 1
@@ -114,7 +111,7 @@ def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filterin
                 #
                      sheet[sbfl_expression].write(row_temp, PROJECT_NAME_COL, mutated_project_name)
                      row = write_result_to_file(row_temp, sheet[sbfl_expression],  ranking_results, space)
-                if(num_of_bugs >= 25):
+                if(num_of_bugs >= 30):
                     break
             wb.close()
 
