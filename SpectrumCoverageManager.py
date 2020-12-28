@@ -44,8 +44,6 @@ def rebuild_spectrum_coverage_for_variant(variant_dir, version="", random=True):
 
 
 def rebuild_spectrum_coverage_with_target_coverage(mutated_project_dir, target_coverage):
-    # rebuild_failed_spectrum_coverage_from_specific_test_cases(test_coverage_dir=coverage_dir, test_cases=["EmailSystem.Client_ESTest.test19.coverage.xml", "EmailSystem.Client_ESTest.test55.coverage.xml"])
-
     """
     require all variants to have the same coverage level
     interrupt immediately if no solution found for a specific variant
@@ -53,7 +51,7 @@ def rebuild_spectrum_coverage_with_target_coverage(mutated_project_dir, target_c
 
     mutated_variant_dirs = get_all_variant_dirs(mutated_project_dir, sort=True)
     test_coverage_container = []
-    version = f"test_{target_coverage}"
+    version = f"{int(target_coverage * 100)}"
 
     # find optimal test cases
     for mutated_variant_dir in mutated_variant_dirs[:]:
@@ -63,6 +61,7 @@ def rebuild_spectrum_coverage_with_target_coverage(mutated_project_dir, target_c
             test_coverage_dir = get_test_coverage_dir(mutated_variant_dir)
             failed_test_coverage_dir = get_failed_test_coverage_dir(mutated_variant_dir)
             passed_test_coverage_dir = get_passed_test_coverage_dir(mutated_variant_dir)
+            # print(TestingCoverageManager.print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir))
             optimal_coverage_file_path_dict = TestingCoverageManager.find_optimal_test_cases_with_target_coverage(
                 failed_test_coverage_dir,
                 passed_test_coverage_dir,
@@ -129,6 +128,6 @@ def rebuild_spectrum_coverage(input_coverage_dir, spectrum_output_path, specific
         joined_test_cases = ""
     logger.info(f"Building spectrum coverage file for [{get_file_name_with_parent(input_coverage_dir)}]")
     output_log = execute_shell_command(
-        f'java -Xmx128m -Drandom={str(random).lower()} -Dupper_bound={max_test_cases} -Dtest_cases={joined_test_cases} -Dcoverage_dir={input_coverage_dir} -Doutput_path={spectrum_output_path} -cp {PLUGIN_PATH} ',
+        f'java -Xmx64m -Drandom={str(random).lower()} -Dupper_bound={max_test_cases} -Dtest_cases={joined_test_cases} -Dcoverage_dir={input_coverage_dir} -Doutput_path={spectrum_output_path} -cp {PLUGIN_PATH} ',
         extra_args=[], log_to_file=True)
     print(output_log)
