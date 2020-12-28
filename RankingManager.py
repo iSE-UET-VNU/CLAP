@@ -89,8 +89,7 @@ def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_lis
     elif (normalized_type == NORMALIZATION_ALPHA_BETA):
         normalized_score_list = normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, suspicious_stms_list)
     else:
-        normalized_score_list = normalize_local_score_none(all_stms_of_the_system, suspicious_stms_list,
-                                                       local_suspiciousness_of_isolated_stms)
+        normalized_score_list = normalize_local_score_none(local_suspiciousness_of_all_the_system, suspicious_stms_list)
 
     if(aggregation_type == AGGREGATION_ARITHMETIC_MEAN):
         ranked_list = global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_score_list, spectrum_expression)
@@ -321,6 +320,21 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, sus
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
+def normalize_local_score_none(local_suspiciousness_of_all_the_system, suspicious_stms_list):
+    all_suspicious_stm = get_all_suspicious_stm(suspicious_stms_list)
+    normalized_score_list = {}
+    for variant in suspicious_stms_list:
+        normalized_score_list[variant] = {}
+        if(len(suspicious_stms_list[variant]) > 0):
+            for stm in all_suspicious_stm:
+                local_score =  get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
+                if local_score == -1:
+                    normalized_score = 0
+                else:
+                    normalized_score = local_score
+                normalized_score_list[variant][stm] = normalized_score
+    return normalized_score_list
+
 def normalize_local_score1(local_suspiciousness_of_isolated_stms, alpha = 0, beta = 1):
     all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
     normalized_score_list = {}
@@ -338,22 +352,6 @@ def normalize_local_score1(local_suspiciousness_of_isolated_stms, alpha = 0, bet
                         normalized_score = beta
                     else:
                         normalized_score = (local_score - min)*((beta-alpha)/(max - min)) + alpha
-                normalized_score_list[variant][stm] = normalized_score
-    return normalized_score_list
-
-def normalize_local_score_none(all_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms):
-    all_suspicious_stm = get_stms_from_list_of_local_suspiciousness(local_suspiciousness_of_isolated_stms)
-    normalized_score_list = {}
-    for variant in local_suspiciousness_of_isolated_stms:
-        normalized_score_list[variant] = {}
-        if(len(local_suspiciousness_of_isolated_stms[variant]) > 0):
-
-            for stm in all_suspicious_stm:
-                local_score =  get_local_score(stm, local_suspiciousness_of_isolated_stms[variant])
-                if local_score == -1:
-                    normalized_score = 0
-                else:
-                    normalized_score = local_score
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
