@@ -113,7 +113,6 @@ def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_lis
     elif (aggregation_type == AGGREGATION_STDEV):
         ranked_list = global_score_aggregation_stdev(all_stms_of_the_system, normalized_score_list,
                                                    spectrum_expression)
-
     return ranked_list
 
 def locate_buggy_statement(buggy_statement, all_suspicious_stms_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type):
@@ -214,6 +213,7 @@ def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum
     print("with isolation")
     local_suspiciousness_of_isolated_stms = local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list,
                                                                              spectrum_expression)
+
     buggy_stm_ranked, buggy_stm_ranked_by_layer, num_suspicious_stm = locate_buggy_statement(buggy_statement, all_suspicious_of_the_system, suspicious_stms_list, local_suspiciousness_of_isolated_stms, local_suspiciousness_of_all_the_system, spectrum_expression, aggregation_type, normalized_type)
 
 

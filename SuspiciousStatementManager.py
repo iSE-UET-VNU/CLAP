@@ -17,7 +17,6 @@ def get_suspicious_statement(mutated_project_dir, filtering_coverage_rate):
         suspicious_stms_list = json.loads(slicing_info_content)
         slicing_info_file.close()
         for key in suspicious_stms_list:
-
             suspicious_temp = []
             for stm in suspicious_stms_list[key].keys():
                 if stm not in failing_coverage_data[key]:
