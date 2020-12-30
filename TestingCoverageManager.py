@@ -173,6 +173,12 @@ def merge_coverage_items(*args):
     return new_coverage_value, new_flags, new_coverage_source_files
 
 
+def get_all_coverage_file_paths(coverage_dir):
+    if not coverage_dir:
+        return []
+    return get_all_coverage_file_paths_in_dir(coverage_dir)
+
+
 def get_all_coverage_flag_items(coverage_dir, file_mapping_prefix="a"):
     """
     each item is formatted as (coverage_value, coverage_flags, file_path).

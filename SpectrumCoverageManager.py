@@ -1,3 +1,5 @@
+import random
+
 import TestingCoverageManager
 from FileManager import get_plugin_path, get_file_name_with_parent, get_test_coverage_dir, join_path, \
     FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME, \
@@ -38,6 +40,93 @@ def rebuild_spectrum_coverage_for_variant(variant_dir, version="", random=True):
                                                                                                  version)
         rebuild_spectrum_coverage(input_coverage_dir=passed_coverage_dir,
                                   spectrum_output_path=spectrum_passed_coverage_file_path, random=random)
+
+
+# BUILD TEST COVERAGE WITH RANDOM INCREMENTAL TEST CASES
+MAX_LEVELS = 10
+
+
+def rebuild_incremental_spectrum_coverages(mutated_project_dir):
+    variant_dirs = get_all_variant_dirs(mutated_project_dir)
+    for variant_dir in variant_dirs:
+        rebuild_incremental_spectrum_coverages_for_variant(variant_dir)
+
+
+def rebuild_incremental_spectrum_coverages_for_variant(variant_dir, version=""):
+    raw_version = version
+    test_coverage_dir = get_test_coverage_dir(variant_dir)
+
+    failed_coverage_dir = join_path(test_coverage_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
+    failed_coverage_file_paths = TestingCoverageManager.get_all_coverage_file_paths(failed_coverage_dir)
+
+    passed_coverage_dir = join_path(test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
+    passed_coverage_file_paths = TestingCoverageManager.get_all_coverage_file_paths(passed_coverage_dir)
+
+    test_suites = get_incremental_test_suites(failed_coverage_file_paths, passed_coverage_file_paths)
+    for i, test_suite in enumerate(test_suites):
+        coverage_file_paths = test_suite
+        version = f"INoT_{i + 1}_{raw_version}"
+        build_incremental_spectrum_coverages_with_each_test_suite(coverage_file_paths, test_coverage_dir, version)
+
+
+def build_incremental_spectrum_coverages_with_each_test_suite(coverage_file_paths, test_coverage_dir, version):
+    failed_coverage_file_names = []
+    passed_coverage_file_names = []
+
+    failed_coverage_dir = join_path(test_coverage_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
+    passed_coverage_dir = join_path(test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
+
+    for file_path in coverage_file_paths:
+        if file_path.startswith(failed_coverage_dir):
+            coverage_file_name = file_path.replace(failed_coverage_dir, "").strip("/")
+            failed_coverage_file_names.append(coverage_file_name)
+            continue
+
+        if file_path.startswith(passed_coverage_dir):
+            coverage_file_name = file_path.replace(passed_coverage_dir, "").strip("/")
+            passed_coverage_file_names.append(coverage_file_name)
+            continue
+
+    if failed_coverage_file_names:
+        spectrum_coverage_file_path = get_failed_spectrum_coverage_file_path_with_version(test_coverage_dir, version)
+        rebuild_spectrum_coverage(input_coverage_dir=failed_coverage_dir,
+                                  spectrum_output_path=spectrum_coverage_file_path,
+                                  specific_test_cases=failed_coverage_file_names,
+                                  random=False,
+                                  max_test_cases=-1)
+
+    if passed_coverage_file_names:
+        spectrum_coverage_file_path = get_passed_spectrum_coverage_file_path_with_version(test_coverage_dir, version)
+        rebuild_spectrum_coverage(input_coverage_dir=passed_coverage_dir,
+                                  spectrum_output_path=spectrum_coverage_file_path,
+                                  specific_test_cases=passed_coverage_file_names,
+                                  random=False,
+                                  max_test_cases=-1)
+
+
+def get_incremental_test_suites(failed_coverage_file_paths, passed_coverage_file_paths):
+    """
+    To hold the condition that failing variant must have a least one failed test,
+    then the coverage_file_paths always concat from firstly failing_paths and passing_test
+    so pick the first element (always failed test if coverage_file_paths have failed tests) and shuffle the rest
+    """
+
+    coverage_file_paths = failed_coverage_file_paths + passed_coverage_file_paths
+    first_coverage_file_path = coverage_file_paths[0]
+    remaining_coverage_file_paths = coverage_file_paths[1:]
+    random.shuffle(remaining_coverage_file_paths)
+    coverage_file_paths = [first_coverage_file_path] + remaining_coverage_file_paths
+    # coverage_file_paths = [re.search(r"(?<=\/)[^\/]+$", path).group(0) for path in coverage_file_paths]
+    total_number_of_tests = len(coverage_file_paths)
+    num_of_extra_test_per_step = int(total_number_of_tests / MAX_LEVELS)
+    test_suites = []
+    for level in range(1, MAX_LEVELS + 1):
+        if level != MAX_LEVELS:
+            current_number_of_tests = level * num_of_extra_test_per_step
+        else:
+            current_number_of_tests = total_number_of_tests
+        test_suites.append((coverage_file_paths[0:current_number_of_tests]))
+    return test_suites
 
 
 # BUILD TEST COVERAGE FROM SPECIFIC TEST CASES
