@@ -118,7 +118,7 @@ def get_incremental_test_suites(failed_coverage_file_paths, passed_coverage_file
     coverage_file_paths = [first_coverage_file_path] + remaining_coverage_file_paths
     # coverage_file_paths = [re.search(r"(?<=\/)[^\/]+$", path).group(0) for path in coverage_file_paths]
     total_number_of_tests = len(coverage_file_paths)
-    num_of_extra_test_per_step = int(total_number_of_tests / MAX_LEVELS)
+    num_of_extra_test_per_step = max(int(total_number_of_tests / MAX_LEVELS), 1)
     test_suites = []
     for level in range(1, MAX_LEVELS + 1):
         if level != MAX_LEVELS:
