@@ -123,6 +123,8 @@ def get_incremental_test_suites(failed_coverage_file_paths, passed_coverage_file
     for level in range(1, MAX_LEVELS + 1):
         if level != MAX_LEVELS:
             current_number_of_tests = level * num_of_extra_test_per_step
+            if current_number_of_tests > total_number_of_tests:
+                break
         else:
             current_number_of_tests = total_number_of_tests
         test_suites.append((coverage_file_paths[0:current_number_of_tests]))
