@@ -1,3 +1,4 @@
+package main;
 class Statistics {
     public int interface_count = 0;
     public int top_interface_count = 0;

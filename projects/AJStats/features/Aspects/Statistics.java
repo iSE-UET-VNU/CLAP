@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int aspect_count = 0;
     public int top_aspect_count = 0;

@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int pointcut_count = 0;
     

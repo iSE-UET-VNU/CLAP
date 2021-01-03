@@ -1,3 +1,4 @@
+package main;
 class AspectJCollector {
     public void MethodDeclaration() throws ParseException {
         int begin = this.token.beginLine;

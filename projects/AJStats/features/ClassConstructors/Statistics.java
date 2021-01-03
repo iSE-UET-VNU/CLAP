@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int class_constructor_count = 0;
     public int class_constructor_loc = 0;

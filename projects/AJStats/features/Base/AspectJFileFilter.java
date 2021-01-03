@@ -1,3 +1,4 @@
+package main;
 import java.io.*;
 
 class AspectJFileFilter implements FileFilter {

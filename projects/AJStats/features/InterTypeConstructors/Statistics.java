@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int inter_type_constructor_count = 0;
     public int inter_type_constructor_loc = 0;

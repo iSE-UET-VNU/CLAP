@@ -1,3 +1,4 @@
+package main;
 class Statistics {
     public int aspect_field_count = 0;
     

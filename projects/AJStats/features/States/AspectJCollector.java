@@ -1,3 +1,4 @@
+package main;
 class AspectJCollector {
 	protected boolean inter_type_method_flag = false;
 	protected boolean inter_type_constructor_flag = false;

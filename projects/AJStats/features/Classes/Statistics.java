@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int class_count = 0;
     public int top_class_count = 0;

@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int advice_count = 0;
     public int advice_loc = 0;

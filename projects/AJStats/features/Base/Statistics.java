@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int file_count = 0;
     

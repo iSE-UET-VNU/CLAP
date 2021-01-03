@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int class_field_count = 0;
     

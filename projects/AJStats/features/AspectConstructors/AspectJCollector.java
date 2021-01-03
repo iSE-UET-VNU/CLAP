@@ -1,3 +1,4 @@
+package main;
 class AspectJCollector {
 	private int constructor_begin = -1;
     public void ConstructorDeclaration() throws ParseException {

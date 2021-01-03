@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int class_method_count = 0;
     public int class_method_loc = 0;

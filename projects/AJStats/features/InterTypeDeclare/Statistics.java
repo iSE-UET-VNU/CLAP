@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int inter_type_declare_count = 0;
     

@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int interface_method_count = 0;
     

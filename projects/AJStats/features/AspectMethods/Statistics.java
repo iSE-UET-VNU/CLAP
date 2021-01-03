@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int aspect_method_count = 0;
     public int aspect_method_loc = 0;

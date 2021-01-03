@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int aspect_constructor_count = 0;
     public int aspect_constructor_loc = 0;

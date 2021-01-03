@@ -1,3 +1,4 @@
+package main;
 class Statistics {
 	public int inter_type_method_count = 0;
     public int inter_type_method_loc = 0;
