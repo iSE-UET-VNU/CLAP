@@ -12,9 +12,9 @@ if __name__ == "__main__":
 
     # ------ START CONFIG ------
     base_dir = None
-    project_name = "Elevator-FH-JML-MB"
+    project_name = "ZipMe"
     t_wise = 2
-    num_of_seeding_bugs = 2
+    num_of_seeding_bugs = 1
     # ------ END CONFIG ------
 
     project_dir = get_project_dir(project_name, base_dir)
