@@ -1,7 +1,8 @@
 import pandas
 
 from ranking.MultipleBugsManager import PROJECT_NAME_HEADER
-
+MAX = 100000
+MIN = -100000
 
 def percentage_of_bugs_found(multiple_bugs_file, sbfl_metric, examined_statements):
     excel_data_df = pandas.read_excel(multiple_bugs_file, sheet_name=None)
@@ -36,19 +37,19 @@ def percentage_of_bugs_found(multiple_bugs_file, sbfl_metric, examined_statement
 
 def average_best_rank(multiple_bugs_file, sbfl_metric):
     excel_data_df = pandas.read_excel(multiple_bugs_file, sheet_name=None)
-    tmp_varcop = 10000
-    tmp_sbfl = 10000
+    tmp_varcop = MAX
+    tmp_sbfl = MAX
     sum_varcop = 0
     sum_sbfl = 0
     num_of_cases = 0
     for i in range(0, len(excel_data_df[sbfl_metric][PROJECT_NAME_HEADER])):
         if(excel_data_df[sbfl_metric][PROJECT_NAME_HEADER][i] != PROJECT_NAME_HEADER and  not pandas.isnull(excel_data_df[sbfl_metric][PROJECT_NAME_HEADER][i])):
-            if(tmp_varcop != 10000 and tmp_sbfl != 10000):
+            if(tmp_varcop != MAX and tmp_sbfl != MAX):
                 sum_varcop += tmp_varcop
                 sum_sbfl += tmp_sbfl
                 num_of_cases += 1
-            tmp_varcop = 10000
-            tmp_sbfl = 10000
+            tmp_varcop = MAX
+            tmp_sbfl = MAX
 
         varcop_rank = excel_data_df[sbfl_metric]["Isolation_rank"][i]
         sbfl_rank = excel_data_df[sbfl_metric]["SBFL_rank"][i]
@@ -64,19 +65,19 @@ def average_best_rank(multiple_bugs_file, sbfl_metric):
 
 def average_worst_rank(multiple_bugs_file, sbfl_metric):
     excel_data_df = pandas.read_excel(multiple_bugs_file, sheet_name=None)
-    tmp_varcop = -10000
-    tmp_sbfl = -10000
+    tmp_varcop = MIN
+    tmp_sbfl = MIN
     sum_varcop = 0
     sum_sbfl = 0
     num_of_cases = 0
     for i in range(0, len(excel_data_df[sbfl_metric][PROJECT_NAME_HEADER])):
         if(excel_data_df[sbfl_metric][PROJECT_NAME_HEADER][i] != PROJECT_NAME_HEADER and  not pandas.isnull(excel_data_df[sbfl_metric][PROJECT_NAME_HEADER][i])):
-            if(tmp_varcop != -10000 and tmp_sbfl != -10000):
+            if(tmp_varcop != MIN and tmp_sbfl != MIN):
                 sum_varcop += tmp_varcop
                 sum_sbfl += tmp_sbfl
                 num_of_cases += 1
-            tmp_varcop = -10000
-            tmp_sbfl = -10000
+            tmp_varcop = MIN
+            tmp_sbfl = MIN
 
         varcop_rank = excel_data_df[sbfl_metric]["Isolation_rank"][i]
         sbfl_rank = excel_data_df[sbfl_metric]["SBFL_rank"][i]
