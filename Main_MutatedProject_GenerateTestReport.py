@@ -19,7 +19,7 @@ if __name__ == "__main__":
         mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir, sort=True)
         for mutated_project_dir in mutated_project_dirs:
             if not was_variants_composed(mutated_project_dir):
-                continue
+                break
             try:
                 lock_project(mutated_project_dir)
             except BlockingIOError as e:
@@ -30,4 +30,4 @@ if __name__ == "__main__":
                 continue
             else:
                 TestManager.write_test_output_to_configs_report(mutated_project_dir)
-        sleep(1800)
+        sleep(120)

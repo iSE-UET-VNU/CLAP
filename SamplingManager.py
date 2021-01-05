@@ -16,8 +16,9 @@ def get_sampling_file_path(output_log):
 def sampling(model_file_path, t_wise):
     logger.info(f"Running sampling for model file [{get_file_name_without_ext(model_file_path)}] with {t_wise}-wise")
     output_log = execute_shell_command(f'java -jar {PLUGIN_PATH} ', extra_args=[
-        {"-t": "t_wise"},
         {"-fm": model_file_path},
-        {"-a Chvatal -s": t_wise},
+        {"-t": "t_wise"},
+        {"-a": "Chvatal"},
+        {"-s": t_wise},
     ])
     return get_sampling_file_path(output_log)
