@@ -10,7 +10,7 @@ from FileManager import join_path, SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_
     get_variants_dir, get_all_variant_dirs, list_dir, get_failing_variants
 
 # keywords
-from Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
+from ranking.Spectrum_Expression import tarantula_calculation, ochiai_calculation, op2_calculation, barinel_calculation, \
     dstar_calculation, TARANTULA_SCORE, TARANTULA, OCHIAI, OCHIAI_SCORE, OP2_SCORE, OP2, BARINEL, BARINEL_SCORE, DSTAR, \
     DSTAR_SCORE, RUSSELL_RAO, RUSSELL_RAO_SCORE, \
     russell_rao_calculation, SIMPLE_MATCHING, simple_matching_calculation, ROGERS_TANIMOTO, SIMPLE_MATCHING_SCORE, \
@@ -58,6 +58,8 @@ NORMALIZATION2 = "NORMALIZATION2"
 NORMALIZATION3 = "NORMALIZATION3"
 NORMALIZATION_NONE = "NORMALIZATION_NONE"
 NORMALIZATION_ALPHA_BETA = "NORMALIZATION_ALPHA_BETA"
+
+STM_NOT_FOUND = -1000
 
 def num_of_suspicious_stms(suspicious_stms_list):
     stm_set = get_all_suspicious_stm(suspicious_stms_list)
@@ -297,7 +299,7 @@ def get_local_score(stm, ranked_list):
     for i in range(0, len(ranked_list)):
         if stm == ranked_list[i][0]:
             return ranked_list[i][1]
-    return -1
+    return STM_NOT_FOUND
 
 def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, suspicious_stms_list, alpha = 0, beta = 1):
     all_suspicious_stm = get_all_suspicious_stm(suspicious_stms_list)
@@ -310,7 +312,7 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, sus
             min = local_suspiciousness_of_all_the_system[variant][len(local_suspiciousness_of_all_the_system[variant])-1][1]
             for stm in all_suspicious_stm:
                 local_score =  get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
-                if local_score == -1:
+                if local_score == STM_NOT_FOUND:
                     normalized_score = alpha
                 else:
                     if(min == max):
@@ -328,7 +330,7 @@ def normalize_local_score_none(local_suspiciousness_of_all_the_system, suspiciou
         if(len(suspicious_stms_list[variant]) > 0):
             for stm in all_suspicious_stm:
                 local_score =  get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
-                if local_score == -1:
+                if local_score == STM_NOT_FOUND:
                     normalized_score = 0
                 else:
                     normalized_score = local_score
@@ -345,7 +347,7 @@ def normalize_local_score1(local_suspiciousness_of_isolated_stms, alpha = 0, bet
             min = local_suspiciousness_of_isolated_stms[variant][len(local_suspiciousness_of_isolated_stms[variant])-1][1]
             for stm in all_suspicious_stm:
                 local_score =  get_local_score(stm, local_suspiciousness_of_isolated_stms[variant])
-                if local_score == -1:
+                if local_score == STM_NOT_FOUND:
                     normalized_score = alpha
                 else:
                     if(min == max):

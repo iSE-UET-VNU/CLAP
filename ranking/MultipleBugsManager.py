@@ -2,14 +2,11 @@ import os
 
 from xlsxwriter import Workbook
 
-import MutantManager
-import RankingManager
-from RankingManager import VARCOP_SPC_LAYER, VARCOP_LAYER, NORMALIZATION1, SPECTRUM, \
-    ranking_multiple_bugs, NORMALIZATION3
-import SPCsManager
-import SlicingManager
-from FileManager import get_spc_log_file_path, join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir
-from SuspiciousStatementManager import get_multiple_buggy_statements, get_suspicious_statement
+from ranking import RankingManager
+from ranking.RankingManager import VARCOP_SPC_LAYER, VARCOP_LAYER, SPECTRUM, \
+    ranking_multiple_bugs
+from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir
+from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, get_suspicious_statement
 
 PROJECT_NAME_COL = 0
 ISOLATION_STM_COL = 1
@@ -24,19 +21,31 @@ SBFL_STM_COL = 7
 SBFL_RANK_COL = 8
 SBFL_SPACE_COL = 9
 
+PROJECT_NAME_HEADER = "Project"
+ISOLATION_STM_HEADER = "Isolation_stm"
+ISOLATION_RANK_HEADER = "Isolation_rank"
+ISOLATION_SPACE_HEADER = "Isolation_space"
+
+WITHOUT_ISOLATION_STM_HEADER = "without_Isolation_stm"
+WITHOUT_ISOLATION_RANK_HEADER = "without_Isolation_rank"
+WITHOUT_ISOLATION_SPACE_HEADER = "without_Isolation_space"
+
+SBFL_STM_HEADER = "SBFL_stm"
+SBFL_RANK_HEADER = "SBFL_rank"
+SBFL_RANK_SPACE = "SBFL_space"
 def write_header_in_result_file(row, sheet):
-    sheet.write(row, PROJECT_NAME_COL, "Project")
-    sheet.write(row, ISOLATION_STM_COL, "Isolation_stm")
-    sheet.write(row, ISOLATION_RANK_COL, "Isolation_rank")
-    sheet.write(row, ISOLATION_SPACE_COL, "Isolation_space")
+    sheet.write(row, PROJECT_NAME_COL, PROJECT_NAME_HEADER)
+    sheet.write(row, ISOLATION_STM_COL, ISOLATION_STM_HEADER)
+    sheet.write(row, ISOLATION_RANK_COL, ISOLATION_RANK_HEADER)
+    sheet.write(row, ISOLATION_SPACE_COL, ISOLATION_SPACE_HEADER)
 
-    sheet.write(row, WITHOUT_ISOLATION_STM_COL, "without_Isolation_stm")
-    sheet.write(row, WITHOUT_ISOLATION_RANK_COL, "without_Isolation_rank")
-    sheet.write(row, WITHOUT_ISOLATION_SPACE_COL, "without_ Isolation_space")
+    sheet.write(row, WITHOUT_ISOLATION_STM_COL, WITHOUT_ISOLATION_STM_HEADER)
+    sheet.write(row, WITHOUT_ISOLATION_RANK_COL, WITHOUT_ISOLATION_RANK_HEADER)
+    sheet.write(row, WITHOUT_ISOLATION_SPACE_COL, WITHOUT_ISOLATION_SPACE_HEADER)
 
-    sheet.write(row, SBFL_STM_COL, "SBFL_stm")
-    sheet.write(row, SBFL_RANK_COL, "SBFL_rank")
-    sheet.write(row, SBFL_SPACE_COL, "SBFL_space")
+    sheet.write(row, SBFL_STM_COL, SBFL_STM_HEADER)
+    sheet.write(row, SBFL_RANK_COL, SBFL_RANK_HEADER)
+    sheet.write(row, SBFL_SPACE_COL, SBFL_RANK_SPACE)
 
 def write_result_to_file(row, sheet, ranking_results, space):
 
@@ -64,10 +73,9 @@ def write_result_to_file(row, sheet, ranking_results, space):
     row = temp
     return row
 
-def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filtering_coverage_rate):
+def mutiple_bugs_ranking(result_folder, system_name, system_dir, spectrum_expressions, filtering_coverage_rate):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
-    result_folder = "Multiple_bugs_"
     mutated_projects_dir = get_mutated_projects_dir(system_dir)
     mutated_projects = list_dir(mutated_projects_dir)
     for aggregation_type in aggregations:
@@ -93,7 +101,6 @@ def mutiple_bugs_ranking(system_name, system_dir, spectrum_expressions, filterin
             for mutated_project_name in mutated_projects:
                 num_of_bugs += 1
                 mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
-                print("project_dir", mutated_project_dir)
                 #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
 
                 #spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)

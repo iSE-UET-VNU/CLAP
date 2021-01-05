@@ -1,14 +1,10 @@
-import os
 import pandas
 
-from ExperimentResultManager import VARCOP_SPC_FAILING_HEADER, VARCOP_SPC_LAYER_HEADER, VARCOP_SPC_SPACE_HEADER, \
+from ranking.RankingResultManager import VARCOP_SPC_FAILING_HEADER, VARCOP_SPC_LAYER_HEADER, VARCOP_SPC_SPACE_HEADER, \
     SPECTRUM_HEADER, SPECTRUM_SPACE_HEADER, FEATURE_HEADER, FEATURE_STM_HEADER, FEATURE_SPACE_HEADER, \
     MUTATED_PROJECT_HEADER, VARCOP_FAILING_HEADER, VARCOP_LAYER_HEADER, VARCOP_SPACE_HEADER
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
-from Spectrum_Expression import RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD, COHEN, SCOTT, ROGOT1, \
-    GEOMETRIC_MEAN, M2, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, WONG1, SOKAL, KULCZYNSKI2, GOODMAN, HARMONIC_MEAN, \
-    EUCLID, KULCZYNSKI1, WONG2, M1, WONG3, ROGOT2, HAMMING, FLEISS, ANDERBERG, ZOLTAR, OVERLAP, SORENSEN_DICE, DICE, \
-    HUMANN
+from ranking.Spectrum_Expression import TARANTULA, OCHIAI, OP2
 from xlsxwriter import Workbook
 
 SYSTEM_COL_HEADER = "SYSTEM"
@@ -46,12 +42,15 @@ FEATURE_STM_COL = 19
 FEATURE_STM_EXAM_COL = 20
 FEATURE_SPACE_COL = 21
 
-SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
-                                                RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
-                                                COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
-                                                WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
-                                                 WONG2, WONG3, ZOLTAR, ROGOT2, HAMMING, FLEISS, ANDERBERG,
-                                                GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
+# SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
+#                                                 RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
+#                                                 COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
+#                                                 WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
+#                                                  WONG2, WONG3, ZOLTAR, ROGOT2, HAMMING, FLEISS, ANDERBERG,
+#                                                 GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
+
+SPECTRUM_EXPRESSIONS_LIST = [OCHIAI, OP2, TARANTULA]
+
 def write_all_bugs_to_a_file(summary_file_dir, file_lists):
     writer = pandas.ExcelWriter(summary_file_dir, engine='openpyxl')
 
@@ -62,7 +61,7 @@ def write_all_bugs_to_a_file(summary_file_dir, file_lists):
         for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
             excel_data_df[spectrum_expression_type].to_excel(writer, sheet_name=spectrum_expression_type, startrow=row,
                                                              index=False)
-        row += len(excel_data_df[WONG3]) + 1
+        row += len(excel_data_df[TARANTULA]) + 1
     writer.save()
 
 
@@ -173,37 +172,17 @@ def calculate_average_value_of_a_list(value_list):
         return 0
     return sum/count
 
-def calculate_average_exam(value_list):
+def calculate_average_exam(value_list, search_space):
     count = 0
     sum = 0
     for i in range(0, len(value_list)):
         if value_list[i] != None and value_list[i] != -1 and value_list[i] != None and type(value_list[i]) != str:
-            if(i <= 53):
-                sum += value_list[i] / 143
-            elif(i <= 73):
-                sum += value_list[i] / 854
-            elif(i <= 99):
-                sum += value_list[i] / 439
-            elif(i <= 151):
-                sum += value_list[i] / 513
-            else:
-                sum += value_list[i] / 1944
+            sum += value_list[i] / search_space[i]
             count += 1
     if count == 0:
         return 0
     return (sum / count)* 100
 
-# def calculate_average_exam(value_list, condition_list, num_of_program_stms):
-#     count = 0
-#     sum = 0
-#     for i in range(0, len(value_list)):
-#         if value_list[i] != None and condition_list[i] != -1 and condition_list[i] != None and type(condition_list[i]) != str:
-#             sum += value_list[i] / num_of_program_stms
-#             count += 1
-#     if count == 0:
-#         return 0
-#     return (sum / count)* 100
-#
 def calculate_average_in_a_file(experimental_file_dir, row, sheet):
 
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
@@ -217,7 +196,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
         spc_failing_average = calculate_average_value_of_a_list(excel_data_df[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER])
         sheet.write(row, SPC_FAILING_ONLY_COL, spc_failing_average)
 
-        spc_failing_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER])
+        spc_failing_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER], excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER])
         sheet.write(row, SPC_FAILING_ONLY_EXAM_COL, spc_failing_exam)
 
         spc_layer_average = calculate_average_value_of_a_list(
@@ -225,7 +204,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
         sheet.write(row, SPC_LAYER_COL, spc_layer_average)
 
 
-        spc_layer_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_SPC_LAYER_HEADER])
+        spc_layer_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_SPC_LAYER_HEADER], excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER])
         sheet.write(row, SPC_LAYER_EXAM_COL, spc_layer_exam)
 
         spc_space = calculate_average_value_of_a_list(
@@ -236,14 +215,14 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
             excel_data_df[spectrum_expression_type][VARCOP_FAILING_HEADER])
         sheet.write(row, WITHOUT_ISOLATION_F_COL, without_isolation_average)
 
-        without_isolation_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_FAILING_HEADER])
+        without_isolation_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_FAILING_HEADER], excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER])
         sheet.write(row, WITHOUT_ISOLATION_F_EXAM_COL, without_isolation_exam)
 
         without_isolation_layer_average = calculate_average_value_of_a_list(
             excel_data_df[spectrum_expression_type][VARCOP_LAYER_HEADER])
         sheet.write(row, WITHOUT_ISOLATION_LAYER_COL, without_isolation_layer_average)
 
-        without_isolation_layer_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_LAYER_HEADER])
+        without_isolation_layer_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][VARCOP_LAYER_HEADER], excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER])
         sheet.write(row, WITHOUT_ISOLATION_LAYER_EXAM_COL, without_isolation_layer_exam)
 
         without_isolation_space = calculate_average_value_of_a_list(
@@ -255,7 +234,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
             excel_data_df[spectrum_expression_type][SPECTRUM_HEADER])
         sheet.write(row, SPECTRUM_COL, spectrum_average)
 
-        spectrum_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][SPECTRUM_HEADER])
+        spectrum_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][SPECTRUM_HEADER], excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER])
         sheet.write(row, SPECTRUM_EXAM_COL, spectrum_exam)
 
         spectrum_space = calculate_average_value_of_a_list(
@@ -270,7 +249,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
             excel_data_df[spectrum_expression_type][FEATURE_STM_HEADER])
         sheet.write(row, FEATURE_STM_COL, feature_stm_average)
 
-        feature_stm_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][FEATURE_STM_HEADER])
+        feature_stm_exam = calculate_average_exam(excel_data_df[spectrum_expression_type][FEATURE_STM_HEADER], excel_data_df[spectrum_expression_type][SPECTRUM_SPACE_HEADER])
         sheet.write(row, FEATURE_STM_EXAM_COL, feature_stm_exam)
 
         feature_space = calculate_average_value_of_a_list(
@@ -280,7 +259,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
         row += 1
     return row
 
-def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
+def summary_for_same_bugs(summary_file_dir, files_list):
 
     wb = Workbook(summary_file_dir)
     sheet = wb.add_worksheet("sheet1")
@@ -308,7 +287,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
                     if file != item and (bug not in list(overall_info[item][spectrum_expression_type][MUTATED_PROJECT_HEADER])) :
                         data[spectrum_expression_type] = data[spectrum_expression_type][data[spectrum_expression_type][MUTATED_PROJECT_HEADER] != bug]
             overall_info[file] = data
-        print(overall_info)
+
 
     for file in overall_info.keys():
         sheet.write(row, K_WISE_COL, file)
@@ -323,7 +302,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
             sheet.write(row, SPC_FAILING_ONLY_COL, spc_failing_average)
 
             spc_failing_exam = calculate_average_exam(
-                list(data[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER]), num_of_program_stms)
+                list(data[spectrum_expression_type][VARCOP_SPC_FAILING_HEADER]), list(data[spectrum_expression_type][SPECTRUM_SPACE_HEADER]))
             sheet.write(row, SPC_FAILING_ONLY_EXAM_COL, spc_failing_exam)
 
             spc_layer_average = calculate_average_value_of_a_list(
@@ -331,7 +310,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
             sheet.write(row, SPC_LAYER_COL, spc_layer_average)
 
             spc_layer_exam = calculate_average_exam(
-                list(data[spectrum_expression_type][VARCOP_SPC_LAYER_HEADER]), num_of_program_stms)
+                list(data[spectrum_expression_type][VARCOP_SPC_LAYER_HEADER]), list(data[spectrum_expression_type][SPECTRUM_SPACE_HEADER]))
             sheet.write(row, SPC_LAYER_EXAM_COL, spc_layer_exam)
 
             spc_space = calculate_average_value_of_a_list(
@@ -343,7 +322,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
             sheet.write(row, WITHOUT_ISOLATION_F_COL, without_isolation_average)
 
             without_isolation_exam = calculate_average_exam(
-                list(data[spectrum_expression_type][VARCOP_FAILING_HEADER]), num_of_program_stms)
+                list(data[spectrum_expression_type][VARCOP_FAILING_HEADER]), list(data[spectrum_expression_type][SPECTRUM_SPACE_HEADER]))
             sheet.write(row, WITHOUT_ISOLATION_F_EXAM_COL, without_isolation_exam)
 
             without_isolation_layer_average = calculate_average_value_of_a_list(
@@ -351,7 +330,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
             sheet.write(row, WITHOUT_ISOLATION_LAYER_COL, without_isolation_layer_average)
 
             without_isolation_layer_exam = calculate_average_exam(
-                list(data[spectrum_expression_type][VARCOP_LAYER_HEADER]), num_of_program_stms)
+                list(data[spectrum_expression_type][VARCOP_LAYER_HEADER]), list(data[spectrum_expression_type][SPECTRUM_SPACE_HEADER]))
             sheet.write(row, WITHOUT_ISOLATION_LAYER_EXAM_COL, without_isolation_layer_exam)
 
             without_isolation_space = calculate_average_value_of_a_list(
@@ -363,7 +342,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
             sheet.write(row, SPECTRUM_COL, spectrum_average)
 
             spectrum_exam = calculate_average_exam(
-                list(data[spectrum_expression_type][SPECTRUM_HEADER]), num_of_program_stms)
+                list(data[spectrum_expression_type][SPECTRUM_HEADER]), list(data[spectrum_expression_type][SPECTRUM_SPACE_HEADER]))
             sheet.write(row, SPECTRUM_EXAM_COL, spectrum_exam)
 
             spectrum_space = calculate_average_value_of_a_list(
@@ -379,7 +358,7 @@ def summary_for_same_bugs(summary_file_dir, files_list, num_of_program_stms):
             sheet.write(row, FEATURE_STM_COL, feature_stm_average)
 
             feature_stm_exam = calculate_average_exam(
-                list(data[spectrum_expression_type][FEATURE_STM_HEADER]), num_of_program_stms)
+                list(data[spectrum_expression_type][FEATURE_STM_HEADER]), list(data[spectrum_expression_type][SPECTRUM_SPACE_HEADER]))
             sheet.write(row, FEATURE_STM_EXAM_COL, feature_stm_exam)
 
             feature_space = calculate_average_value_of_a_list(
@@ -403,4 +382,5 @@ def count_total_bugs(files_list):
                 print(bug)
                 bug_list.append(bug)
     return len(bug_list)
+
 

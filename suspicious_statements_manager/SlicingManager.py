@@ -7,7 +7,7 @@ from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
 
-PLUGIN_NAME = "feature-slicing.jar"
+PLUGIN_NAME = "feature-suspicious_statements_manager.jar"
 PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
@@ -20,9 +20,9 @@ def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
     else:
         post_fix = str(filtering_coverage_rate)
     slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), post_fix)
-    logger.info(f"Running slicing from spc file [{get_file_name_with_parent(spc_file_path)}]")
+    logger.info(f"Running suspicious_statements_manager from spc file [{get_file_name_with_parent(spc_file_path)}]")
     output_log = execute_shell_command(
         f'java -Xmx256m -Dspc_path={spc_file_path} -Dslicing_output_path={slicing_output_path} -Dcoverage_file_name={failed_coverage_file_name} -jar {PLUGIN_PATH} ',
         extra_args=[], log_to_file=True)
-    logger.info(f"Wrote slicing output to file [{get_file_name_with_parent(slicing_output_path)}]")
-    logging.info("[Runtime] slicing %s: %s", slicing_output_path, time.time() - start_time)
+    logger.info(f"Wrote suspicious_statements_manager output to file [{get_file_name_with_parent(slicing_output_path)}]")
+    logging.info("[Runtime] suspicious_statements_manager %s: %s", slicing_output_path, time.time() - start_time)

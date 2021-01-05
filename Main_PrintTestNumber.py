@@ -4,7 +4,7 @@ from xlsxwriter import Workbook
 
 from FileManager import join_path, list_dir, get_mutated_projects_dir, get_test_coverage_dir, get_all_variant_dirs, \
     EXPERIMENT_RESULT_FOLDER
-from RankingManager import count_tests, count_tests_original
+from ranking.RankingManager import count_tests
 
 
 def write_header_in_sumary_file(row, sheet):

@@ -1,18 +1,16 @@
 import logging
 import os
-import time
 
-import SPCsManager
-import SlicingManager
-from FeaturesRankingManager import features_ranking
+from spc import SPCsManager
+from suspicious_statements_manager import SlicingManager
+from ranking.FeaturesRankingManager import features_ranking
 from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EXPERIMENT_RESULT_FOLDER, list_dir, \
     get_spc_log_file_path
 import MutantManager
-import RankingManager
-from RankingManager import  VARCOP_SPC_FAILING, VARCOP_SPC_SEARCH_SPACE, SPECTRUM, SPECTRUM_SEARCH_SPACE, VARCOP_SPC_LAYER, VARCOP_FAILING, VARCOP_LAYER, VARCOP_SEARCH_SPACE
+from ranking import RankingManager
+from ranking.RankingManager import  VARCOP_SPC_FAILING, VARCOP_SPC_SEARCH_SPACE, SPECTRUM, SPECTRUM_SEARCH_SPACE, VARCOP_SPC_LAYER, VARCOP_FAILING, VARCOP_LAYER, VARCOP_SEARCH_SPACE
 
-from SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement, get_single_buggy_statement, \
-    get_mutation_operator, get_single_mutation_operator
+from suspicious_statements_manager.SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement, get_single_buggy_statement
 from xlsxwriter import Workbook
 
 
@@ -105,14 +103,12 @@ def write_results_to_file(row, sheet, ranking_results):
     return row
 
 
-def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
+def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
     # aggregations = [ RankingManager.AGGREGATION_GEOMETRIC_MEAN,
     #                 RankingManager.AGGREGATION_MEDIAN, RankingManager.AGGREGATION_MAX, RankingManager.AGGREGATION_MIN, RankingManager.AGGREGATION_MODE]
 
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
-    result_folder = "coverage_" + spectrum_coverage_prefix + "_"
-    #result_folder = "Example_"
     for aggregation_type in aggregations:
         for normalization_type in normalizations:
             sheet = []
@@ -145,7 +141,7 @@ def ranking_with_coverage_rate(base_dir, system, project_name, filtering_coverag
 
                 mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                 spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
                 #print(spc_log_file_path)
                 SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
