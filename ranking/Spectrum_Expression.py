@@ -295,7 +295,7 @@ def overlap_calculation(fails, passes, total_failed_tests, total_passes_tests):
 
 def euclid_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp = fails + (total_passes_tests - passes)
-    if temp >= 0:
+    if temp <= 0:
         return 0
     else:
         return math.sqrt(temp)
