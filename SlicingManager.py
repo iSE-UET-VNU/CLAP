@@ -12,9 +12,14 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
 def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
+
     start_time = time.time()
     failed_coverage_file_name = get_spectrum_failed_coverage_file_name_with_version(version=coverage_version)
-    slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), filtering_coverage_rate)
+    if(coverage_version != ""):
+        post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
+    else:
+        post_fix = str(filtering_coverage_rate)
+    slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), post_fix)
     logger.info(f"Running slicing from spc file [{get_file_name_with_parent(spc_file_path)}]")
     output_log = execute_shell_command(
         f'java -Xmx256m -Dspc_path={spc_file_path} -Dslicing_output_path={slicing_output_path} -Dcoverage_file_name={failed_coverage_file_name} -jar {PLUGIN_PATH} ',
