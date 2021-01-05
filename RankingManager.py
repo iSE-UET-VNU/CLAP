@@ -563,6 +563,7 @@ def get_information_for_spectrum_ranking(mutated_project_dir, spectrum_coverage_
         if not os.path.isfile(spectrum_passed_coverage_file_dir):
             spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
+
         # if variant is a passing variant and stm_coverage < coverage_rate
         if (not os.path.isfile(spectrum_failed_coverage_file_dir) and stm_coverage < coverage_rate):
             continue
