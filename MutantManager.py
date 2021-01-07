@@ -1,5 +1,4 @@
 import csv
-import json
 import random
 from collections import defaultdict
 from itertools import combinations, product
@@ -8,7 +7,7 @@ from FileManager import get_plugin_path, split_path, get_mutation_result_dir, li
     get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir, \
     is_path_exist, get_model_configs_report_path, get_project_name, unlink, is_symlink
 from Helpers import get_logger, execute_shell_command, natural_sort
-from SuspiciousStatementManager import get_multiple_buggy_statements
+from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements
 
 logger = get_logger(__name__)
 
