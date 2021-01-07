@@ -15,8 +15,8 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 # BUILD TEST COVERAGE WITH RANDOM TEST CASES
 
-def rebuild_spectrum_coverage_for_mutated_project(mutated_project_dir, version=""):
-    if not version:
+def rebuild_spectrum_coverage_for_mutated_project(mutated_project_dir, version=None):
+    if version is None:
         version = get_version_by_time()
     random = False
     variant_dirs = get_all_variant_dirs(mutated_project_dir)
