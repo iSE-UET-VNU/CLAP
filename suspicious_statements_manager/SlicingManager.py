@@ -7,7 +7,7 @@ from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
 
-PLUGIN_NAME = "feature-suspicious_statements_manager.jar"
+PLUGIN_NAME = "feature-slicing.jar"
 PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
@@ -18,7 +18,7 @@ def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
     if(coverage_version != ""):
         post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
     else:
-        post_fix = str(filtering_coverage_rate)
+        post_fix = filtering_coverage_rate
     slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), post_fix)
     logger.info(f"Running suspicious_statements_manager from spc file [{get_file_name_with_parent(spc_file_path)}]")
     output_log = execute_shell_command(
