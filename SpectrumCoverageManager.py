@@ -18,10 +18,10 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 def rebuild_spectrum_coverage_for_mutated_project(mutated_project_dir, version=""):
     if not version:
         version = get_version_by_time()
-    random = True
+    random = False
     variant_dirs = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variant_dirs:
-        rebuild_spectrum_coverage_for_variant(variant_dir, version=version, random=random)
+        rebuild_spectrum_coverage_for_variant(variant_dir, random=random, version=version)
 
 
 def rebuild_spectrum_coverage_for_variant(variant_dir, version="", random=True):
@@ -31,8 +31,7 @@ def rebuild_spectrum_coverage_for_variant(variant_dir, version="", random=True):
         spectrum_failed_coverage_file_path = get_failed_spectrum_coverage_file_path_with_version(test_coverage_dir,
                                                                                                  version)
         rebuild_spectrum_coverage(input_coverage_dir=failed_coverage_dir,
-                                  spectrum_output_path=spectrum_failed_coverage_file_path, random=random,
-                                  max_test_cases=10)
+                                  spectrum_output_path=spectrum_failed_coverage_file_path, random=random)
 
     passed_coverage_dir = join_path(test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME)
     if is_path_exist(passed_coverage_dir):
