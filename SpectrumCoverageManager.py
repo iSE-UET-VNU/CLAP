@@ -151,27 +151,27 @@ def rebuild_spectrum_coverage_with_target_coverage(mutated_project_dir, target_c
             test_coverage_dir = get_test_coverage_dir(mutated_variant_dir)
             failed_test_coverage_dir = get_failed_test_coverage_dir(mutated_variant_dir)
             passed_test_coverage_dir = get_passed_test_coverage_dir(mutated_variant_dir)
-            # print(TestingCoverageManager.print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir))
-            optimal_coverage_file_path_dict = TestingCoverageManager.find_optimal_test_cases_with_target_coverage(
-                failed_test_coverage_dir,
-                passed_test_coverage_dir,
-                target_coverage=target_coverage)
-            if not optimal_coverage_file_path_dict:
-                return
-            else:
-                test_coverage_container.append((test_coverage_dir, optimal_coverage_file_path_dict))
-
-    # build spectrum coverage based on optimal test cases
-    for item in test_coverage_container:
-        test_coverage_dir, optimal_coverage_file_path_dict = item
-        failed_test_cases = optimal_coverage_file_path_dict.get(FAILED_TEST_COVERAGE_FOLDER_NAME)
-        if failed_test_cases:
-            # print(test_coverage_dir, failed_test_cases)
-            rebuild_failed_spectrum_coverage_from_specific_test_cases(test_coverage_dir, failed_test_cases, version)
-        passed_test_cases = optimal_coverage_file_path_dict.get(PASSED_TEST_COVERAGE_FOLDER_NAME)
-        if passed_test_cases:
-            # print(test_coverage_dir, passed_test_cases)
-            rebuild_passed_spectrum_coverage_from_specific_test_cases(test_coverage_dir, passed_test_cases, version)
+            print(TestingCoverageManager.print_coverage_summary(failed_test_coverage_dir, passed_test_coverage_dir))
+    #         optimal_coverage_file_path_dict = TestingCoverageManager.find_optimal_test_cases_with_target_coverage(
+    #             failed_test_coverage_dir,
+    #             passed_test_coverage_dir,
+    #             target_coverage=target_coverage)
+    #         if not optimal_coverage_file_path_dict:
+    #             return
+    #         else:
+    #             test_coverage_container.append((test_coverage_dir, optimal_coverage_file_path_dict))
+    #
+    # # build spectrum coverage based on optimal test cases
+    # for item in test_coverage_container:
+    #     test_coverage_dir, optimal_coverage_file_path_dict = item
+    #     failed_test_cases = optimal_coverage_file_path_dict.get(FAILED_TEST_COVERAGE_FOLDER_NAME)
+    #     if failed_test_cases:
+    #         # print(test_coverage_dir, failed_test_cases)
+    #         rebuild_failed_spectrum_coverage_from_specific_test_cases(test_coverage_dir, failed_test_cases, version)
+    #     passed_test_cases = optimal_coverage_file_path_dict.get(PASSED_TEST_COVERAGE_FOLDER_NAME)
+    #     if passed_test_cases:
+    #         # print(test_coverage_dir, passed_test_cases)
+    #         rebuild_passed_spectrum_coverage_from_specific_test_cases(test_coverage_dir, passed_test_cases, version)
 
 
 def rebuild_failed_spectrum_coverage_from_specific_test_cases(test_coverage_dir, test_cases, version=""):
