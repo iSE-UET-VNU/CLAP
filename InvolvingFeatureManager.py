@@ -110,8 +110,8 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir):
             print("********\n\n__SKIP__FAILED__", config_path, "\n********\n")
             continue
 
-        variant_dir = get_variant_dir_from_config_path(mutated_project_dir, config_path)
-        if not is_path_exist(variant_dir):
+        mutated_variant_dir = get_variant_dir_from_config_path(mutated_project_dir, config_path)
+        if not is_path_exist(mutated_variant_dir):
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
             TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
             is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
