@@ -9,13 +9,13 @@ from FileManager import get_all_variant_dirs, get_model_configs_report_path, get
     get_variant_dir_from_config_path
 
 
-def find_involving_feature(project_dir, mutated_project_dir):
+def find_involving_feature(project_dir, mutated_project_dir, custom_ant):
     failed_variant_dir_items = get_failed_variant_dir_items(mutated_project_dir)
     for item in failed_variant_dir_items:
         failed_variant_name, failed_variant_dir = item
         related_config_path = get_related_config_path(failed_variant_name, project_dir)
         switched_config_paths = compose_switched_configs(related_config_path, failed_variant_name)
-        compose_switched_products(switched_config_paths, project_dir, mutated_project_dir)
+        compose_switched_products(switched_config_paths, project_dir, mutated_project_dir, custom_ant=custom_ant)
 
 
 def get_failed_variant_dir_items(mutated_project_dir):
@@ -89,8 +89,7 @@ def get_feature_selections(config_path):
     return feature_selections
 
 
-def compose_switched_products(config_paths, project_dir, mutated_project_dir):
-    cloned_ant_name = AntManager.clone_ant_plugin()
+def compose_switched_products(config_paths, project_dir, mutated_project_dir, custom_ant):
     lib_paths = get_dependency_lib_dirs(project_dir)
     for config_path in config_paths:
         variant_dir = get_variant_dir_from_config_path(project_dir, config_path)
@@ -105,7 +104,7 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir):
                 continue
             TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
             TestManager.run_batch_junit_test_cases(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
-                                                   halt_on_error=True, custom_ant=cloned_ant_name)
+                                                   halt_on_error=True, custom_ant=custom_ant)
         elif is_path_exist(corrupt_file):
             print("********\n\n__SKIP__FAILED__", config_path, "\n********\n")
             continue
@@ -116,7 +115,7 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir):
             TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
             is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
                                                                         halt_on_failure=False,
-                                                                        halt_on_error=True, custom_ant=cloned_ant_name)
+                                                                        halt_on_error=True, custom_ant=custom_ant)
             if is_all_test_passed:
                 file_name = "sw.test.passed.txt"
             else:
