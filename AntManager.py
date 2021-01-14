@@ -38,7 +38,7 @@ def compile_classes(src, out, lib_path=None):
         {"-classpath": joined_lib_path},
     ])
     if output_log.find("BUILD SUCCESSFUL") < 0:
-        logger.fatal(f"{output_log}\n\nFailed to compile source code [{src}]")
+        logger.fatal(f"Failed to compile source code [{src}]")
     return output_log
 
 
