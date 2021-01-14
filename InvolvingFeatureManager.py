@@ -109,14 +109,17 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir):
         elif is_path_exist(corrupt_file):
             print("********\n\n__SKIP__FAILED__", config_path, "\n********\n")
             continue
-        # mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
-        # TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
-        # is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
-        #                                                             halt_on_failure=False,
-        #                                                             halt_on_error=True, custom_ant=cloned_ant_name)
-        # if is_all_test_passed:
-        #     file_name = "sw.test.passed.txt"
-        # else:
-        #     file_name = "sw.test.failed.txt"
-        # test_flag_file = join_path(mutated_variant_dir, file_name)
-        # touch_file(test_flag_file)
+
+        variant_dir = get_variant_dir_from_config_path(mutated_project_dir, config_path)
+        if not is_path_exist(variant_dir):
+            mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
+            TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
+            is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
+                                                                        halt_on_failure=False,
+                                                                        halt_on_error=True, custom_ant=cloned_ant_name)
+            if is_all_test_passed:
+                file_name = "sw.test.passed.txt"
+            else:
+                file_name = "sw.test.failed.txt"
+            test_flag_file = join_path(mutated_variant_dir, file_name)
+            touch_file(test_flag_file)
