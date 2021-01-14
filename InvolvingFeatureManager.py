@@ -5,19 +5,17 @@ import ConfigManager
 import TestManager
 import VariantComposer
 from FileManager import get_all_variant_dirs, get_model_configs_report_path, get_file_name, get_file_name_without_ext, \
-    get_outer_dir, join_path, get_dependency_lib_dirs, is_path_exist, delete_dir
+    get_outer_dir, join_path, get_dependency_lib_dirs, is_path_exist, delete_dir, touch_file, \
+    get_variant_dir_from_config_path
 
 
 def find_involving_feature(project_dir, mutated_project_dir):
-    print(mutated_project_dir)
     failed_variant_dir_items = get_failed_variant_dir_items(mutated_project_dir)
     for item in failed_variant_dir_items:
         failed_variant_name, failed_variant_dir = item
         related_config_path = get_related_config_path(failed_variant_name, project_dir)
-        print(related_config_path)
         switched_config_paths = compose_switched_configs(related_config_path, failed_variant_name)
-        print(switched_config_paths)
-        valid_switched_config_paths = compose_switched_products(switched_config_paths, project_dir, mutated_project_dir)
+        compose_switched_products(switched_config_paths, project_dir, mutated_project_dir)
 
 
 def get_failed_variant_dir_items(mutated_project_dir):
@@ -95,7 +93,8 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir):
     cloned_ant_name = AntManager.clone_ant_plugin()
     lib_paths = get_dependency_lib_dirs(project_dir)
     for config_path in config_paths:
-        if not is_path_exist(config_path):
+        variant_dir = get_variant_dir_from_config_path(project_dir, config_path)
+        if not is_path_exist(variant_dir):
             variant_dir = VariantComposer.compose_by_config(project_dir, config_path)
             compile_log = AntManager.compile_source_classes(lib_paths=lib_paths, variant_dir=variant_dir)
             if compile_log.find("BUILD SUCCESSFUL") < 0:
@@ -103,9 +102,17 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir):
                 delete_dir(variant_dir)
                 continue
             TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
-            TestManager.run_junit_test_cases_with_coverage(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
-                                                           halt_on_error=True, custom_ant=cloned_ant_name)
+            TestManager.run_batch_junit_test_cases(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
+                                                   halt_on_error=True, custom_ant=cloned_ant_name)
 
-            mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
-            TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
-    TestManager.run_junit_test_cases_with_coverage_on_project(mutated_project_dir, cloned_ant_name)
+        mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
+        TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
+        is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
+                                                                    halt_on_failure=False,
+                                                                    halt_on_error=True, custom_ant=cloned_ant_name)
+        if is_all_test_passed:
+            file_name = "sw.test.passed.txt"
+        else:
+            file_name = "sw.test.failed.txt"
+        test_flag_file = join_path(mutated_variant_dir, file_name)
+        touch_file(test_flag_file)
