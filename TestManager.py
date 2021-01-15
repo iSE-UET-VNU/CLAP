@@ -15,6 +15,9 @@ EVOSUITE_PLUGIN_PATH = get_plugin_path(EVOSUITE_PLUGIN_NAME)
 JUNIT_PLUGIN_NAME = "es_junit.sh"
 JUNIT_PLUGIN_PATH = get_plugin_path(JUNIT_PLUGIN_NAME)
 
+BATCH_JUNIT_PLUGIN_NAME = "es_batch_junit.sh"
+BATCH_JUNIT_PLUGIN_PATH = get_plugin_path(BATCH_JUNIT_PLUGIN_NAME)
+
 
 def generate_junit_test_cases(lib_paths, variant_dir):
     logger.info(f"Generating JUnit Test for variant [{get_file_name_without_ext(variant_dir)}]")
@@ -41,6 +44,36 @@ def link_generated_junit_test_cases(variant_dir, target_variant_dir):
     create_symlink(generated_test_dir, target_test_dir)
 
 
+def run_batch_junit_test_cases(variant_dir, lib_paths=None, halt_on_failure=False, halt_on_error=True,
+                               custom_ant=None):
+    if lib_paths is None:
+        lib_paths = []
+    logger.info(
+        f"Running [BATCH] JUnit Test for variant [{get_file_name_without_ext(variant_dir)}] - Using custom ant [{custom_ant}]")
+    src_dir = get_src_dir(variant_dir)
+    test_dir = get_test_dir(variant_dir)
+    src_classes_dir = get_compiled_source_classes_dir(variant_dir)
+    test_classes_dir = get_compiled_test_classes_dir(variant_dir)
+    output_log = execute_shell_command(f'/bin/sh {BATCH_JUNIT_PLUGIN_PATH}', extra_args=[
+        {"-src": src_dir},
+        {"-test": test_dir},
+        {"-build.classes": src_classes_dir},
+        {"-build.testclasses": test_classes_dir},
+        {"-report.coveragedir": "_"},
+        {"-junit.haltonfailure": "yes" if halt_on_failure else "no"},
+        {"-ant.name": custom_ant},
+        {"-lib_path": ":".join(lib_paths)},
+    ], log_to_file=True)
+    is_test_failure = re.search("(Failures: [1-9]+|Errors: [1-9]+|BUILD FAILED)", output_log)
+    if is_test_failure:
+        if halt_on_failure or (
+                halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
+            logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
+            raise RuntimeError("Test case failures")
+        return False
+    return True
+
+
 def run_junit_test_cases_with_coverage(variant_dir, lib_paths=None, halt_on_failure=False, halt_on_error=True,
                                        custom_ant=None):
     if lib_paths is None:
@@ -62,9 +95,10 @@ def run_junit_test_cases_with_coverage(variant_dir, lib_paths=None, halt_on_fail
         {"-ant.name": custom_ant},
         {"-lib_path": ":".join(lib_paths)},
     ], log_to_file=True)
-    is_test_failure = re.search("(Failures: 1|Errors: 1|BUILD FAILED)", output_log)
+
+    is_test_failure = re.search("(Failures: [1-9]+|Errors: [1-9]+|BUILD FAILED)", output_log)
     if is_test_failure:
-        if halt_on_failure and (
+        if halt_on_failure or (
                 halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
             logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
             raise RuntimeError("Test case failures")

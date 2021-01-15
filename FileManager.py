@@ -126,6 +126,7 @@ def get_all_variant_dirs(project_dir, sort=False):
 def get_spc_log_file_path(project_dir, filtering_coverage_rate):
     return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(filtering_coverage_rate * 100)))
 
+
 def get_slicing_log_file_path(project_dir, postfix):
     try:
         tmp = int(postfix)
@@ -133,8 +134,14 @@ def get_slicing_log_file_path(project_dir, postfix):
     except:
         return join_path(project_dir, SLICING_LOG_FILE_NAME.format(postfix))
 
+
 def get_variant_dir(project_dir, config_name):
     return get_project_sub_dir_by_folder_name(get_variants_dir(project_dir), config_name)
+
+
+def get_variant_dir_from_config_path(project_dir, config_path):
+    config_name = get_file_name_without_ext(config_path)
+    return join_path(get_variants_dir(project_dir), config_name)
 
 
 def get_compiled_classes_dir(variant_dir):
