@@ -113,9 +113,12 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir, cu
         if not is_path_exist(mutated_variant_dir):
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
             TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
-            is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
-                                                                        halt_on_failure=False,
-                                                                        halt_on_error=True, custom_ant=custom_ant)
+            try:
+                is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
+                                                                            halt_on_failure=False,
+                                                                            halt_on_error=True, custom_ant=custom_ant)
+            except Exception as e:
+                continue
             if is_all_test_passed:
                 file_name = "sw.test.passed.txt"
             else:
