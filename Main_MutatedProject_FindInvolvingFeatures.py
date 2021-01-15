@@ -18,4 +18,7 @@ if __name__ == "__main__":
             lock_project(mutated_project_dir)
         except BlockingIOError as e:
             continue
-        InvolvingFeatureManager.find_involving_feature(project_dir, mutated_project_dir, custom_ant=cloned_ant_name)
+        try:
+            InvolvingFeatureManager.find_involving_feature(project_dir, mutated_project_dir, custom_ant=cloned_ant_name)
+        except Exception:
+            continue
