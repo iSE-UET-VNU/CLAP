@@ -109,4 +109,8 @@ def get_mutated_features(mutated_project_dir):
     mutated_project_name = get_file_name(mutated_project_dir)
     buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
     buggy_features = set([stmt.split(".", 1)[0] for stmt in buggy_statements])
+    if len(buggy_features) == 1 and buggy_features[0] == "":
+        # backward compatibility when no feature mentioned in log content -> get it from mutated_project_name
+        # CDL_1:16:void_GraphSearch(WorkSpace):vxiter.hasNext() == false => vxiter.hasNext()
+        return [mutated_project_name.split(".", 1)[0]]
     return buggy_features
