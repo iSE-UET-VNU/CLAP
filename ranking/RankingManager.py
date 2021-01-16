@@ -192,11 +192,10 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
 
 def ranking(buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression, aggregation_type, normalized_type, spectrum_coverage_prefix, coverage_rate):
     global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
-    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + "__" + SPECTRUM_PASSED_COVERAGE_FILE_NAME
     global NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME
-    NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_FAILED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + "__" + SPECTRUM_FAILED_COVERAGE_FILE_NAME
     global buggy
-
     buggy = buggy_statement
 
     all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate)
@@ -565,7 +564,6 @@ def get_information_for_spectrum_ranking(mutated_project_dir, spectrum_coverage_
         if not os.path.isfile(spectrum_passed_coverage_file_dir):
             spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
 
-
         # if variant is a passing variant and stm_coverage < coverage_rate
         if (not os.path.isfile(spectrum_failed_coverage_file_dir) and stm_coverage < coverage_rate):
             continue
@@ -658,7 +656,6 @@ def count_tests_original(test_dir):
 def count_tests(dir):
     spectrum_failed_coverage_file_dir = join_path(dir, NEW_SPECTRUM_FAILED_COVERAGE_FILE_NAME)
     spectrum_passed_coverage_file_dir = join_path(dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
-
 
     num_of_failed_tests = 0
     num_of_passed_tests = 0
