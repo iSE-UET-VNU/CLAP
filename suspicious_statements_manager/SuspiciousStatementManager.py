@@ -3,9 +3,10 @@ import os
 from os.path import isfile
 
 from FileManager import join_path, SLICING_LOG_FILE_NAME, get_slicing_log_file_path, get_variants_dir, get_variant_dir, \
-    get_test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME
+    get_test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, get_file_name
 import json
 import xml.etree.ElementTree as ET
+
 
 def get_suspicious_statement(mutated_project_dir, postfix):
     slicing_info_file_path = get_slicing_log_file_path(mutated_project_dir, postfix)
@@ -29,6 +30,7 @@ def get_suspicious_statement(mutated_project_dir, postfix):
     else:
         return {}
 
+
 def read_coverage_file(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_list = os.listdir(variants_dir)
@@ -50,11 +52,11 @@ def read_coverage_file(mutated_project_dir):
                         for line in file:
                             id = line.get('featureClass') + "." + line.get('featureLineNum')
                             if id not in data[variant] and int(line.get('count')) != 0:
-
                                 data[variant].append(id)
             except:
                 logging.info("Exception when parsing %s", coverage_file)
     return data
+
 
 def get_buggy_statement(mutated_project_name, mutated_project_dir):
     mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
@@ -64,20 +66,24 @@ def get_buggy_statement(mutated_project_name, mutated_project_dir):
     return (".").join(mutated_project_name.split(".")[0:-1]) + "." + mutated_log_file_content[
         buggy_line_number_position_in_log_file]
 
+
 def get_single_buggy_statement(mutated_project_name, mutated_project_dir):
     mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
     mutated_log_file = open(mutated_log_file_path, "r")
     bug_content = mutated_log_file.readline().split(":")
     buggy_line_number_position_in_log_file = 1
-    buggy_statement = (".").join(bug_content[0].split(".")[0:-1]) + "." + bug_content[buggy_line_number_position_in_log_file]
+    buggy_statement = (".").join(bug_content[0].split(".")[0:-1]) + "." + bug_content[
+        buggy_line_number_position_in_log_file]
 
     return buggy_statement
+
 
 def get_mutation_operator(mutated_project_name, mutated_project_dir):
     mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
     mutated_log_file = open(mutated_log_file_path, "r")
     mutated_log_file_content = mutated_log_file.readline().split(":")
-    return  mutated_log_file_content[0]
+    return mutated_log_file_content[0]
+
 
 def get_single_mutation_operator(mutated_project_name, mutated_project_dir):
     mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
@@ -94,5 +100,13 @@ def get_multiple_buggy_statements(mutated_project_name, mutated_project_dir):
     buggy_statements = []
     for item in bugs_content:
         contents = item.split(":")
-        buggy_statements.append((".").join(contents[0].split(".")[0:-1]) + "." + contents[buggy_line_number_position_in_log_file])
+        buggy_statements.append(
+            (".").join(contents[0].split(".")[0:-1]) + "." + contents[buggy_line_number_position_in_log_file])
     return buggy_statements
+
+
+def get_mutated_features(mutated_project_dir):
+    mutated_project_name = get_file_name(mutated_project_dir)
+    buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
+    buggy_features = set([stmt.split(".", 1)[0] for stmt in buggy_statements])
+    return buggy_features
