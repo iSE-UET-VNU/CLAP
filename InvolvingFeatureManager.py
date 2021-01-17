@@ -7,12 +7,12 @@ import TestManager
 import VariantComposer
 from FileManager import get_all_variant_dirs, get_model_configs_report_path, get_file_name, get_file_name_without_ext, \
     get_outer_dir, join_path, get_dependency_lib_dirs, is_path_exist, touch_file, \
-    get_variant_dir_from_config_path, get_model_configs_dir, get_feature_order_file_path
+    get_variant_dir_from_config_path, get_feature_order_file_path
 from suspicious_statements_manager.SuspiciousStatementManager import get_mutated_features
 
-PASSED_TEST_FLAG_FILE_NAME = "sw.test.passed.txt"
-FAILED_TEST_FLAG_FILE_NAME = "sw.test.failed.txt"
 SWITCHED_VARIANT_NAME_POSTFIX = "SW"
+SW_PASSED_TEST_FLAG_FILE_NAME = "sw.test.passed.txt"
+SW_FAILED_TEST_FLAG_FILE_NAME = "sw.test.failed.txt"
 
 
 def find_involving_features(project_dir, mutated_project_dir, custom_ant):
@@ -120,15 +120,15 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir, cu
             mutated_variant_dir = VariantComposer.compose_by_config(mutated_project_dir, config_path)
             TestManager.link_generated_junit_test_cases(variant_dir, mutated_variant_dir)
             try:
-                is_all_test_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
-                                                                            halt_on_failure=False,
-                                                                            halt_on_error=True, custom_ant=custom_ant)
+                are_all_tests_passed = TestManager.run_batch_junit_test_cases(mutated_variant_dir, lib_paths=lib_paths,
+                                                                              halt_on_failure=False,
+                                                                              halt_on_error=True, custom_ant=custom_ant)
             except Exception as e:
                 continue
-            if is_all_test_passed:
-                file_name = PASSED_TEST_FLAG_FILE_NAME
+            if are_all_tests_passed:
+                file_name = SW_PASSED_TEST_FLAG_FILE_NAME
             else:
-                file_name = FAILED_TEST_FLAG_FILE_NAME
+                file_name = SW_FAILED_TEST_FLAG_FILE_NAME
             test_flag_file = join_path(mutated_variant_dir, file_name)
             touch_file(test_flag_file)
 
@@ -140,7 +140,7 @@ def summarize_involving_features(project_dir, mutated_project_dir):
     involving_features = set()
     for variant_dir in variant_dirs:
         variant_name = get_file_name(variant_dir)
-        if is_path_exist(join_path(variant_dir, PASSED_TEST_FLAG_FILE_NAME)):
+        if is_path_exist(join_path(variant_dir, SW_PASSED_TEST_FLAG_FILE_NAME)):
             variant_postfix = variant_name.rsplit("_", 1)[1]
             if not variant_postfix.startswith(SWITCHED_VARIANT_NAME_POSTFIX):
                 raise Exception("Invalid variant was considered as switched {}".format(variant_dir))
@@ -150,14 +150,14 @@ def summarize_involving_features(project_dir, mutated_project_dir):
 
     are_buggy_features_contained = buggy_features.issubset(involving_features)
     involving_features = list(buggy_features | involving_features)
-    print("-"*20)
+    print("-" * 20)
     print("MUTATED_PROJECT_DIR:", mutated_project_dir)
     print("MUTANT NAME:", get_file_name(mutated_project_dir))
     print("BUGGY FEATURES:", json.dumps(list(buggy_features)))
     print("INVOLVING FEATURES:", json.dumps(involving_features))
     print("SIZE: {}".format(len(involving_features)))
     print("CONTAINED |{}|".format(are_buggy_features_contained))
-    print("-"*20)
+    print("-" * 20)
 
 
 def get_ordered_feature_list(project_dir):

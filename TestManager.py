@@ -4,7 +4,8 @@ import re
 from FileManager import get_plugin_path, get_file_name_without_ext, get_test_dir, create_symlink, \
     get_compiled_source_classes_dir, \
     get_compiled_test_classes_dir, get_file_name, get_src_dir, get_test_coverage_dir, get_variant_dir, is_path_exist, \
-    join_path, get_model_configs_report_path, delete_dir, get_variants_dir, list_dir, get_dependency_lib_dirs
+    join_path, get_model_configs_report_path, delete_dir, get_variants_dir, list_dir, get_dependency_lib_dirs, \
+    touch_file, FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME
 from Helpers import get_logger, execute_shell_command, hash_md5
 
 logger = get_logger(__name__)
@@ -113,17 +114,57 @@ def run_junit_test_cases_with_coverage_on_project(project_dir, custom_ant=None):
         run_junit_test_cases_with_coverage(variant_dir=variant_dir, lib_paths=lib_paths, custom_ant=custom_ant)
 
 
-def check_variant_final_test_output(variant_dir):
+PASSED_TEST_FLAG_FILE_NAME = "batch.test.passed.flag"
+FAILED_TEST_FLAG_FILE_NAME = "batch.test.failed.flag"
+
+
+class JunitMode:
+    FAST = 1
+    FULL_COVERAGE = 2
+
+
+def run_junit_test_cases_on_project(project_dir, junit_mode=JunitMode.FAST, custom_ant=None):
+    if junit_mode == JunitMode.FAST:
+        run_batch_junit_test_cases_on_project(project_dir, custom_ant=custom_ant)
+    elif junit_mode == JunitMode.FULL_COVERAGE:
+        run_junit_test_cases_with_coverage_on_project(project_dir, custom_ant=custom_ant)
+    else:
+        raise Exception("Invalid junit mode")
+
+
+def run_batch_junit_test_cases_on_project(project_dir, custom_ant=None):
+    variants_dir = get_variants_dir(project_dir)
+    lib_paths = get_dependency_lib_dirs(project_dir)
+    for variant_dir in list_dir(variants_dir, full_path=True):
+        are_all_tests_passed = run_batch_junit_test_cases(variant_dir=variant_dir, lib_paths=lib_paths,
+                                                          custom_ant=custom_ant)
+        if are_all_tests_passed is True:
+            file_name = PASSED_TEST_FLAG_FILE_NAME
+        elif are_all_tests_passed is False:
+            file_name = FAILED_TEST_FLAG_FILE_NAME
+        else:
+            raise Exception(f"Invalid are_all_tests_passed value {are_all_tests_passed} on variant {variant_dir}")
+        test_flag_file = join_path(variant_dir, file_name)
+        touch_file(test_flag_file)
+
+
+def check_variant_final_test_output(variant_dir, junit_mode=JunitMode.FAST):
     coverage_dir = get_test_coverage_dir(variant_dir)
-    if is_path_exist(join_path(coverage_dir, "failed")):
+    if is_path_exist(join_path(variant_dir, FAILED_TEST_FLAG_FILE_NAME)):
+        if junit_mode == JunitMode.FULL_COVERAGE and not is_path_exist(
+                join_path(coverage_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)):
+            return None
         return False
-    elif is_path_exist(join_path(coverage_dir, "passed")):
+    elif is_path_exist(join_path(variant_dir, PASSED_TEST_FLAG_FILE_NAME)):
+        if junit_mode == JunitMode.FULL_COVERAGE and not is_path_exist(
+                join_path(coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME)):
+            return None
         return True
     else:
         return None
 
 
-def write_test_output_to_configs_report(project_dir):
+def write_test_output_to_configs_report(project_dir, junit_mode=JunitMode.FAST):
     logger.info(f"Writing test output to project's configs report [{get_file_name(project_dir)}]")
     configs_report_file_path = get_model_configs_report_path(project_dir)
     rows = []
@@ -135,13 +176,13 @@ def write_test_output_to_configs_report(project_dir):
                 continue
             config_name = row[0]
             variant_dir = get_variant_dir(project_dir, config_name)
-            final_test_output_flag = check_variant_final_test_output(variant_dir)
+            final_test_output_flag = check_variant_final_test_output(variant_dir, junit_mode=junit_mode)
             if final_test_output_flag is True:
                 final_test_output = "__PASSED__"
             elif final_test_output_flag is False:
                 final_test_output = "__FAILED__"
             else:
-                final_test_output = "__NOASWR__"
+                raise Exception("Overall test result is __NOASWR__ in variant {}".format(variant_dir))
             row[-1] = final_test_output
     with open(configs_report_file_path, "w") as output_report_csv:
         writer = csv.writer(output_report_csv)
