@@ -3,13 +3,17 @@ import MutantManager
 import TestManager
 
 from FileManager import get_project_dir, lock_project
-from Helpers import sleep, natural_sort
+from Helpers import sleep
 from VariantComposer import was_variants_composed
 
 if __name__ == "__main__":
+    # ------ START CONFIG ------
     base_dir = None
     project_name = "3wise-Mutated-Elevator-FH-JML"
     project_dir = get_project_dir(project_name, base_dir)
+    junit_mode = TestManager.JunitMode.FAST
+    # junit_mode = TestManager.JunitMode.FULL_COVERAGE
+    # ------ END CONFIG ------
 
     # clone ant directory
     cloned_ant_name = AntManager.clone_ant_plugin()
@@ -25,7 +29,8 @@ if __name__ == "__main__":
             except BlockingIOError as e:
                 continue
             try:
-                TestManager.run_junit_test_cases_with_coverage_on_project(mutated_project_dir, cloned_ant_name)
+                TestManager.run_junit_test_cases_on_project(mutated_project_dir, junit_mode=junit_mode,
+                                                            custom_ant=cloned_ant_name)
             except RuntimeError:
                 continue
             else:
