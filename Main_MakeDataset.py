@@ -44,9 +44,14 @@ if __name__ == "__main__":
         AntManager.compile_source_classes(lib_paths=lib_paths, variant_dir=variant_dir)
         variant_dirs.append(variant_dir)
 
-        TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
-        TestManager.run_batch_junit_test_cases(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
-                                               halt_on_error=True, custom_ant=cloned_ant_name)
+        while True:
+            TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
+            are_all_tests_passed = TestManager.run_batch_junit_test_cases(variant_dir, lib_paths=lib_paths,
+                                                                          halt_on_failure=False,
+                                                                          halt_on_error=False,
+                                                                          custom_ant=cloned_ant_name)
+            if are_all_tests_passed:
+                break
 
     TestManager.write_test_output_to_configs_report(project_dir)
 
