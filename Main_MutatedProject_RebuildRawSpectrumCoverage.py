@@ -6,7 +6,7 @@ logger = get_logger(__name__)
 
 if __name__ == "__main__":
     # ------ START CONFIG ------
-    base_dir = "/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/dataset/2wise-Elevator-FH-JML-MB"
+    base_dir = "/Users/tuanngokien/Desktop/Software_Analysis/configurable_system/dataset/4wise-BankAccountTP-FH-JML/mutated_projects"
     version = ""
     # ------ END CONFIG ------
 

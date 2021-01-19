@@ -24,7 +24,7 @@ def rebuild_spectrum_coverage_for_mutated_project(mutated_project_dir, version=N
         rebuild_spectrum_coverage_for_variant(variant_dir, random=random, version=version)
 
 
-def rebuild_spectrum_coverage_for_variant(variant_dir, version="", random=True):
+def rebuild_spectrum_coverage_for_variant(variant_dir, version=None, random=True):
     test_coverage_dir = get_test_coverage_dir(variant_dir)
     failed_coverage_dir = join_path(test_coverage_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)
     if is_path_exist(failed_coverage_dir):
