@@ -112,7 +112,6 @@ KULCZYNSKI2_AVERAGE = "Kulczynski2_average"
 def tarantula_calculation(fails, passes, total_failed_tests, total_passed_tests):
     if total_failed_tests == 0 or total_passed_tests == 0:
         return 0
-
     if fails == 0:
         return 0
 
@@ -146,6 +145,7 @@ def dstar_calculation(fails, passes, total_failed_tests, total_passed_tests):
         return 0
     elif temp == 0:
         return 1000
+    results = (fails * fails) / temp
     return (fails * fails) / temp
 
 def dstar_modified_calculation(fails, passes, total_failed_tests, total_passed_tests):
