@@ -141,6 +141,7 @@ def run_batch_junit_test_cases_on_project(project_dir, custom_ant=None):
     lib_paths = get_dependency_lib_dirs(project_dir)
     for variant_dir in list_dir(variants_dir, full_path=True):
         are_all_tests_passed = run_batch_junit_test_cases(variant_dir=variant_dir, lib_paths=lib_paths,
+                                                          halt_on_failure=False, halt_on_error=False,
                                                           custom_ant=custom_ant)
         if are_all_tests_passed is True:
             file_name = PASSED_TEST_FLAG_FILE_NAME
