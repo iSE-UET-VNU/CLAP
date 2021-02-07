@@ -8,102 +8,79 @@ from FileManager import get_project_dir, get_mutated_projects_dir, join_path, EX
     get_spc_log_file_path
 import MutantManager
 from ranking import RankingManager
-from ranking.RankingManager import  VARCOP_SPC_FAILING, VARCOP_SPC_SEARCH_SPACE, SPECTRUM, SPECTRUM_SEARCH_SPACE, VARCOP_SPC_LAYER, VARCOP_FAILING, VARCOP_LAYER, VARCOP_SEARCH_SPACE
+from ranking.Keywords import *
 
-from suspicious_statements_manager.SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement, get_single_buggy_statement
+from suspicious_statements_manager.SuspiciousStatementManager import get_suspicious_statement, get_buggy_statement, \
+    get_single_buggy_statement
 from xlsxwriter import Workbook
 
-
-MUTATED_PROJECT_COL = 0
+BUG_ID_COL = 0
 BUGGY_STM_COL = 1
-VARCOP_SPC_FAILING_COL = 2
-VARCOP_SPC_LAYER_COL = 3
-VARCOP_SPC_SPACE_COL = 4
-VARCOP_FAILING_COL = 5
-VARCOP_LAYER_COL = 6
-VARCOP_SPACE_COL = 7
-SPECTRUM_COL = 8
-SPECTRUM_SPACE_COL = 9
-FEATURE_COL = 10
-FEATURE_STM_COL = 11
-FEATURE_SPACE_COL = 12
-MUTATION_OPERATOR_COL = 13
+VARCOP_RANK_COL = 2
+VARCOP_EXAM_COL = 3
+VARCOP_SPACE_COL = 4
+VARCOP_DISABLE_BPC_RANK_COL = 5
+VARCOP_DISABLE_BPC_EXAM_COL = 6
+SBFL_RANK_COL = 7
+SBFL_EXAM_COL = 8
+FB_RANK_COL = 9
+FB_EXAM_COL = 10
+SPACE_COL = 11
 
-SYSTEM_HEADER = "SYSTEM"
-K_WISE_HEADER = "K_WISE"
-MUTATED_PROJECT_HEADER = "MUTATED_PROJECT"
-VARCOP_SPC_FAILING_HEADER = "SPC_FAILING_ONLY"
-VARCOP_SPC_LAYER_HEADER = "SPC_LAYER"
-VARCOP_SPC_SPACE_HEADER = "SPC_SPACE"
-VARCOP_FAILING_HEADER = "WITHOUT_ISOLATION_F"
-VARCOP_LAYER_HEADER = "WITHOUT_ISOLATION_LAYER"
-VARCOP_SPACE_HEADER = "WITHOUT_ISOLATION_SPACE"
-SPECTRUM_HEADER = "SPECTRUM"
-SPECTRUM_SPACE_HEADER = "SPECTRUM_SPACE"
-FEATURE_HEADER = "FEATURE"
-FEATURE_STM_HEADER = "FEATURE_STM"
-FEATURE_SPACE_HEADER = "FEATURE_SPACE"
-
-FEATURE_RANK = "feature_rank"
-FEATURE_STM_RANK = "feature_stm_rank"
-FEATURE_SPACE = "feature_space"
 
 
 def write_header_in_result_file(row, sheet):
-    sheet.write(row, MUTATED_PROJECT_COL, MUTATED_PROJECT_HEADER)
-    sheet.write(row, VARCOP_SPC_FAILING_COL, VARCOP_SPC_FAILING_HEADER)
-    sheet.write(row, VARCOP_SPC_LAYER_COL, VARCOP_SPC_LAYER_HEADER)
-    sheet.write(row, VARCOP_SPC_SPACE_COL, VARCOP_SPC_SPACE_HEADER)
-    sheet.write(row, VARCOP_FAILING_COL, VARCOP_FAILING_HEADER)
-    sheet.write(row, VARCOP_LAYER_COL, VARCOP_LAYER_HEADER)
-    sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE_HEADER)
-    sheet.write(row, SPECTRUM_COL, SPECTRUM_HEADER)
-    sheet.write(row, SPECTRUM_SPACE_COL, SPECTRUM_SPACE_HEADER)
-    sheet.write(row, FEATURE_COL, FEATURE_HEADER)
-    sheet.write(row, FEATURE_STM_COL, FEATURE_STM_HEADER)
-    sheet.write(row, FEATURE_SPACE_COL, FEATURE_SPACE_HEADER)
+    sheet.write(row, BUG_ID_COL, BUG_ID)
+    sheet.write(row, BUGGY_STM_COL, BUGGY_STM)
+    sheet.write(row, VARCOP_RANK_COL, VARCOP_RANK)
+    sheet.write(row, VARCOP_EXAM_COL, VARCOP_EXAM)
+    sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE)
+    sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, VARCOP_DISABLE_BPC_RANK)
+    sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, VARCOP_DISABLE_BPC_EXAM)
+    sheet.write(row, SBFL_RANK_COL, SBFL_RANK)
+    sheet.write(row, SBFL_EXAM_COL, SBFL_EXAM)
+    sheet.write(row, FB_RANK_COL, FB_RANK)
+    sheet.write(row, FB_EXAM_COL, FB_EXAM)
+    sheet.write(row, SPACE_COL, SPACE)
 
 
 def write_results_to_file(row, sheet, ranking_results):
+    varcop_rank = ranking_results[VARCOP_RANK]
+    sheet.write(row, VARCOP_RANK_COL, varcop_rank)
 
-    spc_spectrum_rank1 = ranking_results[VARCOP_SPC_FAILING]
-    sheet.write(row, VARCOP_SPC_FAILING_COL, spc_spectrum_rank1)
+    varcop_exam = (ranking_results[VARCOP_RANK] / ranking_results[SPACE]) * 100
+    sheet.write(row, VARCOP_EXAM_COL, varcop_exam)
 
-    spc_layer_rank = ranking_results[VARCOP_SPC_LAYER]
-    sheet.write(row, VARCOP_SPC_LAYER_COL, spc_layer_rank)
+    varcop_space = ranking_results[VARCOP_SPACE]
+    sheet.write(row, VARCOP_SPACE_COL, varcop_space)
 
-    spc_space = ranking_results[VARCOP_SPC_SEARCH_SPACE]
-    sheet.write(row, VARCOP_SPC_SPACE_COL, spc_space)
+    varcop_disable_bpc_rank = ranking_results[VARCOP_DISABLE_BPC_RANK]
+    sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, varcop_disable_bpc_rank)
 
-    without_isolation_F = ranking_results[VARCOP_FAILING]
-    sheet.write(row, VARCOP_FAILING_COL, without_isolation_F)
+    varcop_disable_exam = (ranking_results[VARCOP_DISABLE_BPC_RANK] / ranking_results[SPACE]) * 100
+    sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, varcop_disable_exam)
 
-    without_isolation_layer = ranking_results[VARCOP_LAYER]
-    sheet.write(row, VARCOP_LAYER_COL, without_isolation_layer)
+    sbfl_rank = ranking_results[SBFL_RANK]
+    sheet.write(row, SBFL_RANK_COL, sbfl_rank)
 
-    without_isolation_space = ranking_results[VARCOP_SEARCH_SPACE]
-    sheet.write(row, VARCOP_SPACE_COL, without_isolation_space)
+    sbfl_exam = (ranking_results[SBFL_RANK] / ranking_results[SPACE]) * 100
+    sheet.write(row, SBFL_EXAM_COL, sbfl_exam)
 
-    spectrum_rank = ranking_results[SPECTRUM]
-    sheet.write(row, SPECTRUM_COL, spectrum_rank)
+    fb_rank = ranking_results[FB_RANK]
+    sheet.write(row, FB_RANK_COL, fb_rank)
 
-    spectrum_space = ranking_results[SPECTRUM_SEARCH_SPACE]
-    sheet.write(row, SPECTRUM_SPACE_COL, spectrum_space)
+    fb_exam = (ranking_results[FB_RANK] / ranking_results[SPACE]) * 100
+    sheet.write(row, FB_EXAM_COL, fb_exam)
 
-    feature_rank = ranking_results[FEATURE_RANK]
-    sheet.write(row, FEATURE_COL, feature_rank)
-
-    feature_stm_rank = ranking_results[FEATURE_STM_RANK]
-    sheet.write(row, FEATURE_STM_COL, feature_stm_rank)
-
-    feature_space = ranking_results[FEATURE_SPACE]
-    sheet.write(row, FEATURE_SPACE_COL, feature_space)
+    space = ranking_results[SPACE]
+    sheet.write(row, SPACE_COL, space)
     row += 1
 
     return row
 
 
-def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, filtering_coverage_rate, spectrum_expressions, spectrum_coverage_prefix):
+def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, filtering_coverage_rate,
+                               spectrum_expressions, spectrum_coverage_prefix):
     # aggregations = [ RankingManager.AGGREGATION_GEOMETRIC_MEAN,
     #                 RankingManager.AGGREGATION_MEDIAN, RankingManager.AGGREGATION_MAX, RankingManager.AGGREGATION_MIN, RankingManager.AGGREGATION_MODE]
 
@@ -114,7 +91,8 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
             sheet = []
             project_dir = get_project_dir(project_name, base_dir)
             row = 0
-            search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder + str(aggregation_type)) + "_" + str(normalization_type)
+            search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER,
+                                             result_folder + str(aggregation_type)) + "_" + str(normalization_type)
             system_result_dir = join_path(search_rank_type_dir, system)
             if not os.path.exists(system_result_dir):
                 os.makedirs(system_result_dir)
@@ -122,7 +100,7 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
             if not os.path.exists(project_result_dir):
                 os.makedirs(project_result_dir)
             experiment_file_name = join_path(project_result_dir,
-                                             str(filtering_coverage_rate)+ "_" + ".xlsx")
+                                             str(filtering_coverage_rate) + "_" + ".xlsx")
             wb = Workbook(experiment_file_name)
 
             for i in range(0, len(spectrum_expressions)):
@@ -141,31 +119,34 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
 
                 mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-                spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                 spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-                #print(spc_log_file_path)
+                # print(spc_log_file_path)
                 SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
-                if(spectrum_coverage_prefix != ""):
+                if spectrum_coverage_prefix != "":
                     post_fix = str(filtering_coverage_rate) + "_" + spectrum_coverage_prefix + "_"
                 else:
                     post_fix = filtering_coverage_rate
+
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, post_fix)
-                if(system == "GPL"):
+                if system == "GPL":
                     buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
                 else:
                     buggy_statement = get_single_buggy_statement(mutated_project_name, mutated_project_dir)
                 row_temp = row
                 for i in range(0, len(spectrum_expressions)):
-                    ranking_results = RankingManager.ranking(buggy_statement, mutated_project_dir,
-                                                             suspicious_stms_list, spectrum_expressions[i], aggregation_type, normalization_type, spectrum_coverage_prefix, filtering_coverage_rate)
+                    ranking_results = RankingManager.ranking(system, buggy_statement, mutated_project_dir,
+                                                             suspicious_stms_list, spectrum_expressions[i],
+                                                             aggregation_type, normalization_type,
+                                                             spectrum_coverage_prefix, filtering_coverage_rate)
 
-                    ranking_results[FEATURE_RANK], ranking_results[FEATURE_STM_RANK], ranking_results[FEATURE_SPACE] = features_ranking(buggy_statement, mutated_project_dir, filtering_coverage_rate, spectrum_expressions[i], spectrum_coverage_prefix)
+                    ranking_results["feature_rank"], ranking_results[FB_RANK], ranking_results[
+                        "feature_space"] = features_ranking(buggy_statement, mutated_project_dir,
+                                                            filtering_coverage_rate, spectrum_expressions[i],
+                                                            spectrum_coverage_prefix)
 
-                    sheet[i].write(row_temp, MUTATED_PROJECT_COL, mutated_project_name)
+                    sheet[i].write(row_temp, BUG_ID_COL, mutated_project_name)
                     sheet[i].write(row_temp, BUGGY_STM_COL, buggy_statement)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
-
-            # except:
-            #   logging.info(" Exception in ranking %s", mutated_project_name)
 
             wb.close()
