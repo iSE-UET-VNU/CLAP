@@ -68,7 +68,7 @@
         <echo>[Test Case] ${classname}.${method}</echo>
         <junit maxmemory="1024m" fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" printsummary="true"
                failureproperty="test.failed">
-            <classpath refid="testb=uild.classpath"/>
+            <classpath refid="testbuild.classpath"/>
             <test name="${classname}" methods="${method}"/>
         </junit>
         <condition property="coverage_output_dir" value="${report.failedcoveragedir}"
