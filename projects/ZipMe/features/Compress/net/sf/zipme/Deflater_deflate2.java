@@ -24,7 +24,7 @@ class Deflater_deflate2 {
       }
       _this.state=_this.BUSY_STATE | (_this.state & (_this.IS_FLUSHING | _this.IS_FINISHING));
     }
-    for (; ; ) {
+    while (true) {
       count=_this.pending.flush(output,offset,length);
       offset+=count;
       _this.totalOut+=count;

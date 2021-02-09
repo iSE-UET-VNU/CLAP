@@ -23,7 +23,7 @@ class InflaterDynHeader {
   public InflaterDynHeader(){
   }
   public boolean decode(  StreamManipulator input) throws DataFormatException {
-    decode_loop:     for (; ; ) {
+    decode_loop:     while (true) {
 switch (mode) {
 case LNUM:
         lnum=input.peekBits(5);

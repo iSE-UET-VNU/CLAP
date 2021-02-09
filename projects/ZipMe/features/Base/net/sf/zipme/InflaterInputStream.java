@@ -64,7 +64,7 @@ public class InflaterInputStream extends InputStream {
     if (inf == null)     throw new IOException("stream closed");
     if (len == 0)     return 0;
     int count=0;
-    for (; ; ) {
+    while (true) {
       try {
         count=inf.inflate(b,off,len);
       }
