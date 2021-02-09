@@ -5,7 +5,7 @@ from FileManager import get_plugin_path, get_file_name_without_ext, get_test_dir
     get_compiled_source_classes_dir, \
     get_compiled_test_classes_dir, get_file_name, get_src_dir, get_test_coverage_dir, get_variant_dir, is_path_exist, \
     join_path, get_model_configs_report_path, delete_dir, get_variants_dir, list_dir, get_dependency_lib_dirs, \
-    touch_file, FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME
+    touch_file, FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME, move_file
 from Helpers import get_logger, execute_shell_command, hash_md5
 
 logger = get_logger(__name__)
@@ -192,3 +192,5 @@ def write_test_output_to_configs_report(project_dir, junit_mode=JunitMode.FAST):
     with open(configs_report_file_path, "w") as output_report_csv:
         writer = csv.writer(output_report_csv)
         writer.writerows(rows)
+    if JunitMode.FULL_COVERAGE:
+        move_file(configs_report_file_path, configs_report_file_path + ".done")
