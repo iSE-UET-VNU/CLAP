@@ -5,7 +5,7 @@ from FileManager import get_plugin_path, get_file_name_without_ext, get_test_dir
     get_compiled_source_classes_dir, \
     get_compiled_test_classes_dir, get_file_name, get_src_dir, get_test_coverage_dir, get_variant_dir, is_path_exist, \
     join_path, get_model_configs_report_path, delete_dir, get_variants_dir, list_dir, get_dependency_lib_dirs, \
-    touch_file, FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME, move_file
+    touch_file, FAILED_TEST_COVERAGE_FOLDER_NAME, PASSED_TEST_COVERAGE_FOLDER_NAME, copy_file
 from Helpers import get_logger, execute_shell_command, hash_md5
 
 logger = get_logger(__name__)
@@ -71,8 +71,7 @@ def run_batch_junit_test_cases(variant_dir, lib_paths=None, halt_on_failure=Fals
     ], log_to_file=True)
     is_test_failure = re.search("(Failures: [1-9]+|Errors: [1-9]+|BUILD FAILED)", output_log)
     if is_test_failure:
-        if halt_on_failure or (
-                halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
+        if halt_on_failure or (halt_on_error and "BUILD FAILED" in is_test_failure.group()):
             logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
             raise RuntimeError("Test case failures")
         return False
@@ -103,8 +102,7 @@ def run_junit_test_cases_with_coverage(variant_dir, lib_paths=None, halt_on_fail
 
     is_test_failure = re.search("(Failures: [1-9]+|Errors: [1-9]+|BUILD FAILED)", output_log)
     if is_test_failure:
-        if halt_on_failure or (
-                halt_on_error and "Errors" in is_test_failure.group()) or "BUILD FAILED" in is_test_failure.group():
+        if halt_on_failure or (halt_on_error and "BUILD FAILED" in is_test_failure.group()):
             logger.fatal("Some test cases were failed, see log for more detail\n{}".format(output_log))
             raise RuntimeError("Test case failures")
         return False
@@ -193,4 +191,4 @@ def write_test_output_to_configs_report(project_dir, junit_mode=JunitMode.FAST):
         writer = csv.writer(output_report_csv)
         writer.writerows(rows)
     if JunitMode.FULL_COVERAGE:
-        move_file(configs_report_file_path, configs_report_file_path + ".done")
+        copy_file(configs_report_file_path, configs_report_file_path + ".done")

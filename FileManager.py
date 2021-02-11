@@ -252,7 +252,7 @@ def lock_project(project_dir):
         logger.info(f"Project [{get_file_name(project_dir)}] has been locked successfully")
     else:
         message = f"Project [{get_file_name(project_dir)}] had been locked by another process, try again later"
-        logger.error(message)
+        logger.warning(message)
         raise BlockingIOError(message)
 
 

@@ -8,8 +8,8 @@ from VariantComposer import was_variants_composed
 
 if __name__ == "__main__":
     # ------ START CONFIG ------
-    base_dir = None
-    project_name = "3wise-Mutated-Elevator-FH-JML"
+    base_dir = ""
+    project_name = "1wise-BankAccountTP"
     project_dir = get_project_dir(project_name, base_dir)
     junit_mode = TestManager.JunitMode.FAST
     # junit_mode = TestManager.JunitMode.FULL_COVERAGE
@@ -35,4 +35,5 @@ if __name__ == "__main__":
                 continue
             else:
                 TestManager.write_test_output_to_configs_report(mutated_project_dir)
-        sleep(120)
+        # sleep(120)
+        break
