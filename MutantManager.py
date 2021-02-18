@@ -204,10 +204,6 @@ BUG_CONTAINER = {}
 def check_bug_from_report(mutated_project_dir, recheck_compilable=False, lib_paths=None):
     configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
     mutated_project_name = get_project_name(mutated_project_dir)
-    if recheck_compilable:
-        is_compilable = check_all_variant_compilable(mutated_project_dir, lib_paths=lib_paths)
-        if not is_compilable:
-            return False
     buggy_statements = sorted(get_multiple_buggy_statements(mutated_project_name, mutated_project_dir))
     key = ";".join(buggy_statements) + ";"
     exist_passing_configuration = False
@@ -225,6 +221,10 @@ def check_bug_from_report(mutated_project_dir, recheck_compilable=False, lib_pat
     key += ";"
     is_bug_satisfied = (exist_passing_configuration and exist_failing_configuration)
     if is_bug_satisfied and not BUG_CONTAINER.get(key):
+        if recheck_compilable:
+            is_compilable = check_all_variant_compilable(mutated_project_dir, lib_paths=lib_paths)
+            if not is_compilable:
+                return False
         BUG_CONTAINER[key] = True
         return True
     return False
