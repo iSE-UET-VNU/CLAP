@@ -36,7 +36,7 @@ if __name__ == "__main__":
         bug_name = get_file_name(mutated_project_dir)
         if bug_name in uncompilable_bugs:
             continue
-        has_bug = MutantManager.check_bug_from_report(mutated_project_dir)
+        has_bug = MutantManager.check_bug_from_report(mutated_project_dir, recheck_compilable=True, lib_paths=lib_paths)
         if has_bug:
             reselected_bugs.add(bug_name)
 
