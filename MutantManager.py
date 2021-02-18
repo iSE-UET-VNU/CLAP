@@ -3,6 +3,7 @@ import random
 from collections import defaultdict
 from itertools import combinations, product
 
+from AntManager import check_all_variant_compilable
 from FileManager import get_plugin_path, split_path, get_mutation_result_dir, list_dir, join_path, \
     get_mutated_projects_dir, create_symlink, get_feature_source_code_dir, get_file_name_without_ext, copy_dir, \
     is_path_exist, get_model_configs_report_path, get_project_name, unlink, is_symlink
@@ -171,9 +172,15 @@ def inject_mutants(project_dir, mutant_path_tuples):
     return mutated_project_dirs
 
 
-def get_mutated_project_dirs(project_dir, sort=False):
+TEMP_PROJECT_FOLDER_NAME = ".temp"
+
+
+def get_mutated_project_dirs(project_dir, include_temp_project_dir=False, sort=False):
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     mutated_project_dirs = list_dir(mutated_projects_dir, full_path=True)
+    if include_temp_project_dir:
+        temp_mutated_project_dirs = list_dir(join_path(mutated_projects_dir, TEMP_PROJECT_FOLDER_NAME), full_path=True)
+        mutated_project_dirs.extend(temp_mutated_project_dirs)
     if sort:
         mutated_project_dirs = natural_sort(mutated_project_dirs)
     return mutated_project_dirs
@@ -194,9 +201,13 @@ def get_feature_name_from_mutated_project_name(mutated_project_dir):
 BUG_CONTAINER = {}
 
 
-def check_bug_from_report(mutated_project_dir):
+def check_bug_from_report(mutated_project_dir, recheck_compilable=False, lib_paths=None):
     configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
     mutated_project_name = get_project_name(mutated_project_dir)
+    if recheck_compilable:
+        is_compilable = check_all_variant_compilable(mutated_project_dir, lib_paths=lib_paths)
+        if not is_compilable:
+            return False
     buggy_statements = sorted(get_multiple_buggy_statements(mutated_project_name, mutated_project_dir))
     key = ";".join(buggy_statements) + ";"
     exist_passing_configuration = False
