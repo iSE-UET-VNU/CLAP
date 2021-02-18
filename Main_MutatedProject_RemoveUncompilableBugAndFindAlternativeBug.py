@@ -13,12 +13,15 @@ if __name__ == "__main__":
     lib_paths = get_dependency_lib_dirs(project_dir)
 
     mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir, sort=True)
-    print("-------- #UNCOMPILABLE BUGS --------")
+    uncompilable_bugs = []
     for mutated_project_dir in mutated_project_dirs:
         variant_dirs = get_all_variant_dirs(mutated_project_dir, sort=True)
         for variant_dir in variant_dirs:
             is_compilable = check_source_code_compilable(variant_dir, lib_paths=lib_paths)
             if not is_compilable:
-                print(f"{get_file_name_without_ext(mutated_project_dir)} - {variant_dir}")
+                uncompilable_bugs.append(get_file_name_without_ext(mutated_project_dir))
                 break
-    # print("-------- #UNCOMPILABLE BUGS --------")
+    print("-------- #UNCOMPILABLE BUGS --------")
+    for bug in uncompilable_bugs:
+        print(bug)
+    print("-------- #ALTERNATIVE BUGS --------")
