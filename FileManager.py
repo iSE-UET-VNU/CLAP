@@ -24,6 +24,7 @@ SRC_FOLDER_NAME = "src"
 TEST_FOLDER_NAME = "test"
 COMPILED_CLASSES_FOLDER_NAME = "build"
 COMPILED_SOURCE_CLASSES_FOLDER_NAME = "main"
+COMPILED_SOURCE_CLASSES_TEMP_FOLDER_NAME = "main.temp"
 COMPILED_TEST_CLASSES_FOLDER_NAME = "test"
 TEST_RESULTS_FOLDER_NAME = "test_results"
 COVERAGE_FOLDER_NAME = "coverage"
@@ -151,6 +152,11 @@ def get_compiled_classes_dir(variant_dir):
 def get_compiled_source_classes_dir(variant_dir):
     return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
                                               COMPILED_SOURCE_CLASSES_FOLDER_NAME)
+
+
+def get_compiled_source_classes_temp_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
+                                              COMPILED_SOURCE_CLASSES_TEMP_FOLDER_NAME)
 
 
 def get_compiled_test_classes_dir(variant_dir):

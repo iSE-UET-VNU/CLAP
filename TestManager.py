@@ -118,6 +118,7 @@ def run_junit_test_cases_with_coverage_on_project(project_dir, custom_ant=None):
 
 PASSED_TEST_FLAG_FILE_NAME = "batch.test.passed.flag"
 FAILED_TEST_FLAG_FILE_NAME = "batch.test.failed.flag"
+UNKNOWN_TEST_FLAG_FILE_NAME = "batch.test.unknown.flag"
 
 
 class JunitMode:
@@ -139,14 +140,14 @@ def run_batch_junit_test_cases_on_project(project_dir, custom_ant=None):
     lib_paths = get_dependency_lib_dirs(project_dir)
     for variant_dir in list_dir(variants_dir, full_path=True):
         are_all_tests_passed = run_batch_junit_test_cases(variant_dir=variant_dir, lib_paths=lib_paths,
-                                                          halt_on_failure=False, halt_on_error=False,
                                                           custom_ant=custom_ant)
         if are_all_tests_passed is True:
             file_name = PASSED_TEST_FLAG_FILE_NAME
         elif are_all_tests_passed is False:
             file_name = FAILED_TEST_FLAG_FILE_NAME
         else:
-            raise Exception(f"Invalid are_all_tests_passed value {are_all_tests_passed} on variant {variant_dir}")
+            logger.warning(f"Invalid are_all_tests_passed value {are_all_tests_passed} on variant {variant_dir}")
+            file_name = FAILED_TEST_FLAG_FILE_NAME
         test_flag_file = join_path(variant_dir, file_name)
         touch_file(test_flag_file)
 
