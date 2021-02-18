@@ -25,10 +25,7 @@ if __name__ == "__main__":
         is_compilable = check_all_variant_compilable(mutated_project_dir, lib_paths=lib_paths)
         if not is_compilable:
             uncompilable_bugs.add(bug_name)
-    print("-------- #UNCOMPILABLE BUGS --------")
-    for bug_name in uncompilable_bugs:
-        print(bug_name)
-    print("-------- #ALTERNATIVE BUGS --------")
+
     reselected_bugs = set()
     all_get_mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir, include_temp_project_dir=True,
                                                                           sort=True)
@@ -40,5 +37,10 @@ if __name__ == "__main__":
         if has_bug:
             reselected_bugs.add(bug_name)
 
+    print("-------- #UNCOMPILABLE BUGS --------")
+    for bug_name in uncompilable_bugs:
+        print(bug_name)
+
+    print("-------- #ALTERNATIVE BUGS --------")
     for bug_name in (reselected_bugs - selected_bugs):
         print(bug_name)
