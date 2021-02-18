@@ -69,6 +69,7 @@ def execute_shell_command(command, extra_args=None, log_to_file=False):
 
 
 def natural_sort(l):
+    # in case: sort by file name without considering full path
     convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key.rsplit("/", 1)[1])]
     return sorted(l, key=alphanum_key)
