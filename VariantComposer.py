@@ -6,7 +6,7 @@ from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
 
-PLUGIN_NAME = "featurehouse_20201201_constructor.jar"
+PLUGIN_NAME = "featurehouse_20210219.jar"
 PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
