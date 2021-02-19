@@ -102,7 +102,7 @@ def filter_mutants(project_dir, bug_ids):
         full_class_name = mutant_path_parts[1]
         operator_index = mutant_path_parts[4]
         current_bug_id = f"{full_class_name}.{operator_index}"
-        if current_bug_id in bug_ids:
+        if len(bug_ids) <= 0 or current_bug_id in bug_ids:
             filtered_mutant_paths.append(mutant_path)
     return filtered_mutant_paths
 
