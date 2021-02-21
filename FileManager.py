@@ -26,7 +26,6 @@ COMPILED_CLASSES_FOLDER_NAME = "build"
 COMPILED_SOURCE_CLASSES_FOLDER_NAME = "main"
 COMPILED_SOURCE_CLASSES_TEMP_FOLDER_NAME = "main.temp"
 COMPILED_TEST_CLASSES_FOLDER_NAME = "test"
-TEST_RESULTS_FOLDER_NAME = "test_results"
 COVERAGE_FOLDER_NAME = "coverage"
 TEST_CASES_FOLDER_NAME = "test"
 FEATURE_FOLDER_NAME = "features"
@@ -34,7 +33,8 @@ FEATURE_FOLDER_NAME = "features"
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
 MUTATED_PROJECTS_FOLDER_NAME = "mutated_projects"
 
-TEST_COVERAGE_FILE_NAME_PATTERN = "*.coverage.xml"
+TEST_COVERAGE_FILE_EXTENSION = "coverage.xml"
+TEST_COVERAGE_FILE_NAME_PATTERN = f"**/*.{TEST_COVERAGE_FILE_EXTENSION}"
 SPECTRUM_FAILED_COVERAGE_FILE_NAME = "spectrum_failed_coverage.xml"
 SPECTRUM_PASSED_COVERAGE_FILE_NAME = "spectrum_passed_coverage.xml"
 FAILED_TEST_COVERAGE_FOLDER_NAME = "failed"
@@ -164,11 +164,6 @@ def get_compiled_test_classes_dir(variant_dir):
                                               COMPILED_TEST_CLASSES_FOLDER_NAME, force_mkdir=False)
 
 
-def get_test_results_dir(variant_dir):
-    return get_project_sub_dir_by_folder_name(get_compiled_classes_dir(variant_dir),
-                                              TEST_RESULTS_FOLDER_NAME, force_mkdir=False)
-
-
 def get_test_coverage_dir(variant_dir):
     return get_project_sub_dir_by_folder_name(variant_dir, COVERAGE_FOLDER_NAME, force_mkdir=False)
 
@@ -188,7 +183,7 @@ def get_passed_test_coverage_dir(variant_dir):
 
 
 def get_all_coverage_file_paths_in_dir(coverage_dir):
-    return find_all_files_by_wildcard(coverage_dir, TEST_COVERAGE_FILE_NAME_PATTERN)
+    return find_all_files_by_wildcard(coverage_dir, TEST_COVERAGE_FILE_NAME_PATTERN, recursive=True)
 
 
 def get_src_dir(variant_dir):
@@ -269,8 +264,9 @@ def get_outer_dir(current_path, step=1):
     return current_dir
 
 
-def find_all_files_by_wildcard(base_dir, file_name):
-    return glob.glob(join_path(base_dir, file_name))
+def find_all_files_by_wildcard(base_dir, file_name, recursive=False):
+    # NOTE: combine recursive and **/ to matches all files in the current directory and in all subdirectories
+    return glob.glob(join_path(base_dir, file_name), recursive=recursive)
 
 
 def find_file_by_wildcard(base_dir, file_name):

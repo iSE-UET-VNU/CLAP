@@ -27,7 +27,7 @@ if __name__ == "__main__":
             uncompilable_bugs.add(bug_name)
 
     reselected_bugs = set()
-    all_get_mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir, include_temp_project_dir=True,
+    all_get_mutated_project_dirs = MutantManager.get_mutated_project_dirs(project_dir, include_temp_project_dirs=True,
                                                                           sort=True)
     for mutated_project_dir in all_get_mutated_project_dirs:
         bug_name = get_file_name(mutated_project_dir)

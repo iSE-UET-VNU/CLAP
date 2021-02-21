@@ -175,10 +175,10 @@ def inject_mutants(project_dir, mutant_path_tuples):
 TEMP_PROJECT_FOLDER_NAME = ".temp"
 
 
-def get_mutated_project_dirs(project_dir, include_temp_project_dir=False, sort=False):
+def get_mutated_project_dirs(project_dir, include_temp_project_dirs=False, sort=False):
     mutated_projects_dir = get_mutated_projects_dir(project_dir)
     mutated_project_dirs = list_dir(mutated_projects_dir, full_path=True)
-    if include_temp_project_dir:
+    if include_temp_project_dirs:
         temp_mutated_project_dirs = list_dir(join_path(mutated_projects_dir, TEMP_PROJECT_FOLDER_NAME), full_path=True)
         mutated_project_dirs.extend(temp_mutated_project_dirs)
     if sort:
