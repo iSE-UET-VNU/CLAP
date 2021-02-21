@@ -74,6 +74,12 @@ def mixing_multiple_bugs(mutant_paths, num_of_bugs=1, case_limit=None, allow_sam
                 if len(deduplicated_bug_dict[full_class_name]) > 0:
                     continue
             deduplicated_bug_dict[full_class_name].append(source_file_path)
+
+        # algorithm (ex. 2 bugs)
+        # original_list = [(1,2,3), (4,5), (6,7)]
+        # because number of bugs is 2 so need to find all combinations of 2 sub lists first (by combinations func)
+        # with each 2 sub list, we find all combinations of two elements that are picked from both of the lists ((by product func)
+
         candidate_combinations = list(combinations(deduplicated_bug_dict.values(), num_of_bugs))
         mixed_mutant_path_tuples = []
         for cc in candidate_combinations:

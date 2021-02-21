@@ -1,11 +1,11 @@
+import json
 import logging
 import os
+import xml.etree.ElementTree as ET
 from os.path import isfile
 
-from FileManager import join_path, SLICING_LOG_FILE_NAME, get_slicing_log_file_path, get_variants_dir, get_variant_dir, \
+from FileManager import join_path, get_slicing_log_file_path, get_variants_dir, get_variant_dir, \
     get_test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, get_file_name
-import json
-import xml.etree.ElementTree as ET
 
 
 def get_suspicious_statement(mutated_project_dir, postfix):
@@ -90,6 +90,13 @@ def get_single_mutation_operator(mutated_project_name, mutated_project_dir):
     mutated_log_file = open(mutated_log_file_path, "r")
     bug_content = mutated_log_file.readline().split(":")
     return bug_content[0]
+
+
+def get_mutation_operators(mutated_project_name, mutated_project_dir):
+    mutated_log_file_path = join_path(mutated_project_dir, mutated_project_name + ".mutant.log")
+    mutated_log_file = open(mutated_log_file_path, "r")
+    mutation_operators = [l.split(":")[0] for l in mutated_log_file.readlines()]
+    return mutation_operators
 
 
 def get_multiple_buggy_statements(mutated_project_name, mutated_project_dir):
