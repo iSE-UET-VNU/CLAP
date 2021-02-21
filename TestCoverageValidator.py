@@ -120,6 +120,5 @@ def get_all_test_case_name_from_source_files(variant_dir):
     output = execute_shell_command(shell_command)
     test_cases_names = output.split("\n")[0:-1]
     test_cases_name_set = set(test_cases_names)
-    if len(test_cases_names) != len(test_cases_name_set):
-        raise Exception(f"Duplicate test case names in {variant_dir}")
+    assert len(test_cases_names) == len(test_cases_name_set), f"\n---\nDuplicate test case names\nBefore [LIST]: {test_cases_names}\nAfter [SET]: {test_cases_name_set}\n\nVariant dir: {variant_dir}\n---"
     return test_cases_name_set
