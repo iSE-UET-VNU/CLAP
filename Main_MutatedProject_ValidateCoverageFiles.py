@@ -15,4 +15,3 @@ if __name__ == "__main__":
 
     for mutated_project_dir in mutated_project_dirs:
         TestCoverageValidator.check(mutated_project_dir)
-        break

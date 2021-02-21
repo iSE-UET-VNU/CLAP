@@ -67,6 +67,8 @@ def validate_buggy_statement_count_in_coverage_file(coverage_file_path, buggy_st
                     for line in file:
                         if line.tag != "line":
                             continue
+                        if line.get("type") not in ["stmt", "method"]:
+                            continue
                         if line.get("num") in line_nums and int(line.get("count")) >= 0:
                             buggy_statement_executed_flag = True
                     break
@@ -99,6 +101,10 @@ def get_buggy_statements_in_variant_source_code(test_coverage_dir, buggy_stateme
             if file.get("name") not in related_source_file_names:
                 continue
             for line in file:
+                if line.tag != "line":
+                    continue
+                if line.get("type") not in ["stmt", "method"]:
+                    continue
                 if buggy_statement_dict.get(line.get('featureClass'), "_") == line.get('featureLineNum'):
                     real_line_num = line.get("num")
                     real_source_file_path = file.get("path")
@@ -115,10 +121,11 @@ def check_coverage_file_quantity(variant_dir):
 
 
 def get_all_test_case_name_from_source_files(variant_dir):
-    test_dir = get_test_dir(variant_dir)
-    shell_command = f"""find {test_dir}/ -name "*_ESTest.java" -exec egrep -oH "void test[0-9]+\(\)  throws" {{}} \; | sed 's|{test_dir}||1' | sed 's/^\///1; s/\//./g; s/\.java:void /./1; s/()  throws//1;'"""
-    output = execute_shell_command(shell_command)
+    test_dir = get_test_dir(variant_dir) + "/"
+    shell_command = f"""find {test_dir} -name "*_ESTest.java" -exec egrep -oH "void test[0-9]+\(\)  throws" {{}} \; | sed 's|{test_dir}||1' | sed 's/^\///1; s/\//./g; s/\.java:void /./1; s/()  throws//1;'"""
+    output = execute_shell_command(shell_command, show_command=False)
     test_cases_names = output.split("\n")[0:-1]
     test_cases_name_set = set(test_cases_names)
-    assert len(test_cases_names) == len(test_cases_name_set), f"\n---\nDuplicate test case names\nBefore [LIST]: {test_cases_names}\nAfter [SET]: {test_cases_name_set}\n\nVariant dir: {variant_dir}\n---"
+    assert len(test_cases_names) == len(
+        test_cases_name_set), f"\n---\nDuplicate test case names\nBefore [LIST]: {test_cases_names}\nAfter [SET]: {test_cases_name_set}\n\nVariant dir: {variant_dir}\n---"
     return test_cases_name_set
