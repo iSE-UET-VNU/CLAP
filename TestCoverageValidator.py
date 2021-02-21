@@ -116,7 +116,7 @@ def check_coverage_file_quantity(variant_dir):
 
 def get_all_test_case_name_from_source_files(variant_dir):
     test_dir = get_test_dir(variant_dir)
-    shell_command = f"""find {test_dir}/ -name "*_ESTest.java" -exec egrep -or "void test[0-9]+\(\)  throws" {{}} \; | sed 's|{test_dir}||1' | sed 's/^\///1; s/\//./g; s/\.java:void /./1; s/()  throws//1;'"""
+    shell_command = f"""find {test_dir}/ -name "*_ESTest.java" -exec egrep -oH "void test[0-9]+\(\)  throws" {{}} \; | sed 's|{test_dir}||1' | sed 's/^\///1; s/\//./g; s/\.java:void /./1; s/()  throws//1;'"""
     output = execute_shell_command(shell_command)
     test_cases_names = output.split("\n")[0:-1]
     test_cases_name_set = set(test_cases_names)
