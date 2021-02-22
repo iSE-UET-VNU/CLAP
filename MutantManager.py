@@ -59,6 +59,61 @@ def make_mutants(current_project_dir, optional_feature_names):
     return mutant_paths
 
 
+def generate_mutants(project_dir, optional_feature_names, num_of_bugs=1):
+    logger.info(f"Mutating features [{get_file_name_without_ext(project_dir)}]")
+    assign_current_project_as_new_session(project_dir)
+    mutant_paths = make_mutants(project_dir, optional_feature_names)
+    mutant_path_tuples = mixing_multiple_bugs(mutant_paths, num_of_bugs=num_of_bugs)
+    mutated_project_dirs = inject_mutants(project_dir, mutant_path_tuples)
+    return mutated_project_dirs
+
+
+def regenerate_filtered_mutants_from_bug_tuples(project_dir, bug_tuples):
+    logger.info(f"Remaking mutants [{get_file_name_without_ext(project_dir)}] from {len(bug_tuples)} bug TUPLEs")
+    mutant_path_tuples = convert_bug_tuples_to_mutant_path_tuples(project_dir, bug_tuples)
+    filtered_mutated_project_dirs = inject_mutants(project_dir, mutant_path_tuples)
+    return filtered_mutated_project_dirs
+
+
+def convert_bug_tuples_to_mutant_path_tuples(project_dir, bug_tuples):
+    mutation_result_dir = get_mutation_result_dir(project_dir)
+    mutant_paths = get_all_mutant_paths(mutation_result_dir)
+    mutant_path_mapping = {}
+    for mutant_path in mutant_paths:
+        mutant_path_parts = mutant_path.rsplit("/", 5)
+        full_class_name = mutant_path_parts[1]
+        operator_index = mutant_path_parts[4]
+        current_bug_id = f"{full_class_name}.{operator_index}"
+        mutant_path_mapping[current_bug_id] = mutant_path
+    mutant_path_tuples = []
+    for bt in bug_tuples:
+        mutant_path_tuples.append(tuple(mutant_path_mapping[bug_id] for bug_id in bt))
+    return mutant_path_tuples
+
+
+def regenerate_filtered_mutants_from_bug_ids(project_dir, bug_ids, num_of_bugs, case_limit):
+    logger.info(f"Remaking mutants [{get_file_name_without_ext(project_dir)}] from {len(bug_ids)} bug IDs")
+    filtered_mutant_paths = filter_mutants(project_dir, bug_ids)
+    filtered_mutant_path_tuples = mixing_multiple_bugs(filtered_mutant_paths, num_of_bugs=num_of_bugs,
+                                                       case_limit=case_limit, allow_same_file=True)
+    filtered_mutated_project_dirs = inject_mutants(project_dir, filtered_mutant_path_tuples)
+    return filtered_mutated_project_dirs
+
+
+def filter_mutants(project_dir, bug_ids):
+    mutation_result_dir = get_mutation_result_dir(project_dir)
+    mutant_paths = get_all_mutant_paths(mutation_result_dir)
+    filtered_mutant_paths = []
+    for mutant_path in mutant_paths:
+        mutant_path_parts = mutant_path.rsplit("/", 5)
+        full_class_name = mutant_path_parts[1]
+        operator_index = mutant_path_parts[4]
+        current_bug_id = f"{full_class_name}.{operator_index}"
+        if len(bug_ids) <= 0 or current_bug_id in bug_ids:
+            filtered_mutant_paths.append(mutant_path)
+    return filtered_mutant_paths
+
+
 def mixing_multiple_bugs(mutant_paths, num_of_bugs=1, case_limit=None, allow_same_file=False):
     logger.info(f"Mixing multiple bugs [{num_of_bugs}] from {len(mutant_paths)} mutant files")
     if num_of_bugs == 0:
@@ -88,38 +143,6 @@ def mixing_multiple_bugs(mutant_paths, num_of_bugs=1, case_limit=None, allow_sam
         if 0 < case_limit < len(mixed_mutant_path_tuples):
             mixed_mutant_path_tuples = random.sample(mixed_mutant_path_tuples, k=case_limit)
         return mixed_mutant_path_tuples
-
-
-def generate_mutants(project_dir, optional_feature_names, num_of_bugs=1):
-    logger.info(f"Mutating features [{get_file_name_without_ext(project_dir)}]")
-    assign_current_project_as_new_session(project_dir)
-    mutant_paths = make_mutants(project_dir, optional_feature_names)
-    mutant_path_tuples = mixing_multiple_bugs(mutant_paths, num_of_bugs=num_of_bugs)
-    mutated_project_dirs = inject_mutants(project_dir, mutant_path_tuples)
-    return mutated_project_dirs
-
-
-def filter_mutants(project_dir, bug_ids):
-    mutation_result_dir = get_mutation_result_dir(project_dir)
-    filtered_mutant_paths = []
-    mutant_paths = get_all_mutant_paths(mutation_result_dir)
-    for mutant_path in mutant_paths:
-        mutant_path_parts = mutant_path.rsplit("/", 5)
-        full_class_name = mutant_path_parts[1]
-        operator_index = mutant_path_parts[4]
-        current_bug_id = f"{full_class_name}.{operator_index}"
-        if len(bug_ids) <= 0 or current_bug_id in bug_ids:
-            filtered_mutant_paths.append(mutant_path)
-    return filtered_mutant_paths
-
-
-def regenerate_filtered_mutants(project_dir, bug_ids, num_of_bugs, case_limit):
-    logger.info(f"Remaking mutants [{get_file_name_without_ext(project_dir)}]")
-    filtered_mutant_paths = filter_mutants(project_dir, bug_ids)
-    filtered_mutant_path_tuples = mixing_multiple_bugs(filtered_mutant_paths, num_of_bugs=num_of_bugs,
-                                                       case_limit=case_limit, allow_same_file=True)
-    filtered_mutated_project_dirs = inject_mutants(project_dir, filtered_mutant_path_tuples)
-    return filtered_mutated_project_dirs
 
 
 def inject_mutants(project_dir, mutant_path_tuples):
