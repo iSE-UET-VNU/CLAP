@@ -3,7 +3,8 @@ from collections import defaultdict
 
 from FileManager import get_all_variant_dirs, get_test_dir, \
     get_all_coverage_file_paths_in_dir, get_test_coverage_dir, get_file_name, TEST_COVERAGE_FILE_EXTENSION, \
-    get_failed_test_coverage_dir, get_failed_spectrum_coverage_file_path_with_version
+    get_failed_test_coverage_dir, get_failed_spectrum_coverage_file_path_with_version, \
+    get_passed_spectrum_coverage_file_path_with_version, get_passed_test_coverage_dir
 from Helpers import execute_shell_command, get_logger
 from suspicious_statements_manager import SuspiciousStatementManager
 
@@ -24,6 +25,13 @@ def check(mutated_project_dir):
 
 def check_spectrum_coverage_file_aggregated_from_all_tests(variant_dir):
     test_coverage_dir = get_test_coverage_dir(variant_dir)
+
+    passed_coverage_dir = get_passed_test_coverage_dir(variant_dir)
+    if passed_coverage_dir is None:
+        return
+    passed_spectrum_coverage_file = get_passed_spectrum_coverage_file_path_with_version(test_coverage_dir)
+    validate_spectrum_coverage_aggregated_completely(passed_spectrum_coverage_file, passed_coverage_dir)
+
     failed_coverage_dir = get_failed_test_coverage_dir(variant_dir)
     if failed_coverage_dir is None:
         return
