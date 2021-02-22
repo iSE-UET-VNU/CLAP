@@ -40,4 +40,12 @@ if __name__ == "__main__":
             if c not in current_mutation_operator_combinations:
                 target_number_of_bugs_combinations.remove(bug_combination)
                 break
-    print(len(target_number_of_bugs_combinations))
+    print("\nTotal combinations", len(target_number_of_bugs_combinations))
+
+    mutation_operator_counter = defaultdict(int)
+    for bc in target_number_of_bugs_combinations:
+        for mutation_operator in bc:
+            mutation_operator_counter[mutation_operator] += 1
+    print("\n---OCCURRENCES---")
+    for k, v  in mutation_operator_counter.items():
+        print(f"{k}: {v}")
