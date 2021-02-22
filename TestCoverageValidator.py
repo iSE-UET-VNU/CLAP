@@ -1,11 +1,13 @@
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 
+import TestManager
 from FileManager import get_all_variant_dirs, get_test_dir, \
     get_all_coverage_file_paths_in_dir, get_test_coverage_dir, get_file_name, TEST_COVERAGE_FILE_EXTENSION, \
     get_failed_test_coverage_dir, get_failed_spectrum_coverage_file_path_with_version, \
     get_passed_spectrum_coverage_file_path_with_version, get_passed_test_coverage_dir
 from Helpers import execute_shell_command, get_logger
+from TestManager import check_variant_final_test_output
 from suspicious_statements_manager import SuspiciousStatementManager
 
 logger = get_logger(__name__)
@@ -18,9 +20,16 @@ def check(mutated_project_dir):
                                                                                         mutated_project_dir)
     variant_dirs = get_all_variant_dirs(mutated_project_dir, sort=True)
     for variant_dir in variant_dirs:
+        check_test_result_consistency_between_batch_test_and_single_test(variant_dir)
         check_coverage_file_quantity(variant_dir)
         check_buggy_statements_executed_in_failed_tests(variant_dir, feature_buggy_statements)
         check_spectrum_coverage_file_aggregated_from_all_tests(variant_dir)
+
+
+def check_test_result_consistency_between_batch_test_and_single_test(variant_dir):
+    final_test_output_flag = check_variant_final_test_output(variant_dir,
+                                                             junit_mode=TestManager.JunitMode.FULL_COVERAGE)
+    assert final_test_output_flag is not None, f"\n---\nInconsistent in test result of batch test and single test [JUNIT]\nVariant {variant_dir}\n---"
 
 
 def check_spectrum_coverage_file_aggregated_from_all_tests(variant_dir):
