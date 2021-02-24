@@ -102,15 +102,17 @@ def compose_switched_products(config_paths, project_dir, mutated_project_dir, cu
         corrupt_file = join_path(variant_dir, "corrupted_compile.log")
         if not is_path_exist(variant_dir):
             variant_dir = VariantComposer.compose_by_config(project_dir, config_path)
-            compile_log = AntManager.compile_source_classes(lib_paths=lib_paths, variant_dir=variant_dir)
-            if compile_log.find("BUILD SUCCESSFUL") < 0:
+            try:
+                compile_log = AntManager.compile_source_classes(lib_paths=lib_paths, variant_dir=variant_dir)
+            except RuntimeError:
                 print("********\n__FAILED__", config_path, "\n********\n")
                 touch_file(corrupt_file)
                 # delete_dir(variant_dir)
                 continue
-            TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
-            TestManager.run_batch_junit_test_cases(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
-                                                   halt_on_error=True, custom_ant=custom_ant)
+            else:
+                TestManager.generate_junit_test_cases(lib_paths=lib_paths, variant_dir=variant_dir)
+                TestManager.run_batch_junit_test_cases(variant_dir, lib_paths=lib_paths, halt_on_failure=True,
+                                                       halt_on_error=True, custom_ant=custom_ant)
         elif is_path_exist(corrupt_file):
             print("********\n\n__SKIP__FAILED__", config_path, "\n********\n")
             continue
