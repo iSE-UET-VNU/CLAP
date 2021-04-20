@@ -15,6 +15,7 @@ FEATURE_ORDER_FILE_NAME = "features.order"
 LIB_FOLDER_NAME = "lib"
 CONFIG_FOLDER_NAME = "configs"
 CONFIGS_REPORT_FILE_NAME = "config.report.csv"
+CONFIGS_REPORT_FILE_NAME_BACKUP = "config.report.csv.done"
 SPC_LOG_FILE_NAME = "spc_{}.log"
 SLICING_LOG_FILE_NAME = "slicing_{}.log"
 PROJECT_LOCK_FILE_NAME = "project.lock"
@@ -107,7 +108,10 @@ def get_model_configs_dir(project_dir):
 
 
 def get_model_configs_report_path(project_dir):
-    return join_path(project_dir, CONFIGS_REPORT_FILE_NAME)
+    model_path = join_path(project_dir, CONFIGS_REPORT_FILE_NAME)
+    if not is_path_exist(model_path):
+        model_path = join_path(project_dir, CONFIGS_REPORT_FILE_NAME_BACKUP)
+    return model_path
 
 
 def get_dependency_lib_dirs(project_dir):
