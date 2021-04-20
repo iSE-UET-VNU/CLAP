@@ -86,21 +86,33 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
 
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
-    for aggregation_type in aggregations:
-        for normalization_type in normalizations:
+    result_folder_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder)
+    if not os.path.exists(result_folder_dir):
+        os.makedirs(result_folder_dir)
+
+    system_result_dir = join_path(result_folder_dir, system)
+    if not os.path.exists(system_result_dir):
+        os.makedirs(system_result_dir)
+
+    for normalization_type in normalizations:
+        normalization_result_dir = join_path(system_result_dir, normalization_type)
+        if not os.path.exists(normalization_result_dir):
+            os.makedirs(normalization_result_dir)
+
+        for aggregation_type in aggregations:
+            aggregation_result_dir = join_path(normalization_result_dir, aggregation_type)
+            if not os.path.exists(aggregation_result_dir):
+                os.makedirs(aggregation_result_dir)
+
             sheet = []
             project_dir = get_project_dir(project_name, base_dir)
             row = 0
-            search_rank_type_dir = join_path(EXPERIMENT_RESULT_FOLDER,
-                                             result_folder + str(aggregation_type)) + "_" + str(normalization_type)
-            system_result_dir = join_path(search_rank_type_dir, system)
-            if not os.path.exists(system_result_dir):
-                os.makedirs(system_result_dir)
-            project_result_dir = join_path(system_result_dir, project_name)
+
+            project_result_dir = join_path(aggregation_result_dir, project_name)
             if not os.path.exists(project_result_dir):
                 os.makedirs(project_result_dir)
             experiment_file_name = join_path(project_result_dir,
-                                             str(filtering_coverage_rate) + "_" + ".xlsx")
+                                              "1Bug.xlsx")
             wb = Workbook(experiment_file_name)
 
             for i in range(0, len(spectrum_expressions)):
@@ -110,8 +122,9 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
             row += 1
             mutated_projects_dir = get_mutated_projects_dir(project_dir)
             mutated_projects = list_dir(mutated_projects_dir)
-
+            runtime = {}
             for mutated_project_name in mutated_projects:
+
                 # try:
                 ranking_project = project_name + "_" + mutated_project_name
 
@@ -119,23 +132,22 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
 
                 mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-                #spc_log_file_path = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                 spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
                 # print(spc_log_file_path)
-                SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
+                slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
                 if spectrum_coverage_prefix != "":
                     post_fix = str(filtering_coverage_rate) + "_" + spectrum_coverage_prefix + "_"
                 else:
                     post_fix = filtering_coverage_rate
 
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, post_fix)
-                if system == "GPL":
-                    buggy_statement = get_buggy_statement(mutated_project_name, mutated_project_dir)
-                else:
-                    buggy_statement = get_single_buggy_statement(mutated_project_name, mutated_project_dir)
+
+                buggy_statement = get_single_buggy_statement(mutated_project_name, mutated_project_dir)
                 row_temp = row
+                varcop_ranking_time = 0
                 for i in range(0, len(spectrum_expressions)):
-                    ranking_results = RankingManager.ranking(system, buggy_statement, mutated_project_dir,
+                    ranking_results, varcop_ranking_time = RankingManager.ranking(system, buggy_statement, mutated_project_dir,
                                                              suspicious_stms_list, spectrum_expressions[i],
                                                              aggregation_type, normalization_type,
                                                              spectrum_coverage_prefix, filtering_coverage_rate)
@@ -148,5 +160,24 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
                     sheet[i].write(row_temp, BUG_ID_COL, mutated_project_name)
                     sheet[i].write(row_temp, BUGGY_STM_COL, buggy_statement)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
-
+                runtime[mutated_project_name] = [spc_runtime, slicing_runtime, varcop_ranking_time]
+            write_runtime_to_file(system_result_dir, runtime, "single_bug_runtime.xlsx")
             wb.close()
+
+
+def write_runtime_to_file(system_result_dir, run_time, file_name):
+    experiment_file_name = join_path(system_result_dir,
+                                     file_name)
+    if os.path.exists(experiment_file_name):
+        return
+    wb = Workbook(experiment_file_name)
+    sheet = wb.add_worksheet("run_time")
+    row = 0
+    for item in run_time.keys():
+        sheet.write(row, 0, item)
+        col = 1
+        for time in run_time[item]:
+            sheet.write(row, col, time)
+            col += 1
+        row += 1
+    wb.close()

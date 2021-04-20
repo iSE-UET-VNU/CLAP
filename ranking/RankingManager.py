@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 import xml.etree.ElementTree as ET
 from statistics import median, mode, stdev
 from scipy import stats
@@ -108,6 +109,7 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
 
 def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression,
                           aggregation_type, normalized_type, spectrum_coverage_prefix="", coverage_rate=0.0):
+    start_time = time.time()
     global buggy
     buggy = buggy_statements
     global  system
@@ -138,6 +140,24 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
     space[VARCOP_RANK] = len(ranked_list_with_isolation)
 
     all_buggy_position[VARCOP_RANK] = locate_multiple_bugs(buggy_statements, ranked_list_with_isolation)
+    varcop_ranking_time = time.time() - start_time
+    # traditional SBFL
+    ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression,
+                                                                    spectrum_coverage_prefix, coverage_rate)
+    # print(ranked_list_traditional_spectrum)
+    all_buggy_position[SBFL_RANK] = locate_multiple_bugs_traditional_spectrum(buggy_statements,
+                                                                              ranked_list_traditional_spectrum)
+    space[SBFL_RANK] = len(ranked_list_traditional_spectrum)
+    return all_buggy_position, space, varcop_ranking_time
+
+def sbfl_only_ranking_multiple_bugs(buggy_statements, mutated_project_dir, spectrum_expression,
+                           spectrum_coverage_prefix="", coverage_rate=0.0):
+    global buggy
+    buggy = buggy_statements
+    global  system
+    system = ""
+    all_buggy_position = {}
+    space = {}
     # traditional SBFL
     ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression,
                                                                     spectrum_coverage_prefix, coverage_rate)
@@ -146,7 +166,6 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
                                                                               ranked_list_traditional_spectrum)
     space[SBFL_RANK] = len(ranked_list_traditional_spectrum)
     return all_buggy_position, space
-
 
 def locate_multiple_bugs(buggy_statements, ranked_list):
     buggy_positions = {}
@@ -164,6 +183,7 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
 
 def ranking(system_in, buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression,
             aggregation_type, normalized_type, spectrum_coverage_prefix, coverage_rate):
+    start_time = time.time()
     global buggy
     buggy = buggy_statement
     global system
@@ -194,6 +214,7 @@ def ranking(system_in, buggy_statement, mutated_project_dir, suspicious_stms_lis
                                                                                              spectrum_expression,
                                                                                              aggregation_type,
                                                                                              normalized_type)
+    varcop_ranking_time = time.time() - start_time
 
     # spectrum ranking only
     sbfl_rank, sbfl_space = traditional_spectrum_locate_buggy_stm(mutated_project_dir,
@@ -209,7 +230,7 @@ def ranking(system_in, buggy_statement, mutated_project_dir, suspicious_stms_lis
                        SPACE: sbfl_space,
                        }
 
-    return ranking_results
+    return ranking_results, varcop_ranking_time
 
 
 def get_stms_from_list_variants(stms_in_list_variants):

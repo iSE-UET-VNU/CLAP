@@ -17,7 +17,7 @@ def find_SPCs(mutated_project_dir, filtering_coverage_rate):
     spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
     if is_path_exist(spc_log_file_path):
         logger.info(f"Used Old SPC log file [{spc_log_file_path}]")
-        return spc_log_file_path
+        return spc_log_file_path, 0
 
     config_report_path = get_model_configs_report_path(mutated_project_dir)
     variants_dir = get_variants_dir(mutated_project_dir)
@@ -27,8 +27,9 @@ def find_SPCs(mutated_project_dir, filtering_coverage_rate):
                                                                                 filtering_coverage_rate)
     spc_log_file_path = detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir,
                                     spc_log_file_path)
-    logging.info("[Runtime] SPC runtime %s: %s", mutated_project_dir, time.time() - start_time)
-    return spc_log_file_path
+    #logging.info("[Runtime] SPC runtime %s: %s", mutated_project_dir, time.time() - start_time)
+    spc_runtime = time.time() - start_time
+    return spc_log_file_path, spc_runtime
 
 
 def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, spc_log_file_path):

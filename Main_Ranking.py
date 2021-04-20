@@ -7,12 +7,12 @@ from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIA
     WONG3, WONG2, M1, ROGOT2, EUCLID, HAMMING, FLEISS, ANDERBERG, KULCZYNSKI1, KULCZYNSKI2, HARMONIC_MEAN, GOODMAN
 
 if __name__ == "__main__":
-    result_folder = "TrangTesting"
-    base_dir = "/Users/thu-trangnguyen/OneDrive/Research/SPL_systems/Data/"
-    system_names = ["ExamDB"]
-    project_names = ["1wise"]
+    result_folder = "DataV2_Results"
+    base_dir = "/home/huent/Documents/Trang/temp/Single_Bug/"
+    system_names = ["BankAccountTP"]
+    project_names = ["4wise"]
     #multiple_coverages = ["INoT_1_", "INoT_2_", "INoT_3_", "INoT_4_", "INoT_5_", "INoT_6_", "INoT_7_", "INoT_8_", "INoT_9_", "INoT_10_"]
-    multiple_coverages = ["INoT_1_"]
+    multiple_coverages = [""]
     for spectrum_coverage_prefix in multiple_coverages:
         #result_folder = "Trang_testingcoverage_" + spectrum_coverage_prefix + "_"
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
                         #                            spectrum_coverage_prefix)
                         ranking_with_coverage_rate(result_folder, system_dir, system, project_names[project_index],
                                                   filtering_coverage_rate_list[coverage_index],
-                                                  [JACCARD], spectrum_coverage_prefix)
+                                                  [TARANTULA, OCHIAI], spectrum_coverage_prefix)
 
 
 
