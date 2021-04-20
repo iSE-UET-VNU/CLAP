@@ -4,11 +4,11 @@ from spc import SPCsManager
 from suspicious_statements_manager import SlicingManager
 
 if __name__ == "__main__":
-    mutants_dir = ""
+    mutants_dir = "/home/huent/Documents/Trang/temp/BankAccountTP/1Bug/mutated_projects"
     mutants = list_dir(mutants_dir)
     coverage = 0.0
     for mutant_name in mutants:
         mutated_project_dir = join_path(mutants_dir, mutant_name)
-        SPCsManager.find_SPCs(mutated_project_dir, coverage=0.0)
+        SPCsManager.find_SPCs(mutated_project_dir, coverage)
         spc_log_file_path = get_spc_log_file_path(mutated_project_dir, coverage)
         slicing_runtime = SlicingManager.do_slice(spc_log_file_path, coverage, "")
