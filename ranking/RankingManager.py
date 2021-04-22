@@ -93,6 +93,7 @@ def locate_buggy_statement(buggy_statement, all_suspicious_stms_of_the_system, s
                                                                          normalized_type)
         buggy_stm_ranked_without_isolation = search_rank_worst_case_by_layer(buggy_statement,
                                                                              without_isolation_ranked_list)
+
         buggy_stm_ranked_by_layer = len(all_suspicious_stms) + buggy_stm_ranked_without_isolation
         for i in range(0, buggy_stm_ranked_without_isolation):
             if without_isolation_ranked_list[i][0] in all_suspicious_stms:
@@ -885,7 +886,7 @@ def search_rank_worst_case(stm, ranked_list):
                 else:
                     break
             return j + 1
-    return -1
+    return STM_NOT_FOUND
 
 
 def search_rank_worst_case_by_layer(stm, ranked_list):
@@ -898,4 +899,4 @@ def search_rank_worst_case_by_layer(stm, ranked_list):
                 else:
                     break
             return j + 1
-    return -1
+    return STM_NOT_FOUND
