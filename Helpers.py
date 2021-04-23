@@ -4,6 +4,7 @@ import re
 import subprocess
 import hashlib
 import time
+from itertools import chain, combinations
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] [%(module)s] %(message)s",
                     datefmt='%Y-%m-%d %H:%M:%S')
@@ -74,3 +75,8 @@ def natural_sort(l):
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key.rsplit("/", 1)[1])]
     return sorted(l, key=alphanum_key)
+
+
+def powerset(iterable):
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
