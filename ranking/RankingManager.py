@@ -619,23 +619,19 @@ def count_tests_gpl(test_dir):
 
 
 def count_tests(dir, spectrum_coverage_prefix):
-    if (system == "GPL"):
-        num_of_failed_tests = count_tests_gpl(join_path(dir, FAILED_TEST_COVERAGE_FOLDER_NAME))
-        num_of_passed_tests = count_tests_gpl(join_path(dir, PASSED_TEST_COVERAGE_FOLDER_NAME))
-    else:
 
-        spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_failed_coverage_file_dir = join_path(dir, spectrum_failed_file)
-        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_passed_coverage_file_dir = join_path(dir, spectrum_passed_file)
+    spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
+    spectrum_failed_coverage_file_dir = join_path(dir, spectrum_failed_file)
+    spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+    spectrum_passed_coverage_file_dir = join_path(dir, spectrum_passed_file)
 
-        num_of_failed_tests = 0
-        num_of_passed_tests = 0
-        if os.path.isfile(spectrum_failed_coverage_file_dir):
-            num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
+    num_of_failed_tests = 0
+    num_of_passed_tests = 0
+    if os.path.isfile(spectrum_failed_coverage_file_dir):
+        num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
 
-        if os.path.isfile(spectrum_passed_coverage_file_dir):
-            num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
+    if os.path.isfile(spectrum_passed_coverage_file_dir):
+        num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
 
     return num_of_failed_tests, num_of_passed_tests
 
