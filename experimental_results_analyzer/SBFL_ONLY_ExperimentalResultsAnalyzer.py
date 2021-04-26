@@ -14,33 +14,26 @@ from xlsxwriter import Workbook
 
 SBFL_METRIC_COL = 0
 NUM_DETECTED_BUGS_COL = 1
-VARCOP_RANK_COL = 2
-VARCOP_EXAM_COL = 3
-VARCOP_SPACE_COL = 4
-VARCOP_DISABLE_BPC_RANK_COL = 5
-VARCOP_DISABLE_BPC_EXAM_COL = 6
-SBFL_RANK_COL = 7
-SBFL_EXAM_COL = 8
-FB_RANK_COL = 9
-FB_EXAM_COL = 10
-SPACE_COL = 11
+SBFL_RANK_COL = 2
+SBFL_EXAM_COL = 3
+SPACE_COL = 4
 
 SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                              RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
                              COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
-                             WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN, WONG2, ZOLTAR,
-                             EUCLID, ROGOT2, HAMMING, FLEISS, ANDERBERG,
+                             WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
+                             WONG2, EUCLID, ZOLTAR,
+                             ROGOT2, HAMMING, FLEISS, ANDERBERG,
                              GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
 
 
 # SPECTRUM_EXPRESSIONS_LIST = [TARANTULA]
 
-def write_all_bugs_to_a_file(summary_file_dir, file_lists):
+def sbfl_only_write_all_bugs_to_a_file(summary_file_dir, file_lists):
     writer = pandas.ExcelWriter(summary_file_dir, engine='openpyxl')
 
     row = 0
     for file in file_lists:
-
         excel_data_df = pandas.read_excel(file, sheet_name=None)
         for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
             excel_data_df[spectrum_expression_type].to_excel(writer, sheet_name=spectrum_expression_type, startrow=row,
@@ -49,28 +42,17 @@ def write_all_bugs_to_a_file(summary_file_dir, file_lists):
     writer.save()
 
 
-def summary_hitx(hitx_file_dir, all_bugs_file_dir):
+def sbfl_only_summary_hitx(hitx_file_dir, all_bugs_file_dir):
     wb = Workbook(hitx_file_dir)
     sheet = wb.add_worksheet("sheet1")
 
     row = 0
-    sheet.write(row, 1, "HIT@1")
-    sheet.write(row, 3, "HIT@2")
-    sheet.write(row, 5, "HIT@3")
-    sheet.write(row, 7, "HIT@4")
-    sheet.write(row, 9, "HIT@5")
-    row += 1
-    sheet.write(row, 0, "Metric")
-    sheet.write(row, 1, "VarCop")
-    sheet.write(row, 2, "SBFL")
-    sheet.write(row, 3, "VarCop")
-    sheet.write(row, 4, "SBFL")
-    sheet.write(row, 5, "VarCop")
-    sheet.write(row, 6, "SBFL")
-    sheet.write(row, 7, "VarCop")
-    sheet.write(row, 8, "SBFL")
-    sheet.write(row, 9, "VarCop")
-    sheet.write(row, 10, "SBFL")
+    sheet.write(row, 1, "Top-1")
+    sheet.write(row, 2, "Top-2")
+    sheet.write(row, 3, "Top-3")
+    sheet.write(row, 4, "Top-4")
+    sheet.write(row, 5, "Top-5")
+
     row += 1
 
     excel_data_df = pandas.read_excel(all_bugs_file_dir, sheet_name=None)
@@ -81,17 +63,15 @@ def summary_hitx(hitx_file_dir, all_bugs_file_dir):
         col = 0;
         for index in range(0, len(hit_list)):
             col += 1
-            sheet.write(row, col, count_hit_x(excel_data_df[spectrum_expression_type][VARCOP_RANK], hit_list[index]))
-            col += 1
             sheet.write(row, col,
-                        count_hit_x(excel_data_df[spectrum_expression_type][SBFL_RANK],
+                        sbfl_only_count_hit_x(excel_data_df[spectrum_expression_type][SBFL_RANK],
                                     hit_list[index]))
         row += 1
 
     wb.close()
 
 
-def count_hit_x(value_list, x):
+def sbfl_only_count_hit_x(value_list, x):
     count = 0
     for value in value_list:
         if type(value) != str and value != -1 and value <= x:
@@ -99,36 +79,29 @@ def count_hit_x(value_list, x):
     return count
 
 
-def summary_result(all_bugs_file, summary_file):
+def sbfl_only_summary_result(all_bugs_file, summary_file):
     summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
                                  summary_file)
     wb = Workbook(summary_file_dir)
     sheet = wb.add_worksheet("sheet1")
 
     row = 0
-    write_header_in_sumary_file(row, sheet)
+    sbfl_only_write_header_in_sumary_file(row, sheet)
     row += 1
     row = calculate_average_in_a_file(all_bugs_file, row, sheet)
 
     wb.close()
 
 
-def write_header_in_sumary_file(row, sheet):
+def sbfl_only_write_header_in_sumary_file(row, sheet):
     sheet.write(row, SBFL_METRIC_COL, SBFL_METRIC)
     sheet.write(row, NUM_DETECTED_BUGS_COL, NUM_DETECTED_BUGS)
-    sheet.write(row, VARCOP_RANK_COL, VARCOP_RANK)
-    sheet.write(row, VARCOP_EXAM_COL, VARCOP_EXAM)
-    sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE)
-    sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, VARCOP_DISABLE_BPC_RANK)
-    sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, VARCOP_DISABLE_BPC_EXAM)
     sheet.write(row, SBFL_RANK_COL, SBFL_RANK)
     sheet.write(row, SBFL_EXAM_COL, SBFL_EXAM)
-    sheet.write(row, FB_RANK_COL, FB_RANK)
-    sheet.write(row, FB_EXAM_COL, FB_EXAM)
     sheet.write(row, SPACE_COL, SPACE)
 
 
-def num_of_detected_bug(ranking_list):
+def sbfl_only_num_of_detected_bug(ranking_list):
     bug_count = 0
     for r in ranking_list:
         if r != -1 and r != None and type(r) != str:
@@ -152,30 +125,10 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
 
     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
-        num_of_bugs = num_of_detected_bug(excel_data_df[spectrum_expression_type][VARCOP_RANK])
+        num_of_bugs = sbfl_only_num_of_detected_bug(excel_data_df[spectrum_expression_type][SBFL_RANK])
         sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
 
         sheet.write(row, SBFL_METRIC_COL, spectrum_expression_type)
-
-        varcop_rank = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][VARCOP_RANK])
-        sheet.write(row, VARCOP_RANK_COL, varcop_rank)
-
-        varcop_exam = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][VARCOP_EXAM])
-        sheet.write(row, VARCOP_EXAM_COL, varcop_exam)
-
-        varcop_space = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][VARCOP_SPACE])
-        sheet.write(row, VARCOP_SPACE_COL, varcop_space)
-
-        varcop_disable_bpc_rank = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][VARCOP_DISABLE_BPC_RANK])
-        sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, varcop_disable_bpc_rank)
-
-        varcop_disable_bpc_exam = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][VARCOP_DISABLE_BPC_EXAM])
-        sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, varcop_disable_bpc_exam)
 
         sbfl_rank = calculate_average_value_of_a_list(
             excel_data_df[spectrum_expression_type][SBFL_RANK])
@@ -184,14 +137,6 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
         sbfl_exam = calculate_average_value_of_a_list(
             excel_data_df[spectrum_expression_type][SBFL_EXAM])
         sheet.write(row, SBFL_EXAM_COL, sbfl_exam)
-
-        fb_rank = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][FB_RANK])
-        sheet.write(row, FB_RANK_COL, fb_rank)
-
-        fb_exam = calculate_average_value_of_a_list(
-            excel_data_df[spectrum_expression_type][FB_EXAM])
-        sheet.write(row, FB_EXAM_COL, fb_exam)
 
         space = calculate_average_value_of_a_list(
             excel_data_df[spectrum_expression_type][SPACE])
@@ -285,7 +230,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
 #     wb.close()
 
 
-def count_total_bugs(files_list):
+def sbfl_only_count_total_bugs(files_list):
     bug_list = []
     overall_info = {}
 
