@@ -1,7 +1,8 @@
 import pandas
 
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
-from ranking.Keywords import SBFL_METRIC, NUM_DETECTED_BUGS
+from ranking.Keywords import SBFL_METRIC, NUM_DETECTED_BUGS, ISOLATION_VS_SBFL_IN_RANK, ISOLATION_VS_SBFL_IN_EXAM, \
+    WITHOUT_ISOLATION_VS_SBFL_IN_RANK, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM
 from ranking.RankingManager import VARCOP_RANK, VARCOP_SPACE, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, SPACE
 from ranking.RankingResultManager import VARCOP_EXAM, VARCOP_DISABLE_BPC_EXAM, SBFL_EXAM, FB_RANK, FB_EXAM, BUG_ID
 from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
@@ -25,6 +26,12 @@ FB_RANK_COL = 9
 FB_EXAM_COL = 10
 SPACE_COL = 11
 
+#comparion
+ISOLATION_VS_SBFL_IN_RANK_COL = 13
+ISOLATION_VS_SBFL_IN_EXAM_COL = 14
+WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL = 15
+WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL = 16
+
 SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                              RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
                              COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
@@ -36,6 +43,7 @@ SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
 # SPECTRUM_EXPRESSIONS_LIST = [TARANTULA]
 
 def write_all_bugs_to_a_file(summary_file_dir, file_lists):
+    print(summary_file_dir)
     writer = pandas.ExcelWriter(summary_file_dir, engine='openpyxl')
 
     row = 0
@@ -126,6 +134,13 @@ def write_header_in_sumary_file(row, sheet):
     sheet.write(row, FB_RANK_COL, FB_RANK)
     sheet.write(row, FB_EXAM_COL, FB_EXAM)
     sheet.write(row, SPACE_COL, SPACE)
+    write_header_for_comparion(row, sheet)
+
+def write_header_for_comparion(row, sheet):
+    sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, ISOLATION_VS_SBFL_IN_RANK)
+    sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, ISOLATION_VS_SBFL_IN_EXAM)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, WITHOUT_ISOLATION_VS_SBFL_IN_RANK)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM)
 
 
 def num_of_detected_bug(ranking_list):
@@ -151,6 +166,14 @@ def calculate_average_value_of_a_list(value_list):
 def calculate_average_in_a_file(experimental_file_dir, row, sheet):
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
 
+    varcop_win_rank = 0
+    varcop_win_exam = 0
+    disabled_win_rank = 0
+    disabled_win_exam = 0
+    sbfl_win_varcop_rank = 0
+    sbfl_win_disabled_rank = 0
+    sbfl_win_varcop_exam = 0
+    sbfl_win_disabled_exam = 0
     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         num_of_bugs = num_of_detected_bug(excel_data_df[spectrum_expression_type][VARCOP_RANK])
         sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
@@ -197,8 +220,43 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
             excel_data_df[spectrum_expression_type][SPACE])
         sheet.write(row, SPACE_COL, space)
 
+        #comparison
+
+        sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, (sbfl_rank-varcop_rank)/sbfl_rank)
+        if(((sbfl_rank - varcop_rank) / sbfl_rank) > 0):
+            varcop_win_rank += 1
+        elif(((sbfl_rank - varcop_rank) / sbfl_rank) < 0):
+            sbfl_win_varcop_rank += 1
+        sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, (sbfl_exam - varcop_exam) / sbfl_exam)
+        if((sbfl_exam - varcop_exam) / sbfl_exam) > 0:
+            varcop_win_exam += 1
+        elif((sbfl_exam - varcop_exam) / sbfl_exam) < 0:
+            sbfl_win_varcop_exam += 1
+        sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, (sbfl_rank - varcop_disable_bpc_rank) / sbfl_rank)
+        if((sbfl_rank - varcop_disable_bpc_rank) / sbfl_rank) > 0:
+            disabled_win_rank += 1
+        elif((sbfl_rank - varcop_disable_bpc_rank) / sbfl_rank) < 0:
+            sbfl_win_disabled_rank += 1
+        sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, (sbfl_exam - varcop_disable_bpc_exam) / sbfl_exam)
+        if((sbfl_exam - varcop_disable_bpc_exam) / sbfl_exam) >0:
+            disabled_win_exam += 1
+        elif((sbfl_exam - varcop_disable_bpc_exam) / sbfl_exam) < 0:
+            sbfl_win_disabled_exam += 1
         row += 1
+    row += 1
+    sheet.write(row, 11, "VarCop win")
+    sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, varcop_win_rank)
+    sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, varcop_win_exam)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, disabled_win_rank)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, disabled_win_exam)
+    row += 1
+    sheet.write(row, 11, "SBFL win")
+    sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, sbfl_win_varcop_rank)
+    sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, sbfl_win_varcop_exam)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, sbfl_win_disabled_rank)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, sbfl_win_disabled_exam)
     return row
+
 
 
 # def summary_for_same_bugs(summary_file_dir, files_list):
