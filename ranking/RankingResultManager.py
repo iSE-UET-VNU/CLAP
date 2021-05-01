@@ -80,8 +80,9 @@ def write_results_to_file(row, sheet, ranking_results):
 
 
 def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, filtering_coverage_rate,
-                               spectrum_expressions, spectrum_coverage_prefix):
-    # aggregations = [ RankingManager.AGGREGATION_GEOMETRIC_MEAN,
+                               spectrum_expressions, spectrum_coverage_prefix, alpha = 0):
+
+    # aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN, RankingManager.AGGREGATION_GEOMETRIC_MEAN,
     #                 RankingManager.AGGREGATION_MEDIAN, RankingManager.AGGREGATION_MAX, RankingManager.AGGREGATION_MIN, RankingManager.AGGREGATION_MODE]
 
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
@@ -113,6 +114,8 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
                 os.makedirs(project_result_dir)
             experiment_file_name = join_path(project_result_dir,
                                               "1Bug.xlsx")
+            # if os.path.exists(experiment_file_name):
+            #     continue
             wb = Workbook(experiment_file_name)
 
             for i in range(0, len(spectrum_expressions)):
@@ -132,14 +135,14 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
 
                 mutated_project_dir = MutantManager.get_mutated_project_dir(project_dir, mutated_project_name)
 
-                spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
-                spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
+                #spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                #spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
                 # print(spc_log_file_path)
-                slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
+                #slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
                 if spectrum_coverage_prefix != "":
                     post_fix = str(filtering_coverage_rate) + "_" + spectrum_coverage_prefix + "_"
                 else:
-                    post_fix = filtering_coverage_rate
+                    post_fix = 0.0
 
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, post_fix)
 
@@ -150,7 +153,7 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
                     ranking_results, varcop_ranking_time = RankingManager.ranking(system, buggy_statement, mutated_project_dir,
                                                              suspicious_stms_list, spectrum_expressions[i],
                                                              aggregation_type, normalization_type,
-                                                             spectrum_coverage_prefix, filtering_coverage_rate)
+                                                             spectrum_coverage_prefix, filtering_coverage_rate, alpha)
 
                     ranking_results["feature_rank"], ranking_results[FB_RANK], ranking_results[
                         "feature_space"] = features_ranking(buggy_statement, mutated_project_dir,
@@ -160,8 +163,8 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
                     sheet[i].write(row_temp, BUG_ID_COL, mutated_project_name)
                     sheet[i].write(row_temp, BUGGY_STM_COL, buggy_statement)
                     row = write_results_to_file(row_temp, sheet[i], ranking_results)
-                runtime[mutated_project_name] = [spc_runtime, slicing_runtime, varcop_ranking_time]
-            write_runtime_to_file(system_result_dir, runtime, "single_bug_runtime.xlsx")
+                #runtime[mutated_project_name] = [spc_runtime, slicing_runtime, varcop_ranking_time]
+            #write_runtime_to_file(system_result_dir, runtime, "single_bug_runtime.xlsx")
             wb.close()
 
 

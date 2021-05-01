@@ -43,6 +43,39 @@ def features_ranking(buggy_statement, mutated_project_dir, filter_coverage_rate,
     return feature_rank, stm_rank, search_space
 
 
+def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, filter_coverage_rate, spectrum_expression,
+                                   spectrum_coverage_prefix=""):
+    total_variants = 0
+    variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir, spectrum_coverage_prefix)
+    failing_variants = get_failing_variants(mutated_project_dir)
+
+    features_info = {}
+    for variant in variants_testing_coverage:
+        if variants_testing_coverage[variant] >= filter_coverage_rate or variant in failing_variants:
+            total_variants += 1
+            variant_dir = get_variant_dir(mutated_project_dir, variant)
+            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_info,
+                                                           spectrum_coverage_prefix)
+
+    total_passes = total_variants - len(failing_variants)
+    total_fails = len(failing_variants)
+
+    # there are no passing variants with test coverage > threshold
+    if (total_passes == 0):
+        return -2, -2, -2
+    # there are no failing variants
+    if (total_fails == 0):
+        return -2, -2, -2
+    features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
+
+    feature_based_rank = {}
+    for stm in buggy_statements:
+        feature_rank, stm_rank = search_rank_worst_case(stm, features_info, spectrum_expression)
+        feature_based_rank[stm] = stm_rank
+    search_space = total_ranking_statements(features_info)
+    return feature_based_rank
+
+
 def features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression):
     for id in features_info.keys():
         if spectrum_expression == TARANTULA:

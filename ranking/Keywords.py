@@ -36,3 +36,6 @@ VARIANTS_PASSED = "variants_passed"
 SBFL_METRIC = "SBFL_METRIC"
 NUM_DETECTED_BUGS = "NUM_OF_DETECTED_BUGS"
 
+NUM_OF_PASSING_VARIANTS = "num_of_passing_variants"
+NUM_OF_FAILING_VARIANTS = "num_of_failing_variants"
+
