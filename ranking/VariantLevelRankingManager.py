@@ -32,7 +32,7 @@ def read_data_from_coverage_file(data, coverage_file, variant_type):
         tree = ET.parse(coverage_file)
         root = tree.getroot()
         project = root.find("project")
-
+        check_duplicate = []
         for package in project:
             for file in package:
                 for line in file:
@@ -43,7 +43,9 @@ def read_data_from_coverage_file(data, coverage_file, variant_type):
                         data[id]["num_of_passing"] = 0
 
                     if int(line.get('count')) > 0:
-                        data[id][variant_type] += 1
+                        if id not in check_duplicate:
+                            data[id][variant_type] += 1
+                            check_duplicate.append(id)
         return data
     except:
         logging.info("Exception when parsing %s", coverage_file)
@@ -86,6 +88,10 @@ def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, tot
                 failing_passing_variants_of_stms[stm]["num_of_failing"],
                 failing_passing_variants_of_stms[stm]["num_of_passing"],
                 total_fails, total_passes)
+            if(stm == "DailyLimit.Account.19"  or stm == "DailyLimit.Account.35"):
+                print("variant level")
+                print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
+                      "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
 
         elif spectrum_expression == OCHIAI:
             failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = ochiai_calculation(
@@ -98,6 +104,10 @@ def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, tot
                 failing_passing_variants_of_stms[stm]["num_of_failing"],
                 failing_passing_variants_of_stms[stm]["num_of_passing"],
                 total_fails, total_passes)
+            if(stm == "Base.ElevatorSystem.Elevator.57"  or stm == "Weight.ElevatorSystem.Elevator.32"):
+                print("variant level")
+                print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
+                      "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
 
         elif spectrum_expression == BARINEL:
             failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = barinel_calculation(
