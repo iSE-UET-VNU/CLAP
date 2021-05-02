@@ -120,6 +120,8 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
                                                                      variant_level_suspiciousness,
                                                                      spectrum_expression, aggregation_type,
                                                                      normalized_type, alpha)
+    # print("varcop")
+    # print(ranked_list_without_isolation)
     all_buggy_position[VARCOP_DISABLE_BPC_RANK] = locate_multiple_bugs(buggy_statements, suspicious_stms_list, ranked_list_without_isolation, ranked_list_without_isolation)
     space[VARCOP_DISABLE_BPC_RANK] = len(ranked_list_without_isolation)
     # rank with isolation
@@ -363,11 +365,13 @@ def global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_
             if stm not in all_stms_score_list:
                 all_stms_score_list[stm] = {}
                 all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
-                all_stms_score_list[stm][NUM_OF_FAILING_VARIANTS] = 0
+                all_stms_score_list[stm][NUM_OF_FAILING_VARIANTS] = 1
 
     all_stms_score_list = count_num_of_passing_products_for_a_stm(all_stms_score_list, all_stms_of_the_system,
                                                                   normalized_score_list)
 
+    for stm in all_stms_score_list:
+        all_stms_score_list[stm][score_type] = all_stms_score_list[stm][score_type]/all_stms_score_list[stm][NUM_OF_FAILING_VARIANTS]
     return varcop_ranking(all_stms_score_list, variant_level_suspiciousness, spectrum_expression, alpha)
     #return varcop_ranking_global_first(all_stms_score_list, variant_level_suspiciousness, spectrum_expression)
 
@@ -591,6 +595,9 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                                                                          statement_infor[id][PASSED_TEST_COUNT],
                                                                          total_failed_tests,
                                                                          total_passed_tests)
+            # if(id in buggy or id == "DailyLimit.Account.19"):
+            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
+            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][TARANTULA_SCORE])
 
         elif spectrum_expression == OCHIAI:
             statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -600,6 +607,9 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][OP2_SCORE]= op2_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                              statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
                                                              total_passed_tests)
+            # if(id in buggy or id == "Base.ElevatorSystem.Elevator.57"):
+            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
+            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][OP2_SCORE])
 
         elif spectrum_expression == BARINEL:
             statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -627,6 +637,9 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][AMPLE_SCORE] = ample_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
+            # if(id in buggy or id == "BankAccount.Account.28"):
+            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
+            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][AMPLE_SCORE])
         elif spectrum_expression == JACCARD:
             statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
@@ -772,7 +785,10 @@ def varcop_ranking(statements_infor, variant_level_suspiciousness, spectrum_expr
     score_type = spectrum_expression + "_score"
     for (key, value) in statements_infor.items():
         score_tmp = alpha*statements_infor[key][score_type]  + (1-alpha)*variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
-        #score_tmp = statements_infor[key][score_type]/(statements_infor[key][NUM_OF_FAILING_VARIANTS]) + variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
+        # if(statements_infor[key][NUM_OF_FAILING_VARIANTS] != 0):
+        #     score_tmp = alpha*statements_infor[key][score_type]/(statements_infor[key][NUM_OF_FAILING_VARIANTS]) + (1-alpha)*variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
+        # else:
+        #     score_tmp = (1-alpha)*variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
         ranked_list.append((key, score_tmp, statements_infor[key][NUM_OF_PASSING_VARIANTS]))
     return descending_sort(data=ranked_list, sorted_element=1)
 
