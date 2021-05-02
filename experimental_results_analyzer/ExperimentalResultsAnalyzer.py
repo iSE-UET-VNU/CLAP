@@ -3,9 +3,8 @@ import os
 import pandas
 
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
-from experimental_results_analyzer.ImprovementComparisonAnalyzer import comparison, init_comparison_data, write_comparison_data_to_file
-from ranking.Keywords import SBFL_METRIC, VARCOP_VS_SBFL_IN_RANK, VARCOP_VS_SBFL_IN_EXAM, \
-    VARCOP_DISABLE_BPC_VS_SBFL_IN_RANK, VARCOP_DISABLE_BPC_VS_SBFL_IN_EXAM, VARCOP_EXAM, VARCOP_DISABLE_BPC_EXAM, \
+from experimental_results_analyzer.ImprovementComparisonAnalyzer import comparison, init_comparison_data
+from ranking.Keywords import SBFL_METRIC, VARCOP_EXAM, VARCOP_DISABLE_BPC_EXAM, \
     SBFL_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, NUM_CASES, NUM_BUGS, HIT, HIT_VARCOP, HIT_SBFL
 from ranking.RankingManager import VARCOP_RANK, VARCOP_SPACE, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, SPACE
 from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
