@@ -12,6 +12,7 @@ from ranking.Keywords import VARCOP_RANK, VARCOP_EXAM, VARCOP_SPACE, VARCOP_DISA
     SBFL_RANK, SBFL_EXAM, FB_RANK, FB_EXAM, SPACE
 
 
+
 def assumption_summary_result(all_bugs_file, summary_file):
     summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
                                  summary_file)
