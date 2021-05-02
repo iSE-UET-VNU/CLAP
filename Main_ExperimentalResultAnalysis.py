@@ -1,3 +1,5 @@
+import os
+
 from experimental_results_analyzer.ExperimentalResultsAnalyzer import summary_result, summary_hitx, \
     write_all_bugs_to_a_file
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
@@ -11,20 +13,20 @@ from experimental_results_analyzer.ImprovementComparisonAnalyzer import write_co
 
 
 def summary_multiple_bugs():
-    prefix = "DataV2_K0"
+    prefix = "DataV2_K0.5"
 
-    systems = ["BankAccountTP", "Elevator", "All"]
+    systems = ["BankAccountTP", "Elevator", "Email", "ExamDB", "ALL"]
 
     bank_file = ["BankAccountTP/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     elevator = ["Elevator/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     email = ["Email/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     examdb = ["ExamDB/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
-    # gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/1Bug.xlsx"]
-    # zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/1Bug.xlsx"]
+    gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
+    # zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     file_lists = [
-        bank_file[0], elevator[0]
+        bank_file[0], elevator[0], email[0], examdb[0]
     ]
-    experiments = [bank_file, elevator, file_lists]
+    experiments = [bank_file]
     num_of_bugs = ["1Bug", "2Bug", "3Bug"]
     base_path = join_path("/Users/thu-trangnguyen/Documents/project/InputPreparation/experiment_results/", prefix)
     comparison_data = {}
@@ -43,7 +45,7 @@ def summary_multiple_bugs():
         # hitx_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
         #                            prefix + "_" + systems[i]+ "_hix.xlsx")
         # summary_hitx(hitx_file_dir, all_bugs_file_dir, 5)
-
+        os.remove(all_bugs_file_dir)
 
 def summary_for_assumption_evaluation():
     prefix = "DataV2_NewRanking_1_0"
