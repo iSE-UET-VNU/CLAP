@@ -5,7 +5,7 @@ import pandas
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
 from ranking.Keywords import SBFL_METRIC, VARCOP_VS_SBFL_IN_RANK, VARCOP_VS_SBFL_IN_EXAM, \
     VARCOP_DISABLE_BPC_VS_SBFL_IN_RANK, VARCOP_DISABLE_BPC_VS_SBFL_IN_EXAM, VARCOP_EXAM, VARCOP_DISABLE_BPC_EXAM, \
-    SBFL_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, NUM_CASES, NUM_BUGS
+    SBFL_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, NUM_CASES, NUM_BUGS, HIT, HIT_VARCOP, HIT_SBFL
 from ranking.RankingManager import VARCOP_RANK, VARCOP_SPACE, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, SPACE
 from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
     AMPLE, \
@@ -75,43 +75,34 @@ def write_all_bugs_to_a_file(summary_file_dir, file_lists, num_of_bugs, base_pat
     writer.save()
 
 
-def summary_hitx(hitx_file_dir, all_bugs_file_dir):
+def summary_hitx(hitx_file_dir, all_bugs_file_dir, hitn):
     wb = Workbook(hitx_file_dir)
     sheet = wb.add_worksheet("sheet1")
 
     row = 0
-    sheet.write(row, 1, "HIT@1")
-    sheet.write(row, 3, "HIT@2")
-    sheet.write(row, 5, "HIT@3")
-    sheet.write(row, 7, "HIT@4")
-    sheet.write(row, 9, "HIT@5")
+    for hit_index in range(1, hitn + 1):
+        sheet.write(row, hit_index*2 -1, HIT + str(hit_index))
+
     row += 1
-    sheet.write(row, 0, "Metric")
-    sheet.write(row, 1, "VarCop")
-    sheet.write(row, 2, "SBFL")
-    sheet.write(row, 3, "VarCop")
-    sheet.write(row, 4, "SBFL")
-    sheet.write(row, 5, "VarCop")
-    sheet.write(row, 6, "SBFL")
-    sheet.write(row, 7, "VarCop")
-    sheet.write(row, 8, "SBFL")
-    sheet.write(row, 9, "VarCop")
-    sheet.write(row, 10, "SBFL")
+    sheet.write(row, 0, SBFL_METRIC)
+    for hit_index in range(1, hitn + 1):
+        col = hit_index*2 - 1
+        sheet.write(row, col, HIT_VARCOP)
+        sheet.write(row, col + 1, HIT_SBFL)
     row += 1
 
     excel_data_df = pandas.read_excel(all_bugs_file_dir, sheet_name=None)
 
     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         sheet.write(row, 0, spectrum_expression_type)
-        hit_list = [1, 2, 3, 4, 5]
+
         col = 0;
-        for index in range(0, len(hit_list)):
+        for hit in range(1, hitn + 1):
             col += 1
-            sheet.write(row, col, count_hit_x(excel_data_df[spectrum_expression_type][VARCOP_RANK], hit_list[index]))
+            sheet.write(row, col, count_hit_x(excel_data_df[spectrum_expression_type][VARCOP_RANK], hit))
             col += 1
             sheet.write(row, col,
-                        count_hit_x(excel_data_df[spectrum_expression_type][SBFL_RANK],
-                                    hit_list[index]))
+                        count_hit_x(excel_data_df[spectrum_expression_type][SBFL_RANK], hit))
         row += 1
 
     wb.close()
