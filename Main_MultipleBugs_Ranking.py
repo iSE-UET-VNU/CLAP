@@ -12,7 +12,7 @@ if __name__ == "__main__":
     system_names = ["BankAccountTP"]
     bug_folders = ["1Bug"]
     alpha = [1]
-    kwise_list = ["5wise"]
+    kwise_list = ["4wise"]
     #alpha = [1, 0.3, 0.7]
     filtering_coverage_rate_list = [0.0]
     for k in alpha:
@@ -24,15 +24,15 @@ if __name__ == "__main__":
                 for kwise in kwise_list:
                     for coverage in filtering_coverage_rate_list:
                         print(bug_folder_dir)
-                        # mutiple_bugs_ranking(result_folder, system_name, bug_folder,  bug_folder_dir,
-                        #                      [TARANTULA], coverage, k)
-                        mutiple_bugs_ranking(result_folder, system_name, bug_folder,  bug_folder_dir, kwise, [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
-                                                                RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
-                                                                COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
-                                                                WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
-                                                                 WONG2, EUCLID, ZOLTAR,
-                                                                 ROGOT2, HAMMING, FLEISS, ANDERBERG,
-                                                                GOODMAN, HARMONIC_MEAN, KULCZYNSKI2], coverage, k)
+                        mutiple_bugs_ranking(result_folder, system_name, bug_folder,  bug_folder_dir, kwise,
+                                             [TARANTULA], coverage, k)
+                        # mutiple_bugs_ranking(result_folder, system_name, bug_folder,  bug_folder_dir, kwise, [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
+                        #                                         RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
+                        #                                         COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,
+                        #                                         WONG1, SOKAL, SORENSEN_DICE, DICE, HUMANN,
+                        #                                          WONG2, EUCLID, ZOLTAR,
+                        #                                          ROGOT2, HAMMING, FLEISS, ANDERBERG,
+                        #                                         GOODMAN, HARMONIC_MEAN, KULCZYNSKI2], coverage, k)
                         # sbfl_only_mutiple_bugs_ranking(result_folder, system_name, bug_folder, bug_folder_dir, [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                         #                                         RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
                         #                                         COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2,

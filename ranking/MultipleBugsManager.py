@@ -4,12 +4,12 @@ from xlsxwriter import Workbook
 
 from ranking import RankingManager
 from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
-from ranking.Keywords import VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM, FB_RANK, FB_EXAM
+from ranking.Keywords import VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, \
+    VARCOP_EXAM, SBFL_EXAM
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
     ranking_multiple_bugs, VARCOP_SPACE, SPACE
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir, get_spc_log_file_path, \
     get_project_sub_dir_by_folder_name
-from ranking.RankingResultManager import BUG_ID, BUGGY_STM, VARCOP_EXAM, SBFL_EXAM, write_runtime_to_file
 from spc import SPCsManager
 from suspicious_statements_manager import SlicingManager
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, \
@@ -107,8 +107,8 @@ def mutiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwi
 
                 experiment_file_name = join_path(kwise_result_dir,
                                                  bug_folder + ".xlsx")
-                if os.path.exists(experiment_file_name):
-                    continue
+                # if os.path.exists(experiment_file_name):
+                #     continue
                 wb = Workbook(experiment_file_name)
 
                 for i in range(0, len(spectrum_expressions)):
@@ -146,3 +146,20 @@ def mutiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwi
                 #write_runtime_to_file(system_result_dir, runtime, "multiple_bug_runtime.xlsx")
 
                 wb.close()
+
+def write_runtime_to_file(system_result_dir, run_time, file_name):
+    experiment_file_name = join_path(system_result_dir,
+                                     file_name)
+    if os.path.exists(experiment_file_name):
+        return
+    wb = Workbook(experiment_file_name)
+    sheet = wb.add_worksheet("run_time")
+    row = 0
+    for item in run_time.keys():
+        sheet.write(row, 0, item)
+        col = 1
+        for time in run_time[item]:
+            sheet.write(row, col, time)
+            col += 1
+        row += 1
+    wb.close()

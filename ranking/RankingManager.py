@@ -21,10 +21,6 @@ from ranking.VariantLevelRankingManager import calculate_suspiciousness_variant_
 STM_NOT_FOUND = -1000
 
 
-def num_of_suspicious_stms(suspicious_stms_list):
-    stm_set = get_list_of_stm(suspicious_stms_list)
-    return len(stm_set)
-
 
 def get_list_of_stm(dict_of_stm_per_variant):
     stm_set = []
@@ -84,39 +80,12 @@ def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_lis
     return ranked_list
 
 
-def locate_buggy_statement(buggy_statement, all_stms_of_the_system, all_suspicious_stms_of_the_system, suspicious_stms_list,
-                           local_suspiciousness_of_all_the_system, variant_level_suspiciousness,
-                           spectrum_expression, aggregation_type, normalized_type, alpha = 0):
-
-    ranked_list = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list,
-                                                   local_suspiciousness_of_all_the_system, variant_level_suspiciousness, spectrum_expression,
-                                                   aggregation_type, normalized_type, alpha)
-    #print(ranked_list)
-    all_suspicious_stms = get_list_of_stm(suspicious_stms_list)
-    buggy_stm_ranked = search_rank_worst_case(buggy_statement, ranked_list)
-    buggy_stm_ranked_by_layer = search_rank_worst_case_by_layer(buggy_statement, ranked_list)
-    if buggy_stm_ranked_by_layer == STM_NOT_FOUND:
-        without_isolation_ranked_list = global_ranking_a_suspicious_list(all_stms_of_the_system,
-                                                                         all_suspicious_stms_of_the_system,
-                                                                         local_suspiciousness_of_all_the_system, variant_level_suspiciousness,
-                                                                         spectrum_expression, aggregation_type,
-                                                                         normalized_type, alpha)
-        buggy_stm_ranked_without_isolation = search_rank_worst_case_by_layer(buggy_statement,
-                                                                             without_isolation_ranked_list)
-
-        buggy_stm_ranked_by_layer = len(all_suspicious_stms) + buggy_stm_ranked_without_isolation
-        for i in range(0, buggy_stm_ranked_without_isolation):
-            if without_isolation_ranked_list[i][0] in all_suspicious_stms:
-                buggy_stm_ranked_by_layer -= 1
-    return buggy_stm_ranked, buggy_stm_ranked_by_layer, len(ranked_list)
-
 
 def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
     suspicious_stms_list = {}
     for variant in failing_variants:
         suspicious_stms_list[variant] = all_stms_of_the_system[variant]
     return suspicious_stms_list
-
 
 def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms_list, spectrum_expression,
                           aggregation_type, normalized_type, spectrum_coverage_prefix="", coverage_rate=0.0, alpha = 0):
@@ -210,90 +179,6 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
     for stm in buggy_statements:
         buggy_possitions[stm] = search_rank_worst_case(stm, ranked_list)
     return buggy_possitions
-
-
-def ranking(system_in, buggy_statement, mutated_project_dir, suspicious_stms_list, spectrum_expression,
-            aggregation_type, normalized_type, spectrum_coverage_prefix, coverage_rate, alpha = 0):
-    start_time = time.time()
-    global buggy
-    buggy = buggy_statement
-    global system
-    system = system_in
-    all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate)
-
-    # rank without isolation
-   # print("without isolation")
-    failing_variants = get_failing_variants(mutated_project_dir)
-    all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
-    local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir,
-                                                                             all_suspicious_of_the_system,
-                                                                             spectrum_expression,
-                                                                             spectrum_coverage_prefix)
-    list_of_stms = get_list_of_stm(all_stms_of_the_system)
-    failing_passing_variants_of_stms, total_fails, total_passes = get_num_passing_failing_variants(mutated_project_dir, list_of_stms, spectrum_coverage_prefix)
-
-    variant_level_suspiciousness = calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, total_fails, total_passes, TARANTULA)
-    variant_level_suspiciousness = normalized_variant_level_score(variant_level_suspiciousness)
-    #print(variant_level_suspiciousness)
-    without_isolation_ranked_list = global_ranking_a_suspicious_list(all_stms_of_the_system, all_suspicious_of_the_system,
-                                                                     local_suspiciousness_of_all_the_system, variant_level_suspiciousness,
-                                                                     spectrum_expression, aggregation_type, normalized_type, alpha)
-    varcop_disable_bpc_rank_by_failing, varcop_disable_bpc_rank_by_layer, varcop_disable_bpc_space = locate_buggy_statement(
-        buggy_statement,
-        all_stms_of_the_system,
-        all_suspicious_of_the_system,
-        all_suspicious_of_the_system,
-        local_suspiciousness_of_all_the_system, variant_level_suspiciousness,
-        spectrum_expression,
-        aggregation_type,
-        normalized_type, alpha)
-
-    # rank with isolation
-    print("with isolation")
-    varcop_rank_by_failing, varcop_rank_by_layer, varcop_space = locate_buggy_statement(buggy_statement,
-                                                                                        all_stms_of_the_system,
-                                                                                        all_suspicious_of_the_system,
-                                                                                        suspicious_stms_list,
-                                                                                        local_suspiciousness_of_all_the_system, variant_level_suspiciousness,
-                                                                                        spectrum_expression,
-                                                                                        aggregation_type,
-                                                                                        normalized_type, alpha)
-
-    varcop_ranking_time = time.time() - start_time
-
-    # spectrum ranking only
-    sbfl_rank, sbfl_space = traditional_spectrum_locate_buggy_stm(mutated_project_dir,
-                                                                  spectrum_expression,
-                                                                  buggy_statement,
-                                                                  spectrum_coverage_prefix,
-                                                                  coverage_rate)
-    # print("sbfl rank:", sbfl_rank)
-    ranking_results = {VARCOP_RANK: varcop_rank_by_layer,
-                       VARCOP_SPACE: varcop_space,
-                       VARCOP_DISABLE_BPC_RANK: varcop_disable_bpc_rank_by_layer,
-                       SBFL_RANK: sbfl_rank,
-                       SPACE: sbfl_space,
-                       }
-
-    return ranking_results, varcop_ranking_time
-
-
-def get_stms_from_list_variants(stms_in_list_variants):
-    all_stms_list = []
-    for variant in stms_in_list_variants:
-        for stm in stms_in_list_variants[variant]:
-            if stm not in all_stms_list:
-                all_stms_list.append(stm)
-    return all_stms_list
-
-
-def get_stms_from_list_of_local_suspiciousness(local_suspiciousness_list):
-    all_stms = []
-    for variant in local_suspiciousness_list:
-        for item in local_suspiciousness_list[variant]:
-            if item[0] not in all_stms:
-                all_stms.append(item[0])
-    return all_stms
 
 
 def get_local_score(stm, ranked_list):
@@ -514,15 +399,6 @@ def rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression, spect
     return spectrum_ranked_list
 
 
-def traditional_spectrum_locate_buggy_stm(mutated_project_dir, spectrum_expression, buggy_statement,
-                                          spectrum_coverage_prefix, coverage_rate):
-    spectrum_ranked_list = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression,
-                                                        spectrum_coverage_prefix, coverage_rate)
-    buggy_stm_spectrum_ranked = search_rank_worst_case(buggy_statement, spectrum_ranked_list)
-    space = len(spectrum_ranked_list)
-    return buggy_stm_spectrum_ranked, space
-
-
 def get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_list = list_dir(variants_dir)
@@ -661,13 +537,6 @@ def count_test_in_file(file_dir):
         logging.info("Exception when parsing %s", file_dir)
 
 
-def count_tests_gpl(test_dir):
-    num_tests = 0
-
-    if os.path.isdir(test_dir):
-        num_tests = len(list_dir(test_dir))
-
-    return num_tests
 
 
 def count_tests(dir, spectrum_coverage_prefix):
@@ -907,40 +776,6 @@ def varcop_ranking(statements_infor, variant_level_suspiciousness, spectrum_expr
         ranked_list.append((key, score_tmp, statements_infor[key][NUM_OF_PASSING_VARIANTS]))
     return descending_sort(data=ranked_list, sorted_element=1)
 
-def varcop_ranking_variant_first(statements_infor, variant_level_suspiciousness, spectrum_expression):
-    data = []
-
-    score_type = spectrum_expression + "_score"
-    for (key, value) in statements_infor.items():
-        score_tmp = statements_infor[key][score_type]
-        data.append((key, score_tmp, statements_infor[key][NUM_OF_PASSING_VARIANTS], variant_level_suspiciousness[key]
-                     [VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]))
-
-    for i in range(0, len(data) - 1):
-        for j in range(i + 1, len(data)):
-            if (data[i][3] < data[j][3]) or (data[i][3] == data[j][3] and data[i][1] < data[j][1]):
-                data[i], data[j] = \
-                    data[j], data[i]
-
-    return data
-
-
-def varcop_ranking_global_first(statements_infor, variant_level_suspiciousness, spectrum_expression):
-    data = []
-
-    score_type = spectrum_expression + "_score"
-    for (key, value) in statements_infor.items():
-        score_tmp = statements_infor[key][score_type]
-        data.append((key, score_tmp, statements_infor[key][NUM_OF_PASSING_VARIANTS], variant_level_suspiciousness[key]
-        [VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]))
-
-    for i in range(0, len(data) - 1):
-        for j in range(i + 1, len(data)):
-            if (data[i][1] < data[j][1]) or (data[i][1] == data[j][1] and data[i][3] < data[j][3]):
-                data[i], data[j] = \
-                    data[j], data[i]
-
-    return data
 
 def spc_spectrum_ranking(statements_infor, spectrum_expression):
     spc_spectrum_ranked_list = []

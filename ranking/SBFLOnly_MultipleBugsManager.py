@@ -3,11 +3,12 @@ import os
 from xlsxwriter import Workbook
 
 from ranking import RankingManager
+from ranking.Keywords import BUG_ID, BUGGY_STM, SBFL_EXAM
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
     ranking_multiple_bugs, VARCOP_SPACE, SPACE, sbfl_only_ranking_multiple_bugs
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir, get_spc_log_file_path, \
     get_project_sub_dir_by_folder_name
-from ranking.RankingResultManager import BUG_ID, BUGGY_STM, VARCOP_EXAM, SBFL_EXAM
+
 from spc import SPCsManager
 from suspicious_statements_manager import SlicingManager
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, \
