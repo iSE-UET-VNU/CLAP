@@ -68,7 +68,7 @@ def write_result_to_file(row, sheet, ranking_results, space):
     return row
 
 
-def mutiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions, filtering_coverage_rate, alpha):
+def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions, filtering_coverage_rate, alpha):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
 

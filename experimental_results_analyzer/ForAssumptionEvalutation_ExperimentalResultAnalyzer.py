@@ -4,9 +4,10 @@ from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
 from xlsxwriter import Workbook
 
 from experimental_results_analyzer.ExperimentalResultsAnalyzer import write_header_in_sumary_file, SBFL_METRIC_COL, \
-    NUM_DETECTED_BUGS_COL, VARCOP_RANK_COL, VARCOP_EXAM_COL, VARCOP_SPACE_COL, VARCOP_DISABLE_BPC_RANK_COL, \
+    VARCOP_RANK_COL, VARCOP_EXAM_COL, VARCOP_SPACE_COL, VARCOP_DISABLE_BPC_RANK_COL, \
     VARCOP_DISABLE_BPC_EXAM_COL, FB_RANK_COL, FB_EXAM_COL, SPACE_COL, SBFL_RANK_COL, SBFL_EXAM_COL, \
-    SPECTRUM_EXPRESSIONS_LIST
+    SPECTRUM_EXPRESSIONS_LIST, ISOLATION_VS_SBFL_IN_RANK_COL, ISOLATION_VS_SBFL_IN_EXAM_COL, \
+    WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, NUM_BUGS_COL
 
 from ranking.Keywords import VARCOP_RANK, VARCOP_EXAM, VARCOP_SPACE, VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM, \
     SBFL_RANK, SBFL_EXAM, FB_RANK, FB_EXAM, SPACE
@@ -47,9 +48,17 @@ def assumption_calculate_average_value_of_a_list(value_list, condition1, conditi
 def assumption_calculate_average_in_a_file(experimental_file_dir, row, sheet):
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
 
+    varcop_win_rank = 0
+    varcop_win_exam = 0
+    disabled_win_rank = 0
+    disabled_win_exam = 0
+    sbfl_win_varcop_rank = 0
+    sbfl_win_disabled_rank = 0
+    sbfl_win_varcop_exam = 0
+    sbfl_win_disabled_exam = 0
     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         num_of_bugs = assumption_num_of_detected_bug(excel_data_df[spectrum_expression_type][VARCOP_RANK], excel_data_df[spectrum_expression_type][VARCOP_SPACE])
-        sheet.write(row, NUM_DETECTED_BUGS_COL, num_of_bugs)
+        sheet.write(row, NUM_BUGS_COL, num_of_bugs)
 
         sheet.write(row, SBFL_METRIC_COL, spectrum_expression_type)
 
@@ -113,7 +122,43 @@ def assumption_calculate_average_in_a_file(experimental_file_dir, row, sheet):
             excel_data_df[spectrum_expression_type][VARCOP_SPACE])
         sheet.write(row, SPACE_COL, space)
 
+        #comparison
+
+        sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, (sbfl_rank-varcop_rank)/sbfl_rank)
+        if(((sbfl_rank - varcop_rank) / sbfl_rank) > 0):
+            varcop_win_rank += 1
+        elif(((sbfl_rank - varcop_rank) / sbfl_rank) < 0):
+            sbfl_win_varcop_rank += 1
+        sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, (sbfl_exam - varcop_exam) / sbfl_exam)
+        if((sbfl_exam - varcop_exam) / sbfl_exam) > 0:
+            varcop_win_exam += 1
+        elif((sbfl_exam - varcop_exam) / sbfl_exam) < 0:
+            sbfl_win_varcop_exam += 1
+        sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, (sbfl_rank - varcop_disable_bpc_rank) / sbfl_rank)
+        if((sbfl_rank - varcop_disable_bpc_rank) / sbfl_rank) > 0:
+            disabled_win_rank += 1
+        elif((sbfl_rank - varcop_disable_bpc_rank) / sbfl_rank) < 0:
+            sbfl_win_disabled_rank += 1
+        sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, (sbfl_exam - varcop_disable_bpc_exam) / sbfl_exam)
+        if((sbfl_exam - varcop_disable_bpc_exam) / sbfl_exam) >0:
+            disabled_win_exam += 1
+        elif((sbfl_exam - varcop_disable_bpc_exam) / sbfl_exam) < 0:
+            sbfl_win_disabled_exam += 1
         row += 1
+
+    row += 1
+
+    sheet.write(row, 11, "VarCop win")
+    sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, varcop_win_rank)
+    sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, varcop_win_exam)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, disabled_win_rank)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, disabled_win_exam)
+    row += 1
+    sheet.write(row, 11, "SBFL win")
+    sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, sbfl_win_varcop_rank)
+    sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, sbfl_win_varcop_exam)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, sbfl_win_disabled_rank)
+    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, sbfl_win_disabled_exam)
     return row
 
 
@@ -157,7 +202,7 @@ def assumption_summary_hitx(hitx_file_dir, all_bugs_file_dir):
                         assumption_count_hit_x(excel_data_df[spectrum_expression_type][SBFL_RANK],
                                                excel_data_df[spectrum_expression_type][VARCOP_RANK],
                                                excel_data_df[spectrum_expression_type][VARCOP_SPACE],
-                                    hit_list[index]))
+                                               hit_list[index]))
         row += 1
 
     wb.close()
