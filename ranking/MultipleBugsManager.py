@@ -134,7 +134,7 @@ def mutiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, spe
                                                                    suspicious_stms_list,
                                                                    spectrum_expressions[sbfl_expression],
                                                                    aggregation_type,
-                                                                   normalization_type, 0.0, alpha)
+                                                                   normalization_type, "", filtering_coverage_rate, alpha)
                     ranking_results[FB_RANK] = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
                                                             filtering_coverage_rate, spectrum_expressions[sbfl_expression])
                     #
