@@ -3,6 +3,7 @@ import os
 import pandas
 
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
+from experimental_results_analyzer.ImprovementComparisonAnalyzer import comparison, init_comparison_data, write_comparison_data_to_file
 from ranking.Keywords import SBFL_METRIC, VARCOP_VS_SBFL_IN_RANK, VARCOP_VS_SBFL_IN_EXAM, \
     VARCOP_DISABLE_BPC_VS_SBFL_IN_RANK, VARCOP_DISABLE_BPC_VS_SBFL_IN_EXAM, VARCOP_EXAM, VARCOP_DISABLE_BPC_EXAM, \
     SBFL_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, NUM_CASES, NUM_BUGS, HIT, HIT_VARCOP, HIT_SBFL
@@ -30,12 +31,6 @@ SBFL_EXAM_COL = 9
 FB_RANK_COL = 10
 FB_EXAM_COL = 11
 SPACE_COL = 12
-
-# comparion
-ISOLATION_VS_SBFL_IN_RANK_COL = 13
-ISOLATION_VS_SBFL_IN_EXAM_COL = 14
-WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL = 15
-WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL = 16
 
 SPECTRUM_EXPRESSIONS_LIST = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                              RUSSELL_RAO, SIMPLE_MATCHING, ROGERS_TANIMOTO, AMPLE, JACCARD,
@@ -81,12 +76,12 @@ def summary_hitx(hitx_file_dir, all_bugs_file_dir, hitn):
 
     row = 0
     for hit_index in range(1, hitn + 1):
-        sheet.write(row, hit_index*2 -1, HIT + str(hit_index))
+        sheet.write(row, hit_index * 2 - 1, HIT + str(hit_index))
 
     row += 1
     sheet.write(row, 0, SBFL_METRIC)
     for hit_index in range(1, hitn + 1):
-        col = hit_index*2 - 1
+        col = hit_index * 2 - 1
         sheet.write(row, col, HIT_VARCOP)
         sheet.write(row, col + 1, HIT_SBFL)
     row += 1
@@ -116,7 +111,7 @@ def count_hit_x(value_list, x):
     return count
 
 
-def summary_result(all_bugs_file, summary_file):
+def summary_result(all_bugs_file, summary_file, prefix):
     summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
                                  summary_file)
     wb = Workbook(summary_file_dir)
@@ -125,9 +120,10 @@ def summary_result(all_bugs_file, summary_file):
     row = 0
     write_header_in_sumary_file(row, sheet)
     row += 1
-    row = calculate_average_in_a_file(all_bugs_file, row, sheet)
+    comparison_data = calculate_average_in_a_file(all_bugs_file, row, sheet)
 
     wb.close()
+    return comparison_data
 
 
 def write_header_in_sumary_file(row, sheet):
@@ -144,14 +140,6 @@ def write_header_in_sumary_file(row, sheet):
     sheet.write(row, FB_RANK_COL, FB_RANK)
     sheet.write(row, FB_EXAM_COL, FB_EXAM)
     sheet.write(row, SPACE_COL, SPACE)
-    write_header_for_comparion(row, sheet)
-
-
-def write_header_for_comparion(row, sheet):
-    sheet.write(row, ISOLATION_VS_SBFL_IN_RANK_COL, VARCOP_VS_SBFL_IN_RANK)
-    sheet.write(row, ISOLATION_VS_SBFL_IN_EXAM_COL, VARCOP_VS_SBFL_IN_EXAM)
-    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_RANK_COL, VARCOP_DISABLE_BPC_VS_SBFL_IN_RANK)
-    sheet.write(row, WITHOUT_ISOLATION_VS_SBFL_IN_EXAM_COL, VARCOP_DISABLE_BPC_VS_SBFL_IN_EXAM)
 
 
 def num_of_element(data_list):
@@ -164,6 +152,7 @@ def num_of_element(data_list):
 
 def calculate_average_in_a_file(experimental_file_dir, row, sheet):
     excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
+    comparison_data = init_comparison_data()
 
     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
         num_of_cases = num_of_element(excel_data_df[spectrum_expression_type][BUG_ID])
@@ -175,15 +164,18 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
         sheet.write(row, SBFL_METRIC_COL, spectrum_expression_type)
 
         average_value_list = average_best_rank_exam(excel_data_df, spectrum_expression_type)
-        #percentage_of_cases_found_bugs(experimental_file_dir, spectrum_expression_type, 3)
+        # percentage_of_cases_found_bugs(experimental_file_dir, spectrum_expression_type, 3)
         col = VARCOP_RANK_COL
         for metric in data_column:
             sheet.write(row, col, average_value_list[metric])
             col += 1
-
         row += 1
 
-    return row
+        comparison_data = comparison(comparison_data, average_value_list)
+
+    return comparison_data
+
+
 
 
 MAX = 100000
@@ -228,7 +220,7 @@ def percentage_of_cases_found_bugs(experimental_file_dir, sbfl_metric, num_exami
     average_percentage_list = {}
     num_of_cases = num_of_element(excel_data_df[sbfl_metric][BUG_ID])
     for metric in rank_column:
-        average_percentage_list[metric] = percentage_list[metric]/num_of_cases
+        average_percentage_list[metric] = percentage_list[metric] / num_of_cases
     print(average_percentage_list)
     return average_percentage_list
 
