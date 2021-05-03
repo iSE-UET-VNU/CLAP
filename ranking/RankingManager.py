@@ -120,7 +120,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
                                                                      variant_level_suspiciousness,
                                                                      spectrum_expression, aggregation_type,
                                                                      normalized_type, alpha)
-    # print("varcop")
+    # print("varcop without isolation")
     # print(ranked_list_without_isolation)
     all_buggy_position[VARCOP_DISABLE_BPC_RANK] = locate_multiple_bugs(buggy_statements, suspicious_stms_list, ranked_list_without_isolation, ranked_list_without_isolation)
     space[VARCOP_DISABLE_BPC_RANK] = len(ranked_list_without_isolation)
@@ -131,8 +131,9 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
                                                                   variant_level_suspiciousness,
                                                                   spectrum_expression, aggregation_type,
                                                                   normalized_type, alpha)
+    # print("varcop with isolation")
+    # print(ranked_list_with_isolation)
     space[VARCOP_RANK] = len(ranked_list_with_isolation)
-
     all_buggy_position[VARCOP_RANK] = locate_multiple_bugs(buggy_statements, suspicious_stms_list,  ranked_list_with_isolation, ranked_list_without_isolation)
     varcop_ranking_time = time.time() - start_time
     # traditional SBFL
@@ -165,13 +166,15 @@ def sbfl_only_ranking_multiple_bugs(buggy_statements, mutated_project_dir, spect
 
 
 def locate_multiple_bugs(buggy_statements, suspicious_stms_list,  ranked_with_isolation_list, ranked_without_isolation_list):
+    array_of_syspicious_stm = get_list_of_stm(suspicious_stms_list)
     buggy_positions = {}
     for stm in buggy_statements:
         buggy_positions[stm] = search_rank_worst_case_by_layer(stm, ranked_with_isolation_list)
         if buggy_positions[stm] == STM_NOT_FOUND:
-            buggy_positions[stm] = search_rank_worst_case_by_layer(stm, ranked_without_isolation_list)
-            for item in ranked_without_isolation_list:
-                if item in suspicious_stms_list:
+            without_isolation_buggy_position = search_rank_worst_case_by_layer(stm, ranked_without_isolation_list)
+            buggy_positions[stm] = without_isolation_buggy_position + len(array_of_syspicious_stm)
+            for i in range(0, without_isolation_buggy_position):
+                if ranked_without_isolation_list[i][0] in array_of_syspicious_stm:
                     buggy_positions[stm] -= 1
     return buggy_positions
 
