@@ -170,7 +170,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
             col += 1
         row += 1
 
-        comparison_data = comparison(comparison_data, average_value_list)
+        comparison_data = comparison(comparison_data, average_value_list, spectrum_expression_type)
 
     return comparison_data
 

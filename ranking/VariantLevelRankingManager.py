@@ -78,6 +78,7 @@ def get_num_passing_failing_variants(mutated_project_dir, list_of_stms, spectrum
 
 
 def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, total_fails, total_passes, spectrum_expression):
+
     for stm in failing_passing_variants_of_stms.keys():
         failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = tarantula_calculation(failing_passing_variants_of_stms[stm]["num_of_failing"],
                                                                                                       failing_passing_variants_of_stms[stm]["num_of_passing"],
@@ -88,10 +89,10 @@ def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, tot
                 failing_passing_variants_of_stms[stm]["num_of_failing"],
                 failing_passing_variants_of_stms[stm]["num_of_passing"],
                 total_fails, total_passes)
-            if(stm == "DailyLimit.Account.19"  or stm == "DailyLimit.Account.35"):
-                print("variant level")
-                print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
-                      "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
+            # if(stm == "DailyLimit.Account.19"  or stm == "DailyLimit.Account.35"):
+            #     print("variant level")
+            #     print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
+            #           "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
 
         elif spectrum_expression == OCHIAI:
             failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = ochiai_calculation(
@@ -104,10 +105,10 @@ def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, tot
                 failing_passing_variants_of_stms[stm]["num_of_failing"],
                 failing_passing_variants_of_stms[stm]["num_of_passing"],
                 total_fails, total_passes)
-            if(stm == "Base.ElevatorSystem.Elevator.57"  or stm == "Weight.ElevatorSystem.Elevator.32"):
-                print("variant level")
-                print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
-                      "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
+            # if(stm == "Base.ElevatorSystem.Elevator.57"  or stm == "Weight.ElevatorSystem.Elevator.32"):
+            #     print("variant level")
+            #     print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
+            #           "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
 
         elif spectrum_expression == BARINEL:
             failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = barinel_calculation(
@@ -144,6 +145,10 @@ def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, tot
                 failing_passing_variants_of_stms[stm]["num_of_failing"],
                 failing_passing_variants_of_stms[stm]["num_of_passing"],
                 total_fails, total_passes)
+            # if(stm == "BankAccount.Account.28"  or stm == "BankAccount.Account.21"):
+            #     print("variant level")
+            #     print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
+            #           "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
 
         elif spectrum_expression == JACCARD:
             failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = jaccard_calculation(
