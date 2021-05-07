@@ -1,7 +1,8 @@
+import csv
 import os
 
 from FileManager import get_variants_dir, list_dir, get_variant_dir, get_test_coverage_dir, join_path, \
-    get_spectrum_failed_coverage_file_name_with_version
+    get_spectrum_failed_coverage_file_name_with_version, get_model_configs_report_path
 from TestingCoverageManager import statement_coverage
 
 
@@ -27,3 +28,21 @@ def is_var_bug(mutated_project_dir, filter_coverage, spectrum_coverage_prefix=""
     if (num_of_failing_variants >= 1 and num_of_passing_variants >= 1):
         return 1
     return 0
+
+def is_var_bug_by_config(mutated_project_dir):
+    config_report_path = get_model_configs_report_path(mutated_project_dir)
+    print(config_report_path)
+    with open(config_report_path) as f:
+        reader = csv.reader(f, delimiter=',')
+        header = next(reader)
+        feature_names = header[1:]
+        for row in reader:
+            if(row[-1] == "__FAILED__"):
+                count_enabled = 0
+                for f in row[1:-1]:
+                    print(f)
+                    if(f.strip() == "T"):
+                        count_enabled += 1
+                if count_enabled == 1:
+                    return 0
+    return 1
