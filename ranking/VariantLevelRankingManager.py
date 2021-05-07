@@ -78,12 +78,7 @@ def get_num_passing_failing_variants(mutated_project_dir, list_of_stms, spectrum
 
 
 def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, total_fails, total_passes, spectrum_expression):
-
     for stm in failing_passing_variants_of_stms.keys():
-        if(failing_passing_variants_of_stms[stm]["num_of_failing"] == 0):
-            failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = 0
-        else:
-
             if spectrum_expression == TARANTULA:
                 failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = tarantula_calculation(
                     failing_passing_variants_of_stms[stm]["num_of_failing"],
@@ -145,10 +140,10 @@ def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, tot
                     failing_passing_variants_of_stms[stm]["num_of_failing"],
                     failing_passing_variants_of_stms[stm]["num_of_passing"],
                     total_fails, total_passes)
-                # if(stm == "Base.ElevatorSystem.Person.42"  or stm == "Base.Actions.13"):
-                #     print("variant level")
-                #     print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
-                #           "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
+                if(stm == "Empty.ElevatorSystem.Environment.14"  or stm == "Base.Actions.13"):
+                    print("variant level")
+                    print(stm, "  ", failing_passing_variants_of_stms[stm]["num_of_failing"], "   ", failing_passing_variants_of_stms[stm]["num_of_passing"],
+                          "    ", total_fails, "      ", total_passes, "     ", failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE])
 
             elif spectrum_expression == JACCARD:
                 failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = jaccard_calculation(

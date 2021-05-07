@@ -10,6 +10,7 @@ from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
     ranking_multiple_bugs, VARCOP_SPACE, SPACE
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir, get_spc_log_file_path, \
     get_project_sub_dir_by_folder_name
+from ranking.VarBugManager import is_var_bug, is_var_bug_by_config
 from spc import SPCsManager
 from suspicious_statements_manager import SlicingManager
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, \
@@ -27,6 +28,7 @@ SBFL_EXAM_COL = 8
 FB_RANK_COL = 9
 FB_EXAM_COL = 10
 SBFL_SPACE_COL = 11
+IS_VAR_BUG_COL = 12
 
 
 def write_header_in_result_file(row, sheet):
@@ -42,16 +44,26 @@ def write_header_in_result_file(row, sheet):
     sheet.write(row, FB_RANK_COL, FB_RANK)
     sheet.write(row, FB_EXAM_COL, FB_EXAM)
     sheet.write(row, SBFL_SPACE_COL, SPACE)
+    sheet.write(row, IS_VAR_BUG_COL, "IS_VAR_BUG")
 
 
-def write_result_to_file(row, sheet, ranking_results, space):
+def write_result_to_file(row, sheet, ranking_results, space, is_var_bug):
 
     for stm in ranking_results[VARCOP_RANK].keys():
         sheet.write(row, VARCOP_BUGGY_STM_COL, stm)
-        sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm])
-        exam = (ranking_results[VARCOP_RANK][stm] / space[SBFL_RANK]) * 100
-        sheet.write(row, VARCOP_EXAM_COL, exam)
-        sheet.write(row, VARCOP_SPACE_COL, space[VARCOP_RANK])
+
+        if(is_var_bug):
+            sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm])
+            exam = (ranking_results[VARCOP_RANK][stm] / space[SBFL_RANK]) * 100
+            sheet.write(row, VARCOP_EXAM_COL, exam)
+            sheet.write(row, VARCOP_SPACE_COL, space[VARCOP_RANK])
+        else:
+            sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm])
+            exam = (ranking_results[VARCOP_DISABLE_BPC_RANK][stm] / space[SBFL_RANK]) * 100
+            sheet.write(row, VARCOP_EXAM_COL, exam)
+
+            sheet.write(row, VARCOP_SPACE_COL, space[SBFL_RANK])
+            sheet.write(row, IS_VAR_BUG_COL, 0)
 
         sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm])
         disabled_bpc_exam = (ranking_results[VARCOP_DISABLE_BPC_RANK][stm] / space[SBFL_RANK]) * 100
@@ -120,10 +132,10 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                 for mutated_project_name in mutated_projects:
                     num_of_bugs += 1
                     mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
-                    #spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
-
-                    #spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-                    #slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
+                    # spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+                    #
+                    # spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
+                    # slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
                     suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
                     buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
                     # print(buggy_statements)
@@ -131,9 +143,14 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                     row_temp = row
                     varcop_ranking_time = 0
+                    #is_a_var_bug = is_var_bug(mutated_project_dir, filtering_coverage_rate)
+                    is_a_var_bug = is_var_bug_by_config(mutated_project_dir)
+                    if(is_a_var_bug == 1):
+                        is_a_var_bug = is_var_bug(mutated_project_dir, filtering_coverage_rate)
+                    filtering_coverage_rate = 0.0
                     for sbfl_expression in range(0, len(spectrum_expressions)):
                         ranking_results, space, varcop_ranking_time = ranking_multiple_bugs(buggy_statements, mutated_project_dir,
-                                                                       suspicious_stms_list,
+                                                                   suspicious_stms_list,
                                                                        spectrum_expressions[sbfl_expression],
                                                                        aggregation_type,
                                                                        normalization_type, "", filtering_coverage_rate, alpha)
@@ -141,7 +158,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                                                                 filtering_coverage_rate, spectrum_expressions[sbfl_expression])
                         #
                         sheet[sbfl_expression].write(row_temp, BUG_ID_COL, mutated_project_name)
-                        row = write_result_to_file(row_temp, sheet[sbfl_expression], ranking_results, space)
+                        row = write_result_to_file(row_temp, sheet[sbfl_expression], ranking_results, space, is_a_var_bug)
                     #runtime[mutated_project_name] = [spc_runtime, slicing_runtime, varcop_ranking_time]
                 #write_runtime_to_file(system_result_dir, runtime, "multiple_bug_runtime.xlsx")
 
