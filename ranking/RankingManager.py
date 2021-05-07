@@ -120,8 +120,8 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
                                                                      variant_level_suspiciousness,
                                                                      spectrum_expression, aggregation_type,
                                                                      normalized_type, alpha)
-    print("varcop without isolation")
-    print(ranked_list_without_isolation)
+    # print("varcop without isolation")
+    # print(ranked_list_without_isolation)
     all_buggy_position[VARCOP_DISABLE_BPC_RANK] = locate_multiple_bugs(buggy_statements, suspicious_stms_list, ranked_list_without_isolation, ranked_list_without_isolation)
     space[VARCOP_DISABLE_BPC_RANK] = len(ranked_list_without_isolation)
     # rank with isolation
@@ -643,9 +643,9 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][AMPLE_SCORE] = ample_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-            if id in buggy or id == "Base.Actions.13":
-                print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
-                      "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][AMPLE_SCORE])
+            # if id in buggy or id == "Base.Actions.13":
+            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
+            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][AMPLE_SCORE])
         elif spectrum_expression == JACCARD:
             statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
