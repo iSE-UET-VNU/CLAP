@@ -35,22 +35,23 @@ def local_ranking_a_suspicious_list(mutated_project_dir, suspicious_stms_list, s
                                     spectrum_coverage_prefix):
     local_suspiciousness = {}
     for variant in suspicious_stms_list:
-        #print(variant)
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         statement_info = suspiciousness_calculation(variant_dir, suspicious_stms_list[variant], spectrum_expression,
                                                     spectrum_coverage_prefix)
+
         local_suspiciousness[variant] = spc_spectrum_ranking(statement_info, spectrum_expression)
     return local_suspiciousness
 
 
-def global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list,
+def global_ranking_a_suspicious_list(all_stms_of_the_system, all_stms_in_failing_variants, suspicious_stms_list,
                                      local_suspiciousness_of_all_the_system, variant_level_suspiciousness,
                                      spectrum_expression, aggregation_type, normalized_type, alpha = 0):
+
     if normalized_type == NORMALIZATION_ALPHA_BETA:
-        normalized_score_list = normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system,
+        normalized_score_list = normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all_stms_in_failing_variants,
                                                                  suspicious_stms_list)
     else:
-        normalized_score_list = normalize_local_score_none(local_suspiciousness_of_all_the_system, suspicious_stms_list)
+        normalized_score_list = normalize_local_score_none(local_suspiciousness_of_all_the_system, all_stms_in_failing_variants, suspicious_stms_list)
 
     if aggregation_type == AGGREGATION_ARITHMETIC_MEAN:
         ranked_list = global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_score_list, variant_level_suspiciousness,
@@ -97,8 +98,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
     all_stms_of_the_system = get_all_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate)
     all_buggy_position = {}
     space = {}
-    # rank without isolation
-    #print("without isolation")
+
     failing_variants = get_failing_variants(mutated_project_dir)
     list_of_stms = get_list_of_stm(all_stms_of_the_system)
     failing_passing_variants_of_stms, total_fails, total_passes = get_num_passing_failing_variants(mutated_project_dir,
@@ -114,33 +114,30 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
                                                                              all_suspicious_of_the_system,
                                                                              spectrum_expression,
                                                                              spectrum_coverage_prefix)
-    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system,
+    ranked_list_without_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, all_suspicious_of_the_system,
                                                                      all_suspicious_of_the_system,
                                                                      local_suspiciousness_of_all_the_system,
                                                                      variant_level_suspiciousness,
                                                                      spectrum_expression, aggregation_type,
                                                                      normalized_type, alpha)
-    # print("varcop without isolation")
-    # print(ranked_list_without_isolation)
+
     all_buggy_position[VARCOP_DISABLE_BPC_RANK] = locate_multiple_bugs(buggy_statements, suspicious_stms_list, ranked_list_without_isolation, ranked_list_without_isolation)
     space[VARCOP_DISABLE_BPC_RANK] = len(ranked_list_without_isolation)
-    # rank with isolation
-    print("with isolation")
-    ranked_list_with_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, suspicious_stms_list,
+
+    ranked_list_with_isolation = global_ranking_a_suspicious_list(all_stms_of_the_system, all_suspicious_of_the_system,
+                                                                  suspicious_stms_list,
                                                                   local_suspiciousness_of_all_the_system,
                                                                   variant_level_suspiciousness,
                                                                   spectrum_expression, aggregation_type,
                                                                   normalized_type, alpha)
-    # print("varcop with isolation")
-    # print(ranked_list_with_isolation)
+
     space[VARCOP_RANK] = len(ranked_list_with_isolation)
     all_buggy_position[VARCOP_RANK] = locate_multiple_bugs(buggy_statements, suspicious_stms_list,  ranked_list_with_isolation, ranked_list_without_isolation)
     varcop_ranking_time = time.time() - start_time
     # traditional SBFL
     ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression,
                                                                     spectrum_coverage_prefix, coverage_rate)
-    # print("traditional")
-    # print(ranked_list_traditional_spectrum)
+
     all_buggy_position[SBFL_RANK] = locate_multiple_bugs_traditional_spectrum(buggy_statements,
                                                                               ranked_list_traditional_spectrum)
     space[SBFL_RANK] = len(ranked_list_traditional_spectrum)
@@ -158,7 +155,7 @@ def sbfl_only_ranking_multiple_bugs(buggy_statements, mutated_project_dir, spect
     # traditional SBFL
     ranked_list_traditional_spectrum = rank_by_traditional_spectrum(mutated_project_dir, spectrum_expression,
                                                                     spectrum_coverage_prefix, coverage_rate)
-    # print(ranked_list_traditional_spectrum)
+
     all_buggy_position[SBFL_RANK] = locate_multiple_bugs_traditional_spectrum(buggy_statements,
                                                                               ranked_list_traditional_spectrum)
     space[SBFL_RANK] = len(ranked_list_traditional_spectrum)
@@ -189,59 +186,69 @@ def locate_multiple_bugs_traditional_spectrum(buggy_statements, ranked_list):
 def get_local_score(stm, ranked_list):
     for i in range(0, len(ranked_list)):
         if stm == ranked_list[i][0]:
-            return ranked_list[i][1]
-    return STM_NOT_FOUND
+            return ranked_list[i][1], ranked_list[i][2]
+    return STM_NOT_FOUND, 0
 
 def normalized_variant_level_score(suspiciousness_variant_level_list, alpha=0, beta=1):
     min_score = 1000000
     max_score = -1000000
     for stm in suspiciousness_variant_level_list:
-        if(suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] > max_score):
+        if(suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] > max_score
+                and suspiciousness_variant_level_list[stm][VARIANT_NUM_OF_FAILS] != 0):
             max_score = suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
+
         if (suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] < min_score):
             min_score = suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
+
     for stm in suspiciousness_variant_level_list:
         tmp = suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
         if min_score == max_score:
             suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = alpha
         else:
-            suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = (tmp - min_score) * ((beta - alpha) / (max_score - min_score)) + alpha
+            if(suspiciousness_variant_level_list[stm][VARIANT_NUM_OF_FAILS] == 0):
+                suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = alpha
+            else:
+                suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = (tmp - min_score) * ((beta - alpha) / (max_score - min_score)) + alpha
 
-    #print(suspiciousness_variant_level_list)
+
     return suspiciousness_variant_level_list
 
-def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, suspicious_stms_list, alpha=0, beta=1):
+def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all_statements_in_failing_variants, suspicious_stms_list, alpha=0, beta=1):
     all_suspicious_stm = get_list_of_stm(suspicious_stms_list)
 
     normalized_score_list = {}
-    for variant in suspicious_stms_list:
+    for variant in all_statements_in_failing_variants:
+
         normalized_score_list[variant] = {}
-        if (len(suspicious_stms_list[variant]) > 0):
+        if (len(all_statements_in_failing_variants[variant]) > 0):
             max = local_suspiciousness_of_all_the_system[variant][0][1]
             min = \
                 local_suspiciousness_of_all_the_system[variant][
                     len(local_suspiciousness_of_all_the_system[variant]) - 1][1]
+
             for stm in all_suspicious_stm:
-                local_score = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
+                local_score, num_of_failing_test = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
                 if local_score == STM_NOT_FOUND:
                     normalized_score = alpha
                 else:
                     if (min == max):
                         normalized_score = beta
                     else:
-                        normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
+                        if(num_of_failing_test == 0):
+                            normalized_score = alpha
+                        else:
+                            normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
-
-def normalize_local_score_none(local_suspiciousness_of_all_the_system, suspicious_stms_list):
+def normalize_local_score_none(local_suspiciousness_of_all_the_system, all_statements_in_failing_variants, suspicious_stms_list):
     all_suspicious_stm = get_list_of_stm(suspicious_stms_list)
     normalized_score_list = {}
-    for variant in suspicious_stms_list:
+    for variant in all_statements_in_failing_variants:
         normalized_score_list[variant] = {}
-        if (len(suspicious_stms_list[variant]) > 0):
+        if (len(all_statements_in_failing_variants[variant]) > 0):
             for stm in all_suspicious_stm:
-                local_score = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
+                local_score, num_of_fail_test = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
                 if local_score == STM_NOT_FOUND:
                     normalized_score = 0
                 else:
@@ -378,6 +385,7 @@ def global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_
 
     for stm in all_stms_score_list:
         all_stms_score_list[stm][score_type] = all_stms_score_list[stm][score_type]/all_stms_score_list[stm][NUM_OF_FAILING_VARIANTS]
+
     return varcop_ranking(all_stms_score_list, variant_level_suspiciousness, spectrum_expression, alpha)
     #return varcop_ranking_global_first(all_stms_score_list, variant_level_suspiciousness, spectrum_expression)
 
@@ -457,7 +465,7 @@ def get_information_for_spectrum_ranking(mutated_project_dir, spectrum_coverage_
     stm_info_for_spectrum = {}
     variants_list = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variants_list:
-        #print(variant_dir)
+
         stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
         spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
@@ -601,9 +609,6 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                                                                          statement_infor[id][PASSED_TEST_COUNT],
                                                                          total_failed_tests,
                                                                          total_passed_tests)
-            # if(id in buggy or id == "DailyLimit.Account.19"):
-            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
-            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][TARANTULA_SCORE])
 
         elif spectrum_expression == OCHIAI:
             statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -613,9 +618,6 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][OP2_SCORE]= op2_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                              statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
                                                              total_passed_tests)
-            # if(id in buggy or id == "Base.ElevatorSystem.Elevator.57"):
-            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
-            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][OP2_SCORE])
 
         elif spectrum_expression == BARINEL:
             statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -640,12 +642,10 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                 statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
                 total_failed_tests, total_passed_tests)
         elif spectrum_expression == AMPLE:
-            statement_infor[id][AMPLE_SCORE] = ample_calculation(statement_infor[id][FAILED_TEST_COUNT],
+            statement_infor[id][AMPLE_SCORE] = ample2_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                  statement_infor[id][PASSED_TEST_COUNT],
                                                                  total_failed_tests, total_passed_tests)
-            # if id in buggy or id == "Base.Actions.13":
-            #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT], "     ", statement_infor[id][PASSED_TEST_COUNT],
-            #           "      ", total_failed_tests, "      ", total_passed_tests, "      ", statement_infor[id][AMPLE_SCORE])
+
         elif spectrum_expression == JACCARD:
             statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
@@ -663,6 +663,7 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][ROGOT1_SCORE] = rogot1_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                    statement_infor[id][PASSED_TEST_COUNT],
                                                                    total_failed_tests, total_passed_tests)
+
         elif spectrum_expression == GEOMETRIC_MEAN:
 
             statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(
@@ -694,6 +695,7 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
             statement_infor[id][DICE_SCORE] = dice_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                statement_infor[id][PASSED_TEST_COUNT],
                                                                total_failed_tests, total_passed_tests)
+
         elif spectrum_expression == HUMANN:
 
             statement_infor[id][HUMANN_SCORE] = humman_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -745,15 +747,15 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                                                                    statement_infor[id][PASSED_TEST_COUNT],
                                                                    total_failed_tests, total_passed_tests)
         elif spectrum_expression == ANDERBERG:
-
             statement_infor[id][ANDERBERG_SCORE] = anderberg_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                          statement_infor[id][PASSED_TEST_COUNT],
                                                                          total_failed_tests, total_passed_tests)
-        elif spectrum_expression == GOODMAN:
 
+        elif spectrum_expression == GOODMAN:
             statement_infor[id][GOODMAN_SCORE] = goodman_calculation(statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],
                                                                      total_failed_tests, total_passed_tests)
+
         elif spectrum_expression == HARMONIC_MEAN:
 
             statement_infor[id][HARMONIC_MEAN_SCORE] = harmonic_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
@@ -778,7 +780,7 @@ def spectrum_ranking(statements_infor, spectrum_expression):
 
     score_type = spectrum_expression + "_score"
     for (key, value) in statements_infor.items():
-        spectrum_ranked_list.append((key, statements_infor[key][score_type]))
+        spectrum_ranked_list.append((key, statements_infor[key][score_type], statements_infor[key][FAILED_TEST_COUNT]))
 
     # 0 is the position of key, 1 is the position of score
     return descending_sort(data=spectrum_ranked_list, sorted_element=1)
@@ -791,10 +793,6 @@ def varcop_ranking(statements_infor, variant_level_suspiciousness, spectrum_expr
     score_type = spectrum_expression + "_score"
     for (key, value) in statements_infor.items():
         score_tmp = alpha*statements_infor[key][score_type]  + (1-alpha)*variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
-        # if(statements_infor[key][NUM_OF_FAILING_VARIANTS] != 0):
-        #     score_tmp = alpha*statements_infor[key][score_type]/(statements_infor[key][NUM_OF_FAILING_VARIANTS]) + (1-alpha)*variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
-        # else:
-        #     score_tmp = (1-alpha)*variant_level_suspiciousness[key][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
         ranked_list.append((key, score_tmp, statements_infor[key][NUM_OF_PASSING_VARIANTS]))
     return descending_sort(data=ranked_list, sorted_element=1)
 
@@ -804,8 +802,8 @@ def spc_spectrum_ranking(statements_infor, spectrum_expression):
     score_type = spectrum_expression + "_score"
 
     for (key, value) in statements_infor.items():
-        if statements_infor[key][SUSPICIOUS]:
-            spc_spectrum_ranked_list.append((key, statements_infor[key][score_type]))
+        #if statements_infor[key][SUSPICIOUS]:
+        spc_spectrum_ranked_list.append((key, statements_infor[key][score_type], statements_infor[key][FAILED_TEST_COUNT]))
 
     # 0 is the position of key, 1 is the position of score
     return descending_sort(data=spc_spectrum_ranked_list, sorted_element=1)

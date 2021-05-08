@@ -130,6 +130,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                 num_of_bugs = 0
                 runtime = {}
                 for mutated_project_name in mutated_projects:
+                    print(mutated_project_name)
                     num_of_bugs += 1
                     mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
                     # spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
@@ -138,8 +139,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                     # slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
                     suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
                     buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
-                    # print(buggy_statements)
-                    #
+
 
                     row_temp = row
                     varcop_ranking_time = 0

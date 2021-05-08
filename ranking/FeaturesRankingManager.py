@@ -116,7 +116,7 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
                 len(features_info[id][VARIANTS_FAILED]), len(features_info[id][VARIANTS_PASSED]),
                 total_fails, total_passes)
         elif spectrum_expression == AMPLE:
-            features_info[id][AMPLE_SCORE] = ample_calculation(len(features_info[id][VARIANTS_FAILED]),
+            features_info[id][AMPLE_SCORE] = ample2_calculation(len(features_info[id][VARIANTS_FAILED]),
                                                                len(features_info[id][VARIANTS_PASSED]),
                                                                total_fails, total_passes)
         elif spectrum_expression == JACCARD:

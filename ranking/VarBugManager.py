@@ -21,9 +21,7 @@ def is_var_bug(mutated_project_dir, filter_coverage, spectrum_coverage_prefix=""
             num_of_failing_variants += 1
         elif stm_coverage >= filter_coverage:
             num_of_passing_variants += 1
-        # if not os.path.isfile(failed_file):
-        #     print(variant)
-        #     print(stm_coverage)
+
 
     if (num_of_failing_variants >= 1 and num_of_passing_variants >= 1):
         return 1
@@ -31,7 +29,7 @@ def is_var_bug(mutated_project_dir, filter_coverage, spectrum_coverage_prefix=""
 
 def is_var_bug_by_config(mutated_project_dir):
     config_report_path = get_model_configs_report_path(mutated_project_dir)
-    print(config_report_path)
+
     with open(config_report_path) as f:
         reader = csv.reader(f, delimiter=',')
         header = next(reader)
@@ -40,7 +38,7 @@ def is_var_bug_by_config(mutated_project_dir):
             if(row[-1] == "__FAILED__"):
                 count_enabled = 0
                 for f in row[1:-1]:
-                    print(f)
+
                     if(f.strip() == "T"):
                         count_enabled += 1
                 if count_enabled == 1:
