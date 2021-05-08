@@ -305,8 +305,11 @@ def rogot2_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp2 = total_failed_tests
     temp3 = total_passes_tests
     temp4 = (total_passes_tests - passes) + (total_failed_tests - fails)
-    if temp1 == 0 or temp2 == 0 or temp3 == 0 or temp4 == 0:
+
+    if temp1 == 0 or temp2 == 0:
         return 0
+    if temp3 == 0 or temp4 == 0:
+        return (1/4)*((fails/temp1) + (fails/temp2))
     else:
         return (1/4)*((fails/temp1) + (fails/temp2)+((total_passes_tests-passes)/temp3) + ((total_passes_tests-passes)/temp4))
 
