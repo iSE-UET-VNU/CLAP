@@ -4,6 +4,7 @@ import time
 import xml.etree.ElementTree as ET
 from statistics import median, mode, stdev, mean
 from scipy import stats
+from scipy.stats.mstats import gmean
 import numpy
 
 from FileManager import join_path, \
@@ -193,8 +194,7 @@ def normalized_variant_level_score(suspiciousness_variant_level_list, alpha=0, b
     min_score = 1000000
     max_score = -1000000
     for stm in suspiciousness_variant_level_list:
-        if(suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] > max_score
-                and suspiciousness_variant_level_list[stm][VARIANT_NUM_OF_FAILS] != 0):
+        if(suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] > max_score):
             max_score = suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE]
 
         if (suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] < min_score):
@@ -205,12 +205,7 @@ def normalized_variant_level_score(suspiciousness_variant_level_list, alpha=0, b
         if min_score == max_score:
             suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = alpha
         else:
-            if(suspiciousness_variant_level_list[stm][VARIANT_NUM_OF_FAILS] == 0):
-                suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = alpha
-            else:
-                suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = (tmp - min_score) * ((beta - alpha) / (max_score - min_score)) + alpha
-
-
+            suspiciousness_variant_level_list[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = (tmp - min_score) * ((beta - alpha) / (max_score - min_score)) + alpha
     return suspiciousness_variant_level_list
 
 def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all_statements_in_failing_variants, suspicious_stms_list, alpha=0, beta=1):
@@ -234,10 +229,7 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all
                     if (min == max):
                         normalized_score = beta
                     else:
-                        if(num_of_failing_test == 0):
-                            normalized_score = alpha
-                        else:
-                            normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
+                        normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
@@ -387,22 +379,26 @@ def global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_
         all_stms_score_list[stm][score_type] = all_stms_score_list[stm][score_type]/all_stms_score_list[stm][NUM_OF_FAILING_VARIANTS]
 
     return varcop_ranking(all_stms_score_list, variant_level_suspiciousness, spectrum_expression, alpha)
-    #return varcop_ranking_global_first(all_stms_score_list, variant_level_suspiciousness, spectrum_expression)
 
 
 def global_score_aggregation_geometric_mean(all_stms_of_the_system, normalized_score_list, variant_level_suspiciousness, spectrum_expression):
+    list_of_scores = {}
     score_type = spectrum_expression + "_score"
     all_stms_score_list = {}
     for variant in normalized_score_list:
         for stm in normalized_score_list[variant]:
-            if stm in all_stms_score_list:
-                all_stms_score_list[stm][score_type] *= normalized_score_list[variant][stm]
-            if stm not in all_stms_score_list:
-                all_stms_score_list[stm] = {}
-                all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
+            if stm in list_of_scores:
+                list_of_scores[stm].append(normalized_score_list[variant][stm])
+            if stm not in list_of_scores:
+                list_of_scores[stm] = []
+                list_of_scores[stm].append(normalized_score_list[variant][stm])
+
+    for stm in list_of_scores.keys():
+        all_stms_score_list[stm] = {}
+        all_stms_score_list[stm][score_type] = gmean(list_of_scores[stm])
 
     all_stms_score_list = count_num_of_passing_products_for_a_stm(all_stms_score_list, all_stms_of_the_system,
-                                                                  normalized_score_list)
+                                                              normalized_score_list)
     return varcop_ranking(all_stms_score_list, variant_level_suspiciousness, spectrum_expression)
 
 
