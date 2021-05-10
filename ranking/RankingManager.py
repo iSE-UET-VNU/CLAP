@@ -108,7 +108,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, suspicious_stms
 
     variant_level_suspiciousness = calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, total_fails,
                                                                           total_passes, spectrum_expression)
-    variant_level_suspiciousness = normalized_score(variant_level_suspiciousness, VARIANT_LEVEL_SUSPICIOUSNESS_SCORE)
+    variant_level_suspiciousness = normalized_score(variant_level_suspiciousness, VARIANT_LEVEL_SUSPICIOUSNESS_SCORE, VARIANT_NUM_OF_FAILS)
 
     all_suspicious_of_the_system = get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants)
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir,
@@ -190,11 +190,11 @@ def get_local_score(stm, ranked_list):
             return ranked_list[i][1], ranked_list[i][2]
     return STM_NOT_FOUND, 0
 
-def normalized_score(scores_list, normalized_value, alpha=0, beta=1):
+def normalized_score(scores_list, normalized_value, failings, alpha=0, beta=1):
     min_score = 1000000
     max_score = -1000000
     for stm in scores_list:
-        if(scores_list[stm][normalized_value] > max_score):
+        if(scores_list[stm][normalized_value] > max_score and scores_list[stm][failings] != 0):
             max_score = scores_list[stm][normalized_value]
 
         if (scores_list[stm][normalized_value] < min_score):
@@ -205,7 +205,10 @@ def normalized_score(scores_list, normalized_value, alpha=0, beta=1):
         if min_score == max_score:
             scores_list[stm][normalized_value] = alpha
         else:
-            scores_list[stm][normalized_value] = (tmp - min_score) * ((beta - alpha) / (max_score - min_score)) + alpha
+            if(scores_list[stm][failings] == 0):
+                scores_list[stm][normalized_value] = alpha
+            else:
+                scores_list[stm][normalized_value] = (tmp - min_score) * ((beta - alpha) / (max_score - min_score)) + alpha
     return scores_list
 
 def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all_statements_in_failing_variants, suspicious_stms_list, alpha=0, beta=1):
@@ -229,7 +232,10 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all
                     if (min == max):
                         normalized_score = beta
                     else:
-                        normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
+                        if(num_of_failing_test == 0):
+                            normalized_score = alpha
+                        else:
+                            normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
                 normalized_score_list[variant][stm] = normalized_score
     return normalized_score_list
 
@@ -378,7 +384,7 @@ def global_score_aggregation_arithmetic_mean(all_stms_of_the_system, normalized_
     for stm in all_stms_score_list:
         all_stms_score_list[stm][score_type] = all_stms_score_list[stm][score_type]/all_stms_score_list[stm][NUM_OF_FAILING_VARIANTS]
 
-    all_stms_score_list = normalized_score(all_stms_score_list, score_type)
+    all_stms_score_list = normalized_score(all_stms_score_list, score_type, NUM_OF_FAILING_VARIANTS)
     return varcop_ranking(all_stms_score_list, variant_level_suspiciousness, spectrum_expression, alpha)
 
 
