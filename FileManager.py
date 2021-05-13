@@ -134,7 +134,6 @@ def get_spc_log_file_path(project_dir, filtering_coverage_rate):
 
 def get_slicing_log_file_path(project_dir, postfix):
     try:
-        tmp = int(postfix)
         return join_path(project_dir, SLICING_LOG_FILE_NAME.format(int(postfix * 100)))
     except:
         return join_path(project_dir, SLICING_LOG_FILE_NAME.format(postfix))

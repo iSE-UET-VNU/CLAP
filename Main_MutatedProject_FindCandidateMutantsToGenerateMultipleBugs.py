@@ -21,7 +21,7 @@ if __name__ == "__main__":
     for mutated_project_dir in mutated_project_dirs:
         mutated_project_name = get_file_name(mutated_project_dir)
         mutation_operators = get_mutation_operators(mutated_project_name, mutated_project_dir)
-        current_mutation_operator_combinations.add(tuple(mutation_operators))
+        current_mutation_operator_combinations.add(tuple(sorted(mutation_operators)))
         for o in mutation_operators:
             file_id = o.rsplit(".", 1)[0]
             mutation_operator_with_file_mapping[file_id].add(o)
@@ -37,6 +37,7 @@ if __name__ == "__main__":
     # recheck that fixing a random bug always results in a valid existing combinations (3 bugs -> 2 bugs)
     for bug_combination in target_number_of_bugs_combinations[:]:
         for c in combinations(bug_combination, current_number_of_bugs):
+            c = tuple(sorted(list(c)))
             if c not in current_mutation_operator_combinations:
                 target_number_of_bugs_combinations.remove(bug_combination)
                 break

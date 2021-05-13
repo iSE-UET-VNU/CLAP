@@ -12,10 +12,11 @@ PLUGIN_PATH = get_plugin_path(PLUGIN_NAME)
 
 
 def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
-
     start_time = time.time()
+
     failed_coverage_file_name = get_spectrum_failed_coverage_file_name_with_version(version=coverage_version)
-    if(coverage_version != ""):
+
+    if (coverage_version != ""):
         post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
     else:
         post_fix = filtering_coverage_rate
@@ -28,7 +29,8 @@ def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
     output_log = execute_shell_command(
         f'java -Xmx256m -Dspc_path={spc_file_path} -Dslicing_output_path={slicing_output_path} -Dcoverage_file_name={failed_coverage_file_name} -jar {PLUGIN_PATH} ',
         extra_args=[], log_to_file=True)
-    logger.info(f"Wrote suspicious_statements_manager output to file [{get_file_name_with_parent(slicing_output_path)}]")
+    logger.info(
+        f"Wrote suspicious_statements_manager output to file [{get_file_name_with_parent(slicing_output_path)}]")
     logging.info("[Runtime] suspicious_statements_manager %s: %s", slicing_output_path, time.time() - start_time)
     slicing_runtime = time.time() - start_time
     return slicing_runtime
