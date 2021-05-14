@@ -240,7 +240,7 @@ def get_spectrum_coverage_file_path_with_version(test_coverage_dir, original_cov
 
 
 def get_spectrum_coverage_file_name_with_version(original_coverage_file_name, version=""):
-    if version:
+    if version != "":
         version = version + "__"
     return version + original_coverage_file_name
 
