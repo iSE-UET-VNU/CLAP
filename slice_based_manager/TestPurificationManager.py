@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup, NavigableString
 
 from FileManager import get_junit_report_path, SOURCE_CODE_EXTENSION, get_test_dir, join_path, \
     get_file_name_without_ext, copy_dir, get_src_dir, get_temp_src_dir, get_outer_dir, \
-    TEST_FOLDER_NAME, TEMP_SRC_FOLDER_NAME, get_purified_test_suites_report_path, get_file_name
+    TEST_FOLDER_NAME, TEMP_SRC_FOLDER_NAME, get_purified_test_suites_report_path, get_file_name, find_file_by_wildcard
 from Helpers import get_logger
 
 logger = get_logger(__name__)
@@ -155,8 +155,10 @@ def purify_test_case(failed_test_info):
         all_test_source_code_lines.pop(failed_assertion_line_number - 2)
         failed_assertion_line_number = failed_assertion_line_number - 1
     elif 'verifyException("' in all_test_source_code_lines[failed_assertion_line_number - 1]:
-        raise Exception(
-            f"Found [verifyException()] statement, cannot locate target statement [{test_file_path}][{test_case_name}]")
+        failed_assertion_line_number = failed_assertion_line_number - 7
+        all_test_source_code_lines[failed_assertion_line_number - 2] = all_test_source_code_lines[
+            failed_assertion_line_number - 1]
+        failed_assertion_line_number = failed_assertion_line_number - 1
 
     related_source_code_lines = []
     for line in all_test_source_code_lines[failed_assertion_line_number - 1::-1]:
@@ -199,7 +201,8 @@ def get_failed_test_info_from_junit_report(failed_variant_dir):
 
             test_case_name = td_children[0].text.strip()
             test_case_stack_trace_elm = td_children[2].find("code")
-            for code_elm in test_case_stack_trace_elm.children:
+            failed_test_info = None
+            for code_elm in list(test_case_stack_trace_elm.children)[5:]:
                 if not isinstance(code_elm, NavigableString):
                     continue
                 trace_info = str(code_elm)
@@ -209,6 +212,22 @@ def get_failed_test_info_from_junit_report(failed_variant_dir):
                                                     test_file_name)
                     failed_assertion_line_number = int(
                         re.search(f"{SOURCE_CODE_EXTENSION}:(\d+)\)", trace_info).group(1))
-                    failed_test_info_list.append((test_case_file_path, test_case_name, failed_assertion_line_number))
+                    failed_test_info = (test_case_file_path, test_case_name, failed_assertion_line_number)
                     break
+
+            if not failed_test_info:
+                # "java.lang.StackOverflowError" does not show detail source test file, so all the test is taken
+                test_case_file_path = find_file_by_wildcard(test_dir, "**/" + test_file_name, recursive=True)
+                test_case_method_signature = TEST_CASE_METHOD_SIGNATURE_TEMPLATE.format(test_case_name=test_case_name)
+                source_code_lines = open(test_case_file_path).readlines()
+                indentation_count = -1
+                for index, line in enumerate(source_code_lines):
+                    if test_case_method_signature in line:
+                        indentation_count = len(line) - len(line.lstrip())
+                    elif indentation_count >= 0 and line.startswith(" " * indentation_count + "}"):
+                        failed_assertion_line_number = index
+                        break
+                failed_test_info = (test_case_file_path, test_case_name, failed_assertion_line_number)
+
+            failed_test_info_list.append(failed_test_info)
     return failed_test_info_list

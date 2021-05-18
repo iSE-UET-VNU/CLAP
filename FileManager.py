@@ -291,8 +291,8 @@ def find_all_files_by_wildcard(base_dir, file_name, recursive=False):
     return glob.glob(join_path(base_dir, file_name), recursive=recursive)
 
 
-def find_file_by_wildcard(base_dir, file_name):
-    related_files = find_all_files_by_wildcard(base_dir, file_name)
+def find_file_by_wildcard(base_dir, file_name, recursive=False):
+    related_files = find_all_files_by_wildcard(base_dir, file_name, recursive)
     if len(related_files):
         return related_files[0]
     return None
