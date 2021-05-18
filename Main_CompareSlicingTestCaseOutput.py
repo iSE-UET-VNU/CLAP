@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from FileManager import list_dir, get_slicing_test_case_output_file_path, \
     get_slicing_log_file_path, get_variants_dir, join_path, get_test_coverage_dir, \
     get_failed_spectrum_coverage_file_path_with_version, get_file_name
+from suspicious_statements_manager.SuspiciousStatementManager import get_single_buggy_statement
 
 
 def get_all_failed_test_case_executed_statements(mutated_project_dir, variant_name):
@@ -29,6 +30,8 @@ if __name__ == "__main__":
     mutated_project_dirs = list_dir(mutants_dir, full_path=True)
 
     for mutated_project_dir in mutated_project_dirs:
+        mutated_project_name = get_file_name(mutated_project_dir)
+        buggy_statement = get_single_buggy_statement(mutated_project_name, mutated_project_dir)
         slicing_pts_output_file_path = get_slicing_test_case_output_file_path(mutated_project_dir)
         slicing_pts_output_dict = json.load(open(slicing_pts_output_file_path))
 
@@ -44,7 +47,10 @@ if __name__ == "__main__":
                 get_all_failed_test_case_executed_statements(mutated_project_dir,
                                                              variant_name))
             pts_sliced_statements.update(slicing_pts_output_dict[variant_name])
-            spc_sliced_statements.update(slicing_spc_output_dict[variant_name])
+            spc_sliced_statements.update(list(slicing_spc_output_dict[variant_name].keys()))
 
-        print(get_file_name(mutated_project_dir), len(failed_test_cases_executed_statements), len(pts_sliced_statements),
-              len(spc_sliced_statements))
+        print(mutants_dir)
+        print(mutated_project_name,
+              len(failed_test_cases_executed_statements),
+              ("*" if buggy_statement not in pts_sliced_statements else "") + str(len(pts_sliced_statements)),
+              ("*" if buggy_statement not in pts_sliced_statements else "") + str(len(spc_sliced_statements)))
