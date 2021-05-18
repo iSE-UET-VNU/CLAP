@@ -135,7 +135,7 @@ def ranking_with_coverage_rate(result_folder, base_dir, system, project_name, fi
                 spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                 spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
                 # print(spc_log_file_path)
-                slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
+                slicing_runtime = SlicingManager.do_slice_spc(spc_log_file_path, filtering_coverage_rate, spectrum_coverage_prefix)
                 if spectrum_coverage_prefix != "":
                     post_fix = str(filtering_coverage_rate) + "_" + spectrum_coverage_prefix + "_"
                 else:

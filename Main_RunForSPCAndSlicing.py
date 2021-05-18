@@ -16,4 +16,4 @@ if __name__ == "__main__":
         for version in coverage_versions:
             # SPCsManager.find_SPCs(mutated_project_dir, coverage)
             spc_log_file_path = get_spc_log_file_path(mutated_project_dir, coverage)
-            slicing_runtime = SlicingManager.do_slice(spc_log_file_path, coverage, version)
+            slicing_runtime = SlicingManager.do_slice_spc(spc_log_file_path, coverage, version)

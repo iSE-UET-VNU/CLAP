@@ -113,7 +113,7 @@ def mutiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, spe
                 spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
 
                 spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-                slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
+                slicing_runtime = SlicingManager.do_slice_spc(spc_log_file_path, filtering_coverage_rate, "")
                 suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
                 # print(buggy_statements)

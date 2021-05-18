@@ -19,7 +19,7 @@ def generate_purified_test_suite(mutated_project_dir, failed_variant_dirs):
         assertion_line_container = generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list)
         purified_test_suites_report_dict[temp_src_dir] = assertion_line_container
 
-    write_purified_test_suites_report_dict(mutated_project_dir, purified_test_suites_report_dict)
+    return write_purified_test_suites_report_dict(mutated_project_dir, purified_test_suites_report_dict)
 
 
 def write_purified_test_suites_report_dict(mutated_project_dir, test_suites_report_dict):
@@ -28,6 +28,7 @@ def write_purified_test_suites_report_dict(mutated_project_dir, test_suites_repo
         for temp_src_dir, assertion_line_numbers in test_suites_report_dict.items():
             output_file.write("{};{}\n".format(",".join(assertion_line_numbers), temp_src_dir))
     logger.info(f"Done to write purified test suites to [{get_file_name(mutated_project_dir)}]")
+    return output_path
 
 
 def init_temp_src(failed_variant_dir):
@@ -91,7 +92,12 @@ PREDEFINE_SOURCE_CODE = """
 
     public static void assertNull(String message, Object object) { }
     
+    public static void assertSame(Object expected, Object actual) {}
+    
+    public static void assertNotSame(Object expected, Object actual) {}
+
     public static class Random{ public static void setNextRandom(int number) { }}
+    
 """
 
 PURIFIED_TEST_SUITE_SOURCE_CODE_TEMPLATE = f"""
@@ -160,6 +166,7 @@ def purify_test_case(failed_test_info):
             failed_assertion_line_number - 1]
         failed_assertion_line_number = failed_assertion_line_number - 1
 
+    # build complete test case
     related_source_code_lines = []
     for line in all_test_source_code_lines[failed_assertion_line_number - 1::-1]:
         related_source_code_lines.append(line)
@@ -225,7 +232,10 @@ def get_failed_test_info_from_junit_report(failed_variant_dir):
                     if test_case_method_signature in line:
                         indentation_count = len(line) - len(line.lstrip())
                     elif indentation_count >= 0 and line.startswith(" " * indentation_count + "}"):
-                        failed_assertion_line_number = index
+                        if 'verifyException("' in source_code_lines[index - 2]:
+                            failed_assertion_line_number = index - 8
+                        else:
+                            failed_assertion_line_number = index
                         break
                 failed_test_info = (test_case_file_path, test_case_name, failed_assertion_line_number)
 
