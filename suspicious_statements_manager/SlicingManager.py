@@ -52,7 +52,8 @@ def do_slice_pts(pts_file_path):
     output_log = execute_shell_command(
         f'java -Xmx256m -Dpts_path={pts_file_path} -Dslicing_output_path={output_path} -Dcoverage_file_name={failed_coverage_file_name} -jar {TEST_CASE_SLICING_PLUGIN_PATH} ',
         extra_args=[], log_to_file=True)
-    print(output_log)
+    if output_log.strip() != "":
+        raise Exception(f"Failed to slice test cases on {pts_file_path}")
     logger.info(
         f"Wrote SLICE-BASED] slicing on test cases output to file [{get_file_name_with_parent(output_path)}]")
     return output_path
