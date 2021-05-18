@@ -28,6 +28,7 @@ if __name__ == "__main__":
     # ------ END CONFIG ------
 
     mutated_project_dirs = list_dir(mutants_dir, full_path=True)
+    print(mutants_dir + "\n")
 
     for mutated_project_dir in mutated_project_dirs:
         mutated_project_name = get_file_name(mutated_project_dir)
@@ -49,8 +50,11 @@ if __name__ == "__main__":
             pts_sliced_statements.update(slicing_pts_output_dict[variant_name])
             spc_sliced_statements.update(list(slicing_spc_output_dict[variant_name].keys()))
 
-        print(mutants_dir)
+        intersect_statements = pts_sliced_statements & spc_sliced_statements
+
         print(mutated_project_name,
               len(failed_test_cases_executed_statements),
               ("*" if buggy_statement not in pts_sliced_statements else "") + str(len(pts_sliced_statements)),
-              ("*" if buggy_statement not in pts_sliced_statements else "") + str(len(spc_sliced_statements)))
+              ("*" if buggy_statement not in spc_sliced_statements else "") + str(len(spc_sliced_statements)),
+              ("*" if buggy_statement not in intersect_statements else "") + str(len(intersect_statements)),
+              sep="\t")
