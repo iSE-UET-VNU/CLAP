@@ -199,7 +199,6 @@ def get_failed_test_info_from_junit_report(failed_variant_dir):
 
             test_case_name = td_children[0].text.strip()
             test_case_stack_trace_elm = td_children[2].find("code")
-            failed_assertion_line_number = -1
             for code_elm in test_case_stack_trace_elm.children:
                 if not isinstance(code_elm, NavigableString):
                     continue
@@ -210,6 +209,6 @@ def get_failed_test_info_from_junit_report(failed_variant_dir):
                                                     test_file_name)
                     failed_assertion_line_number = int(
                         re.search(f"{SOURCE_CODE_EXTENSION}:(\d+)\)", trace_info).group(1))
+                    failed_test_info_list.append((test_case_file_path, test_case_name, failed_assertion_line_number))
                     break
-            failed_test_info_list.append((test_case_file_path, test_case_name, failed_assertion_line_number))
     return failed_test_info_list
