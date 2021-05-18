@@ -135,10 +135,13 @@ def run_junit_test_cases_on_project(project_dir, junit_mode=JunitMode.FAST, cust
         raise Exception("Invalid junit mode")
 
 
-def run_batch_junit_test_cases_on_project(project_dir, custom_ant=None):
-    variants_dir = get_variants_dir(project_dir)
+def run_batch_junit_test_cases_on_project(project_dir, custom_ant=None, custom_variant_dirs=None):
+    if not custom_variant_dirs:
+        variants_dir = get_variants_dir(project_dir)
+        custom_variant_dirs = list_dir(variants_dir, full_path=True)
     lib_paths = get_dependency_lib_dirs(project_dir)
-    for variant_dir in list_dir(variants_dir, full_path=True):
+
+    for variant_dir in custom_variant_dirs:
         are_all_tests_passed = run_batch_junit_test_cases(variant_dir=variant_dir, lib_paths=lib_paths,
                                                           custom_ant=custom_ant)
         if are_all_tests_passed is True:
@@ -193,3 +196,19 @@ def write_test_output_to_configs_report(project_dir, junit_mode=JunitMode.FAST):
         writer.writerows(rows)
     if JunitMode.FULL_COVERAGE:
         move_file(configs_report_file_path, configs_report_file_path + ".done")
+
+
+def get_failed_variant_dirs_from_config_report(mutated_project_dir):
+    configs_report_file_path = get_model_configs_report_path(mutated_project_dir)
+    variants_dir = get_variants_dir(mutated_project_dir)
+    variant_dir_dict = {get_file_name(vd): vd for vd in list_dir(variants_dir, full_path=True)}
+    failed_variant_dirs = []
+    with open(configs_report_file_path, "r") as report_csv:
+        reader = csv.reader(report_csv)
+        next(reader)
+        for i, row in enumerate(reader):
+            test_passed = row[-1] == "__PASSED__"
+            current_variant_name = row[0]
+            if not test_passed:
+                failed_variant_dirs.append(variant_dir_dict.get(current_variant_name))
+    return failed_variant_dirs

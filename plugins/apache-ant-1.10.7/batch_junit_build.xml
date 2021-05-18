@@ -24,13 +24,14 @@
     </path>
     <target name="compile">
         <mkdir dir="${build.classes}"/>
-        <javac srcdir="${src}" destdir="${build.classes}" classpathref="build.classpath" includeantruntime="false"/>
+        <javac debug="true" debuglevel="lines,source" srcdir="${src}" destdir="${build.classes}"
+               classpathref="build.classpath" includeantruntime="false"/>
         <copy todir="${build.classes}">
             <fileset dir="${src}" excludes="**/*.java"/>
         </copy>
         <mkdir dir="${build.testclasses}"/>
-        <javac srcdir="${test}" destdir="${build.testclasses}" classpathref="testbuild.classpath"
-               includeantruntime="false"/>
+        <javac debug="true" debuglevel="lines,source" srcdir="${test}" destdir="${build.testclasses}"
+               classpathref="testbuild.classpath" includeantruntime="false"/>
     </target>
 
     <target name="batchtest">
@@ -43,9 +44,20 @@
                 </fileset>
             </batchtest>
         </junit>
+        <junitreport>
+            <fileset dir="${build.testclasses}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${build.testclasses}"/>
+        </junitreport>
     </target>
 
     <target name="clean">
+        <delete>
+            <fileset dir="${src}/..">
+                <include name="batch.test.*.flag"/>
+            </fileset>
+        </delete>
         <delete dir="${build.classes}"/>
         <delete dir="${build.testclasses}"/>
     </target>

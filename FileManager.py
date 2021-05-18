@@ -1,14 +1,16 @@
 import glob
 import os
+import pathlib
 import re
 import shutil
 from pathlib import Path
 
 from Helpers import get_logger
 
-PLUGIN_DIR = os.path.abspath("plugins")
-LOG_DIR = os.path.abspath("logs")
-PROJECT_DIR = os.path.abspath("projects")
+_BASE_DIR = pathlib.Path(__file__).parent.absolute()
+PLUGIN_DIR = os.path.join(_BASE_DIR, "plugins")
+LOG_DIR = os.path.join(_BASE_DIR, "logs")
+PROJECT_DIR = os.path.join(_BASE_DIR, "projects")
 
 MODE_FILE_NAME = "model.m"
 FEATURE_ORDER_FILE_NAME = "features.order"
@@ -18,17 +20,22 @@ CONFIGS_REPORT_FILE_NAME = "config.report.csv"
 CONFIGS_REPORT_FILE_NAME_BACKUP = "config.report.csv.done"
 SPC_LOG_FILE_NAME = "spc_{}.log"
 SLICING_LOG_FILE_NAME = "slicing_{}.log"
+PURIFIED_TEST_SUITES_REPORT = "pts.report.log"
 PROJECT_LOCK_FILE_NAME = "project.lock"
 
 VARIANT_FOLDER_NAME = "variants"
 SRC_FOLDER_NAME = "src"
+TEMP_SRC_FOLDER_NAME = "temp_src"
 TEST_FOLDER_NAME = "test"
 COMPILED_CLASSES_FOLDER_NAME = "build"
 COMPILED_SOURCE_CLASSES_FOLDER_NAME = "main"
 COMPILED_SOURCE_CLASSES_TEMP_FOLDER_NAME = "main.temp"
 COMPILED_TEST_CLASSES_FOLDER_NAME = "test"
 COVERAGE_FOLDER_NAME = "coverage"
-TEST_CASES_FOLDER_NAME = "test"
+
+JUNIT_TEST_REPORT_FILE_NAME = "junit-noframes.html"
+SOURCE_CODE_EXTENSION = ".java"
+
 FEATURE_FOLDER_NAME = "features"
 
 MUTATION_RESULT_FOLDER_NAME = "mutation_result"
@@ -139,6 +146,10 @@ def get_slicing_log_file_path(project_dir, postfix):
         return join_path(project_dir, SLICING_LOG_FILE_NAME.format(postfix))
 
 
+def get_purified_test_suites_report_path(project_dir):
+    return join_path(project_dir, PURIFIED_TEST_SUITES_REPORT)
+
+
 def get_variant_dir(project_dir, config_name):
     return get_project_sub_dir_by_folder_name(get_variants_dir(project_dir), config_name)
 
@@ -150,6 +161,10 @@ def get_variant_dir_from_config_path(project_dir, config_path):
 
 def get_compiled_classes_dir(variant_dir):
     return get_project_sub_dir_by_folder_name(variant_dir, COMPILED_CLASSES_FOLDER_NAME)
+
+
+def get_junit_report_path(variant_dir):
+    return join_path(variant_dir, COMPILED_CLASSES_FOLDER_NAME, TEST_FOLDER_NAME, JUNIT_TEST_REPORT_FILE_NAME)
 
 
 def get_compiled_source_classes_dir(variant_dir):
@@ -191,6 +206,10 @@ def get_all_coverage_file_paths_in_dir(coverage_dir):
 
 def get_src_dir(variant_dir):
     return get_project_sub_dir_by_folder_name(variant_dir, SRC_FOLDER_NAME, force_mkdir=False)
+
+
+def get_temp_src_dir(variant_dir):
+    return get_project_sub_dir_by_folder_name(variant_dir, TEMP_SRC_FOLDER_NAME, force_mkdir=False)
 
 
 def get_test_dir(variant_dir, force_mkdir=True):
@@ -391,8 +410,8 @@ def copy_file(src, dst):
     shutil.copyfile(src, dst)
 
 
-def copy_dir(src, dst):
-    if is_path_exist(dst):
+def copy_dir(src, dst, delete_existing_dir=True):
+    if delete_existing_dir and is_path_exist(dst):
         delete_dir(dst)
     shutil.copytree(src, dst)
 

@@ -26,6 +26,10 @@ def hash_md5(input_str):
     return hashlib.md5(input_str.encode()).hexdigest()
 
 
+def hash_to_int(input_str):
+    return int(hashlib.sha1(input_str.encode("utf-8")).hexdigest(), 16) % (10 ** 8)
+
+
 def get_current_timestamp():
     return round(time.time())
 
