@@ -79,207 +79,208 @@ def get_num_passing_failing_variants(mutated_project_dir, list_of_stms, spectrum
 
 
 def calculate_suspiciousness_variant_level(failing_passing_variants_of_stms, total_fails, total_passes, spectrum_expression):
+    score = spectrum_expression + VARIANT_LEVEL_SUSPICIOUSNESS_SCORE
     for stm in failing_passing_variants_of_stms.keys():
             if spectrum_expression == TARANTULA:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = tarantula_calculation(
+                failing_passing_variants_of_stms[stm][score] = tarantula_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
             elif spectrum_expression == OCHIAI:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = ochiai_calculation(
+                failing_passing_variants_of_stms[stm][score] = ochiai_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == OP2:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = op2_calculation(
+                failing_passing_variants_of_stms[stm][score] = op2_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == BARINEL:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = barinel_calculation(
+                failing_passing_variants_of_stms[stm][score] = barinel_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == DSTAR:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = dstar_calculation(
+                failing_passing_variants_of_stms[stm][score] = dstar_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == RUSSELL_RAO:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = russell_rao_calculation(
+                failing_passing_variants_of_stms[stm][score] = russell_rao_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == SIMPLE_MATCHING:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = simple_matching_calculation(
+                failing_passing_variants_of_stms[stm][score] = simple_matching_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == ROGERS_TANIMOTO:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = rogers_tanimoto_calculation(
+                failing_passing_variants_of_stms[stm][score] = rogers_tanimoto_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == AMPLE:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = ample2_calculation(
+                failing_passing_variants_of_stms[stm][score] = ample2_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == JACCARD:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = jaccard_calculation(
+                failing_passing_variants_of_stms[stm][score] = jaccard_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == COHEN:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = cohen_calculation(
+                failing_passing_variants_of_stms[stm][score] = cohen_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == SCOTT:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = scott_calculation(
+                failing_passing_variants_of_stms[stm][score] = scott_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == ROGOT1:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = rogot1_calculation(
+                failing_passing_variants_of_stms[stm][score] = rogot1_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == GEOMETRIC_MEAN:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = geometric_mean_calculation(
+                failing_passing_variants_of_stms[stm][score] = geometric_mean_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == M2:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = m2_calculation(
+                failing_passing_variants_of_stms[stm][score] = m2_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == WONG1:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = wong1_calculation(
+                failing_passing_variants_of_stms[stm][score] = wong1_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == SOKAL:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = sokal_calculation(
+                failing_passing_variants_of_stms[stm][score] = sokal_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             # new
             elif spectrum_expression == SORENSEN_DICE:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = sorensen_dice_calculation(
+                failing_passing_variants_of_stms[stm][score] = sorensen_dice_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == DICE:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = dice_calculation(
+                failing_passing_variants_of_stms[stm][score] = dice_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == HUMANN:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = humman_calculation(
+                failing_passing_variants_of_stms[stm][score] = humman_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == M1:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = m1_calculation(
+                failing_passing_variants_of_stms[stm][score] = m1_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == WONG2:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = wong2_calculation(
+                failing_passing_variants_of_stms[stm][score] = wong2_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == WONG3:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = wong3_calculation(
+                failing_passing_variants_of_stms[stm][score] = wong3_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == ZOLTAR:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = zoltar_calculation(
+                failing_passing_variants_of_stms[stm][score] = zoltar_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == OVERLAP:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = overlap_calculation(
+                failing_passing_variants_of_stms[stm][score] = overlap_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == EUCLID:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = euclid_calculation(
+                failing_passing_variants_of_stms[stm][score] = euclid_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == ROGOT2:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = rogot2_calculation(
+                failing_passing_variants_of_stms[stm][score] = rogot2_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == HAMMING:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = hamming_calculation(
+                failing_passing_variants_of_stms[stm][score] = hamming_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == FLEISS:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = fleiss_calculation(
+                failing_passing_variants_of_stms[stm][score] = fleiss_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == ANDERBERG:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = anderberg_calculation(
+                failing_passing_variants_of_stms[stm][score] = anderberg_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == GOODMAN:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = goodman_calculation(
+                failing_passing_variants_of_stms[stm][score] = goodman_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == HARMONIC_MEAN:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = harmonic_mean_calculation(
+                failing_passing_variants_of_stms[stm][score] = harmonic_mean_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == KULCZYNSKI1:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = kulczynski1_calculation(
+                failing_passing_variants_of_stms[stm][score] = kulczynski1_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)
 
             elif spectrum_expression == KULCZYNSKI2:
-                failing_passing_variants_of_stms[stm][VARIANT_LEVEL_SUSPICIOUSNESS_SCORE] = kulczynski2_calculation(
+                failing_passing_variants_of_stms[stm][score] = kulczynski2_calculation(
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_FAILS],
                     failing_passing_variants_of_stms[stm][VARIANT_NUM_OF_PASSES],
                     total_fails, total_passes)

@@ -47,7 +47,7 @@ def write_header_in_result_file(row, sheet):
     sheet.write(row, IS_VAR_BUG_COL, "IS_VAR_BUG")
 
 
-def write_result_to_file(row, sheet, ranking_results, space, is_var_bug):
+def write_result_to_file(row, sheet, ranking_results, fb_results, space, is_var_bug):
 
     for stm in ranking_results[VARCOP_RANK].keys():
         sheet.write(row, VARCOP_BUGGY_STM_COL, stm)
@@ -72,15 +72,15 @@ def write_result_to_file(row, sheet, ranking_results, space, is_var_bug):
         sheet.write(row, SBFL_RANK_COL, ranking_results[SBFL_RANK][stm])
         sheet.write(row, SBFL_EXAM_COL, (ranking_results[SBFL_RANK][stm] / space[SBFL_RANK]) * 100)
 
-        sheet.write(row, FB_RANK_COL, ranking_results[FB_RANK][stm])
-        sheet.write(row, FB_EXAM_COL, (ranking_results[FB_RANK][stm] / space[SBFL_RANK]) * 100)
+        sheet.write(row, FB_RANK_COL, fb_results[stm])
+        sheet.write(row, FB_EXAM_COL, (fb_results[stm] / space[SBFL_RANK]) * 100)
 
         sheet.write(row, SBFL_SPACE_COL, space[SBFL_RANK])
         row += 1
     return row
 
 
-def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions, filtering_coverage_rate, alpha):
+def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions, filtering_coverage_rate, coverage_version, alpha):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
 
@@ -118,7 +118,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                 row = 0
 
                 experiment_file_name = join_path(kwise_result_dir,
-                                                 bug_folder + ".xlsx")
+                                                 bug_folder + coverage_version +  ".xlsx")
                 # if os.path.exists(experiment_file_name):
                 #     continue
                 wb = Workbook(experiment_file_name)
@@ -136,8 +136,13 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                     # spc_log_file_path, spc_runtime = SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
                     #
                     # spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-                    # slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, "")
-                    suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
+                    # slicing_runtime = SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, coverage_version)
+                    if(coverage_version == ""):
+                        suspicious_stms_list = get_suspicious_statement(mutated_project_dir, filtering_coverage_rate)
+                    else:
+                        post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
+                        suspicious_stms_list = get_suspicious_statement(mutated_project_dir, post_fix)
+
                     buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
 
@@ -148,17 +153,20 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                     if(is_a_var_bug == 1):
                         is_a_var_bug = is_var_bug(mutated_project_dir, filtering_coverage_rate)
                     filtering_coverage_rate = 0.0
-                    for sbfl_expression in range(0, len(spectrum_expressions)):
-                        ranking_results, space, varcop_ranking_time = ranking_multiple_bugs(buggy_statements, mutated_project_dir,
+
+                    ranking_results, space, varcop_ranking_time = ranking_multiple_bugs(buggy_statements, mutated_project_dir,
                                                                    suspicious_stms_list,
-                                                                       spectrum_expressions[sbfl_expression],
+                                                                       spectrum_expressions,
                                                                        aggregation_type,
-                                                                       normalization_type, "", filtering_coverage_rate, alpha)
-                        ranking_results[FB_RANK] = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
-                                                                filtering_coverage_rate, spectrum_expressions[sbfl_expression])
+                                                                       normalization_type, coverage_version, filtering_coverage_rate, alpha)
+                    fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
+                                                                filtering_coverage_rate, spectrum_expressions)
                         #
+                    for sbfl_expression in range(0, len(spectrum_expressions)):
                         sheet[sbfl_expression].write(row_temp, BUG_ID_COL, mutated_project_name)
-                        row = write_result_to_file(row_temp, sheet[sbfl_expression], ranking_results, space, is_a_var_bug)
+                        row = write_result_to_file(row_temp, sheet[sbfl_expression], ranking_results[spectrum_expressions[sbfl_expression]],
+                                                   fb_ranking_results[spectrum_expressions[sbfl_expression]],
+                                                   space[spectrum_expressions[sbfl_expression]], is_a_var_bug)
                     #runtime[mutated_project_name] = [spc_runtime, slicing_runtime, varcop_ranking_time]
                 #write_runtime_to_file(system_result_dir, runtime, "multiple_bug_runtime.xlsx")
 
