@@ -18,6 +18,7 @@ CONFIGS_REPORT_FILE_NAME = "config.report.csv"
 CONFIGS_REPORT_FILE_NAME_BACKUP = "config.report.csv.done"
 SPC_LOG_FILE_NAME = "spc_{}.log"
 SLICING_LOG_FILE_NAME = "slicing_{}.log"
+SLICING_TC_LOG_FILE_NAME = "slicing_test_case.log"
 PROJECT_LOCK_FILE_NAME = "project.lock"
 
 VARIANT_FOLDER_NAME = "variants"
@@ -138,6 +139,10 @@ def get_slicing_log_file_path(project_dir, postfix):
         return join_path(project_dir, SLICING_LOG_FILE_NAME.format(int(postfix * 100)))
     except:
         return join_path(project_dir, SLICING_LOG_FILE_NAME.format(postfix))
+
+
+def get_slicing_test_case_file_path(project_dir):
+    return join_path(project_dir, SLICING_TC_LOG_FILE_NAME)
 
 
 def get_variant_dir(project_dir, config_name):

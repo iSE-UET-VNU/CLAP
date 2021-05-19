@@ -5,25 +5,32 @@ import xml.etree.ElementTree as ET
 
 from FileManager import get_variant_dir, get_test_coverage_dir, join_path, \
     get_failing_variants, get_spectrum_failed_coverage_file_name_with_version, \
-    get_spectrum_passed_coverage_file_name_with_version
+    get_spectrum_passed_coverage_file_name_with_version, list_dir, get_variants_dir
+from ranking.RankingManager import get_set_of_stms
 
 from ranking.Spectrum_Expression import *
 from ranking.Keywords import *
 from TestingCoverageManager import statement_coverage_of_variants
 
 
-def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, filter_coverage_rate, spectrum_expressions,
+def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, search_spaces, filter_coverage_rate, spectrum_expressions,
                                    spectrum_coverage_prefix=""):
+    statements_sets = {}
+    statements_sets[SS_STMS_IN_F_PRODUCTS] = get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS])
+    statements_sets[SS_SLICING] = get_set_of_stms(search_spaces[SS_SLICING])
     total_variants = 0
-    variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir, spectrum_coverage_prefix)
+    variants_testing_coverage = {}
+    if filter_coverage_rate > 0:
+        variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir, spectrum_coverage_prefix)
     failing_variants = get_failing_variants(mutated_project_dir)
+    features_info = {SS_STMS_IN_F_PRODUCTS: {}, SS_SLICING: {}}
 
-    features_info = {}
-    for variant in variants_testing_coverage:
-        if variants_testing_coverage[variant] >= filter_coverage_rate or variant in failing_variants:
+    variants_dir = get_variants_dir(mutated_project_dir)
+    for variant in list_dir(variants_dir):
+        if variant in failing_variants or (filter_coverage_rate == 0 or (variants_testing_coverage[variant] >= filter_coverage_rate)):
             total_variants += 1
             variant_dir = get_variant_dir(mutated_project_dir, variant)
-            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_info,
+            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_info, statements_sets,
                                                            spectrum_coverage_prefix)
 
     total_passes = total_variants - len(failing_variants)
@@ -37,13 +44,24 @@ def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, filter
         return -2, -2, -2
     feature_based_rank = {}
     for spectrum_expression in spectrum_expressions:
-        features_info = features_suspiciousness_calculation(features_info, total_passes, total_fails, spectrum_expression)
+        features_info[SS_STMS_IN_F_PRODUCTS] = features_suspiciousness_calculation(features_info[SS_STMS_IN_F_PRODUCTS], total_passes, total_fails, spectrum_expression)
 
-        feature_based_rank[spectrum_expression] = {}
+        feature_based_rank[spectrum_expression] = {FB_RANK:{}, FB_TC_RANK:{}}
         for stm in buggy_statements:
-            feature_rank, stm_rank = search_rank_worst_case(stm, features_info, spectrum_expression)
-            feature_based_rank[spectrum_expression][stm] = stm_rank
-    search_space = total_ranking_statements(features_info)
+            feature_rank, stm_rank = search_rank_worst_case(stm, features_info[SS_STMS_IN_F_PRODUCTS], features_info[SS_STMS_IN_F_PRODUCTS], spectrum_expression)
+            feature_based_rank[spectrum_expression][FB_RANK][stm] = {}
+            feature_based_rank[spectrum_expression][FB_RANK][stm][RANK] = stm_rank
+            feature_based_rank[spectrum_expression][FB_RANK][stm][EXAM] = (stm_rank/ len(statements_sets[SS_STMS_IN_F_PRODUCTS])) * 100
+
+        for stm in buggy_statements:
+            if(stm in statements_sets[SS_SLICING]):
+                feature_rank, stm_rank = search_rank_worst_case(stm, features_info[SS_STMS_IN_F_PRODUCTS], features_info[SS_SLICING], spectrum_expression)
+                feature_based_rank[spectrum_expression][FB_TC_RANK][stm] = {}
+                feature_based_rank[spectrum_expression][FB_TC_RANK][stm][RANK] = stm_rank
+                feature_based_rank[spectrum_expression][FB_TC_RANK][stm][EXAM] = (stm_rank/len(statements_sets[SS_SLICING])) * 100
+            else:
+                feature_based_rank[spectrum_expression][FB_TC_RANK] = feature_based_rank[spectrum_expression][FB_RANK]
+
     return feature_based_rank
 
 
@@ -195,7 +213,7 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
     return features_info
 
 
-def get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_coverage_info,
+def get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_coverage_info, search_spaces,
                                    spectrum_coverage_prefix):
     test_coverage_dir = get_test_coverage_dir(variant_dir)
 
@@ -208,25 +226,25 @@ def get_coverage_infor_of_variants(variant, variant_dir, failing_variants, featu
     if variant in failing_variants:
 
         if os.path.isfile(spectrum_failed_coverage_file_dir):
-            features_coverage_info = read_coverage_info(variant, features_coverage_info,
+            features_coverage_info = read_coverage_info(variant, features_coverage_info, search_spaces,
                                                         spectrum_failed_coverage_file_dir, VARIANTS_FAILED)
 
         if os.path.isfile(spectrum_passed_coverage_file_dir):
-            features_coverage_info = read_coverage_info(variant, features_coverage_info,
+            features_coverage_info = read_coverage_info(variant, features_coverage_info,search_spaces,
                                                         spectrum_passed_coverage_file_dir, VARIANTS_FAILED)
     else:
         if os.path.isfile(spectrum_failed_coverage_file_dir):
-            features_coverage_info = read_coverage_info(variant, features_coverage_info,
+            features_coverage_info = read_coverage_info(variant, features_coverage_info, search_spaces,
                                                         spectrum_failed_coverage_file_dir, VARIANTS_PASSED)
 
         if os.path.isfile(spectrum_passed_coverage_file_dir):
-            features_coverage_info = read_coverage_info(variant, features_coverage_info,
+            features_coverage_info = read_coverage_info(variant, features_coverage_info, search_spaces,
                                                         spectrum_passed_coverage_file_dir, VARIANTS_PASSED)
 
     return features_coverage_info
 
 
-def read_coverage_info(variant, coverage_info, coverage_file, kind_of_test_count):
+def read_coverage_info(variant, coverage_info, search_spaces, coverage_file, kind_of_test_count):
     try:
         tree = ET.parse(coverage_file)
         root = tree.getroot()
@@ -236,22 +254,23 @@ def read_coverage_info(variant, coverage_info, coverage_file, kind_of_test_count
             for file in package:
                 for line in file:
                     id = line.get('featureClass')
-                    if id not in coverage_info:
-                        coverage_info[id] = {}
-                        coverage_info[id][VARIANTS_FAILED] = []
-                        coverage_info[id][VARIANTS_PASSED] = []
-                        coverage_info[id][STATEMENT_ID] = []
-                    if int(line.get('count')) > 0 and variant not in coverage_info[id][kind_of_test_count]:
-                        coverage_info[id][kind_of_test_count].append(variant)
-                    stm_id = line.get('featureClass') + "." + line.get('featureLineNum')
-                    if stm_id not in coverage_info[id][STATEMENT_ID]:
-                        coverage_info[id][STATEMENT_ID].append(stm_id)
+                    for space in [SS_STMS_IN_F_PRODUCTS, SS_SLICING]:
+                        if id not in coverage_info[space]:
+                            coverage_info[space][id] = {}
+                            coverage_info[space][id][VARIANTS_FAILED] = []
+                            coverage_info[space][id][VARIANTS_PASSED] = []
+                            coverage_info[space][id][STATEMENT_ID] = []
+                        if int(line.get('count')) > 0 and variant not in coverage_info[space][id][kind_of_test_count]:
+                            coverage_info[space][id][kind_of_test_count].append(variant)
+                        stm_id = line.get('featureClass') + "." + line.get('featureLineNum')
+                        if stm_id in search_spaces[space] and stm_id not in coverage_info[space][id][STATEMENT_ID]:
+                            coverage_info[space][id][STATEMENT_ID].append(stm_id)
         return coverage_info
     except:
         logging.info("Exception when parsing %s", coverage_file)
 
 
-def search_rank_worst_case(buggy_stm, features_info, spectrum_expression):
+def search_rank_worst_case(buggy_stm, features_info, space, spectrum_expression):
     ranking_score_type = spectrum_expression + "_score"
     score = 0
     for feature in features_info:
@@ -264,7 +283,7 @@ def search_rank_worst_case(buggy_stm, features_info, spectrum_expression):
     for feature in features_info:
         if features_info[feature][ranking_score_type] >= score:
             feature_rank += 1
-            stm_rank += len(features_info[feature][STATEMENT_ID])
+            stm_rank += len(space[feature][STATEMENT_ID])
     return feature_rank, stm_rank
 
 

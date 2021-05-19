@@ -5,10 +5,11 @@ import xml.etree.ElementTree as ET
 from os.path import isfile
 
 from FileManager import join_path, get_slicing_log_file_path, get_variants_dir, get_variant_dir, \
-    get_test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, get_file_name
+    get_test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, get_file_name, get_slicing_test_case_file_path
 
 
-def get_suspicious_statement(mutated_project_dir, postfix):
+def get_suspicious_statement_varcop(mutated_project_dir, postfix):
+
     slicing_info_file_path = get_slicing_log_file_path(mutated_project_dir, postfix)
     failing_coverage_data = read_coverage_file(mutated_project_dir)
     if isfile(slicing_info_file_path):
@@ -30,6 +31,31 @@ def get_suspicious_statement(mutated_project_dir, postfix):
     else:
         return {}
 
+def get_suspicious_statement_tc_based(mutated_project_dir):
+    slicing_info_file_path = get_slicing_test_case_file_path(mutated_project_dir)
+    failing_coverage_data = read_coverage_file(mutated_project_dir)
+    if isfile(slicing_info_file_path):
+        slicing_info_file = open(slicing_info_file_path, "r")
+        slicing_info_content = slicing_info_file.readline()
+        suspicious_stms_list = json.loads(slicing_info_content)
+        tc_sliced_based_stms = {}
+        slicing_info_file.close()
+        for key in suspicious_stms_list:
+            suspicious_temp = []
+            for stm in suspicious_stms_list[key]:
+                if stm not in failing_coverage_data[key]:
+                    suspicious_temp.append(stm)
+
+            for stm in suspicious_temp:
+                index = suspicious_stms_list[key].index(stm)
+                suspicious_stms_list[key].pop(index)
+            tc_sliced_based_stms[key] = {}
+            for stm in suspicious_stms_list[key]:
+                tc_sliced_based_stms[key][stm] = {}
+                tc_sliced_based_stms[key][stm]["num_interactions"] = 0
+        return tc_sliced_based_stms
+    else:
+        return {}
 
 def read_coverage_file(mutated_project_dir):
     variants_dir = get_variants_dir(mutated_project_dir)
