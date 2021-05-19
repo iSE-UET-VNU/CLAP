@@ -148,11 +148,11 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                     row_temp = row
                     varcop_ranking_time = 0
-                    #is_a_var_bug = is_var_bug(mutated_project_dir, filtering_coverage_rate)
-                    is_a_var_bug = is_var_bug_by_config(mutated_project_dir)
-                    if(is_a_var_bug == 1):
-                        is_a_var_bug = is_var_bug(mutated_project_dir, filtering_coverage_rate)
-                    filtering_coverage_rate = 0.0
+
+                    if(system_name == "ZipMe"):
+                        is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base", "Compress"])
+                    else:
+                        is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base"])
 
                     ranking_results, space, varcop_ranking_time = ranking_multiple_bugs(buggy_statements, mutated_project_dir,
                                                                    suspicious_stms_list,

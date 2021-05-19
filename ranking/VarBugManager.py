@@ -22,12 +22,12 @@ def is_var_bug(mutated_project_dir, filter_coverage, spectrum_coverage_prefix=""
         elif stm_coverage >= filter_coverage:
             num_of_passing_variants += 1
 
-
-    if (num_of_failing_variants >= 1 and num_of_passing_variants >= 1):
+    if num_of_failing_variants >= 1 and num_of_passing_variants >= 1:
         return 1
     return 0
 
-def is_var_bug_by_config(mutated_project_dir):
+
+def is_var_bug_by_config(mutated_project_dir, bases):
     config_report_path = get_model_configs_report_path(mutated_project_dir)
 
     with open(config_report_path) as f:
@@ -35,12 +35,14 @@ def is_var_bug_by_config(mutated_project_dir):
         header = next(reader)
         feature_names = header[1:]
         for row in reader:
-            if(row[-1] == "__FAILED__"):
-                count_enabled = 0
-                for f in row[1:-1]:
+            if row[-1] == "__FAILED__":
+                flag = True
+                for i in range(0, len(feature_names)):
 
-                    if(f.strip() == "T"):
-                        count_enabled += 1
-                if count_enabled == 1:
+                    if row[i + 1].strip() == "T":
+                        if feature_names[i] not in bases:
+                            flag = False
+
+                if flag:
                     return 0
     return 1
