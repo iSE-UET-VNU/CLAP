@@ -15,12 +15,11 @@ def generate_purified_test_suite(mutated_project_dir, failed_variant_dirs):
     purified_test_suites_report_dict = {}
     for failed_variant_dir in failed_variant_dirs:
         failed_test_info_list = get_failed_test_info_from_junit_report(failed_variant_dir)
-        print_failed_assertion_lines(failed_variant_dir, failed_test_info_list)
-        # temp_src_dir = init_temp_src(failed_variant_dir)
-        # assertion_line_container = generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list)
-        # purified_test_suites_report_dict[temp_src_dir] = assertion_line_container
-    return None
-    # return write_purified_test_suites_report_dict(mutated_project_dir, purified_test_suites_report_dict)
+        temp_src_dir = init_temp_src(failed_variant_dir)
+        assertion_line_container = generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list)
+        purified_test_suites_report_dict[temp_src_dir] = assertion_line_container
+
+    return write_purified_test_suites_report_dict(mutated_project_dir, purified_test_suites_report_dict)
 
 
 def write_purified_test_suites_report_dict(mutated_project_dir, test_suites_report_dict):
@@ -37,20 +36,6 @@ def init_temp_src(failed_variant_dir):
     new_src_dir = get_temp_src_dir(failed_variant_dir)
     copy_dir(src_dir, new_src_dir, delete_existing_dir=True)
     return new_src_dir
-
-
-def print_failed_assertion_lines(failed_variant_dir, failed_test_info_list):
-    # find raw failed test case, obtain source code and purify all
-    test_case_source_code_dict = defaultdict(list)
-    required_import_statements_container_dict = {}
-    for test_case_info in failed_test_info_list:
-        test_file_path = test_case_info[0]
-        test_case_name = test_case_info[1]
-        failed_assertion_line_number = test_case_info[2]
-
-        all_test_source_code_lines = open(test_case_info[0]).read().splitlines()
-
-        print(all_test_source_code_lines[failed_assertion_line_number - 1])
 
 
 def generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list):
@@ -107,11 +92,31 @@ PREDEFINE_SOURCE_CODE = """
 
     public static void assertNull(String message, Object object) { }
     
-    public static void assertSame(Object expected, Object actual) {}
+    public static void assertSame(Object expected, Object actual) { }
     
-    public static void assertNotSame(Object expected, Object actual) {}
+    public static void assertNotSame(Object expected, Object actual) { }
+    
+    public static void assertArrayEquals(byte[] expecteds, byte[] actuals) { }
 
     public static class Random{ public static void setNextRandom(int number) { }}
+    
+    public static class System{ public static void setCurrentTimeMillis(long time) { }}
+    
+    public static class FileSystemHandling {
+        public FileSystemHandling() {}
+
+        public static boolean appendStringToFile(File file, String value) { return false; }
+
+        public static boolean appendLineToFile(File file, String line) { return false; }
+
+        public static boolean createFolder(File file) { return false; }
+
+        public static boolean setPermissions(File file, boolean isReadable, boolean isWritable, boolean isExecutable) { return false; }
+
+        public static boolean shouldThrowIOException(File file) { return false; }
+
+        public static boolean shouldAllThrowIOExceptions() { return false; }
+    }
     
 """
 
@@ -152,16 +157,7 @@ def purify_test_case(failed_test_info):
     all_test_source_code_lines = open(failed_test_info[0]).read().splitlines()
 
     # prune import statements
-    required_import_statements = []
-    for line in all_test_source_code_lines:
-        if line.startswith("package") and not required_import_statements:
-            required_import_statements.append(line)
-        if line.startswith("import"):
-            target_package = line.split(" ")[-1]
-            if not target_package.startswith("org.junit") and not target_package.startswith("org.evosuite"):
-                required_import_statements.append(line)
-        if line.startswith("@RunWith(EvoRunner.class)"):
-            break
+    required_import_statements, all_test_source_code_lines = prune_import_statements(all_test_source_code_lines)
 
     # prune assertion statement
     test_case_method_signature = TEST_CASE_METHOD_SIGNATURE_TEMPLATE.format(test_case_name=test_case_name)
@@ -193,17 +189,54 @@ def purify_test_case(failed_test_info):
     related_source_code_lines[-1] = related_source_code_lines[-1] + " //_X_FAILED_ASSERTION_"
     related_source_code_lines.append("   }")
 
-    # normalize unsupported statements (imported from external libraries such as Evosuite)
-    for index, line in enumerate(related_source_code_lines):
+    purified_test_case_source_code = "\n".join(related_source_code_lines)
+    return test_file_path, required_import_statements, purified_test_case_source_code
+
+
+def prune_import_statements(all_test_source_code_lines):
+    package_declaration_statement = None
+    required_import_statements = {"import java.io.File;"}
+    for i, line in enumerate(all_test_source_code_lines):
+        if line.startswith("package"):
+            package_declaration_statement = line
+        if line.startswith("import"):
+            target_package = line.split(" ")[-1]
+            if not target_package.startswith("org.junit") and not target_package.startswith("org.evosuite"):
+                required_import_statements.add(line)
+
+        # convert Evosuite classes to Standard Java classes, also import related dependencies
+        if "MockFile" in line:
+            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockFile", "File")
+
+        if "MockFileOutputStream" in line:
+            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockFileOutputStream",
+                                                                                  "FileOutputStream")
+            required_import_statements.add("import java.io.FileOutputStream;")
+
+        if "MockFileInputStream" in line:
+            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockFileInputStream",
+                                                                                  "FileInputStream")
+            required_import_statements.add("import java.io.FileInputStream;")
+
+        if "MockPrintStream" in line:
+            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockPrintStream",
+                                                                                  "PrintStream")
+            required_import_statements.add("import java.io.PrintStream;")
+
+        if line.lstrip().startswith("doReturn("):
+            all_test_source_code_lines[i] = "//" + all_test_source_code_lines[i]
+
+        if "EvoSuiteFile" in line:
+            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("EvoSuiteFile", "File")
+
         if "mock(" in line and "new ViolatedAssumptionAnswer()" in line:
             left_hand_side = line.split("=", 1)[0]
             variable_type = left_hand_side.strip().rsplit(" ", 1)[0]
             new_right_hand_side = f"new {variable_type}(){{}};"
             normalized_statement = left_hand_side + "= " + new_right_hand_side
-            related_source_code_lines[index] = normalized_statement
+            all_test_source_code_lines[i] = normalized_statement
 
-    purified_test_case_source_code = "\n".join(related_source_code_lines)
-    return test_file_path, required_import_statements, purified_test_case_source_code
+    return [package_declaration_statement] + list(required_import_statements), all_test_source_code_lines
 
 
 def get_failed_test_info_from_junit_report(failed_variant_dir):
