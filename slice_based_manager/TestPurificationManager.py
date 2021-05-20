@@ -90,6 +90,8 @@ PREDEFINE_SOURCE_CODE = """
     
     public static void assertNotNull(Object object) { }
 
+    public static void assertNull(Object object) { }
+    
     public static void assertNull(String message, Object object) { }
     
     public static void assertSame(Object expected, Object actual) { }

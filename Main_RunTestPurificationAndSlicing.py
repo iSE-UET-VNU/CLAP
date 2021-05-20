@@ -8,7 +8,7 @@ from suspicious_statements_manager import SlicingManager
 if __name__ == "__main__":
     # ------ START CONFIG ------
     mutants_dir = "/home/hieuvd/spl_dataset_generation/InputPreparation/new_projects/4wise-ZipMe/mutated_projects"
-    # ------ END CONFIG ------
+    # ------ END CONFIG ------π
 
     mutated_project_dirs = list_dir(mutants_dir, full_path=True)
 
