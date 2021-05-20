@@ -4,8 +4,7 @@ import pandas
 
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
 from experimental_results_analyzer.ImprovementComparisonAnalyzer import comparison, init_comparison_data
-from ranking.Keywords import SBFL_METRIC, VARCOP_EXAM, VARCOP_DISABLE_BPC_EXAM, \
-    SBFL_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, NUM_CASES, NUM_BUGS, HIT, HIT_VARCOP, HIT_SBFL
+from ranking.Keywords import *
 from ranking.RankingManager import VARCOP_RANK, VARCOP_SPACE, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, SPACE
 from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
     AMPLE, \
@@ -14,9 +13,10 @@ from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIA
 
 from xlsxwriter import Workbook
 
-data_column = [VARCOP_RANK, VARCOP_EXAM, VARCOP_SPACE, VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM, SBFL_RANK,
-               SBFL_EXAM, FB_RANK, FB_EXAM, SPACE]
-rank_column = [VARCOP_RANK, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, FB_RANK]
+data_column = [VARCOP_RANK, VARCOP_EXAM, VARCOP_SPACE, VARCOP_TC_RANK, VARCOP_TC_EXAM, SBFL_TC_RANK, SBFL_TC_EXAM,
+               FB_TC_RANK, FB_TC_EXAM, TC_SPACE, VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM,
+               SBFL_RANK, SBFL_EXAM, FB_RANK, FB_EXAM, SPACE]
+rank_column = [VARCOP_RANK, VARCOP_TC_RANK, SBFL_TC_RANK, FB_TC_RANK, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, FB_RANK]
 SBFL_METRIC_COL = 0
 NUM_CASES_COL = 1
 NUM_BUGS_COL = 2
@@ -129,16 +129,20 @@ def write_header_in_sumary_file(row, sheet):
     sheet.write(row, SBFL_METRIC_COL, SBFL_METRIC)
     sheet.write(row, NUM_CASES_COL, NUM_CASES)
     sheet.write(row, NUM_BUGS_COL, NUM_BUGS)
-    sheet.write(row, VARCOP_RANK_COL, VARCOP_RANK)
-    sheet.write(row, VARCOP_EXAM_COL, VARCOP_EXAM)
-    sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE)
-    sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, VARCOP_DISABLE_BPC_RANK)
-    sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, VARCOP_DISABLE_BPC_EXAM)
-    sheet.write(row, SBFL_RANK_COL, SBFL_RANK)
-    sheet.write(row, SBFL_EXAM_COL, SBFL_EXAM)
-    sheet.write(row, FB_RANK_COL, FB_RANK)
-    sheet.write(row, FB_EXAM_COL, FB_EXAM)
-    sheet.write(row, SPACE_COL, SPACE)
+    col = NUM_BUGS_COL + 1
+    for item in data_column:
+        sheet.write(row, col, item)
+        col += 1
+    # sheet.write(row, VARCOP_RANK_COL, VARCOP_RANK)
+    # sheet.write(row, VARCOP_EXAM_COL, VARCOP_EXAM)
+    # sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE)
+    # sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, VARCOP_DISABLE_BPC_RANK)
+    # sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, VARCOP_DISABLE_BPC_EXAM)
+    # sheet.write(row, SBFL_RANK_COL, SBFL_RANK)
+    # sheet.write(row, SBFL_EXAM_COL, SBFL_EXAM)
+    # sheet.write(row, FB_RANK_COL, FB_RANK)
+    # sheet.write(row, FB_EXAM_COL, FB_EXAM)
+    # sheet.write(row, SPACE_COL, SPACE)
 
 
 def num_of_element(data_list):
@@ -164,7 +168,7 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
 
         average_value_list = average_best_rank_exam(excel_data_df, spectrum_expression_type)
         # percentage_of_cases_found_bugs(experimental_file_dir, spectrum_expression_type, 3)
-        col = VARCOP_RANK_COL
+        col = NUM_BUGS_COL + 1
         for metric in data_column:
             sheet.write(row, col, average_value_list[metric])
             col += 1

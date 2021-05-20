@@ -4,9 +4,7 @@ from xlsxwriter import Workbook
 
 from ranking import RankingManager
 from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
-from ranking.Keywords import VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM, FB_RANK, FB_EXAM, BUG_ID, BUGGY_STM, \
-    VARCOP_EXAM, SBFL_EXAM, SS_VARCOP, SS_SLICING, SS_ALL_STMS, SS_STMS_IN_F_PRODUCTS, RANK, EXAM, VARCOP_TC_RANK, \
-    VARCOP_TC_EXAM, SBFL_TC_RANK, SBFL_TC_EXAM, FB_TC_RANK, FB_TC_EXAM
+from ranking.Keywords import *
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
     ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_executed_stms_of_the_system, get_set_of_stms
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir, get_spc_log_file_path, \
@@ -40,6 +38,7 @@ IS_VAR_BUG_COL = 19
 
 
 def write_header_in_result_file(row, sheet):
+    row = row - 1
     sheet.write(row + 1, BUG_ID_COL, BUG_ID)
     sheet.write(row + 1, VARCOP_BUGGY_STM_COL, BUGGY_STM)
 
@@ -69,38 +68,67 @@ def write_header_in_result_file(row, sheet):
 
     sheet.write(row + 1, IS_VAR_BUG_COL, "IS_VAR_BUG")
 
+def write_header_in_result_file_for_analyzing(row, sheet):
+    sheet.write(row, BUG_ID_COL, BUG_ID)
+    sheet.write(row, VARCOP_BUGGY_STM_COL, BUGGY_STM)
+
+    #sheet.write(row, VARCOP_RANK_COL, "VARCOP SPACE")
+    sheet.write(row, VARCOP_RANK_COL, VARCOP_RANK)
+    sheet.write(row, VARCOP_EXAM_COL, VARCOP_EXAM)
+    sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE)
+
+
+    sheet.write(row, VARCOP_TC_SLICED_RANK_COL, VARCOP_TC_RANK)
+    sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, VARCOP_TC_EXAM)
+    sheet.write(row, SBFL_TC_SLICED_RANK_COL, SBFL_TC_RANK)
+    sheet.write(row, SBFL_TC_SLICED_EXAM_COL, SBFL_TC_EXAM)
+    sheet.write(row, FB_TC_SLICED_RANK_COL, FB_TC_RANK)
+    sheet.write(row, FB_TC_SLICED_EXAM_COL, FB_TC_EXAM)
+    sheet.write(row, TC_SLICED_SPACE_COL, TC_SPACE)
+
+    sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, VARCOP_DISABLE_BPC_RANK)
+    sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, VARCOP_DISABLE_BPC_EXAM)
+    sheet.write(row, SBFL_RANK_COL, SBFL_RANK)
+    sheet.write(row, SBFL_EXAM_COL, SBFL_EXAM)
+    sheet.write(row, FB_RANK_COL, FB_RANK)
+    sheet.write(row, FB_EXAM_COL, FB_EXAM)
+    sheet.write(row, SPACE_COL, SPACE)
+
+    sheet.write(row, IS_VAR_BUG_COL, "IS_VAR_BUG")
 
 def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces, is_var_bug):
     varcop_space = len(get_set_of_stms(search_spaces[SS_VARCOP]))
     sliced_space = len(get_set_of_stms(search_spaces[SS_SLICING]))
     all_space = len(get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS]))
+    all_stms = len(get_set_of_stms(search_spaces[SS_ALL_STMS]))
+
     for stm in ranking_results[VARCOP_RANK].keys():
         sheet.write(row, VARCOP_BUGGY_STM_COL, stm)
 
         if (is_var_bug):
             sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm][RANK])
-            sheet.write(row, VARCOP_EXAM_COL, ranking_results[VARCOP_RANK][stm][EXAM])
+            sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_RANK][stm][RANK]/all_stms) * 100)
             sheet.write(row, VARCOP_SPACE_COL, varcop_space)
         else:
             sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
-            sheet.write(row, VARCOP_EXAM_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][EXAM])
+            sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK]/all_stms) * 100)
             sheet.write(row, VARCOP_SPACE_COL, all_space)
             sheet.write(row, IS_VAR_BUG_COL, 0)
 
         sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
-        sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, ranking_results[VARCOP_TC_RANK][stm][EXAM])
+        sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
-        sheet.write(row, SBFL_TC_SLICED_EXAM_COL, ranking_results[SBFL_TC_RANK][stm][EXAM])
+        sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
-        sheet.write(row, FB_TC_SLICED_EXAM_COL, fb_results[FB_TC_RANK][stm][EXAM])
+        sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
 
         sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
-        sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][EXAM])
+        sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, SBFL_RANK_COL, ranking_results[SBFL_RANK][stm][RANK])
-        sheet.write(row, SBFL_EXAM_COL, ranking_results[SBFL_RANK][stm][EXAM])
+        sheet.write(row, SBFL_EXAM_COL, (ranking_results[SBFL_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
-        sheet.write(row, FB_EXAM_COL, fb_results[FB_RANK][stm][EXAM])
+        sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, SPACE_COL, all_space)
 
         row += 1
@@ -151,8 +179,8 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                 for i in range(0, len(spectrum_expressions)):
                     sheet.append(wb.add_worksheet(spectrum_expressions[i]))
-                    write_header_in_result_file(row, sheet[i])
-                row += 2
+                    write_header_in_result_file_for_analyzing(row, sheet[i])
+                row += 1
                 num_of_bugs = 0
                 runtime = {}
                 for mutated_project_name in mutated_projects:
