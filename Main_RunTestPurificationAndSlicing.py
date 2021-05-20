@@ -27,4 +27,4 @@ if __name__ == "__main__":
                                                           custom_ant=cloned_ant_name,
                                                           custom_variant_dirs=failed_variant_dirs)
         pts_file_path = TestPurificationManager.generate_purified_test_suite(mutated_project_dir, failed_variant_dirs)
-        SlicingManager.do_slice_pts(pts_file_path)
+        # SlicingManager.do_slice_pts(pts_file_path)

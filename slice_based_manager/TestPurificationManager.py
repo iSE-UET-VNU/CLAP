@@ -15,11 +15,12 @@ def generate_purified_test_suite(mutated_project_dir, failed_variant_dirs):
     purified_test_suites_report_dict = {}
     for failed_variant_dir in failed_variant_dirs:
         failed_test_info_list = get_failed_test_info_from_junit_report(failed_variant_dir)
-        temp_src_dir = init_temp_src(failed_variant_dir)
-        assertion_line_container = generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list)
-        purified_test_suites_report_dict[temp_src_dir] = assertion_line_container
-
-    return write_purified_test_suites_report_dict(mutated_project_dir, purified_test_suites_report_dict)
+        print_failed_assertion_lines(failed_variant_dir, failed_test_info_list)
+        # temp_src_dir = init_temp_src(failed_variant_dir)
+        # assertion_line_container = generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list)
+        # purified_test_suites_report_dict[temp_src_dir] = assertion_line_container
+    return None
+    # return write_purified_test_suites_report_dict(mutated_project_dir, purified_test_suites_report_dict)
 
 
 def write_purified_test_suites_report_dict(mutated_project_dir, test_suites_report_dict):
@@ -36,6 +37,20 @@ def init_temp_src(failed_variant_dir):
     new_src_dir = get_temp_src_dir(failed_variant_dir)
     copy_dir(src_dir, new_src_dir, delete_existing_dir=True)
     return new_src_dir
+
+
+def print_failed_assertion_lines(failed_variant_dir, failed_test_info_list):
+    # find raw failed test case, obtain source code and purify all
+    test_case_source_code_dict = defaultdict(list)
+    required_import_statements_container_dict = {}
+    for test_case_info in failed_test_info_list:
+        test_file_path = test_case_info[0]
+        test_case_name = test_case_info[1]
+        failed_assertion_line_number = test_case_info[2]
+
+        all_test_source_code_lines = open(test_case_info[0]).read().splitlines()
+
+        print(all_test_source_code_lines[failed_assertion_line_number - 1])
 
 
 def generate_purified_test_cases_source_code(failed_variant_dir, failed_test_info_list):
