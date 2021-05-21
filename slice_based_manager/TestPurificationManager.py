@@ -222,8 +222,10 @@ def prune_import_statements(all_test_source_code_lines):
             all_test_source_code_lines[i] = line.replace("MockPrintStream", "PrintStream")
             required_import_statements.add("import java.io.PrintStream;")
 
-        if re.match(r"\smockFileInputStream\d+.release\(\)", line):
-            all_test_source_code_lines[i] = line.replace(".release()", ".close()")
+        release_method_call_match = re.match(r"\s+mockFileInputStream\d+.(release)\(\)", line)
+        if release_method_call_match:
+            call_index = release_method_call_match.span(1)
+            all_test_source_code_lines[i] = line[0:call_index[0]] + "close" + line[call_index[1]:]
 
         if line.lstrip().startswith("doReturn("):
             all_test_source_code_lines[i] = "//" + line
