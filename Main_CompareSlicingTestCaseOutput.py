@@ -29,7 +29,9 @@ if __name__ == "__main__":
     # ------ END CONFIG ------
 
     mutated_project_dirs = list_dir(mutants_dir, full_path=True)
-    print(mutants_dir + "\n")
+    print("{} [{} bugs]\n".format(mutants_dir, len(mutated_project_dirs)))
+    pts_loss_count = 0
+    spc_loss_count = 0
 
     for mutated_project_dir in mutated_project_dirs:
         mutated_project_name = get_file_name(mutated_project_dir)
@@ -53,9 +55,19 @@ if __name__ == "__main__":
 
         intersect_statements = pts_sliced_statements & spc_sliced_statements
 
+        if not buggy_statements.issubset(pts_sliced_statements):
+            pts_loss_count += 1
+        if not buggy_statements.issubset(spc_sliced_statements):
+            spc_loss_count += 1
+
         print(mutated_project_name,
               len(failed_test_cases_executed_statements),
               ("*" if not buggy_statements.issubset(pts_sliced_statements) else "") + str(len(pts_sliced_statements)),
               ("*" if not buggy_statements.issubset(spc_sliced_statements) else "") + str(len(spc_sliced_statements)),
-              ("*" if not buggy_statements.issubset(intersect_statements) else "") + str(len(intersect_statements)),
+              # ("*" if not buggy_statements.issubset(intersect_statements) else "") + str(len(intersect_statements)),
               sep="\t")
+
+    print("\n------")
+    print("PTS_LOSS_COUNT = %d", pts_loss_count)
+    print("sPC_LOSS_COUNT = %d", pts_loss_count)
+    print("------")
