@@ -208,28 +208,28 @@ def prune_import_statements(all_test_source_code_lines):
 
         # convert Evosuite classes to Standard Java classes, also import related dependencies
         if "MockFile" in line:
-            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockFile", "File")
+            all_test_source_code_lines[i] = line.replace("MockFile", "File")
 
         if "MockFileOutputStream" in line:
-            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockFileOutputStream",
-                                                                                  "FileOutputStream")
+            all_test_source_code_lines[i] = line.replace("MockFileOutputStream", "FileOutputStream")
             required_import_statements.add("import java.io.FileOutputStream;")
 
         if "MockFileInputStream" in line:
-            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockFileInputStream",
-                                                                                  "FileInputStream")
+            all_test_source_code_lines[i] = line.replace("MockFileInputStream", "FileInputStream")
             required_import_statements.add("import java.io.FileInputStream;")
 
         if "MockPrintStream" in line:
-            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("MockPrintStream",
-                                                                                  "PrintStream")
+            all_test_source_code_lines[i] = line.replace("MockPrintStream", "PrintStream")
             required_import_statements.add("import java.io.PrintStream;")
 
+        if re.match(r"\smockFileInputStream\d+.release\(\)", line):
+            all_test_source_code_lines[i] = line.replace(".release()", ".close()")
+
         if line.lstrip().startswith("doReturn("):
-            all_test_source_code_lines[i] = "//" + all_test_source_code_lines[i]
+            all_test_source_code_lines[i] = "//" + line
 
         if "EvoSuiteFile" in line:
-            all_test_source_code_lines[i] = all_test_source_code_lines[i].replace("EvoSuiteFile", "File")
+            all_test_source_code_lines[i] = line.replace("EvoSuiteFile", "File")
 
         if "mock(" in line and "new ViolatedAssumptionAnswer()" in line:
             left_hand_side = line.split("=", 1)[0]
