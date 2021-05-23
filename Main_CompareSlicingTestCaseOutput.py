@@ -45,29 +45,38 @@ if __name__ == "__main__":
         failed_test_cases_executed_statements = set()
         pts_sliced_statements = set()
         spc_sliced_statements = set()
+        intersect_statements = set()
 
         for variant_name in slicing_pts_output_dict:
             failed_test_cases_executed_statements.update(
                 get_all_failed_test_case_executed_statements(mutated_project_dir,
                                                              variant_name))
-            pts_sliced_statements.update(slicing_pts_output_dict[variant_name])
-            spc_sliced_statements.update(list(slicing_spc_output_dict[variant_name].keys()))
+            current_pts_sliced_statements = set(slicing_pts_output_dict[variant_name])
+            pts_sliced_statements.update(current_pts_sliced_statements)
 
-        intersect_statements = pts_sliced_statements & spc_sliced_statements
+            current_spc_sliced_statements = set(slicing_spc_output_dict.get(variant_name, {}).keys())
+            spc_sliced_statements.update(current_spc_sliced_statements)
 
-        if not buggy_statements.issubset(pts_sliced_statements):
+            current_intersect_statements = current_pts_sliced_statements & current_spc_sliced_statements
+            intersect_statements.update(current_intersect_statements)
+
+        if not buggy_statements.intersection(pts_sliced_statements):
             pts_loss_count += 1
-        if not buggy_statements.issubset(spc_sliced_statements):
+        if not buggy_statements.intersection(spc_sliced_statements):
             spc_loss_count += 1
 
         print(mutated_project_name,
               len(failed_test_cases_executed_statements),
-              ("*" if not buggy_statements.issubset(pts_sliced_statements) else "") + str(len(pts_sliced_statements)),
-              ("*" if not buggy_statements.issubset(spc_sliced_statements) else "") + str(len(spc_sliced_statements)),
-              # ("*" if not buggy_statements.issubset(intersect_statements) else "") + str(len(intersect_statements)),
+              ("*" if not buggy_statements.intersection(pts_sliced_statements) else "") + str(
+                  len(pts_sliced_statements)),
+              ("*" if not buggy_statements.intersection(spc_sliced_statements) else "") + str(
+                  len(spc_sliced_statements)),
+              ("*" if not buggy_statements.intersection(intersect_statements) else "") + str(len(intersect_statements)),
               sep="\t")
 
     print("\n------")
-    print("PTS_LOSS_COUNT = %d", pts_loss_count)
-    print("sPC_LOSS_COUNT = %d", pts_loss_count)
+    print("TOTAL_BUGS = %d" % len(mutated_project_dirs))
+    print()
+    print("PTS_LOSS_COUNT = %d" % pts_loss_count)
+    print("SPC_LOSS_COUNT = %d" % pts_loss_count)
     print("------")
