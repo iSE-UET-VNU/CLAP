@@ -101,6 +101,7 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
 
 def product_based_assessment(mutated_project_dir, all_stms_in_failing_products, spectrum_expressions,
                              spectrum_coverage_prefix):
+    print("product_based")
     list_of_stms = get_set_of_stms(all_stms_in_failing_products)
     failing_passing_variants_of_stms, total_fails, total_passes = get_num_passing_failing_variants(mutated_project_dir,
                                                                                                    list_of_stms,
@@ -132,7 +133,7 @@ def sbfl(buggy_statements, mutated_project_dir, search_spaces, spectrum_expressi
                                     spectrum_expressions)
 
     isolated_ranked_list = sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests,
-                                                 sliced_stms_set, spectrum_expressions)
+                                        sliced_stms_set, spectrum_expressions)
     for metric in spectrum_expressions:
         if metric not in all_buggy_positions.keys():
             all_buggy_positions[metric] = {}
@@ -144,7 +145,6 @@ def sbfl(buggy_statements, mutated_project_dir, search_spaces, spectrum_expressi
         all_buggy_positions[metric][SBFL_TC_RANK] = locate_multiple_bugs(buggy_statements, sliced_stms_set,
                                                                          isolated_ranked_list[metric],
                                                                          full_ranked_list[metric])
-
 
 
 def varcop(buggy_statements, local_scores, variant_level_suspiciousness, search_spaces,
@@ -178,19 +178,22 @@ def varcop(buggy_statements, local_scores, variant_level_suspiciousness, search_
                                                                        aggregation_type,
                                                                        normalized_type, alpha)
 
+
         all_buggy_positions[metric][VARCOP_RANK] = locate_multiple_bugs(buggy_statements,
                                                                         varcop_isolated_set,
                                                                         varcop_isolated_ranked_list,
                                                                         full_ranked_list)
+
         # tc_based_isolation
         sliced_isolated_ranked_list = global_ranking_a_suspicious_list(search_spaces[SS_ALL_STMS],
                                                                        search_spaces[SS_STMS_IN_F_PRODUCTS],
-                                                                       search_spaces[SS_VARCOP],
+                                                                       search_spaces[SS_SLICING],
                                                                        local_scores[metric],
                                                                        variant_level_suspiciousness[metric],
                                                                        metric,
                                                                        aggregation_type,
                                                                        normalized_type, alpha)
+
 
         all_buggy_positions[metric][VARCOP_TC_RANK] = locate_multiple_bugs(buggy_statements,
                                                                            sliced_isolated_set,
@@ -205,7 +208,6 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, search_spaces, 
     buggy = buggy_statements
     global all_buggy_positions
     all_buggy_positions = {}
-
 
     variant_level_suspiciousness = product_based_assessment(mutated_project_dir, search_spaces[SS_ALL_STMS],
                                                             spectrum_expressions, spectrum_coverage_prefix)
@@ -243,7 +245,6 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, search_spaces, 
 
 def locate_multiple_bugs(buggy_statements, isolated_set, isolated_ranked_list,
                          full_ranked_list):
-
     bugs = {}
     for stm in buggy_statements:
         bugs[stm] = {}
@@ -291,7 +292,7 @@ def normalized_score(scores_list, normalized_value, failings, alpha=0, beta=1):
 
         if (scores_list[stm][normalized_value] < min_score):
             min_score = scores_list[stm][normalized_value]
-
+    print(max_score, min_score)
     for stm in scores_list:
         tmp = scores_list[stm][normalized_value]
         if min_score == max_score:
@@ -311,14 +312,14 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all
 
     normalized_score_list = {}
     for variant in all_statements_in_failing_variants:
-
+        print("variant", variant)
         normalized_score_list[variant] = {}
         if (len(all_statements_in_failing_variants[variant]) > 0):
             max = local_suspiciousness_of_all_the_system[variant][0][1]
             min = \
                 local_suspiciousness_of_all_the_system[variant][
                     len(local_suspiciousness_of_all_the_system[variant]) - 1][1]
-
+            print(min, max)
             for stm in all_suspicious_stm:
                 local_score, num_of_failing_test = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
 
@@ -516,7 +517,6 @@ def global_score_aggregation_geometric_mean(all_stms_of_the_system, normalized_s
 
 
 def sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests, isolated_stms_set, spectrum_expressions):
-
     spectrum_ranked_list = {}
     for spectrum_expression in spectrum_expressions:
         statement_with_scores = spectrum_calculation(stm_info_for_sbfl, total_failed_tests,

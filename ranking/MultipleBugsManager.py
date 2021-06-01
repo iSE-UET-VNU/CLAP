@@ -108,12 +108,16 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
         if (is_var_bug):
             sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm][RANK])
             sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_RANK][stm][RANK]/all_stms) * 100)
-            sheet.write(row, VARCOP_SPACE_COL, varcop_space)
+            # if(ranking_results[VARCOP_RANK][stm][RANK] > varcop_space):
+            #     sheet.write(row, VARCOP_SPACE_COL, all_space)
+            # else:
+
         else:
             sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
             sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK]/all_stms) * 100)
-            sheet.write(row, VARCOP_SPACE_COL, all_space)
+            #sheet.write(row, VARCOP_SPACE_COL, all_space)
             sheet.write(row, IS_VAR_BUG_COL, 0)
+        sheet.write(row, VARCOP_SPACE_COL, varcop_space)
 
         sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
         sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK]/all_stms) * 100)
@@ -121,6 +125,7 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
         sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK]/all_stms) * 100)
         sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
         sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK]/all_stms) * 100)
+
         sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
 
         sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])

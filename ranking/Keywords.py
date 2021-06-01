@@ -55,6 +55,7 @@ NUM_OF_FAILING_VARIANTS = "num_of_failing_variants"
 HIT = "HIT@"
 HIT_VARCOP = "VARCOP"
 HIT_SBFL = "SBFL"
+HIT_TC_SBFL = "SBFL+Slicing"
 
 #improvement comparison
 VARCOP_VS_SBFL_IN_RANK = "VARCOP_VS_SBFL_IN_RANK"
