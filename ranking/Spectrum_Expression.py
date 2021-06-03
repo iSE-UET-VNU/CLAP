@@ -9,7 +9,7 @@ DSTAR = "Dstar"
 RUSSELL_RAO = "Russell_rao"
 SIMPLE_MATCHING = "Simple_matching"
 ROGERS_TANIMOTO = "Rogers_tanimoto"
-AMPLE = "Ample"
+AMPLE = "Ample2"
 JACCARD = "Jaccard"
 COHEN = "Cohen"
 SCOTT = "Scott"
@@ -53,8 +53,8 @@ SIMPLE_MATCHING_SCORE = "Simple_matching_score"
 SIMPLE_MATCHING_AVERAGE = "Simple_matching_average"
 ROGERS_TANIMOTO_SCORE = "Rogers_tanimoto_score"
 ROGERS_TANIMOTO_AVERAGE = "Rogers_tanimoto_average"
-AMPLE_SCORE = "Ample_score"
-AMPLE_AVERAGE = "Ample_average"
+AMPLE_SCORE = "Ample2_score"
+AMPLE_AVERAGE = "Ample2_average"
 JACCARD_SCORE = "Jaccard_score"
 JACCARD_AVERAGE = "Jaccard_average"
 COHEN_SCORE = "Cohen_score"
@@ -175,13 +175,21 @@ def rogers_tanimoto_calculation(fails, passes, total_failed_tests, total_passes_
     else:
         return (fails + (total_passes_tests - passes))/ temp
 
-def ample_calculation(fails, passes, total_failed_tests, total_passes_tests):
+# def ample_calculation(fails, passes, total_failed_tests, total_passes_tests):
+#     if total_failed_tests == 0:
+#         return 0
+#     elif total_passes_tests == 0:
+#         return 1
+#     else:
+#         return abs(fails/total_failed_tests - passes/total_passes_tests)
+
+def ample2_calculation(fails, passes, total_failed_tests, total_passes_tests):
     if total_failed_tests == 0:
         return 0
     elif total_passes_tests == 0:
         return 1
     else:
-        return abs(fails/total_failed_tests - passes/total_passes_tests)
+        return (fails/total_failed_tests - passes/total_passes_tests)
 
 def jaccard_calculation(fails, passes, total_failed_tests, total_passes_tests):
     if(total_failed_tests + passes) == 0:
@@ -270,6 +278,8 @@ def wong2_calculation(fails, passes, total_failed_tests, total_passes_tests):
     return fails - passes
 
 def wong3_calculation(fails, passes, total_failed_tests, total_passes_tests):
+    if total_failed_tests + total_failed_tests == 0:
+        return  -1000
     if passes <= 2:
         return fails - passes
     elif 2 < passes and passes <= 10:
@@ -305,8 +315,11 @@ def rogot2_calculation(fails, passes, total_failed_tests, total_passes_tests):
     temp2 = total_failed_tests
     temp3 = total_passes_tests
     temp4 = (total_passes_tests - passes) + (total_failed_tests - fails)
-    if temp1 == 0 or temp2 == 0 or temp3 == 0 or temp4 == 0:
+
+    if temp1 == 0 or temp2 == 0:
         return 0
+    if temp3 == 0 or temp4 == 0:
+        return (1/4)*((fails/temp1) + (fails/temp2))
     else:
         return (1/4)*((fails/temp1) + (fails/temp2)+((total_passes_tests-passes)/temp3) + ((total_passes_tests-passes)/temp4))
 
