@@ -15,7 +15,7 @@ def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
 
     start_time = time.time()
     failed_coverage_file_name = get_spectrum_failed_coverage_file_name_with_version(version=coverage_version)
-    if(coverage_version != ""):
+    if coverage_version != "":
         post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
     else:
         post_fix = filtering_coverage_rate

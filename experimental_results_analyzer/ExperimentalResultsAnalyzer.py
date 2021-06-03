@@ -184,13 +184,13 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
     return comparison_data
 
 
-def summary_percentage_bug_found(all_bugs_file, summary_file, prefix):
+def summary_pbl(all_bugs_file, summary_file, prefix):
     summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
                                  summary_file)
     wb = Workbook(summary_file_dir)
     sheets = []
     num_sheet =0
-    for spectrum_expression_type in [OP2]:
+    for spectrum_expression_type in [TARANTULA, OP2, OCHIAI, BARINEL, DSTAR]:
         sheets.append(wb.add_worksheet(spectrum_expression_type))
         sheet = sheets[num_sheet]
         num_sheet += 1
@@ -206,13 +206,41 @@ def summary_percentage_bug_found(all_bugs_file, summary_file, prefix):
             col = 0
             sheet.write(row, col, num_stm)
             col = +1
-            #average_value_list = percentage_of_cases_found_bugs(all_bugs_file, spectrum_expression_type, num_stm)
             average_value_list = percentage_of_bugs_found_per_case(all_bugs_file, spectrum_expression_type, num_stm)
-            #print(average_value_list)
-            # col = NUM_BUGS_COL + 1
             for metric in rank_column:
                  sheet.write(row, col, average_value_list[metric])
                  col += 1
+            row += 1
+
+    wb.close()
+
+def summary_percentage_of_cases_found_bugs(all_bugs_file, summary_file, prefix):
+    summary_file_dir = join_path(EXPERIMENT_RESULT_FOLDER,
+                                 summary_file)
+    wb = Workbook(summary_file_dir)
+    sheets = []
+    num_sheet =0
+    for spectrum_expression_type in [TARANTULA, OP2, OCHIAI, BARINEL, DSTAR]:
+        sheets.append(wb.add_worksheet(spectrum_expression_type))
+        sheet = sheets[num_sheet]
+        num_sheet += 1
+        row = 0
+        col = 0
+        sheet.write(row, col, "NUM OF EXAMED STMS")
+        col += 1
+        for item in rank_column:
+            sheet.write(row, col, item)
+            col += 1
+        row += 1
+        for num_stm in range(1, 11):
+            col = 0
+            sheet.write(row, col, num_stm)
+            col = +1
+            average_value_list = percentage_of_cases_found_bugs(all_bugs_file, spectrum_expression_type, num_stm)
+
+            for metric in rank_column:
+                sheet.write(row, col, average_value_list[metric])
+                col += 1
             row += 1
 
     wb.close()

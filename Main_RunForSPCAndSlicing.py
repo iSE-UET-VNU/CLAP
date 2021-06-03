@@ -6,6 +6,7 @@ if __name__ == "__main__":
     mutants_dir = "/home/huent/Documents/Trang/temp/BankAccountTP/1Bug/mutated_projects"
     mutated_project_dirs = list_dir(mutants_dir, full_path=True)
     coverage = 0.0
+    coverage_verison = ["INoT_10", ""]
     for mutated_project_dir in mutated_project_dirs:
         try:
             lock_project(mutated_project_dir)

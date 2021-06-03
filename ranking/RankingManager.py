@@ -101,7 +101,6 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
 
 def product_based_assessment(mutated_project_dir, all_stms_in_failing_products, spectrum_expressions,
                              spectrum_coverage_prefix):
-    print("product_based")
     list_of_stms = get_set_of_stms(all_stms_in_failing_products)
     failing_passing_variants_of_stms, total_fails, total_passes = get_num_passing_failing_variants(mutated_project_dir,
                                                                                                    list_of_stms,
@@ -292,7 +291,6 @@ def normalized_score(scores_list, normalized_value, failings, alpha=0, beta=1):
 
         if (scores_list[stm][normalized_value] < min_score):
             min_score = scores_list[stm][normalized_value]
-    print(max_score, min_score)
     for stm in scores_list:
         tmp = scores_list[stm][normalized_value]
         if min_score == max_score:
@@ -312,14 +310,12 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all
 
     normalized_score_list = {}
     for variant in all_statements_in_failing_variants:
-        print("variant", variant)
         normalized_score_list[variant] = {}
         if (len(all_statements_in_failing_variants[variant]) > 0):
             max = local_suspiciousness_of_all_the_system[variant][0][1]
             min = \
                 local_suspiciousness_of_all_the_system[variant][
                     len(local_suspiciousness_of_all_the_system[variant]) - 1][1]
-            print(min, max)
             for stm in all_suspicious_stm:
                 local_score, num_of_failing_test = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
 
@@ -437,7 +433,7 @@ def global_score_aggregation_stdev(all_stms_of_the_system, normalized_score_list
 
     for stm in list_of_scores.keys():
         all_stms_score_list[stm] = {}
-        if (len(list_of_scores[stm]) < 2):
+        if len(list_of_scores[stm]) < 2:
             all_stms_score_list[stm][score_type] = list_of_scores[stm][0]
         else:
             all_stms_score_list[stm][score_type] = stdev(list_of_scores[stm])
