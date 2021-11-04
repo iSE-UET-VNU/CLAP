@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 from FileManager import *
 import logging
 
+
+
 def passing_product_has_buggy_features(config_file, buggy_features):
     passing_products = []
     with open(config_file) as csv_file:
@@ -64,7 +66,7 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants = list_dir(variants_dir)
     failing_variants = get_failing_variants(mutated_project_dir)
-    file_name = join_path(mutated_project_dir, "variants_testing_label.csv")
+    file_name = join_path(mutated_project_dir, LABELED_FILE_NAME)
 
     with open(file_name, 'w', newline='') as csvfile:
         fieldnames = ['VARIANT', 'LABEL', 'FP created from F']
@@ -73,11 +75,11 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
         for v in variants:
             if v in failing_variants:
                 v_index = failing_variants.index(v)
-                if(v_index % 2 == 0):
-                    writer.writerow({'VARIANT': v, 'LABEL': 'F'})
+                if v_index % 2 == 0:
+                    writer.writerow({'VARIANT': v, 'LABEL': FAILING})
                 else:
-                    writer.writerow({'VARIANT': v, 'LABEL': 'FP', 'FP created from F': '1'})
+                    writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
             elif v in passing_variants_contain_buggy_stmts:
-                writer.writerow({'VARIANT': v, 'LABEL': 'FP'})
+                writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
             else:
-                writer.writerow({'VARIANT': v, 'LABEL': 'AP'})
+                writer.writerow({'VARIANT': v, 'LABEL': ACTUAl_PASSING})
