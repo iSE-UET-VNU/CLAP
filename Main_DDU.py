@@ -2,11 +2,11 @@ from DDU.DDU import *
 from FileManager import join_path, list_dir
 from label_data.HelperForLabeledData import *
 
-labels = [FAILING, FALSE_PASSING, ACTUAl_PASSING]
-count_for_labels = ["Count_" + FAILING, "Count_" +  FALSE_PASSING, "Count_" + ACTUAl_PASSING]
+labels = [FAILING, FALSE_PASSING, TRUE_PASSING]
+count_for_labels = ["Count_" + FAILING, "Count_" + FALSE_PASSING, "Count_" + TRUE_PASSING]
 
 if __name__ == "__main__":
-    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/ZipMe/1Bug/2wise/"
+    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/Debug/1Bug/4wise/"
     mutated_projects = list_dir(system_dir)
     average_ddu = {}
     sytem_name = "ZipMe"
@@ -34,4 +34,4 @@ if __name__ == "__main__":
 
     write_dict_to_file(join_path("/Users/thu-trangnguyen/Documents/Projects/VarCop/experiment_results/Consistent_Testing", sytem_name + "_ddu_1Bug.csv"),
                        average_ddu,
-                       ["PROJECT ID", FAILING, FALSE_PASSING, ACTUAl_PASSING, "Count_" + FAILING, "Count_" + FALSE_PASSING, "Count_" + ACTUAl_PASSING])
+                       ["PROJECT ID", FAILING, FALSE_PASSING, TRUE_PASSING, "Count_" + FAILING, "Count_" + FALSE_PASSING, "Count_" + TRUE_PASSING])

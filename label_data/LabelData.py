@@ -1,3 +1,4 @@
+from label_data.HelperForLabeledData import *
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, get_mutated_features
 import csv
 import xml.etree.ElementTree as ET
@@ -62,6 +63,7 @@ def base_is_buggy_features(base_features, buggy_features):
     return False
 
 
+
 def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants = list_dir(variants_dir)
@@ -82,4 +84,4 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
             elif v in passing_variants_contain_buggy_stmts:
                 writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
             else:
-                writer.writerow({'VARIANT': v, 'LABEL': ACTUAl_PASSING})
+                writer.writerow({'VARIANT': v, 'LABEL': TRUE_PASSING})

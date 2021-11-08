@@ -2,7 +2,7 @@ from label_data.LabelData import *
 
 
 if __name__ == "__main__":
-    project_base_path = "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise"
+    project_base_path = "/Users/thu-trangnguyen/Documents/Research/SPL/Debug/1Bug/4wise"
     base_features = ["Base"]
     mutated_projects_list = list_dir(project_base_path)
     bugs_in_bases = []
@@ -20,19 +20,15 @@ if __name__ == "__main__":
         else:
             passing_variants_contain_buggy_features = passing_product_has_buggy_features(config_report_path,
                                                                                          buggy_features)
-            # if len(passing_variants_contain_buggy_features) == 0:
-            #    print("trang")
-            # else:
+
             passing_variants_contain_buggy_stmts = passing_product_has_buggy_statements(mu_project_path,
                                                                                         passing_variants_contain_buggy_features,
                                                                                         buggy_stmts)
-            # if len(passing_variants_contain_buggy_stmts) > 0:
             if len(passing_variants_contain_buggy_features) > 0 and len(passing_variants_contain_buggy_stmts) == 0 and len(failing_variants) != 1:
                 buggy_features_but_not_buggy_stmts.append(mutated_project)
             if len(failing_variants) == 1 and len(passing_variants_contain_buggy_stmts) == 0:
                 one_fail.append(mutated_project)
             else:
-                #print(mutated_project)
                 label(mu_project_path, passing_variants_contain_buggy_stmts)
 
     print("bugs in base")

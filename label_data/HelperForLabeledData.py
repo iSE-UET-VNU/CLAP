@@ -5,7 +5,11 @@ from label_data.LabelData import *
 from FileManager import *
 import xml.etree.ElementTree as ET
 
-ACTUAl_PASSING = "AP"
+from ranking.MultipleBugsManager import get_suspicious_space
+from ranking.RankingManager import get_infor_for_sbfl, get_set_of_stms, sbfl_ranking, SS_STMS_IN_F_PRODUCTS
+from ranking.Spectrum_Expression import OP2
+
+TRUE_PASSING = "TP"
 FALSE_PASSING = "FP"
 FAILING = "F"
 LABELED_FILE_NAME = "variants_testing_label.csv"
@@ -14,6 +18,14 @@ VARIANT_NAME = 'VARIANT'
 LABEL = 'LABEL'
 CREATED_FP = 'FP created from F'
 DDU = "DDU"
+
+executed_susp_stmt_vs_susp_stmt_in_passing_variant = "executed_susp_stmt_vs_susp_stmt_in_passing_variant"
+not_executed_susp_stmt_vs_susp_stmt_in_passing_variant = "not_executed_susp_stmt_vs_susp_stmt_in_passing_variant"
+executed_susp_stmt_vs_susp_stmt_in_a_failed_execution = "executed_susp_stmt_vs_susp_stmt_in_a_failed_execution"
+not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution = "not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution"
+tested_unexpected_behaviors_in_passing_variant = "tested_unexpected_behaviors_in_passing_variant"
+confirmed_successes_in_passing_variant = "check_confirmed_successes_in_passing_variant"
+total_susp_scores = "total_susp_scores"
 
 
 def get_variants_and_labels(mutated_project_dir):
@@ -129,6 +141,17 @@ def get_passing_executions(project_dir, system_stm_ids, variants):
     return passed_test_executions
 
 
+def get_passing_executions_in_a_variant(project_dir, system_stm_ids, variant):
+    passed_test_executions = {}
+    variant_dir = get_variant_dir(project_dir, variant)
+    passed_tests_coverage_dir = get_passed_test_coverage_dir(variant_dir)
+    all_passed_spectrums = list_dir(passed_tests_coverage_dir)
+    for file in all_passed_spectrums:
+        file_dir = join_path(passed_tests_coverage_dir, file)
+        passed_test_executions[file] = read_coverage_file(system_stm_ids[variant], file_dir)
+    return passed_test_executions
+
+
 def get_labeled_failing_variants(project_dir):
     failing_variants = get_failing_variants(project_dir)
     variants_and_labels = get_variants_and_labels(project_dir)
@@ -160,28 +183,27 @@ def convert_to_dict(passing_variant_stmt):
             stmt_ids[tmp["id"]]["tested"] = tmp["tested"]
     return stmt_ids
 
+
 def similar_path(path1, path2, threshold):
     count = 0
     for item in path1:
         if item in path2:
             count += 1
-
-    if count/len(path1) > threshold:
+    if count / len(path1) > threshold:
         return True
     return False
 
 
 def exist_path(path, list_paths, threshold):
-    count = 0
     for p in list_paths:
-        if(similar_path(path, list_paths[p], threshold)):
+        if similar_path(path, list_paths[p], threshold):
             return True
     return False
 
-def overlap_failed_exection_vs_passing_variant(failing_exections, passing_variant_stmt):
+
+def check_suspicious_stmts_in_passing_variants(failing_exections, passing_variant_stmt):
     passing_variant_stmt_dict = convert_to_dict(passing_variant_stmt)
-    overlaps = {}
-    max = -1000
+    suspicious_in_passing_variant = {}
     for variant_name in failing_exections:
         for test in failing_exections[variant_name]:
             execution = failing_exections[variant_name][test]
@@ -193,33 +215,139 @@ def overlap_failed_exection_vs_passing_variant(failing_exections, passing_varian
                         D1.append(item["id"])
                     else:
                         D2.append(item["id"])
-            overlaps[variant_name + "__" + test] = {"Executed": D1, "Not Executed": D2}
-            # overlap_portion_p_executed
-            # if(len(D1) + len(D2) > 0):
-            #     if len(D1)/(len(D1) + len(D2)) > max:
-            #         max = len(D1)/(len(D1) + len(D2))
-            # elif max < 0:
-            #     max = 1
+            suspicious_in_passing_variant[variant_name + "__" + test] = {"Executed": D1, "Not Executed": D2}
 
-            # overlap_portion_p_not_executed
-            if(len(D1) + len(D2) > 0):
-                if len(D2)/(len(D1) + len(D2)) > max:
-                    max = len(D2)/(len(D1) + len(D2))
-            elif max < 0:
-                max = 1
+    return suspicious_in_passing_variant
 
-            # #overlap_portion_Si_executed
-            # if(len(execution) > 0):
-            #     if len(D1)/len(execution) > max:
-            #         max = len(D1)/len(execution)
-            # elif max < 0:
-            #     max = 0
 
-            # #overlap_portion_Si_not_executed
-            # if (len(execution) > 0):
-            #     if len(D2) / len(execution) > max:
-            #         max = len(D2) / len(execution)
-            # elif max < 0:
-            #     max = 0
-    #return overlaps
+def check_executed_susp_stmt_vs_susp_stmt_in_passing_variant(susp_in_passing_variant):
+    min = 1000
+    for item in susp_in_passing_variant:
+        executed_set_len = len(susp_in_passing_variant[item]["Executed"])
+        suspicious_set_len = len(susp_in_passing_variant[item]["Not Executed"]) + executed_set_len
+        if suspicious_set_len == 0:
+            if min < 0:
+                min = 1
+        else:
+            tmp = executed_set_len / suspicious_set_len
+            if tmp < min:
+                min = tmp
+    return 1 - min
+
+
+def check_not_executed_susp_stmt_vs_susp_stmt_in_passing_variant(susp_in_passing_variant):
+    max = -1000
+    for item in susp_in_passing_variant:
+        not_executed_set_len = len(susp_in_passing_variant[item]["Not Executed"])
+        suspicious_set_len = len(susp_in_passing_variant[item]["Executed"]) + not_executed_set_len
+        if suspicious_set_len == 0:
+            if max < 0:
+                max = 0
+        else:
+            tmp = not_executed_set_len / suspicious_set_len
+            if tmp > max:
+                max = tmp
     return max
+
+
+def check_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution(failed_excutions, susp_in_passing_variant):
+    max = -1000
+    for item in susp_in_passing_variant:
+        var_name = item.split("__")[0]
+        test_id = item.split("__")[1]
+        failed_execution_len = len(failed_excutions[var_name][test_id])
+        susp_executed_set_len = len(susp_in_passing_variant[item]["Executed"])
+        if failed_execution_len != 0:
+            if susp_executed_set_len / failed_execution_len > max:
+                max = susp_executed_set_len / failed_execution_len
+
+    return max
+
+
+def check_not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution(failed_excutions, susp_in_passing_variant):
+    max = -1000
+    for item in susp_in_passing_variant:
+        var_name = item.split("__")[0]
+        test_id = item.split("__")[1]
+        failed_execution_len = len(failed_excutions[var_name][test_id])
+        not_susp_executed_set_len = len(susp_in_passing_variant[item]["Not Executed"])
+        if failed_execution_len != 0:
+            if not_susp_executed_set_len / failed_execution_len > max:
+                max = not_susp_executed_set_len / failed_execution_len
+
+    return max
+
+
+def check_tested_unexpected_behaviors_in_passing_variant(executions_in_failing_products, execution_in_a_passing_product,
+                                                         susp_in_passing_product,
+                                                         threshold):
+    num_failed_executions_contained_in_passing_product = 0
+    num_failed_exeuctions_tested_by_passing_product = 0
+    for item in susp_in_passing_product:
+        var_name = item.split("__")[0]
+        test_id = item.split("__")[1]
+        failed_execution = executions_in_failing_products[var_name][test_id]
+        susp_set_len = len(susp_in_passing_product[item]["Executed"]) + len(
+            susp_in_passing_product[item]["Not Executed"])
+        if susp_set_len / len(failed_execution) > threshold:
+            num_failed_executions_contained_in_passing_product += 1
+            if exist_path(failed_execution, execution_in_a_passing_product, threshold):
+                num_failed_exeuctions_tested_by_passing_product += 1
+
+    if num_failed_executions_contained_in_passing_product == 0:
+        return 0
+    else:
+        return 1 - num_failed_exeuctions_tested_by_passing_product / num_failed_executions_contained_in_passing_product
+
+
+def check_confirmed_successes_in_passing_variant(executions_in_failing_products, passed_executions_in_failing_products,
+                                                 passed_executions_in_passing_product, susp_in_passing_product,
+                                                 threshold):
+    fvars_have_susp_in_pvariant = []
+    for item in susp_in_passing_product:
+        var_name = item.split("__")[0]
+        test_id = item.split("__")[1]
+        failed_execution = executions_in_failing_products[var_name][test_id]
+        susp_set_len = len(susp_in_passing_product[item]["Executed"]) + len(
+            susp_in_passing_product[item]["Not Executed"])
+        if susp_set_len / len(failed_execution) >= threshold:
+            if (var_name not in fvars_have_susp_in_pvariant):
+                fvars_have_susp_in_pvariant.append(var_name)
+    sum = 0
+
+    for fvariant in fvars_have_susp_in_pvariant:
+        covered_susscesses = 0
+        for test in passed_executions_in_passing_product:
+            if exist_path(passed_executions_in_passing_product[test],
+                          passed_executions_in_failing_products[fvariant], threshold):
+                covered_susscesses += 1
+        sum += covered_susscesses / len(passed_executions_in_passing_product)
+    if len(fvars_have_susp_in_pvariant) == 0:
+        return 0
+    else:
+        return 1 - sum / len(fvars_have_susp_in_pvariant)
+
+
+def ranking_suspicious_stmts(project_dir):
+    search_spaces = get_suspicious_space(project_dir, 0.0, "")
+    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(project_dir,
+                                                                                   "",
+                                                                                   0.0)
+    all_stms_f_products_set = get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS])
+    full_ranked_list = sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests,
+                                    all_stms_f_products_set,
+                                    [OP2])
+    op2_ranked_list = {}
+    for (stmt, score, v) in full_ranked_list[OP2]:
+        op2_ranked_list[stmt] = score
+
+    return op2_ranked_list
+
+
+def check_total_susp_scores_in_passing_variant(susp_scores, passing_variant_stmt):
+    sum_scores = 0
+    for stmt in passing_variant_stmt:
+        tmp = passing_variant_stmt[stmt]["id"]
+        if tmp in susp_scores:
+           sum_scores += susp_scores[tmp]
+    return sum_scores
