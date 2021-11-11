@@ -78,5 +78,5 @@ if __name__ == "__main__":
     print("TOTAL_BUGS = %d" % len(mutated_project_dirs))
     print()
     print("PTS_LOSS_COUNT = %d" % pts_loss_count)
-    print("SPC_LOSS_COUNT = %d" % pts_loss_count)
+    print("SPC_LOSS_COUNT = %d" % spc_loss_count)
     print("------")

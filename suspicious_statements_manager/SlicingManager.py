@@ -2,7 +2,8 @@ import logging
 import time
 
 from FileManager import get_plugin_path, get_file_name_with_parent, get_slicing_log_file_path, get_outer_dir, \
-    get_spectrum_failed_coverage_file_name_with_version, is_path_exist, get_slicing_test_case_output_file_path
+    get_spectrum_failed_coverage_file_name_with_version, is_path_exist, get_slicing_test_case_output_file_path, \
+    get_variants_dir
 from Helpers import get_logger, execute_shell_command
 
 logger = get_logger(__name__)
@@ -12,6 +13,9 @@ FEATURE_SLICING_PLUGIN_PATH = get_plugin_path(FEATURE_SLICING_PLUGIN_NAME)
 
 TEST_CASE_SLICING_PLUGIN_NAME = "testcase-slicing.jar"
 TEST_CASE_SLICING_PLUGIN_PATH = get_plugin_path(TEST_CASE_SLICING_PLUGIN_NAME)
+
+ALL_STATEMENTS_SLICING_PLUGIN_NAME = "all-statements-slicing.jar"
+ALL_STATEMENTS_SLICING_PLUGIN_PATH = get_plugin_path(ALL_STATEMENTS_SLICING_PLUGIN_NAME)
 
 
 def do_slice_spc(spc_file_path, filtering_coverage_rate, coverage_version):
@@ -55,5 +59,16 @@ def do_slice_pts(pts_file_path):
     if "exception" in output_log.lower():
         raise Exception(f"Failed to slice test cases on {pts_file_path}")
     logger.info(
-        f"Wrote SLICE-BASED] slicing on test cases output to file [{get_file_name_with_parent(output_path)}]")
+        f"Wrote [SLICE-BASED] slicing on test cases output to file [{get_file_name_with_parent(output_path)}]")
     return output_path
+
+
+def do_slice_all_statements(mutated_project_dir):
+    logger.info(
+        f"Running [ALL-STATEMENTS] slicing on test cases from mutated project [{get_file_name_with_parent(mutated_project_dir)}]")
+    variants_dir = get_variants_dir(mutated_project_dir)
+    output_log = execute_shell_command(
+        f'java -Xmx512m -Dvariants_dir={variants_dir} -jar {ALL_STATEMENTS_SLICING_PLUGIN_PATH} ', extra_args=[],
+        log_to_file=True)
+    if "exception" in output_log.lower():
+        raise Exception(f"Failed to slice test cases on {mutated_project_dir}")
