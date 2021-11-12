@@ -16,7 +16,7 @@ if __name__ == "__main__":
         try:
             lock_project(mutated_project_dir)
         except BlockingIOError as e:
-            pass
+            continue
 
         SlicingManager.do_slice_all_statements(mutated_project_dir)
         break
