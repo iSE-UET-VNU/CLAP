@@ -99,8 +99,11 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
                 v_index = failing_variants.index(v)
                 if v_index % 2 == 0:
                     writer.writerow({'VARIANT': v, 'LABEL': FAILING})
-                elif v not in unconverted_to_FP_variants:
-                    writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
+                else:
+                    if v not in unconverted_to_FP_variants:
+                        writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
+                    else:
+                        writer.writerow({'VARIANT': v, 'LABEL': FAILING})
             elif v in passing_variants_contain_buggy_stmts:
                 writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
             else:
