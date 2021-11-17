@@ -1,12 +1,14 @@
 import csv
+import json
 
 from FileManager import *
 from label_data.LabelData import *
 from FileManager import *
 import xml.etree.ElementTree as ET
 
-from ranking.MultipleBugsManager import get_suspicious_space
-from ranking.RankingManager import get_infor_for_sbfl, get_set_of_stms, sbfl_ranking, SS_STMS_IN_F_PRODUCTS
+from label_data.SBFLHelper import get_suspicious_space_consistent_version, get_infor_for_sbfl_consistent_testing_version
+from ranking.RankingManager import get_infor_for_sbfl, get_set_of_stms, sbfl_ranking, SS_STMS_IN_F_PRODUCTS, \
+    local_ranking_a_suspicious_list
 from ranking.Spectrum_Expression import OP2
 
 TRUE_PASSING = "TP"
@@ -25,7 +27,12 @@ executed_susp_stmt_vs_susp_stmt_in_a_failed_execution = "executed_susp_stmt_vs_s
 not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution = "not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution"
 tested_unexpected_behaviors_in_passing_variant = "tested_unexpected_behaviors_in_passing_variant"
 confirmed_successes_in_passing_variant = "check_confirmed_successes_in_passing_variant"
-total_susp_scores = "total_susp_scores"
+total_susp_scores_in_system = "susp_scores_in_system"
+total_susp_scores_in_variants = "susp_scores_in_variants"
+
+forward_similarity = "forward_similarity"
+backward_similarity = "backward_similarity"
+both_forward_and_backward_similarity = "both_forward_and_backward_similarity"
 
 
 def get_variants_and_labels(mutated_project_dir):
@@ -189,7 +196,7 @@ def similar_path(path1, path2, threshold):
     for item in path1:
         if item in path2:
             count += 1
-    if count / len(path1) > threshold:
+    if len(path1) != 0 and count / len(path1) > threshold:
         return True
     return False
 
@@ -328,12 +335,14 @@ def check_confirmed_successes_in_passing_variant(executions_in_failing_products,
         return 1 - sum / len(fvars_have_susp_in_pvariant)
 
 
-def ranking_suspicious_stmts(project_dir):
-    search_spaces = get_suspicious_space(project_dir, 0.0, "")
-    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(project_dir,
-                                                                                   "",
-                                                                                   0.0)
-    all_stms_f_products_set = get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS])
+def ranking_suspicious_stmts(project_dir, failing_variants):
+    search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
+
+    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_consistent_testing_version(
+        project_dir, failing_variants,
+        "",
+        0.0)
+    all_stms_f_products_set = get_set_of_stms(search_spaces)
     full_ranked_list = sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests,
                                     all_stms_f_products_set,
                                     [OP2])
@@ -344,10 +353,125 @@ def ranking_suspicious_stmts(project_dir):
     return op2_ranked_list
 
 
+def normalize_score(scores_list):
+    min = 10000
+    max = -10000
+    for (stmt, score, v) in scores_list:
+        if score > max:
+            max = score
+        if score < min:
+            min = score
+    data = {}
+    for (stmt, score, v) in scores_list:
+        data[stmt] = (score - min) * (1 / (max - min))
+    return data
+
+
+def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
+    search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
+    suspicious_scores = local_ranking_a_suspicious_list(project_dir, search_spaces, [OP2], "")
+    data = {}
+    for v in suspicious_scores[OP2]:
+        normalized_data = normalize_score(suspicious_scores[OP2][v])
+        for stmt in normalized_data:
+            if stmt not in data:
+                data[stmt] = normalized_data[stmt]
+            elif normalized_data[stmt] > data[stmt]:
+                data[stmt] = normalized_data[stmt]
+    return data
+
+
 def check_total_susp_scores_in_passing_variant(susp_scores, passing_variant_stmt):
     sum_scores = 0
     for stmt in passing_variant_stmt:
         tmp = passing_variant_stmt[stmt]["id"]
         if tmp in susp_scores:
-           sum_scores += susp_scores[tmp]
+            sum_scores += susp_scores[tmp]
     return sum_scores
+
+
+def get_dependencies(slicing_file_dir):
+    slicing_file = open(slicing_file_dir, "r")
+    slicing_content = slicing_file.readline()
+    slicies = json.loads(slicing_content)
+    return slicies
+
+
+def check_similarity_between_two_slicies(pv_slice, fv_slice):
+    count = 0
+    for s in pv_slice:
+        if s in fv_slice:
+            count += 1
+    return count
+
+def check_dependencies_by_slicing_type(similarities, susp_stmt, fv_slicies, pv_slicies, slicing_type):
+    if susp_stmt in fv_slicies:
+        if susp_stmt in pv_slicies:
+            tmp = check_similarity_between_two_slicies(pv_slicies[susp_stmt], fv_slicies[susp_stmt])
+            if susp_stmt not in similarities:
+                similarities[susp_stmt] = {}
+                similarities[susp_stmt]["Backward"] = 0
+                similarities[susp_stmt]["Forward"] = 0
+                similarities[susp_stmt]["Both"] = 0
+
+            if len(fv_slicies[susp_stmt]) >0 and tmp/len(fv_slicies[susp_stmt]) > similarities[susp_stmt][slicing_type]:
+                similarities[susp_stmt][slicing_type] = tmp/len(fv_slicies[susp_stmt])
+    return similarities
+
+
+def check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies, pv_forward_slicies, pv_backward_slices):
+    for stmt in similarities:
+        simi_in_fw = 0
+        total_slice_length = 0
+        if stmt in pv_forward_slicies and stmt in fv_forward_slicies:
+            simi_in_fw = check_similarity_between_two_slicies(pv_forward_slicies[stmt], fv_forward_slicies[stmt])
+            total_slice_length = len(fv_forward_slicies[stmt])
+
+        simi_in_bw = 0
+        if stmt in pv_backward_slices and stmt in fv_backward_slicies:
+            simi_in_bw = check_similarity_between_two_slicies(pv_backward_slices[stmt], fv_backward_slicies[stmt])
+            total_slice_length += len(fv_backward_slicies[stmt])
+
+        if total_slice_length > 0:
+            tmp = (simi_in_bw + simi_in_fw) / total_slice_length
+            if tmp > similarities[stmt]["Both"]:
+                similarities[stmt]["Both"] = tmp
+    return similarities
+
+def aggreate_similarity_by_avg(similarity):
+    fw = 0
+    bw = 0
+    both = 0
+    for stmt in similarity:
+        fw += similarity[stmt]["Forward"]
+        bw += similarity[stmt]["Backward"]
+        both += similarity[stmt]["Both"]
+    return {"Forward": fw/len(similarity), "Backward": bw/len(similarity), "Both": both/len(similarity)}
+
+def check_dependencies(variants_folder_dir, passing_variant, failed_executions_in_failing_products):
+    passing_variant_dir = join_path(variants_folder_dir, passing_variant)
+    pv_forward_file = get_forward_slicing_file(passing_variant_dir)
+    pv_forward_slicies = get_dependencies(pv_forward_file)
+
+    pv_backward_file = get_backward_slicing_file(passing_variant_dir)
+    pv_backward_slicies = get_dependencies(pv_backward_file)
+
+    similarities = {}
+    for fv in failed_executions_in_failing_products:
+        fv_dir = join_path(variants_folder_dir, fv)
+
+        fv_forward_file = get_forward_slicing_file(fv_dir)
+        fv_forward_slicies = get_dependencies(fv_forward_file)
+
+        fv_backward_file = get_backward_slicing_file(fv_dir)
+        fv_backward_slicies = get_dependencies(fv_backward_file)
+
+        for test in failed_executions_in_failing_products[fv]:
+            for item in failed_executions_in_failing_products[fv][test]:
+                susp_stmt = item["id"]
+                similarities = check_dependencies_by_slicing_type(similarities, susp_stmt, fv_forward_slicies,
+                                                                  pv_forward_slicies, "Forward")
+                similarities = check_dependencies_by_slicing_type(similarities, susp_stmt, fv_backward_slicies,
+                                                                  pv_backward_slicies, "Backward")
+        similarities = check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies, pv_forward_slicies, pv_backward_slicies)
+    return aggreate_similarity_by_avg(similarities)

@@ -2,8 +2,8 @@ from label_data.LabelData import *
 
 
 if __name__ == "__main__":
-    project_base_path = "/Users/thu-trangnguyen/Documents/Research/SPL/Debug/1Bug/4wise"
-    base_features = ["Base"]
+    project_base_path = "/Users/thu-trangnguyen/Documents/Research/SPL/ZipMe/1Bug/2wise"
+    base_features = ["Base", "Compress"]
     mutated_projects_list = list_dir(project_base_path)
     bugs_in_bases = []
     one_fail = []
