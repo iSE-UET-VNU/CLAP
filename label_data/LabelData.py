@@ -6,7 +6,6 @@ from FileManager import *
 import logging
 
 
-
 def passing_product_has_buggy_features(config_file, buggy_features):
     passing_products = []
     with open(config_file) as csv_file:
@@ -63,13 +62,34 @@ def base_is_buggy_features(base_features, buggy_features):
     return False
 
 
+def verify_failing_variants(mutated_project_dir):
+    buggy_stmts = get_multiple_buggy_statements(mutated_project_dir.split("/")[-1], mutated_project_dir)
+    failing_variants = get_failing_variants(mutated_project_dir)
+    system_stm_ids = get_all_stm_ids(mutated_project_dir)
+    failing_executions = get_failings_executions(mutated_project_dir, system_stm_ids, failing_variants)
+    unconverted_to_FP_variants = []
+    for bstm in buggy_stmts:
+        flag = False
+        for v in failing_executions:
+            for test in failing_executions[v]:
+                for item in failing_executions[v][test]:
+                    if item['id'] == bstm:
+                        flag = True
+                        if v not in unconverted_to_FP_variants:
+                            unconverted_to_FP_variants.append(v)
+                        break
+                if flag: break
+            if flag: break
+    return unconverted_to_FP_variants
+
 
 def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants = list_dir(variants_dir)
     failing_variants = get_failing_variants(mutated_project_dir)
+    unconverted_to_FP_variants = verify_failing_variants(mutated_project_dir)
     file_name = join_path(mutated_project_dir, LABELED_FILE_NAME)
-
+    verify_failing_variants(mutated_project_dir)
     with open(file_name, 'w', newline='') as csvfile:
         fieldnames = ['VARIANT', 'LABEL', 'FP created from F']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -79,7 +99,7 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
                 v_index = failing_variants.index(v)
                 if v_index % 2 == 0:
                     writer.writerow({'VARIANT': v, 'LABEL': FAILING})
-                else:
+                elif v not in unconverted_to_FP_variants:
                     writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
             elif v in passing_variants_contain_buggy_stmts:
                 writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
