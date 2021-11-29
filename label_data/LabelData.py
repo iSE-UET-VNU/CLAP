@@ -1,4 +1,5 @@
 from label_data.HelperForLabeledData import *
+from label_data.SpectrumReader import get_all_stm_ids, get_failings_executions
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, get_mutated_features
 import csv
 import xml.etree.ElementTree as ET
@@ -89,7 +90,9 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     failing_variants = get_failing_variants(mutated_project_dir)
     unconverted_to_FP_variants = verify_failing_variants(mutated_project_dir)
     file_name = join_path(mutated_project_dir, LABELED_FILE_NAME)
-    verify_failing_variants(mutated_project_dir)
+    num_failings = 0
+    num_fp = 0
+    num_tp = 0
     with open(file_name, 'w', newline='') as csvfile:
         fieldnames = ['VARIANT', 'LABEL', 'FP created from F']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -99,12 +102,19 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
                 v_index = failing_variants.index(v)
                 if v_index % 2 == 0:
                     writer.writerow({'VARIANT': v, 'LABEL': FAILING})
+                    num_failings += 1
                 else:
                     if v not in unconverted_to_FP_variants:
                         writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
+                        num_fp += 1
                     else:
                         writer.writerow({'VARIANT': v, 'LABEL': FAILING})
+                        num_failings += 1
             elif v in passing_variants_contain_buggy_stmts:
                 writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
+                num_fp += 1
             else:
                 writer.writerow({'VARIANT': v, 'LABEL': TRUE_PASSING})
+                num_tp += 1
+    if(num_failings == 0 or num_tp == 0 or num_fp == 0):
+        print(mutated_project_dir)

@@ -1,14 +1,13 @@
-import csv
 import json
 
-from FileManager import *
 from label_data.LabelData import *
 from FileManager import *
 import xml.etree.ElementTree as ET
 
-from label_data.SBFLHelper import get_suspicious_space_consistent_version, get_infor_for_sbfl_consistent_testing_version
-from ranking.RankingManager import get_infor_for_sbfl, get_set_of_stms, sbfl_ranking, SS_STMS_IN_F_PRODUCTS, \
-    local_ranking_a_suspicious_list
+from label_data.SBFLHelper import get_suspicious_space_consistent_version, \
+    get_infor_for_sbfl_consistent_testing_version
+from label_data.SpectrumReader import get_stm_ids_per_variant, similar_path
+from ranking.RankingManager import get_set_of_stms, sbfl_ranking, local_ranking_a_suspicious_list
 from ranking.Spectrum_Expression import OP2
 
 TRUE_PASSING = "TP"
@@ -59,107 +58,8 @@ def write_dict_to_file(file_name, data, fieldnames):
             writer.writerow(tmp)
 
 
-def get_stm_ids_per_variant(variant_dir):
-    coverage_dir = get_test_coverage_dir(variant_dir)
-    spectrum_dirs = [join_path(coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME),
-                     join_path(coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)]
-    data = {}
-    for cfile in spectrum_dirs:
-        if os.path.isfile(cfile):
-            try:
-                tree = ET.parse(cfile)
-                root = tree.getroot()
-                project = root.find("project")
-                for package in project:
-                    for file in package:
-                        file_name = file.get("path")
-                        for line in file:
-                            id = line.get('featureClass') + "." + line.get('featureLineNum')
-                            key = file_name + "." + line.get('num')
-                            if key not in data:
-                                data[key] = {}
-                                data[key]['id'] = id
-                                data[key]['tested'] = 0
-                                if int(line.get('count')) != 0:
-                                    data[key]['tested'] = 1;
-            except:
-                logging.info("Exception when parsing %s", cfile)
-    return data
-
-
-def get_all_stm_ids(project_dir):
-    system_stm_ids = {}
-    variants = get_all_variant_dirs(project_dir)
-    for variant in variants:
-        variant_name = variant.split("/")[-1]
-        system_stm_ids[variant_name] = get_stm_ids_per_variant(variant)
-    return system_stm_ids
-
-
-def read_coverage_file(system_stm_ids, coverage_file_dir):
-    data = []
-    if os.path.isfile(coverage_file_dir):
-        try:
-            tree = ET.parse(coverage_file_dir)
-            root = tree.getroot()
-            project = root.find("project")
-            packages = project.findall("package")
-            for package in packages:
-                files = package.findall("file")
-                for file in files:
-                    file_path = file.get("path").split("/")
-                    src_id = file_path.index("src")
-                    file_name = "/".join(file_path[src_id + 1:])
-                    lines = file.findall("line")
-                    for line in lines:
-                        id = file_name + "." + line.get('num')
-                        if "count" in line.attrib and int(line.get("count")) > 0:
-                            if id in system_stm_ids.keys():
-                                if system_stm_ids[id] not in data:
-                                    data.append(system_stm_ids[id])
-        except:
-            logging.info("Exception when parsing %s", coverage_file_dir)
-    return data
-
-
-def get_failings_executions(project_dir, system_stm_ids, failing_variants):
-    failed_test_executions = {}
-    for variant in failing_variants:
-        failed_test_executions[variant] = {}
-        variant_dir = get_variant_dir(project_dir, variant)
-        failed_tests_coverage_dir = get_failed_test_coverage_dir(variant_dir)
-        all_failed_spectrums = list_dir(failed_tests_coverage_dir)
-        for file in all_failed_spectrums:
-            file_dir = join_path(failed_tests_coverage_dir, file)
-            failed_test_executions[variant][file] = read_coverage_file(system_stm_ids[variant], file_dir)
-    return failed_test_executions
-
-
-def get_passing_executions(project_dir, system_stm_ids, variants):
-    passed_test_executions = {}
-    for variant in variants:
-        passed_test_executions[variant] = {}
-        variant_dir = get_variant_dir(project_dir, variant)
-        passed_tests_coverage_dir = get_passed_test_coverage_dir(variant_dir)
-        all_passed_spectrums = list_dir(passed_tests_coverage_dir)
-        for file in all_passed_spectrums:
-            file_dir = join_path(passed_tests_coverage_dir, file)
-            passed_test_executions[variant][file] = read_coverage_file(system_stm_ids[variant], file_dir)
-    return passed_test_executions
-
-
-def get_passing_executions_in_a_variant(project_dir, system_stm_ids, variant):
-    passed_test_executions = {}
-    variant_dir = get_variant_dir(project_dir, variant)
-    passed_tests_coverage_dir = get_passed_test_coverage_dir(variant_dir)
-    all_passed_spectrums = list_dir(passed_tests_coverage_dir)
-    for file in all_passed_spectrums:
-        file_dir = join_path(passed_tests_coverage_dir, file)
-        passed_test_executions[file] = read_coverage_file(system_stm_ids[variant], file_dir)
-    return passed_test_executions
-
-
 def get_labeled_failing_variants(project_dir):
+    print(project_dir)
     failing_variants = get_failing_variants(project_dir)
     variants_and_labels = get_variants_and_labels(project_dir)
     for item in failing_variants:
@@ -190,15 +90,6 @@ def convert_to_dict(passing_variant_stmt):
             stmt_ids[tmp["id"]]["tested"] = tmp["tested"]
     return stmt_ids
 
-
-def similar_path(path1, path2, threshold):
-    count = 0
-    for item in path1:
-        if item in path2:
-            count += 1
-    if len(path1) != 0 and count / len(path1) > threshold:
-        return True
-    return False
 
 
 def exist_path(path, list_paths, threshold):
@@ -404,6 +295,7 @@ def check_similarity_between_two_slicies(pv_slice, fv_slice):
             count += 1
     return count
 
+
 def check_dependencies_by_slicing_type(similarities, susp_stmt, fv_slicies, pv_slicies, slicing_type):
     if susp_stmt in fv_slicies:
         if susp_stmt in pv_slicies:
@@ -414,12 +306,14 @@ def check_dependencies_by_slicing_type(similarities, susp_stmt, fv_slicies, pv_s
                 similarities[susp_stmt]["Forward"] = 0
                 similarities[susp_stmt]["Both"] = 0
 
-            if len(fv_slicies[susp_stmt]) >0 and tmp/len(fv_slicies[susp_stmt]) > similarities[susp_stmt][slicing_type]:
-                similarities[susp_stmt][slicing_type] = tmp/len(fv_slicies[susp_stmt])
+            if len(fv_slicies[susp_stmt]) > 0 and tmp / len(fv_slicies[susp_stmt]) > similarities[susp_stmt][
+                slicing_type]:
+                similarities[susp_stmt][slicing_type] = tmp / len(fv_slicies[susp_stmt])
     return similarities
 
 
-def check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies, pv_forward_slicies, pv_backward_slices):
+def check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies, pv_forward_slicies,
+                               pv_backward_slices):
     for stmt in similarities:
         simi_in_fw = 0
         total_slice_length = 0
@@ -438,6 +332,7 @@ def check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_sli
                 similarities[stmt]["Both"] = tmp
     return similarities
 
+
 def aggreate_similarity_by_avg(similarity):
     fw = 0
     bw = 0
@@ -446,7 +341,11 @@ def aggreate_similarity_by_avg(similarity):
         fw += similarity[stmt]["Forward"]
         bw += similarity[stmt]["Backward"]
         both += similarity[stmt]["Both"]
-    return {"Forward": fw/len(similarity), "Backward": bw/len(similarity), "Both": both/len(similarity)}
+
+    if len(similarity) == 0:
+        return {"Forward": 0, "Backward": 0, "Both": 0}
+    return {"Forward": fw / len(similarity), "Backward": bw / len(similarity), "Both": both / len(similarity)}
+
 
 def check_dependencies(variants_folder_dir, passing_variant, failed_executions_in_failing_products):
     passing_variant_dir = join_path(variants_folder_dir, passing_variant)
@@ -473,5 +372,6 @@ def check_dependencies(variants_folder_dir, passing_variant, failed_executions_i
                                                                   pv_forward_slicies, "Forward")
                 similarities = check_dependencies_by_slicing_type(similarities, susp_stmt, fv_backward_slicies,
                                                                   pv_backward_slicies, "Backward")
-        similarities = check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies, pv_forward_slicies, pv_backward_slicies)
+        similarities = check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies,
+                                                  pv_forward_slicies, pv_backward_slicies)
     return aggreate_similarity_by_avg(similarities)
