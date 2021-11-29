@@ -24,41 +24,41 @@ def summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments):
         all_bugs_file_dir = join_path(summary_path,
                                       prefix + "_" + systems[i] + "temp" + file_post_fix + ".xlsx")
 
-
         write_all_bugs_to_a_file(all_bugs_file_dir, experiments[i], num_of_bugs, base_path)
 
         summary_file = join_path(summary_path,
                                  prefix + "_" + systems[i] + "_summary" + file_post_fix + ".xlsx")
         comparison_data[systems[i]] = summary_result(all_bugs_file_dir, summary_file, prefix + systems[i])
-        comparison_file_path = join_path(summary_path, prefix + "_comparison" + file_post_fix + ".xlsx")
-        write_comparison_data_to_file(comparison_file_path, comparison_data)
-        hitx_file_dir = join_path(summary_path,
-                                  prefix + "_" + systems[i] + "_hix" + file_post_fix + ".xlsx")
-        summary_hitx(hitx_file_dir, all_bugs_file_dir, 5)
-        pbl_file = join_path(summary_path,
-                                                 prefix + "_" + systems[i] + "plb" + file_post_fix + ".xlsx")
-        summary_pbl(all_bugs_file_dir, pbl_file, prefix + systems[i])
-        percentage_case_found_bug_file = join_path(summary_path,
-                             prefix + "_" + systems[i] + "percentage_case_found_bug_file" + file_post_fix + ".xlsx")
-        summary_percentage_of_cases_found_bugs(all_bugs_file_dir, percentage_case_found_bug_file, prefix + systems[i])
+        # comparison_file_path = join_path(summary_path, prefix + "_comparison" + file_post_fix + ".xlsx")
+        # #write_comparison_data_to_file(comparison_file_path, comparison_data)
+        # hitx_file_dir = join_path(summary_path,
+        #                           prefix + "_" + systems[i] + "_hix" + file_post_fix + ".xlsx")
+        # summary_hitx(hitx_file_dir, all_bugs_file_dir, 5)
+        # pbl_file = join_path(summary_path,
+        #                      prefix + "_" + systems[i] + "plb" + file_post_fix + ".xlsx")
+        # summary_pbl(all_bugs_file_dir, pbl_file, prefix + systems[i])
+        # percentage_case_found_bug_file = join_path(summary_path,
+        #                                            prefix + "_" + systems[
+        #                                                i] + "percentage_case_found_bug_file" + file_post_fix + ".xlsx")
+        # summary_percentage_of_cases_found_bugs(all_bugs_file_dir, percentage_case_found_bug_file, prefix + systems[i])
         os.remove(all_bugs_file_dir)
 
 
 if __name__ == "__main__":
-    num_of_bugs = ["2Bug"]
-    prefix = "temp_0.5"
-    base_path = join_path("/Users/thu-trangnguyen/Desktop/project/InputPreparation/experiment_results/", prefix)
+    num_of_bugs = ["1Bug"]
+    prefix = "classified_all_keep_useful_tests_0.5"
+    base_path = join_path("/Users/thu-trangnguyen/Documents/Projects/VarCop/experiment_results/", prefix)
 
-    systems = ["BankAccountTP"]
+    systems = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL", "ZipMe", "ALL"]
 
     bankaccount = ["BankAccountTP/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     elevator = ["Elevator/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     email = ["Email/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     examdb = ["ExamDB/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
-    gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
-    zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
+    gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/1wise/"]
+    zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/2wise/"]
     all = [
         bankaccount[0], elevator[0], email[0], examdb[0], gpl[0], zipme[0]
     ]
-    experiments = [bankaccount]
+    experiments = [bankaccount, elevator, email, examdb, gpl, zipme, all]
     summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments)

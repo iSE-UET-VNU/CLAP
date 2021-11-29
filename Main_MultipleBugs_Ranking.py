@@ -6,13 +6,13 @@ from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIA
     WONG3, WONG2, M1, ROGOT2, EUCLID, HAMMING, FLEISS, ANDERBERG, KULCZYNSKI1, KULCZYNSKI2, HARMONIC_MEAN, GOODMAN
 
 if __name__ == "__main__":
-    result_base_folder = "temp_"
-    data_base_dir = "/Users/thu-trangnguyen/Downloads/VarCop/Debug"
-    system_names = ["BankAccountTP"]
-    bug_folders = ["2Bug"]
+    result_base_folder = "classified_all_keep_useful_tests_"
+    data_base_dir = "/Users/thu-trangnguyen/Documents/Research/SPL"
+    system_names = ["ZipMe"]
+    bug_folders = ["1Bug"]
     alpha = [0.5]
     # alpha = [1, 0.3, 0.7]
-    kwise_list = ["4wise"]
+    kwise_list = ["2wise"]
     filtering_coverage_rate_list = [0.0]
     # coverage_versions = [ "INoT_2_", "INoT_4_", "INoT_6_", "INoT_8_", "INoT_9_"]
     coverage_versions = [""]
@@ -32,3 +32,6 @@ if __name__ == "__main__":
                                                WONG2, EUCLID, ZOLTAR,
                                                ROGOT2, HAMMING, FLEISS, ANDERBERG,
                                                GOODMAN, HARMONIC_MEAN, KULCZYNSKI2], 0.0, coverage, k)
+
+                        # multiple_bugs_ranking(result_folder, system_name, bug_folder, bug_folder_dir, kwise,
+                        #                       [TARANTULA], 0.0, coverage, k)
