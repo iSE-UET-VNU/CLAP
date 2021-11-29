@@ -2,6 +2,7 @@ import os
 
 from xlsxwriter import Workbook
 
+from label_data.HelperForLabeledData import FALSE_PASSING, LABEL
 from ranking import RankingManager
 from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
@@ -14,6 +15,7 @@ from spc import SPCsManager
 from suspicious_statements_manager import SlicingManager
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, \
     get_suspicious_statement_varcop, get_suspicious_statement_tc_based
+from csv import reader
 
 BUG_ID_COL = 0
 VARCOP_BUGGY_STM_COL = 1
@@ -76,35 +78,35 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
     all_space = len(get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS]))
     all_stms = len(get_set_of_stms(search_spaces[SS_ALL_STMS]))
 
-    for stm in ranking_results[VARCOP_RANK].keys():
+    for stm in ranking_results[SBFL_RANK].keys():
         sheet.write(row, VARCOP_BUGGY_STM_COL, stm)
 
-        if is_var_bug:
-            sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm][RANK])
-            sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_RANK][stm][RANK] / all_stms) * 100)
-        else:
-            sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
-            sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
-            sheet.write(row, IS_VAR_BUG_COL, 0)
+        # if is_var_bug:
+        #     sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm][RANK])
+        #     sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_RANK][stm][RANK] / all_stms) * 100)
+        # else:
+        #     sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
+        #     sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
+        #     sheet.write(row, IS_VAR_BUG_COL, 0)
 
-        sheet.write(row, VARCOP_SPACE_COL, varcop_space)
+        # sheet.write(row, VARCOP_SPACE_COL, varcop_space)
 
-        sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
-        sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK] / all_stms) * 100)
-        sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
-        sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK] / all_stms) * 100)
-        sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
-        sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
+        # sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
+        # sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
+        # sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK] / all_stms) * 100)
 
-        sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
+        # sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
 
-        sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
-        sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL,
-                    (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
+        # sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL,
+        #            (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SBFL_RANK_COL, ranking_results[SBFL_RANK][stm][RANK])
         sheet.write(row, SBFL_EXAM_COL, (ranking_results[SBFL_RANK][stm][RANK] / all_stms) * 100)
-        sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
-        sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
+        # sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SPACE_COL, all_space)
 
         row += 1
@@ -182,9 +184,21 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                 num_of_bugs = 0
 
                 for mutated_project_name in mutated_projects:
+                    mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
+                    classified_file = join_path(mutated_project_dir, "classified_svc_all.csv")
+                    if not os.path.isfile(classified_file):
+                        continue
                     print(mutated_project_name)
                     num_of_bugs += 1
-                    mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
+
+                    label_file = join_path(mutated_project_dir, "variants_testing_label.csv")
+                    failing_variants = get_f_variants(label_file, LABEL)
+
+                    #not_used_variants = []
+                    not_used_variants = get_not_used_variants(classified_file)
+                    #not_used_variants = get_not_used_variants_for_classification_by_variant(
+                    #    join_path(mutated_project_dir, "consistent_testing_info_normalized.csv"),
+                    #    classified_file)
 
                     # suspicious_isolation(mutated_project_dir, filtering_coverage_rate, coverage_version)
                     search_spaces = get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version)
@@ -198,22 +212,28 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                         is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base"])
 
                     ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
-                                                                                 mutated_project_dir,
+                                                                                 mutated_project_dir, failing_variants,
+                                                                                 not_used_variants,
                                                                                  search_spaces,
                                                                                  spectrum_expressions,
                                                                                  aggregation_type,
                                                                                  normalization_type,
                                                                                  coverage_version,
                                                                                  filtering_coverage_rate, alpha)
-                    fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
-                                                                        search_spaces,
-                                                                        filtering_coverage_rate, spectrum_expressions)
+                    # fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
+                    #                                                     search_spaces,
+                    #                                                     filtering_coverage_rate, spectrum_expressions)
+                    fb_ranking_results = {}
 
                     for metric in range(0, len(spectrum_expressions)):
                         sheet[metric].write(row_temp, BUG_ID_COL, mutated_project_name)
+                        # row = write_result_to_file(row_temp, sheet[metric],
+                        #                            ranking_results[spectrum_expressions[metric]],
+                        #                            fb_ranking_results[spectrum_expressions[metric]], search_spaces,
+                        #                            is_a_var_bug)
                         row = write_result_to_file(row_temp, sheet[metric],
                                                    ranking_results[spectrum_expressions[metric]],
-                                                   fb_ranking_results[spectrum_expressions[metric]], search_spaces,
+                                                   "", search_spaces,
                                                    is_a_var_bug)
                 wb.close()
 
@@ -234,3 +254,49 @@ def write_runtime_to_file(system_result_dir, run_time, file_name):
             col += 1
         row += 1
     wb.close()
+
+
+def get_f_variants(label_file, column):
+    f_variants = []
+    count = 0
+    index = 0
+    with open(label_file, 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        for row in csv_reader:
+            if count == 0:
+                index = row.index(column)
+                count += 1
+            else:
+                if row[index] == "F":
+                    f_variants.append(row[0])
+    return f_variants
+
+
+def get_not_used_variants(classified_file):
+    fp_variants = []
+
+    with open(classified_file, 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        for row in csv_reader:
+
+            if row[-1] == FALSE_PASSING:
+                fp_variants.append(row[0])
+    return fp_variants
+
+
+def get_not_used_variants_for_classification_by_variant(normalized_info_file,
+                                                        classified_file):
+    nu_variants = []
+    with open(classified_file, 'r') as c_read_obj:
+        c_csv_reader = reader(c_read_obj)
+        for row in c_csv_reader:
+            if row[-1] == FALSE_PASSING:
+                nu_variants.append(row[0])
+
+    with open(normalized_info_file, 'r') as n_read_obj:
+        n_csv_reader = reader(n_read_obj)
+        for row in n_csv_reader:
+
+            if row[1] not in nu_variants and row[2] == FALSE_PASSING:
+                nu_variants.append(row[1])
+    return nu_variants

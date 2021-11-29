@@ -13,9 +13,10 @@ from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIA
 
 from xlsxwriter import Workbook
 
-data_column = [VARCOP_RANK, VARCOP_EXAM, VARCOP_SPACE, VARCOP_TC_RANK, VARCOP_TC_EXAM, SBFL_TC_RANK, SBFL_TC_EXAM,
-               FB_TC_RANK, FB_TC_EXAM, TC_SPACE, VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM,
-               SBFL_RANK, SBFL_EXAM, FB_RANK, FB_EXAM, SPACE]
+# data_column = [VARCOP_RANK, VARCOP_EXAM, VARCOP_SPACE, VARCOP_TC_RANK, VARCOP_TC_EXAM, SBFL_TC_RANK, SBFL_TC_EXAM,
+#                FB_TC_RANK, FB_TC_EXAM, TC_SPACE, VARCOP_DISABLE_BPC_RANK, VARCOP_DISABLE_BPC_EXAM,
+#                SBFL_RANK, SBFL_EXAM, FB_RANK, FB_EXAM, SPACE]
+data_column = [SBFL_RANK, SBFL_EXAM, SPACE]
 rank_column = [VARCOP_RANK, VARCOP_TC_RANK, SBFL_TC_RANK, FB_TC_RANK, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, FB_RANK]
 SBFL_METRIC_COL = 0
 NUM_CASES_COL = 1
@@ -50,6 +51,7 @@ def write_all_bugs_to_a_file(summary_file_dir, file_lists, num_of_bugs, base_pat
         for b in num_of_bugs:
             file_name = join_path(file, b + ".xlsx")
             file_path = join_path(base_path, file_name)
+            print(file_path)
             if os.path.exists(file_path):
                 excel_data_df = pandas.read_excel(file_path, sheet_name=None)
                 num_of_file += 1
@@ -175,13 +177,14 @@ def calculate_average_in_a_file(experimental_file_dir, row, sheet):
         # average_value_list = percentage_of_cases_found_bugs(experimental_file_dir, spectrum_expression_type, 3)
         col = NUM_BUGS_COL + 1
         for metric in data_column:
+
             sheet.write(row, col, average_value_list[metric])
             col += 1
         row += 1
 
-        comparison_data = comparison(comparison_data, average_value_list, spectrum_expression_type)
+        #comparison_data = comparison(comparison_data, average_value_list, spectrum_expression_type)
 
-    return comparison_data
+    #return comparison_data
 
 
 def summary_pbl(all_bugs_file, summary_file, prefix):

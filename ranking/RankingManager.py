@@ -11,6 +11,7 @@ from FileManager import join_path, \
     get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
     get_variants_dir, get_all_variant_dirs, list_dir, get_failing_variants, \
     get_spectrum_failed_coverage_file_name_with_version, get_spectrum_passed_coverage_file_name_with_version
+from label_data.SpectrumReader import get_all_stm_ids, get_failings_executions, get_passing_executions, similar_path
 
 from ranking.Keywords import *
 # keywords
@@ -119,11 +120,13 @@ def product_based_assessment(mutated_project_dir, all_stms_in_failing_products, 
     return variant_level_suspiciousness
 
 
-def sbfl(buggy_statements, mutated_project_dir, search_spaces, spectrum_expressions, spectrum_coverage_prefix,
+def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, not_used_variants,
+         spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate):
-    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
-                                                                                   spectrum_coverage_prefix,
-                                                                                   coverage_rate)
+    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_remove_passed_tests(
+        mutated_project_dir, failing_variants, not_used_variants,
+        spectrum_coverage_prefix,
+        coverage_rate)
     # traditional SBFL
     all_stms_f_products_set = get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS])
     sliced_stms_set = get_set_of_stms(search_spaces[SS_SLICING])
@@ -177,7 +180,6 @@ def varcop(buggy_statements, local_scores, variant_level_suspiciousness, search_
                                                                        aggregation_type,
                                                                        normalized_type, alpha)
 
-
         all_buggy_positions[metric][VARCOP_RANK] = locate_multiple_bugs(buggy_statements,
                                                                         varcop_isolated_set,
                                                                         varcop_isolated_ranked_list,
@@ -193,14 +195,14 @@ def varcop(buggy_statements, local_scores, variant_level_suspiciousness, search_
                                                                        aggregation_type,
                                                                        normalized_type, alpha)
 
-
         all_buggy_positions[metric][VARCOP_TC_RANK] = locate_multiple_bugs(buggy_statements,
                                                                            sliced_isolated_set,
                                                                            sliced_isolated_ranked_list,
                                                                            full_ranked_list)
 
 
-def ranking_multiple_bugs(buggy_statements, mutated_project_dir, search_spaces, spectrum_expressions,
+def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants, not_used_variants, search_spaces,
+                          spectrum_expressions,
                           aggregation_type, normalized_type, spectrum_coverage_prefix="", coverage_rate=0.0, alpha=0):
     start_time = time.time()
     global buggy
@@ -215,10 +217,11 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, search_spaces, 
                                                                              search_spaces[SS_STMS_IN_F_PRODUCTS],
                                                                              spectrum_expressions,
                                                                              spectrum_coverage_prefix)
-    sbfl(buggy_statements, mutated_project_dir, search_spaces, spectrum_expressions, spectrum_coverage_prefix,
+    sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, not_used_variants,
+         spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate)
-    varcop(buggy_statements, local_suspiciousness_of_all_the_system, variant_level_suspiciousness, search_spaces,
-           spectrum_expressions, aggregation_type, normalized_type, alpha)
+    # varcop(buggy_statements, local_suspiciousness_of_all_the_system, variant_level_suspiciousness, search_spaces,
+    #       spectrum_expressions, aggregation_type, normalized_type, alpha)
 
     varcop_ranking_time = time.time() - start_time
     return all_buggy_positions, varcop_ranking_time
@@ -569,38 +572,72 @@ def get_executed_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefi
     return all_stms_in_system, all_stms_in_failing_product
 
 
-def get_infor_for_sbfl(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
+def can_use_this_test(path, failed_executions, threshold):
+    for v in failed_executions:
+        for t in failed_executions[v]:
+            if similar_path(path, failed_executions[v][t], threshold):
+                return False
+    return True
+
+
+def get_infor_for_sbfl_remove_passed_tests(mutated_project_dir, failing_variants, not_used_variants,
+                                           spectrum_coverage_prefix, coverage_rate):
+    stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
+                                                                                       failing_variants,
+                                                                                       not_used_variants,
+                                                                                       spectrum_coverage_prefix,
+                                                                                       coverage_rate)
+
+    system_stm_ids = get_all_stm_ids(mutated_project_dir)
+    failed_executions_in_failing_products = get_failings_executions(mutated_project_dir, system_stm_ids,
+                                                                    failing_variants)
+    passing_executions = get_passing_executions(mutated_project_dir, system_stm_ids, not_used_variants)
+
+    for v in passing_executions:
+        for test in passing_executions[v]:
+            if can_use_this_test(passing_executions[v][test], failed_executions_in_failing_products, 0.8):
+                for item in passing_executions[v][test]:
+                    if int(item["tested"]) == 1:
+                        if item["id"] in stm_info_for_spectrum:
+                            stm_info_for_spectrum[item["id"]]['passed_test_count'] += 1
+                total_passed_tests += 1
+    return stm_info_for_spectrum, total_passed_tests, total_failed_tests
+
+
+def get_infor_for_sbfl(mutated_project_dir, failing_variants, not_used_variants, spectrum_coverage_prefix,
+                       coverage_rate):
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
     variants_list = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variants_list:
-        stm_coverage = 0
-        if coverage_rate > 0:
-            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
-        test_coverage_dir = get_test_coverage_dir(variant_dir)
-        spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
-        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
+        if variant_dir.split("/")[-1] not in not_used_variants:
+            stm_coverage = 0
+            if coverage_rate > 0:
+                stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
+            test_coverage_dir = get_test_coverage_dir(variant_dir)
+            spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
+            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
+            spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+            spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
 
-        # if variant is a passing variant and stm_coverage < coverage_rate
-        if not os.path.isfile(
-                spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
-            continue
-        if os.path.isfile(spectrum_failed_coverage_file_dir):
-            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
-                                                                    spectrum_failed_coverage_file_dir,
-                                                                    FAILED_TEST_COUNT)
+            # if variant is a passing variant and stm_coverage < coverage_rate
+            if not os.path.isfile(
+                    spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
+                continue
+            if variant_dir.split("/")[-1] in failing_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
+                stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
+                                                                        spectrum_failed_coverage_file_dir,
+                                                                        FAILED_TEST_COUNT)
 
-        if os.path.isfile(spectrum_passed_coverage_file_dir):
-            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
-                                                                    spectrum_passed_coverage_file_dir,
-                                                                    PASSED_TEST_COUNT)
+            if os.path.isfile(spectrum_passed_coverage_file_dir):
+                stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
+                                                                        spectrum_passed_coverage_file_dir,
+                                                                        PASSED_TEST_COUNT)
 
-        ftests, ptests = count_tests(test_coverage_dir, spectrum_coverage_prefix)
-        total_failed_tests += ftests
-        total_passed_tests += ptests
+            ftests, ptests = count_tests2(test_coverage_dir, failing_variants, spectrum_coverage_prefix)
+            total_failed_tests += ftests
+            total_passed_tests += ptests
 
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
 
@@ -678,6 +715,23 @@ def count_tests(dir, spectrum_coverage_prefix):
     num_of_failed_tests = 0
     num_of_passed_tests = 0
     if os.path.isfile(spectrum_failed_coverage_file_dir):
+        num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
+
+    if os.path.isfile(spectrum_passed_coverage_file_dir):
+        num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
+
+    return num_of_failed_tests, num_of_passed_tests
+
+
+def count_tests2(dir, failing_variants, spectrum_coverage_prefix):
+    spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
+    spectrum_failed_coverage_file_dir = join_path(dir, spectrum_failed_file)
+    spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+    spectrum_passed_coverage_file_dir = join_path(dir, spectrum_passed_file)
+
+    num_of_failed_tests = 0
+    num_of_passed_tests = 0
+    if dir.split("/")[-2] in failing_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
         num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
 
     if os.path.isfile(spectrum_passed_coverage_file_dir):
