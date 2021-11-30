@@ -1,8 +1,8 @@
 from ranking.Keywords import *
-from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
+from spectrum_manager.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
     AMPLE, \
-    SIMPLE_MATCHING, RUSSELL_RAO, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL, DICE, HUMANN, OVERLAP, ZOLTAR, \
-    WONG3, WONG2, M1, ROGOT2, EUCLID, HAMMING, FLEISS, ANDERBERG, KULCZYNSKI1, KULCZYNSKI2, HARMONIC_MEAN, GOODMAN
+    SIMPLE_MATCHING, RUSSELL_RAO, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL, DICE, HUMANN, ZOLTAR, \
+    WONG2, ROGOT2, EUCLID, HAMMING, FLEISS, ANDERBERG, KULCZYNSKI2, HARMONIC_MEAN, GOODMAN
 
 from xlsxwriter import Workbook
 
@@ -95,15 +95,15 @@ def write_comparison_data_to_file(file_path, comparison_data):
     index = 0
     for metrics in comparison_metrics:
         sheet_name = ""
-        if(metrics[0] == VARCOP_RANK):
+        if metrics[0] == VARCOP_RANK:
             sheet_name = "VARCOP"
-        if(metrics[0] == VARCOP_TC_RANK):
+        if metrics[0] == VARCOP_TC_RANK:
             sheet_name = "VARCOP_SLICING"
-        if(metrics[0] == VARCOP_DISABLE_BPC_RANK):
+        if metrics[0] == VARCOP_DISABLE_BPC_RANK:
             sheet_name = "VARCOP_ALL"
-        if(metrics[1] == SBFL_RANK):
+        if metrics[1] == SBFL_RANK:
             sheet_name += "vs SBFL"
-        if(metrics[1] == SBFL_TC_RANK):
+        if metrics[1] == SBFL_TC_RANK:
             sheet_name += "vs SBFL_SLICING"
 
         sheets.append(wb.add_worksheet(sheet_name))

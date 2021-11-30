@@ -1,11 +1,8 @@
 import pandas
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
 from sklearn import svm
 from sklearn import metrics
 
-from FileManager import list_dir, join_path
-from label_data.HelperForLabeledData import *
+from consistent_testing_manager.FPMatricsCaculation import *
 import numpy as np
 
 FEATURES = [DDU,

@@ -2,16 +2,15 @@ import os
 
 from xlsxwriter import Workbook
 
-from label_data.HelperForLabeledData import FALSE_PASSING, LABEL
+from consistent_testing_manager.FPMatricsCaculation import FALSE_PASSING, LABEL
 from ranking import RankingManager
-from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
-    ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_executed_stms_of_the_system, get_set_of_stms
-from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir, get_spc_log_file_path, \
-    get_project_sub_dir_by_folder_name
-from ranking.VarBugManager import is_var_bug, is_var_bug_by_config
+    ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_set_of_stms
+from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, list_dir, get_spc_log_file_path
+from ranking.VarBugManager import is_var_bug_by_config
 from spc import SPCsManager
+from spectrum_manager.SpectrumReader import get_executed_stms_of_the_system
 from suspicious_statements_manager import SlicingManager
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, \
     get_suspicious_statement_varcop, get_suspicious_statement_tc_based
@@ -185,7 +184,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                 for mutated_project_name in mutated_projects:
                     mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
-                    classified_file = join_path(mutated_project_dir, "classified_svc_all.csv")
+                    classified_file = join_path(mutated_project_dir, "classified_svc_by_system_0.csv")
                     if not os.path.isfile(classified_file):
                         continue
                     print(mutated_project_name)

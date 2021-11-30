@@ -1,22 +1,15 @@
-import logging
-import os
+
 import time
-import xml.etree.ElementTree as ET
-from statistics import median, mode, stdev, mean
+from statistics import median, stdev
 from scipy import stats
 from scipy.stats.mstats import gmean
 import numpy
 
-from FileManager import join_path, \
-    get_test_coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, FAILED_TEST_COVERAGE_FOLDER_NAME, get_variant_dir, \
-    get_variants_dir, get_all_variant_dirs, list_dir, get_failing_variants, \
-    get_spectrum_failed_coverage_file_name_with_version, get_spectrum_passed_coverage_file_name_with_version
-from label_data.SpectrumReader import get_all_stm_ids, get_failings_executions, get_passing_executions, similar_path
+from spectrum_manager.SpectrumReader import *
 
 from ranking.Keywords import *
 # keywords
-from ranking.Spectrum_Expression import *
-from TestingCoverageManager import statement_coverage
+from spectrum_manager.Spectrum_Expression import *
 from ranking.VariantLevelRankingManager import calculate_suspiciousness_variant_level, get_num_passing_failing_variants, \
     VARIANT_LEVEL_SUSPICIOUSNESS_SCORE
 
@@ -227,24 +220,6 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variant
     return all_buggy_positions, varcop_ranking_time
 
 
-# def sbfl_only_ranking_multiple_bugs(buggy_statements, mutated_project_dir, spectrum_expression,
-#                                     spectrum_coverage_prefix="", coverage_rate=0.0):
-#     global buggy
-#     buggy = buggy_statements
-#     global system
-#     system = ""
-#     all_buggy_position = {}
-#     space = {}
-#     # traditional SBFL
-#     ranked_list_traditional_spectrum = sbfl_ranking(mutated_project_dir, spectrum_expression,
-#                                                     spectrum_coverage_prefix, coverage_rate)
-#
-#     all_buggy_position[SBFL_RANK] = locate_multiple_bugs(buggy_statements,
-#                                                                  ranked_list_traditional_spectrum)
-#     space[SBFL_RANK] = len(ranked_list_traditional_spectrum)
-#     return all_buggy_position, space
-
-
 def locate_multiple_bugs(buggy_statements, isolated_set, isolated_ranked_list,
                          full_ranked_list):
     bugs = {}
@@ -261,21 +236,6 @@ def locate_multiple_bugs(buggy_statements, isolated_set, isolated_ranked_list,
         else:
             bugs[stm][EXAM] = bugs[stm][RANK] / len(isolated_ranked_list)
     return bugs
-
-
-# def locate_multiple_bugs_by_sbfl(buggy_statements, ranked_list, full_ranked_list):
-#     buggy_positions = {}
-#     stms_in_ranked_list = get_set_of_stms(ranked_list)
-#     print(stms_in_ranked_list)
-#     for stm in buggy_statements:
-#         rank = search_rank_worst_case(stm, ranked_list)
-#         if rank == STM_NOT_FOUND:
-#             temp = search_rank_worst_case(stm, full_ranked_list)
-#             rank = len(ranked_list) + temp
-#             for stm in stms_in_ranked_list:
-#                 rank -= 1
-#         buggy_positions[stm] = rank
-#     return buggy_positions
 
 
 def get_local_score(stm, ranked_list):
@@ -314,7 +274,7 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all
     normalized_score_list = {}
     for variant in all_statements_in_failing_variants:
         normalized_score_list[variant] = {}
-        if (len(all_statements_in_failing_variants[variant]) > 0):
+        if len(all_statements_in_failing_variants[variant]) > 0:
             max = local_suspiciousness_of_all_the_system[variant][0][1]
             min = \
                 local_suspiciousness_of_all_the_system[variant][
@@ -323,16 +283,16 @@ def normalize_local_score_alpha_beta(local_suspiciousness_of_all_the_system, all
                 local_score, num_of_failing_test = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
 
                 if local_score == STM_NOT_FOUND:
-                    normalized_score = alpha
+                    tmp_normalized_score = alpha
                 else:
                     if min == max:
-                        normalized_score = beta
+                        tmp_normalized_score = beta
                     else:
                         if num_of_failing_test == 0:
-                            normalized_score = alpha
+                            tmp_normalized_score = alpha
                         else:
-                            normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
-                normalized_score_list[variant][stm] = normalized_score
+                            tmp_normalized_score = (local_score - min) * ((beta - alpha) / (max - min)) + alpha
+                normalized_score_list[variant][stm] = tmp_normalized_score
     return normalized_score_list
 
 
@@ -346,10 +306,10 @@ def normalize_local_score_none(local_suspiciousness_of_all_the_system, all_state
             for stm in all_suspicious_stm:
                 local_score, num_of_fail_test = get_local_score(stm, local_suspiciousness_of_all_the_system[variant])
                 if local_score == STM_NOT_FOUND:
-                    normalized_score = 0
+                    tmp_normalized_score = 0
                 else:
-                    normalized_score = local_score
-                normalized_score_list[variant][stm] = normalized_score
+                    tmp_normalized_score = local_score
+                normalized_score_list[variant][stm] = tmp_normalized_score
     return normalized_score_list
 
 
@@ -388,7 +348,7 @@ def global_score_aggregation_max(all_stms_of_the_system, normalized_score_list, 
     for variant in normalized_score_list:
         for stm in normalized_score_list[variant]:
             if stm in all_stms_score_list:
-                if (all_stms_score_list[stm][score_type] < normalized_score_list[variant][stm]):
+                if all_stms_score_list[stm][score_type] < normalized_score_list[variant][stm]:
                     all_stms_score_list[stm][score_type] = normalized_score_list[variant][stm]
             if stm not in all_stms_score_list:
                 all_stms_score_list[stm] = {}
@@ -528,50 +488,6 @@ def sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests, isol
     return spectrum_ranked_list
 
 
-def get_executed_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
-    variants_dir = get_variants_dir(mutated_project_dir)
-    variants_list = list_dir(variants_dir)
-    all_stms_in_system = {}
-    all_stms_in_failing_product = {}
-    for variant in variants_list:
-        stm_coverage = 0
-        variant_dir = get_variant_dir(mutated_project_dir, variant)
-        test_coverage_dir = get_test_coverage_dir(variant_dir)
-        if coverage_rate > 0:
-            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
-        spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        failed_file = join_path(test_coverage_dir, spectrum_failed_file)
-        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        passed_file = join_path(test_coverage_dir, spectrum_passed_file)
-
-        # if variant is a passing coverage and statement coverage is less than the coverage rate
-        if not os.path.isfile(failed_file) and coverage_rate != 0 and stm_coverage <= coverage_rate:
-            continue
-
-        coverage_files = [failed_file, passed_file]
-
-        for c_file in coverage_files:
-            if os.path.isfile(c_file):
-                data = {}
-                try:
-                    tree = ET.parse(c_file)
-                    root = tree.getroot()
-                    project = root.find("project")
-
-                    for package in project:
-                        for file in package:
-                            for line in file:
-                                id = line.get('featureClass') + "." + line.get('featureLineNum')
-                                if id not in data:
-                                    data[id] = {'num_interactions': 0}
-                except:
-                    logging.info("Exception when parsing %s", c_file)
-                all_stms_in_system[variant] = data
-                if coverage_files.index(c_file) == 0:
-                    all_stms_in_failing_product[variant] = data
-    return all_stms_in_system, all_stms_in_failing_product
-
-
 def can_use_this_test(path, failed_executions, threshold):
     for v in failed_executions:
         for t in failed_executions[v]:
@@ -604,72 +520,6 @@ def get_infor_for_sbfl_remove_passed_tests(mutated_project_dir, failing_variants
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
 
 
-def get_infor_for_sbfl(mutated_project_dir, failing_variants, not_used_variants, spectrum_coverage_prefix,
-                       coverage_rate):
-    total_failed_tests = 0
-    total_passed_tests = 0
-    stm_info_for_spectrum = {}
-    variants_list = get_all_variant_dirs(mutated_project_dir)
-    for variant_dir in variants_list:
-        if variant_dir.split("/")[-1] not in not_used_variants:
-            stm_coverage = 0
-            if coverage_rate > 0:
-                stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
-            test_coverage_dir = get_test_coverage_dir(variant_dir)
-            spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
-            spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-            spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
-
-            # if variant is a passing variant and stm_coverage < coverage_rate
-            if not os.path.isfile(
-                    spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
-                continue
-            if variant_dir.split("/")[-1] in failing_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
-                stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
-                                                                        spectrum_failed_coverage_file_dir,
-                                                                        FAILED_TEST_COUNT)
-
-            if os.path.isfile(spectrum_passed_coverage_file_dir):
-                stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
-                                                                        spectrum_passed_coverage_file_dir,
-                                                                        PASSED_TEST_COUNT)
-
-            ftests, ptests = count_tests2(test_coverage_dir, failing_variants, spectrum_coverage_prefix)
-            total_failed_tests += ftests
-            total_passed_tests += ptests
-
-    return stm_info_for_spectrum, total_passed_tests, total_failed_tests
-
-
-def read_coverage_info_for_spectrum(statement_infor, coverage_file, kind_of_test_count):
-    data = {}
-    try:
-        tree = ET.parse(coverage_file)
-        root = tree.getroot()
-        project = root.find("project")
-
-        for package in project:
-            for file in package:
-                for line in file:
-                    id = line.get('featureClass') + "." + line.get('featureLineNum')
-                    if id not in data:
-                        data[id] = {}
-                        data[id][FAILED_TEST_COUNT] = 0
-                        data[id][PASSED_TEST_COUNT] = 0
-                    data[id][kind_of_test_count] = max(int(line.get('count')),
-                                                       data[id][kind_of_test_count])
-
-        for id in data.keys():
-            if id not in statement_infor:
-                statement_infor[id] = data[id]
-            else:
-                statement_infor[id][kind_of_test_count] += data[id][kind_of_test_count]
-
-        return statement_infor
-    except:
-        logging.info("Exception when parsing %s", coverage_file)
-
 
 def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expressions, spectrum_coverage_prefix):
     statement_infor = {}
@@ -695,49 +545,6 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
 
     return statement_infor
 
-
-def count_test_in_file(file_dir):
-    try:
-        tree = ET.parse(file_dir)
-        root = tree.getroot()
-        project = root.find("tests")
-        return int(project.get("count"))
-    except:
-        logging.info("Exception when parsing %s", file_dir)
-
-
-def count_tests(dir, spectrum_coverage_prefix):
-    spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-    spectrum_failed_coverage_file_dir = join_path(dir, spectrum_failed_file)
-    spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-    spectrum_passed_coverage_file_dir = join_path(dir, spectrum_passed_file)
-
-    num_of_failed_tests = 0
-    num_of_passed_tests = 0
-    if os.path.isfile(spectrum_failed_coverage_file_dir):
-        num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
-
-    if os.path.isfile(spectrum_passed_coverage_file_dir):
-        num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
-
-    return num_of_failed_tests, num_of_passed_tests
-
-
-def count_tests2(dir, failing_variants, spectrum_coverage_prefix):
-    spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-    spectrum_failed_coverage_file_dir = join_path(dir, spectrum_failed_file)
-    spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-    spectrum_passed_coverage_file_dir = join_path(dir, spectrum_passed_file)
-
-    num_of_failed_tests = 0
-    num_of_passed_tests = 0
-    if dir.split("/")[-2] in failing_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
-        num_of_failed_tests = count_test_in_file(spectrum_failed_coverage_file_dir)
-
-    if os.path.isfile(spectrum_passed_coverage_file_dir):
-        num_of_passed_tests = count_test_in_file(spectrum_passed_coverage_file_dir)
-
-    return num_of_failed_tests, num_of_passed_tests
 
 
 def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind_of_test_count, suspicious_stms_list):
@@ -767,175 +574,12 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 
 
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression):
+    score = spectrum_expression + "_score"
     for id in statement_infor.keys():
-        if spectrum_expression == TARANTULA:
-
-            statement_infor[id][TARANTULA_SCORE] = tarantula_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                         statement_infor[id][PASSED_TEST_COUNT],
-                                                                         total_failed_tests,
-                                                                         total_passed_tests)
-
-        elif spectrum_expression == OCHIAI:
-            statement_infor[id][OCHIAI_SCORE] = ochiai_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-        elif spectrum_expression == OP2:
-            statement_infor[id][OP2_SCORE] = op2_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                             statement_infor[id][PASSED_TEST_COUNT], total_failed_tests,
-                                                             total_passed_tests)
-
-        elif spectrum_expression == BARINEL:
-            statement_infor[id][BARINEL_SCORE] = barinel_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                     statement_infor[id][PASSED_TEST_COUNT],
-                                                                     total_failed_tests,
-                                                                     total_passed_tests)
-
-        elif spectrum_expression == DSTAR:
-            statement_infor[id][DSTAR_SCORE] = dstar_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == RUSSELL_RAO:
-            statement_infor[id][RUSSELL_RAO_SCORE] = russell_rao_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                             statement_infor[id][PASSED_TEST_COUNT],
-                                                                             total_failed_tests, total_passed_tests)
-        elif spectrum_expression == SIMPLE_MATCHING:
-            statement_infor[id][SIMPLE_MATCHING_SCORE] = simple_matching_calculation(
-                statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
-                total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ROGERS_TANIMOTO:
-            statement_infor[id][ROGERS_TANIMOTO_SCORE] = rogers_tanimoto_calculation(
-                statement_infor[id][FAILED_TEST_COUNT], statement_infor[id][PASSED_TEST_COUNT],
-                total_failed_tests, total_passed_tests)
-        elif spectrum_expression == AMPLE:
-            statement_infor[id][AMPLE_SCORE] = ample2_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                  statement_infor[id][PASSED_TEST_COUNT],
-                                                                  total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == JACCARD:
-            statement_infor[id][JACCARD_SCORE] = jaccard_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                     statement_infor[id][PASSED_TEST_COUNT],
-                                                                     total_failed_tests, total_passed_tests)
-        elif spectrum_expression == COHEN:
-            statement_infor[id][COHEN_SCORE] = cohen_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == SCOTT:
-            statement_infor[id][SCOTT_SCORE] = scott_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ROGOT1:
-            statement_infor[id][ROGOT1_SCORE] = rogot1_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == GEOMETRIC_MEAN:
-
-            statement_infor[id][GEOMETRIC_MEAN_SCORE] = geometric_mean_calculation(
-                statement_infor[id][FAILED_TEST_COUNT],
-                statement_infor[id][PASSED_TEST_COUNT],
-                total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == M2:
-            statement_infor[id][M2_SCORE] = m2_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                           statement_infor[id][PASSED_TEST_COUNT],
-                                                           total_failed_tests, total_passed_tests)
-        elif spectrum_expression == WONG1:
-            statement_infor[id][WONG1_SCORE] = wong1_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == SOKAL:
-            statement_infor[id][SOKAL_SCORE] = sokal_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-        # new
-        elif spectrum_expression == SORENSEN_DICE:
-
-            statement_infor[id][SORENSEN_DICE_SCORE] = sorensen_dice_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == DICE:
-
-            statement_infor[id][DICE_SCORE] = dice_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                               statement_infor[id][PASSED_TEST_COUNT],
-                                                               total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == HUMANN:
-
-            statement_infor[id][HUMANN_SCORE] = humman_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-        elif spectrum_expression == M1:
-
-            statement_infor[id][M1_SCORE] = m1_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                           statement_infor[id][PASSED_TEST_COUNT],
-                                                           total_failed_tests, total_passed_tests)
-        elif spectrum_expression == WONG2:
-
-            statement_infor[id][WONG2_SCORE] = wong2_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == WONG3:
-
-            statement_infor[id][WONG3_SCORE] = wong3_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ZOLTAR:
-
-            statement_infor[id][ZOLTAR_SCORE] = zoltar_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-        elif spectrum_expression == OVERLAP:
-
-            statement_infor[id][OVERLAP_SCORE] = overlap_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                     statement_infor[id][PASSED_TEST_COUNT],
-                                                                     total_failed_tests, total_passed_tests)
-        elif spectrum_expression == EUCLID:
-
-            statement_infor[id][EUCLID_SCORE] = euclid_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ROGOT2:
-
-            statement_infor[id][ROGOT2_SCORE] = rogot2_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-        elif spectrum_expression == HAMMING:
-
-            statement_infor[id][HAMMING_SCORE] = hamming_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                     statement_infor[id][PASSED_TEST_COUNT],
-                                                                     total_failed_tests, total_passed_tests)
-        elif spectrum_expression == FLEISS:
-
-            statement_infor[id][FLEISS_SCORE] = fleiss_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                   statement_infor[id][PASSED_TEST_COUNT],
-                                                                   total_failed_tests, total_passed_tests)
-        elif spectrum_expression == ANDERBERG:
-            statement_infor[id][ANDERBERG_SCORE] = anderberg_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                         statement_infor[id][PASSED_TEST_COUNT],
-                                                                         total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == GOODMAN:
-            statement_infor[id][GOODMAN_SCORE] = goodman_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                     statement_infor[id][PASSED_TEST_COUNT],
-                                                                     total_failed_tests, total_passed_tests)
-
-        elif spectrum_expression == HARMONIC_MEAN:
-
-            statement_infor[id][HARMONIC_MEAN_SCORE] = harmonic_mean_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                                 statement_infor[id][PASSED_TEST_COUNT],
-                                                                                 total_failed_tests, total_passed_tests)
-        elif spectrum_expression == KULCZYNSKI1:
-
-            statement_infor[id][KULCZYNSKI1_SCORE] = kulczynski1_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                             statement_infor[id][PASSED_TEST_COUNT],
-                                                                             total_failed_tests, total_passed_tests)
-        elif spectrum_expression == KULCZYNSKI2:
-
-            statement_infor[id][KULCZYNSKI2_SCORE] = kulczynski2_calculation(statement_infor[id][FAILED_TEST_COUNT],
-                                                                             statement_infor[id][PASSED_TEST_COUNT],
-                                                                             total_failed_tests, total_passed_tests)
+        statement_infor[id][score] = suspicious_score_by_sbfl_metric(spectrum_expression, statement_infor[id][FAILED_TEST_COUNT],
+                                                                               statement_infor[id][PASSED_TEST_COUNT],
+                                                                               total_failed_tests,
+                                                                               total_passed_tests)
 
     return statement_infor
 

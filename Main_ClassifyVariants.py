@@ -1,12 +1,9 @@
-import csv
-
-from FileManager import list_dir, join_path
 import pandas
 
-from label_data.LabelData import *
+from consistent_testing_manager.LabelData import *
 from sklearn import preprocessing
 
-# FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
+# FIELDS = [VARIANT_NAME, LABEL, consistent_testing_manager, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
 #           not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
 #           executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
 #           not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
@@ -30,7 +27,7 @@ FIELDS = [VARIANT_NAME, LABEL, DDU,
           confirmed_successes_in_passing_variant + "_0.8",
           total_susp_scores_in_system, both_forward_and_backward_similarity]
 
-# FIELDS = [VARIANT_NAME, LABEL, DDU,
+# FIELDS = [VARIANT_NAME, LABEL, consistent_testing_manager,
 #           not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
 #           executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
 #           not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,

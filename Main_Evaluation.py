@@ -1,8 +1,6 @@
 import pandas
 
-from FileManager import list_dir, join_path
-from label_data.LabelData import *
-import json
+from consistent_testing_manager.LabelData import *
 
 FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
           not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,

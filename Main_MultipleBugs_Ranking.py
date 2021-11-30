@@ -1,18 +1,18 @@
 from FileManager import join_path
 from ranking.MultipleBugsManager import multiple_bugs_ranking
-from ranking.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
+from spectrum_manager.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
     AMPLE, \
-    SIMPLE_MATCHING, RUSSELL_RAO, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL, DICE, HUMANN, OVERLAP, ZOLTAR, \
-    WONG3, WONG2, M1, ROGOT2, EUCLID, HAMMING, FLEISS, ANDERBERG, KULCZYNSKI1, KULCZYNSKI2, HARMONIC_MEAN, GOODMAN
+    SIMPLE_MATCHING, RUSSELL_RAO, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL, DICE, HUMANN, ZOLTAR, \
+    WONG2, ROGOT2, EUCLID, HAMMING, FLEISS, ANDERBERG, KULCZYNSKI2, HARMONIC_MEAN, GOODMAN
 
 if __name__ == "__main__":
     result_base_folder = "classified_all_keep_useful_tests_"
     data_base_dir = "/Users/thu-trangnguyen/Documents/Research/SPL"
-    system_names = ["ZipMe"]
+    system_names = ["Debug"]
     bug_folders = ["1Bug"]
     alpha = [0.5]
     # alpha = [1, 0.3, 0.7]
-    kwise_list = ["2wise"]
+    kwise_list = ["4wise"]
     filtering_coverage_rate_list = [0.0]
     # coverage_versions = [ "INoT_2_", "INoT_4_", "INoT_6_", "INoT_8_", "INoT_9_"]
     coverage_versions = [""]

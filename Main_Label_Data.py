@@ -1,4 +1,4 @@
-from label_data.LabelData import *
+from consistent_testing_manager.LabelData import *
 
 
 if __name__ == "__main__":

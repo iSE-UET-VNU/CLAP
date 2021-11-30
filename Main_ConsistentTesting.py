@@ -1,13 +1,12 @@
-from DDU.DDU import ddu
-from FileManager import *
-from label_data.HelperForLabeledData import *
-from label_data.SBFLHelper import get_passing_executions_in_a_variant
-from label_data.SpectrumReader import get_passing_executions
+from consistent_testing_manager.DDU import ddu
+from consistent_testing_manager.FPMatricsCaculation import *
+from spectrum_manager.SpectrumReader import get_passing_executions, get_passing_executions_in_a_variant, get_all_stm_ids, \
+    get_failings_executions
 
 labels = [FALSE_PASSING, TRUE_PASSING]
 
 if __name__ == "__main__":
-    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise/"
+    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/Debug/1Bug/4wise/"
     mutated_projects = list_dir(system_dir)
     FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
               not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
