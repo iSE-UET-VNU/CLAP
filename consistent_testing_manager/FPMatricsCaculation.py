@@ -6,8 +6,8 @@ from sklearn import preprocessing
 from FileManager import *
 from consistent_testing_manager.FileName import consistent_testing_info_file, consistent_testing_normalized_info_file
 
-from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_path, get_suspicious_space_consistent_version, \
-    get_infor_for_sbfl_consistent_testing_version
+from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_path, \
+    get_suspicious_space_consistent_version, get_infor_for_sbfl
 from ranking.RankingManager import get_set_of_stms, sbfl_ranking, local_ranking_a_suspicious_list
 from spectrum_manager.Spectrum_Expression import OP2
 
@@ -230,7 +230,7 @@ def check_confirmed_successes_in_passing_variant(executions_in_failing_products,
 def ranking_suspicious_stmts(project_dir, failing_variants):
     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
 
-    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_consistent_testing_version(
+    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(
         project_dir, failing_variants,
         "",
         0.0)

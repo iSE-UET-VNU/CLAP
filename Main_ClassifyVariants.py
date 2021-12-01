@@ -1,23 +1,14 @@
-import pandas
-
+from consistent_testing_manager.FileName import classified_all_file
 from consistent_testing_manager.LabelData import *
-from sklearn import preprocessing
 
-# FIELDS = [VARIANT_NAME, LABEL, consistent_testing_manager, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
+#
+# FIELDS = [VARIANT_NAME, LABEL, DDU,
 #           not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
 #           executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
 #           not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
-#           tested_unexpected_behaviors_in_passing_variant + "_0.5",
 #           tested_unexpected_behaviors_in_passing_variant + "_0.8",
-#           tested_unexpected_behaviors_in_passing_variant + "_1.0",
-#           confirmed_successes_in_passing_variant + "_0.5",
 #           confirmed_successes_in_passing_variant + "_0.8",
-#           confirmed_successes_in_passing_variant + "_1.0",
-#           total_susp_scores_in_system,
-#           total_susp_scores_in_variants,
-#           forward_similarity,
-#           backward_similarity,
-#           both_forward_and_backward_similarity]
+#           total_susp_scores_in_system, both_forward_and_backward_similarity]
 
 FIELDS = [VARIANT_NAME, LABEL, DDU,
           not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
@@ -25,25 +16,14 @@ FIELDS = [VARIANT_NAME, LABEL, DDU,
           not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
           tested_unexpected_behaviors_in_passing_variant + "_0.8",
           confirmed_successes_in_passing_variant + "_0.8",
-          total_susp_scores_in_system, both_forward_and_backward_similarity]
-
-# FIELDS = [VARIANT_NAME, LABEL, consistent_testing_manager,
-#           not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
-#           executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
-#           not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
-#           tested_unexpected_behaviors_in_passing_variant + "_0.8",
-#           confirmed_successes_in_passing_variant + "_0.8",
-#           total_susp_scores_in_variants]
-
-
+          total_susp_scores_in_variants]
 
 
 
 def classify(project_dir, metrics):
-    consistent_testing_info_normalized_file = join_path(project_dir, "consistent_testing_info_normalized.csv")
-    classified_file = join_path(project_dir, "classification_info_sups_in_variants_dependencies.csv")
-    #classified_file = join_path(project_dir, "classification_info_sups_in_variants.csv")
-    data = pandas.read_csv(consistent_testing_info_normalized_file)
+    consistent_testing_info_normalized_file_path = join_path(project_dir, consistent_testing_normalized_info_file)
+    classified_file = join_path(project_dir, classified_all_file)
+    data = pandas.read_csv(consistent_testing_info_normalized_file_path)
     classified_variants = {}
     total_classified_values = 0
     for i in range(0, len(data[VARIANT_NAME])):

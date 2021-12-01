@@ -1,4 +1,3 @@
-
 import time
 from statistics import median, stdev
 from scipy import stats
@@ -113,11 +112,11 @@ def product_based_assessment(mutated_project_dir, all_stms_in_failing_products, 
     return variant_level_suspiciousness
 
 
-def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, not_used_variants,
-         spectrum_expressions, spectrum_coverage_prefix,
+def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, keep_useful_tests,
+         spectrum_expressions,  spectrum_coverage_prefix,
          coverage_rate):
-    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_remove_passed_tests(
-        mutated_project_dir, failing_variants, not_used_variants,
+    stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_with_FP_detection(
+        mutated_project_dir, failing_variants, fp_variants, keep_useful_tests,
         spectrum_coverage_prefix,
         coverage_rate)
     # traditional SBFL
@@ -194,7 +193,7 @@ def varcop(buggy_statements, local_scores, variant_level_suspiciousness, search_
                                                                            full_ranked_list)
 
 
-def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants, not_used_variants, search_spaces,
+def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants, fp_variants, keep_useful_tests, search_spaces,
                           spectrum_expressions,
                           aggregation_type, normalized_type, spectrum_coverage_prefix="", coverage_rate=0.0, alpha=0):
     start_time = time.time()
@@ -210,7 +209,7 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variant
                                                                              search_spaces[SS_STMS_IN_F_PRODUCTS],
                                                                              spectrum_expressions,
                                                                              spectrum_coverage_prefix)
-    sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, not_used_variants,
+    sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, keep_useful_tests,
          spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate)
     # varcop(buggy_statements, local_suspiciousness_of_all_the_system, variant_level_suspiciousness, search_spaces,
@@ -488,39 +487,6 @@ def sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests, isol
     return spectrum_ranked_list
 
 
-def can_use_this_test(path, failed_executions, threshold):
-    for v in failed_executions:
-        for t in failed_executions[v]:
-            if similar_path(path, failed_executions[v][t], threshold):
-                return False
-    return True
-
-
-def get_infor_for_sbfl_remove_passed_tests(mutated_project_dir, failing_variants, not_used_variants,
-                                           spectrum_coverage_prefix, coverage_rate):
-    stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
-                                                                                       failing_variants,
-                                                                                       not_used_variants,
-                                                                                       spectrum_coverage_prefix,
-                                                                                       coverage_rate)
-
-    system_stm_ids = get_all_stm_ids(mutated_project_dir)
-    failed_executions_in_failing_products = get_failings_executions(mutated_project_dir, system_stm_ids,
-                                                                    failing_variants)
-    passing_executions = get_passing_executions(mutated_project_dir, system_stm_ids, not_used_variants)
-
-    for v in passing_executions:
-        for test in passing_executions[v]:
-            if can_use_this_test(passing_executions[v][test], failed_executions_in_failing_products, 0.8):
-                for item in passing_executions[v][test]:
-                    if int(item["tested"]) == 1:
-                        if item["id"] in stm_info_for_spectrum:
-                            stm_info_for_spectrum[item["id"]]['passed_test_count'] += 1
-                total_passed_tests += 1
-    return stm_info_for_spectrum, total_passed_tests, total_failed_tests
-
-
-
 def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expressions, spectrum_coverage_prefix):
     statement_infor = {}
     test_coverage_dir = get_test_coverage_dir(variant_dir)
@@ -544,7 +510,6 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
                                                spectrum_expression)
 
     return statement_infor
-
 
 
 def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind_of_test_count, suspicious_stms_list):
@@ -576,10 +541,11 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression):
     score = spectrum_expression + "_score"
     for id in statement_infor.keys():
-        statement_infor[id][score] = suspicious_score_by_sbfl_metric(spectrum_expression, statement_infor[id][FAILED_TEST_COUNT],
-                                                                               statement_infor[id][PASSED_TEST_COUNT],
-                                                                               total_failed_tests,
-                                                                               total_passed_tests)
+        statement_infor[id][score] = suspicious_score_by_sbfl_metric(spectrum_expression,
+                                                                     statement_infor[id][FAILED_TEST_COUNT],
+                                                                     statement_infor[id][PASSED_TEST_COUNT],
+                                                                     total_failed_tests,
+                                                                     total_passed_tests)
 
     return statement_infor
 

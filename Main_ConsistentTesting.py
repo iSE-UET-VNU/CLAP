@@ -7,7 +7,7 @@ from spectrum_manager.SpectrumReader import get_passing_executions, get_passing_
 labels = [FALSE_PASSING, TRUE_PASSING]
 
 if __name__ == "__main__":
-    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/Email/3Bug/4wise/"
+    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/ZipMe/1Bug/2wise/"
     mutated_projects = list_dir(system_dir)
     FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
               not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,

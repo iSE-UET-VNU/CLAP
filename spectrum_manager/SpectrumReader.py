@@ -97,14 +97,14 @@ def similar_path(path1, path2, threshold):
     return False
 
 
-def get_infor_for_sbfl(mutated_project_dir, failing_variants, not_used_variants, spectrum_coverage_prefix,
+def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spectrum_coverage_prefix,
                        coverage_rate):
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
     variants_list = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variants_list:
-        if variant_dir.split("/")[-1] not in not_used_variants:
+        if variant_dir.split("/")[-1] not in fp_variants:
             stm_coverage = 0
             if coverage_rate > 0:
                 stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
@@ -128,49 +128,56 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, not_used_variants,
                                                                         spectrum_passed_coverage_file_dir,
                                                                         PASSED_TEST_COUNT)
 
-            ftests, ptests = count_tests2(test_coverage_dir, failing_variants, spectrum_coverage_prefix)
+            ftests, ptests = count_tests_by_labeled_variants(test_coverage_dir, failing_variants,
+                                                             spectrum_coverage_prefix)
             total_failed_tests += ftests
             total_passed_tests += ptests
 
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
 
 
-def get_infor_for_sbfl_consistent_testing_version(mutated_project_dir, failing_variants, spectrum_coverage_prefix,
-                                                  coverage_rate):
-    total_failed_tests = 0
-    total_passed_tests = 0
-    stm_info_for_spectrum = {}
-    variants_list = get_all_variant_dirs(mutated_project_dir)
-    for variant_dir in variants_list:
-        stm_coverage = 0
-        if coverage_rate > 0:
-            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
-        test_coverage_dir = get_test_coverage_dir(variant_dir)
-        spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
-        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
-
-        # if variant is a passing variant and stm_coverage < coverage_rate
-        if not os.path.isfile(
-                spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
-            continue
-        if variant_dir.split("/")[-1] in failing_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
-            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
-                                                                    spectrum_failed_coverage_file_dir,
-                                                                    FAILED_TEST_COUNT)
-
-        if os.path.isfile(spectrum_passed_coverage_file_dir):
-            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
-                                                                    spectrum_passed_coverage_file_dir,
-                                                                    PASSED_TEST_COUNT)
-
-        ftests, ptests = count_tests(test_coverage_dir, spectrum_coverage_prefix)
-        if variant_dir.split("/")[-1] in failing_variants:
-            total_failed_tests += ftests
-        total_passed_tests += ptests
-
+def get_infor_for_sbfl_with_FP_detection(mutated_project_dir, failing_variants, fp_variants, keep_useful_tests,
+                                         spectrum_coverage_prefix, coverage_rate):
+    stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
+                                                                                       failing_variants,
+                                                                                       fp_variants,
+                                                                                       spectrum_coverage_prefix,
+                                                                                       coverage_rate)
+    test_checking_method = "EXECUTION_SET"
+    if keep_useful_tests:
+        stm_info_for_spectrum, total_passed_tests = keep_useful_tests(mutated_project_dir, failing_variants, fp_variants, stm_info_for_spectrum,
+                                                                                total_passed_tests, test_checking_method)
+    print(total_passed_tests, "  ", total_failed_tests)
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
+
+
+def keep_useful_tests(mutated_project_dir, failing_variants, fp_variants, stm_info_for_spectrum,
+                                total_passed_tests, test_checking_method):
+    system_stm_ids = get_all_stm_ids(mutated_project_dir)
+    failed_executions_in_failing_products = get_failings_executions(mutated_project_dir, system_stm_ids,
+                                                                    failing_variants)
+    passing_executions = get_passing_executions(mutated_project_dir, system_stm_ids, fp_variants)
+
+    for v in passing_executions:
+        for test in passing_executions[v]:
+            if test_checking_method == "EXECUTION_SET":
+                if has_a_similar_failed_test_by_execution_set(passing_executions[v][test],
+                                                              failed_executions_in_failing_products, 0.8):
+                    for item in passing_executions[v][test]:
+                        if int(item["tested"]) == 1:
+                            if item["id"] in stm_info_for_spectrum:
+                                stm_info_for_spectrum[item["id"]]['passed_test_count'] += 1
+                    total_passed_tests += 1
+    return stm_info_for_spectrum, total_passed_tests
+
+
+
+def has_a_similar_failed_test_by_execution_set(path, failed_executions, threshold):
+    for v in failed_executions:
+        for t in failed_executions[v]:
+            if similar_path(path, failed_executions[v][t], threshold):
+                return False
+    return True
 
 
 def get_passing_executions(project_dir, system_stm_ids, variants):
@@ -334,7 +341,7 @@ def count_tests(dir, spectrum_coverage_prefix):
     return num_of_failed_tests, num_of_passed_tests
 
 
-def count_tests2(dir, failing_variants, spectrum_coverage_prefix):
+def count_tests_by_labeled_variants(dir, failing_variants, spectrum_coverage_prefix):
     spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
     spectrum_failed_coverage_file_dir = join_path(dir, spectrum_failed_file)
     spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
