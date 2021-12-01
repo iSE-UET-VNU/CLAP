@@ -38,21 +38,6 @@ FIELDS = [VARIANT_NAME, LABEL, DDU,
 
 
 
-def normalization(project_dir):
-    consistent_testing_info_file = join_path(project_dir, "consistent_testing_info.csv")
-    consistent_testing_info_normalized_file = join_path(project_dir, "consistent_testing_info_normalized.csv")
-    data = pandas.read_csv(consistent_testing_info_file)
-    variants = data[FIELDS[0]]
-    labels = data[FIELDS[1]]
-    x = data[FIELDS[2:]].values
-    min_max_scaler = preprocessing.MinMaxScaler()
-    x_scaled = min_max_scaler.fit_transform(x)
-    data = pandas.DataFrame(x_scaled)
-    data.columns = FIELDS[2:]
-    data.insert(loc=0, column= FIELDS[1], value=labels)
-    data.insert(loc=0, column= FIELDS[0], value=variants)
-    data.to_csv(consistent_testing_info_normalized_file)
-
 
 def classify(project_dir, metrics):
     consistent_testing_info_normalized_file = join_path(project_dir, "consistent_testing_info_normalized.csv")

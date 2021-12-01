@@ -1,6 +1,10 @@
 import csv
 import json
+
+import pandas
+from sklearn import preprocessing
 from FileManager import *
+from consistent_testing_manager.FileName import consistent_testing_info_file, consistent_testing_normalized_info_file
 
 from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_path, get_suspicious_space_consistent_version, \
     get_infor_for_sbfl_consistent_testing_version
@@ -372,3 +376,19 @@ def check_dependencies(variants_folder_dir, passing_variant, failed_executions_i
         similarities = check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies,
                                                   pv_forward_slicies, pv_backward_slicies)
     return aggreate_similarity_by_avg(similarities)
+
+
+def normalization(FIELDS, project_dir):
+    consistent_testing_info_file_path = join_path(project_dir, consistent_testing_info_file)
+    consistent_testing_info_normalized_file = join_path(project_dir, consistent_testing_normalized_info_file)
+    data = pandas.read_csv(consistent_testing_info_file_path)
+    variants = data[FIELDS[0]]
+    labels = data[FIELDS[1]]
+    x = data[FIELDS[2:]].values
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    data = pandas.DataFrame(x_scaled)
+    data.columns = FIELDS[2:]
+    data.insert(loc=0, column= FIELDS[1], value=labels)
+    data.insert(loc=0, column= FIELDS[0], value=variants)
+    data.to_csv(consistent_testing_info_normalized_file)

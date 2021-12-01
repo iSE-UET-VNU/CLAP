@@ -1,12 +1,13 @@
 from consistent_testing_manager.DDU import ddu
 from consistent_testing_manager.FPMatricsCaculation import *
+from consistent_testing_manager.FileName import  consistent_testing_info_file
 from spectrum_manager.SpectrumReader import get_passing_executions, get_passing_executions_in_a_variant, get_all_stm_ids, \
     get_failings_executions
 
 labels = [FALSE_PASSING, TRUE_PASSING]
 
 if __name__ == "__main__":
-    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/Debug/1Bug/4wise/"
+    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/Email/3Bug/4wise/"
     mutated_projects = list_dir(system_dir)
     FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
               not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
@@ -19,10 +20,10 @@ if __name__ == "__main__":
               confirmed_successes_in_passing_variant + "_0.8",
               confirmed_successes_in_passing_variant + "_1.0",
               total_susp_scores_in_system,
-              total_susp_scores_in_variants,
-              forward_similarity,
-              backward_similarity,
-              both_forward_and_backward_similarity]
+              total_susp_scores_in_variants]
+    # forward_similarity,
+    # backward_similarity,
+    # both_forward_and_backward_similarity
     for project in mutated_projects:
         constant_data = {}
         project_dir = join_path(system_dir, project)
@@ -58,8 +59,9 @@ if __name__ == "__main__":
             constant_data[p_v][total_susp_scores_in_system] = check_total_susp_scores_in_passing_variant(susp_scores_in_system, passing_variants_stmts[p_v])
             constant_data[p_v][total_susp_scores_in_variants] = check_total_susp_scores_in_passing_variant(susp_scores_in_variants, passing_variants_stmts[p_v])
 
-            dependencies_similarity = check_dependencies(join_path(project_dir, "variants"), p_v, failed_executions_in_failing_products)
-            constant_data[p_v][forward_similarity] = dependencies_similarity["Forward"]
-            constant_data[p_v][backward_similarity] = dependencies_similarity["Backward"]
-            constant_data[p_v][both_forward_and_backward_similarity] = dependencies_similarity["Both"]
-        write_dict_to_file(join_path(project_dir,"consistent_testing_info.csv"), constant_data, FIELDS)
+            # dependencies_similarity = check_dependencies(join_path(project_dir, "variants"), p_v, failed_executions_in_failing_products)
+            # constant_data[p_v][forward_similarity] = dependencies_similarity["Forward"]
+            # constant_data[p_v][backward_similarity] = dependencies_similarity["Backward"]
+            # constant_data[p_v][both_forward_and_backward_similarity] = dependencies_similarity["Both"]
+        write_dict_to_file(join_path(project_dir, consistent_testing_info_file), constant_data, FIELDS)
+        normalization(FIELDS, project_dir)
