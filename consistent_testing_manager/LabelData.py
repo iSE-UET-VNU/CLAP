@@ -65,6 +65,7 @@ def base_is_buggy_features(base_features, buggy_features):
 
 def verify_failing_variants(mutated_project_dir):
     buggy_stmts = get_multiple_buggy_statements(mutated_project_dir.split("/")[-1], mutated_project_dir)
+
     failing_variants = get_failing_variants(mutated_project_dir)
     system_stm_ids = get_all_stm_ids(mutated_project_dir)
     failing_executions = get_failings_executions(mutated_project_dir, system_stm_ids, failing_variants)
@@ -81,6 +82,8 @@ def verify_failing_variants(mutated_project_dir):
                         break
                 if flag: break
             if flag: break
+        if flag == False:
+            unconverted_to_FP_variants.append("-1")
     return unconverted_to_FP_variants
 
 
@@ -89,6 +92,10 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     variants = list_dir(variants_dir)
     failing_variants = get_failing_variants(mutated_project_dir)
     unconverted_to_FP_variants = verify_failing_variants(mutated_project_dir)
+    for item in unconverted_to_FP_variants:
+        if item == "-1":
+            print(mutated_project_dir)
+            return
     file_name = join_path(mutated_project_dir, LABELED_FILE_NAME)
     num_failings = 0
     num_fp = 0

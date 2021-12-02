@@ -1,15 +1,15 @@
 from consistent_testing_manager.LabelData import *
-
+from suspicious_statements_manager.SuspiciousStatementManager import get_mutated_features
 
 if __name__ == "__main__":
     project_base_path = "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/3Bug/4wise"
-    base_features = ["Base"]
+    base_features = ["BankAccount"]
     mutated_projects_list = list_dir(project_base_path)
     bugs_in_bases = []
     one_fail = []
     buggy_features_but_not_buggy_stmts = []
     for mutated_project in mutated_projects_list:
-        print(mutated_project)
+        #print(mutated_project)
         mu_project_path = join_path(project_base_path, mutated_project)
         buggy_stmts = get_multiple_buggy_statements(mutated_project, mu_project_path)
         buggy_features = get_mutated_features(mu_project_path)
