@@ -5,7 +5,6 @@ import pandas
 from FileManager import join_path, EXPERIMENT_RESULT_FOLDER
 from experimental_results_analyzer.ImprovementComparisonAnalyzer import init_comparison_data
 from ranking.Keywords import *
-from ranking.RankingManager import VARCOP_RANK, VARCOP_DISABLE_BPC_RANK, SBFL_RANK, SPACE
 from spectrum_manager.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, ROGERS_TANIMOTO, \
     AMPLE, \
     SIMPLE_MATCHING, RUSSELL_RAO, COHEN, SCOTT, ROGOT1, GEOMETRIC_MEAN, M2, WONG1, SOKAL, DICE, HUMANN, ZOLTAR, \

@@ -4,7 +4,7 @@ from sklearn import metrics
 
 from consistent_testing_manager.FPMatricsCaculation import *
 import numpy as np
-from consistent_testing_manager.FileName import classified_all_file
+from consistent_testing_manager.FileName import classified_all_file, classified_all_single_bug_file
 
 # FEATURES = [DDU,
 #             not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
@@ -161,7 +161,12 @@ if __name__ == "__main__":
     #                     "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/1Bug/4wise/",
     #                     "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise/"]
     training_systems = []
-    testing_systems = ["/Users/thu-trangnguyen/OneDrive/SPL/BankAccountTP/1Bug/4wise/"]
+    testing_systems = ["/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/1Bug/4wise/",
+                       "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/1Bug/4wise/",
+                       "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/1Bug/4wise/",
+                       "/Users/thu-trangnguyen/Documents/Research/SPL/Email/1Bug/4wise/",
+                       "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise/",
+                       "/Users/thu-trangnguyen/Documents/Research/SPL/ZipMe/1Bug/2wise/"]
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(training_systems, testing_systems, 0.8, 0)
     print(test_samples)
@@ -173,4 +178,4 @@ if __name__ == "__main__":
     print(clf.coef_)
 
 
-    write_classified_result(y_pred, test_samples, 0, classified_all_file)
+    write_classified_result(y_pred, test_samples, 0, classified_all_single_bug_file)

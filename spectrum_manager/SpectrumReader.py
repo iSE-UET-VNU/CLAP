@@ -4,10 +4,12 @@ import os
 from FileManager import join_path, list_dir, get_failed_test_coverage_dir, get_variant_dir, get_test_coverage_dir, \
     SPECTRUM_FAILED_COVERAGE_FILE_NAME, SPECTRUM_PASSED_COVERAGE_FILE_NAME, get_all_variant_dirs, \
     get_passed_test_coverage_dir, get_spectrum_failed_coverage_file_name_with_version, \
-    get_spectrum_passed_coverage_file_name_with_version, get_variants_dir
+    get_spectrum_passed_coverage_file_name_with_version, get_variants_dir, PASSED_TEST_COVERAGE_FOLDER_NAME, \
+    FAILED_TEST_COVERAGE_FOLDER_NAME
 import xml.etree.ElementTree as ET
 
 from TestingCoverageManager import statement_coverage
+from consistent_testing_manager.DDU import create_activity_matrix_system_level, ddu_system_level
 from ranking.Keywords import FAILED_TEST_COUNT, PASSED_TEST_COUNT
 
 
@@ -143,41 +145,94 @@ def get_infor_for_sbfl_with_FP_detection(mutated_project_dir, failing_variants, 
                                                                                        fp_variants,
                                                                                        spectrum_coverage_prefix,
                                                                                        coverage_rate)
-    test_checking_method = "EXECUTION_SET"
+    test_checking_method = "DDU"
     if keep_useful_tests:
-        stm_info_for_spectrum, total_passed_tests = keep_useful_tests(mutated_project_dir, failing_variants, fp_variants, stm_info_for_spectrum,
-                                                                                total_passed_tests, test_checking_method)
-    print(total_passed_tests, "  ", total_failed_tests)
+        stm_info_for_spectrum, total_passed_tests = get_useful_tests_in_FP_variants(mutated_project_dir,
+                                                                                    failing_variants,
+                                                                                    fp_variants, stm_info_for_spectrum,
+                                                                                    total_passed_tests,
+                                                                                    test_checking_method)
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
 
 
-def keep_useful_tests(mutated_project_dir, failing_variants, fp_variants, stm_info_for_spectrum,
-                                total_passed_tests, test_checking_method):
+def init_activity_matrix_for_ddu(mutated_project_dir, failing_variants, fp_variants):
+    variants_list = get_all_variant_dirs(mutated_project_dir)
+    A = {}
+    for variant_dir in variants_list:
+        if variant_dir.split("/")[-1] not in fp_variants:
+            coverage_dir = get_test_coverage_dir(variant_dir)
+            if variant_dir.split("/")[-1] in failing_variants:
+                pass_fail_dirs = [join_path(coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME),
+                                  join_path(coverage_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)]
+            else:
+                pass_fail_dirs = [join_path(coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME)]
+            for path in pass_fail_dirs:
+                if os.path.isdir(path):
+                    all_coverage_files = list_dir(path)
+                    for file in all_coverage_files:
+                        file_path = join_path(path, file)
+                        A = create_activity_matrix_system_level(A, file_path)
+    return A
+
+
+def get_useful_tests_in_FP_variants(mutated_project_dir, failing_variants, fp_variants, stm_info_for_spectrum,
+                                    total_passed_tests, test_checking_method):
     system_stm_ids = get_all_stm_ids(mutated_project_dir)
     failed_executions_in_failing_products = get_failings_executions(mutated_project_dir, system_stm_ids,
                                                                     failing_variants)
+    A = init_activity_matrix_for_ddu(mutated_project_dir, failing_variants, fp_variants)
+    system_ddu = ddu_system_level(A)
     passing_executions = get_passing_executions(mutated_project_dir, system_stm_ids, fp_variants)
-
     for v in passing_executions:
         for test in passing_executions[v]:
-            if test_checking_method == "EXECUTION_SET":
-                if has_a_similar_failed_test_by_execution_set(passing_executions[v][test],
-                                                              failed_executions_in_failing_products, 0.8):
-                    for item in passing_executions[v][test]:
-                        if int(item["tested"]) == 1:
-                            if item["id"] in stm_info_for_spectrum:
-                                stm_info_for_spectrum[item["id"]]['passed_test_count'] += 1
-                    total_passed_tests += 1
+            ddu_add_this_test = False
+            if test_checking_method == "DDU":
+                new_A = A.copy()
+                var_dir = join_path(get_variants_dir(mutated_project_dir), v)
+                passed_test_path = join_path(join_path(get_test_coverage_dir(var_dir), PASSED_TEST_COVERAGE_FOLDER_NAME), test)
+                new_A = create_activity_matrix_system_level(new_A, passed_test_path)
+                new_ddu = ddu_system_level(new_A)
+                if new_ddu > system_ddu:
+                    A = new_A.copy()
+                    system_ddu = new_ddu
+                    ddu_add_this_test = True
+
+            if (test_checking_method == "EXECUTION_SET" and
+                not has_a_similar_failed_test_by_execution_set(
+                    passing_executions[v][test],
+                    failed_executions_in_failing_products, 0.8)) \
+                    or (test_checking_method == "CONTAIN_SUSP_STM"
+                        and not contain_suspcious_stmts(
+                        passing_executions[v][test], failed_executions_in_failing_products))\
+                    or test_checking_method == "DDU" and ddu_add_this_test:
+
+                for item in passing_executions[v][test]:
+                    if int(item["tested"]) == 1:
+                        if item["id"] in stm_info_for_spectrum:
+                            stm_info_for_spectrum[item["id"]]['passed_test_count'] += 1
+                total_passed_tests += 1
     return stm_info_for_spectrum, total_passed_tests
 
+
+def contain_suspcious_stmts(path, failed_executions):
+    passing_execution_stmt = []
+    for item in path:
+        if item["id"] not in passing_execution_stmt:
+            passing_execution_stmt.append(item["id"])
+    for v in failed_executions:
+        for t in failed_executions[v]:
+            for item in failed_executions[v][t]:
+                if item["id"] in passing_execution_stmt:
+                    return True
+    return False
 
 
 def has_a_similar_failed_test_by_execution_set(path, failed_executions, threshold):
     for v in failed_executions:
         for t in failed_executions[v]:
             if similar_path(path, failed_executions[v][t], threshold):
-                return False
-    return True
+                return True
+    return False
 
 
 def get_passing_executions(project_dir, system_stm_ids, variants):

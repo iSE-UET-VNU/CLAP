@@ -202,13 +202,13 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variant
     global all_buggy_positions
     all_buggy_positions = {}
 
-    variant_level_suspiciousness = product_based_assessment(mutated_project_dir, search_spaces[SS_ALL_STMS],
-                                                            spectrum_expressions, spectrum_coverage_prefix)
-
-    local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir,
-                                                                             search_spaces[SS_STMS_IN_F_PRODUCTS],
-                                                                             spectrum_expressions,
-                                                                             spectrum_coverage_prefix)
+    # variant_level_suspiciousness = product_based_assessment(mutated_project_dir, search_spaces[SS_ALL_STMS],
+    #                                                         spectrum_expressions, spectrum_coverage_prefix)
+    #
+    # local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir,
+    #                                                                          search_spaces[SS_STMS_IN_F_PRODUCTS],
+    #                                                                          spectrum_expressions,
+    #                                                                          spectrum_coverage_prefix)
     sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, keep_useful_tests,
          spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate)
@@ -505,6 +505,7 @@ def suspiciousness_calculation(variant_dir, suspicious_stms_list, spectrum_expre
                                                                   PASSED_TEST_COUNT, suspicious_stms_list)
 
     (total_failed_tests, total_passed_tests) = count_tests(test_coverage_dir, spectrum_coverage_prefix)
+
     for spectrum_expression in spectrum_expressions:
         statement_infor = spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests,
                                                spectrum_expression)
@@ -541,6 +542,11 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression):
     score = spectrum_expression + "_score"
     for id in statement_infor.keys():
+        # if id in buggy:
+        #     # print(id, "  ", statement_infor[id][FAILED_TEST_COUNT],
+        #     #       statement_infor[id][PASSED_TEST_COUNT],
+        #     #       total_failed_tests,
+        #     #       total_passed_tests)
         statement_infor[id][score] = suspicious_score_by_sbfl_metric(spectrum_expression,
                                                                      statement_infor[id][FAILED_TEST_COUNT],
                                                                      statement_infor[id][PASSED_TEST_COUNT],

@@ -11,6 +11,9 @@ from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_pat
 from ranking.RankingManager import get_set_of_stms, sbfl_ranking, local_ranking_a_suspicious_list
 from spectrum_manager.Spectrum_Expression import OP2
 
+BACKWARD_SLICING_TYPE = "Backward"
+FORWARD_SLICING_TYPE = "Forward"
+
 TRUE_PASSING = "TP"
 FALSE_PASSING = "FP"
 FAILING = "F"
@@ -231,7 +234,7 @@ def ranking_suspicious_stmts(project_dir, failing_variants):
     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
 
     stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(
-        project_dir, failing_variants,
+        project_dir, failing_variants,[],
         "",
         0.0)
     all_stms_f_products_set = get_set_of_stms(search_spaces)
@@ -370,9 +373,9 @@ def check_dependencies(variants_folder_dir, passing_variant, failed_executions_i
             for item in failed_executions_in_failing_products[fv][test]:
                 susp_stmt = item["id"]
                 similarities = check_dependencies_by_slicing_type(similarities, susp_stmt, fv_forward_slicies,
-                                                                  pv_forward_slicies, "Forward")
+                                                                  pv_forward_slicies, FORWARD_SLICING_TYPE)
                 similarities = check_dependencies_by_slicing_type(similarities, susp_stmt, fv_backward_slicies,
-                                                                  pv_backward_slicies, "Backward")
+                                                                  pv_backward_slicies, BACKWARD_SLICING_TYPE)
         similarities = check_overall_dependencies(similarities, fv_forward_slicies, fv_backward_slicies,
                                                   pv_forward_slicies, pv_backward_slicies)
     return aggreate_similarity_by_avg(similarities)

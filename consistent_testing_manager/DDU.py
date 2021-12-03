@@ -1,5 +1,10 @@
+import logging
+
 from consistent_testing_manager.FPMatricsCaculation import *
+from FileManager import  *
 import xml.etree.ElementTree as ET
+
+
 
 def coverage_per_test(file_path):
     data = {}
@@ -35,7 +40,7 @@ def coverage_per_test(file_path):
     return data
 
 
-def create_activity_matrix(variant_dir, variant_label):
+def create_activity_matrix_variant_level(variant_dir, variant_label):
     A = {}
     coverage_dir = get_test_coverage_dir(variant_dir)
     if variant_label == FAILING:
@@ -49,6 +54,11 @@ def create_activity_matrix(variant_dir, variant_label):
             for file in all_coverage_files:
                 file_path = join_path(path, file)
                 A[file] = coverage_per_test(file_path)
+    return A
+
+
+def create_activity_matrix_system_level(A, file_path):
+    A[file_path] = coverage_per_test(file_path)
     return A
 
 
@@ -78,6 +88,8 @@ def same_pattern(consider_matrix):
                 if key != k and same_p[k] == 0:
                     test_value = 0
                     for a in consider_matrix[key]:
+                        if a not in consider_matrix[k]:
+                            consider_matrix[k][a] = 0
                         if consider_matrix[key][a] != consider_matrix[k][a]:
                             test_value = -1
                             break
@@ -101,7 +113,6 @@ def diversity(matrix):
             count += 1
             sum += same_activity_tests[key] * (same_activity_tests[key] - 1)
     diversity_metric = 1 - (sum / (N * (N - 1)))
-
     return diversity_metric
 
 
@@ -134,7 +145,15 @@ def check_test_status(variant_dir):
 
 
 def ddu(variant_dir, variant_label):
-    activity_matrix = create_activity_matrix(variant_dir, variant_label)
+    activity_matrix = create_activity_matrix_variant_level(variant_dir, variant_label)
+    density_metric = density(activity_matrix)
+    diversity_metric = diversity(activity_matrix)
+    uniqueness_metric = uniqueness(activity_matrix)
+    ddu = density_metric * diversity_metric * uniqueness_metric
+    return ddu
+
+
+def ddu_system_level(activity_matrix):
     density_metric = density(activity_matrix)
     diversity_metric = diversity(activity_matrix)
     uniqueness_metric = uniqueness(activity_matrix)
@@ -148,7 +167,7 @@ def get_inconsistent_test_by_ddu(mutated_project_dir):
     ddu_set = {}
     count = 0
     for var_dir in variant_dirs:
-        activity_matrix = create_activity_matrix(var_dir)
+        activity_matrix = create_activity_matrix_variant_level(var_dir)
         density_metric = density(activity_matrix)
         diversity_metric = diversity(activity_matrix)
         uniqueness_metric = uniqueness(activity_matrix)
@@ -165,3 +184,4 @@ def get_inconsistent_test_by_ddu(mutated_project_dir):
         if ddu_set[v] < average_ddu:
             inconsistent.append(v)
     return inconsistent
+
