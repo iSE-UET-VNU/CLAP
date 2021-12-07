@@ -20,9 +20,9 @@ def do_slice(spc_file_path, filtering_coverage_rate, coverage_version):
     else:
         post_fix = filtering_coverage_rate
     slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), post_fix)
-    if is_path_exist(slicing_output_path):
-        logger.info(f"Used Old Slicing log file [{slicing_output_path}]")
-        return slicing_output_path, 0
+    # if is_path_exist(slicing_output_path):
+    #     logger.info(f"Used Old Slicing log file [{slicing_output_path}]")
+    #     return slicing_output_path, 0
 
     logger.info(f"Running suspicious_statements_manager from spc file [{get_file_name_with_parent(spc_file_path)}]")
     output_log = execute_shell_command(

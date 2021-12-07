@@ -42,11 +42,11 @@ def summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments):
 
 
 if __name__ == "__main__":
-    num_of_bugs = ["1Bug"]
-    prefix = "classified_all_1bug_remove_FP_0.5"
+    num_of_bugs = ["1Bug", "2Bug", "3Bug"]
+    prefix = "classified_all_keep_tests_susp_variants_0.5"
     base_path = join_path("/Users/thu-trangnguyen/Documents/Projects/VarCop/experiment_results/", prefix)
 
-    systems = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL", "ZipMe", "ALL"]
+    systems = ["BankAccountTP","Elevator", "Email", "ExamDB", "GPL", "ZipMe", "ALL"]
 
     bankaccount = ["BankAccountTP/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     elevator = ["Elevator/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/1wise/"]
     zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/2wise/"]
     all = [
-        bankaccount[0], elevator[0], email[0], examdb[0], gpl[0], zipme[0]
+        bankaccount[0],  elevator[0], email[0], examdb[0], gpl[0], zipme[0]
     ]
     experiments = [bankaccount, elevator, email, examdb, gpl, zipme, all]
     summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments)

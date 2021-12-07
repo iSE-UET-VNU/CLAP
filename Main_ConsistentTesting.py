@@ -1,6 +1,7 @@
 from consistent_testing_manager.DDU import ddu
 from consistent_testing_manager.FPMatricsCaculation import *
 from consistent_testing_manager.FileName import  consistent_testing_info_file
+from ranking.RankingManager import get_max_susp_each_stmt_in_variants
 from spectrum_manager.SpectrumReader import get_passing_executions, get_passing_executions_in_a_variant, get_all_stm_ids, \
     get_failings_executions
 

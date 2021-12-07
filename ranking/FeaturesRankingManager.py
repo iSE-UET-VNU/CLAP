@@ -13,26 +13,25 @@ from ranking.Keywords import *
 from TestingCoverageManager import statement_coverage_of_variants
 
 
-def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, search_spaces, filter_coverage_rate, spectrum_expressions,
+def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants,
+                                   FP_variants, search_spaces, filter_coverage_rate, spectrum_expressions,
                                    spectrum_coverage_prefix=""):
-    statements_sets = {}
-    statements_sets[SS_STMS_IN_F_PRODUCTS] = get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS])
-    statements_sets[SS_SLICING] = get_set_of_stms(search_spaces[SS_SLICING])
+
+    statements_sets = {SS_STMS_IN_F_PRODUCTS: get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS]),
+                       SS_SLICING: get_set_of_stms(search_spaces[SS_SLICING])}
     total_variants = 0
     variants_testing_coverage = {}
-    if filter_coverage_rate > 0:
-        variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir, spectrum_coverage_prefix)
-    failing_variants = get_failing_variants(mutated_project_dir)
+
     features_info = {SS_STMS_IN_F_PRODUCTS: {}, SS_SLICING: {}}
 
     variants_dir = get_variants_dir(mutated_project_dir)
     for variant in list_dir(variants_dir):
-        if variant in failing_variants or (filter_coverage_rate == 0 or (variants_testing_coverage[variant] >= filter_coverage_rate)):
+        if variant in failing_variants or (variant not in FP_variants):
             total_variants += 1
             variant_dir = get_variant_dir(mutated_project_dir, variant)
             features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_info, statements_sets,
                                                            spectrum_coverage_prefix)
-
+    print(total_variants)
     total_passes = total_variants - len(failing_variants)
     total_fails = len(failing_variants)
 

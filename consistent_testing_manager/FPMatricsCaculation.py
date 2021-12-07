@@ -248,32 +248,32 @@ def ranking_suspicious_stmts(project_dir, failing_variants):
     return op2_ranked_list
 
 
-def normalize_score(scores_list):
-    min = 10000
-    max = -10000
-    for (stmt, score, v) in scores_list:
-        if score > max:
-            max = score
-        if score < min:
-            min = score
-    data = {}
-    for (stmt, score, v) in scores_list:
-        data[stmt] = (score - min) * (1 / (max - min))
-    return data
-
-
-def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
-    search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
-    suspicious_scores = local_ranking_a_suspicious_list(project_dir, search_spaces, [OP2], "")
-    data = {}
-    for v in suspicious_scores[OP2]:
-        normalized_data = normalize_score(suspicious_scores[OP2][v])
-        for stmt in normalized_data:
-            if stmt not in data:
-                data[stmt] = normalized_data[stmt]
-            elif normalized_data[stmt] > data[stmt]:
-                data[stmt] = normalized_data[stmt]
-    return data
+# def normalize_score(scores_list):
+#     min = 10000
+#     max = -10000
+#     for (stmt, score, v) in scores_list:
+#         if score > max:
+#             max = score
+#         if score < min:
+#             min = score
+#     data = {}
+#     for (stmt, score, v) in scores_list:
+#         data[stmt] = (score - min) * (1 / (max - min))
+#     return data
+#
+#
+# def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
+#     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
+#     suspicious_scores = local_ranking_a_suspicious_list(project_dir, search_spaces, [OP2], "")
+#     data = {}
+#     for v in suspicious_scores[OP2]:
+#         normalized_data = normalize_score(suspicious_scores[OP2][v])
+#         for stmt in normalized_data:
+#             if stmt not in data:
+#                 data[stmt] = normalized_data[stmt]
+#             elif normalized_data[stmt] > data[stmt]:
+#                 data[stmt] = normalized_data[stmt]
+#     return data
 
 
 def check_total_susp_scores_in_passing_variant(susp_scores, passing_variant_stmt):

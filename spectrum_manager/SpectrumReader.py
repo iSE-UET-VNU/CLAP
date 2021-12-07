@@ -138,20 +138,20 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spect
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
 
 
-def get_infor_for_sbfl_with_FP_detection(mutated_project_dir, failing_variants, fp_variants, keep_useful_tests,
+def get_infor_for_sbfl_with_FP_detection(mutated_project_dir, failing_variants, fp_variants, sups_in_variants,
+                                         keep_useful_tests,
                                          spectrum_coverage_prefix, coverage_rate):
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
                                                                                        failing_variants,
                                                                                        fp_variants,
                                                                                        spectrum_coverage_prefix,
                                                                                        coverage_rate)
-    test_checking_method = "DDU"
+
     if keep_useful_tests:
         stm_info_for_spectrum, total_passed_tests = get_useful_tests_in_FP_variants(mutated_project_dir,
-                                                                                    failing_variants,
-                                                                                    fp_variants, stm_info_for_spectrum,
-                                                                                    total_passed_tests,
-                                                                                    test_checking_method)
+                                                                                    fp_variants, sups_in_variants,
+                                                                                    stm_info_for_spectrum,
+                                                                                    total_passed_tests)
     return stm_info_for_spectrum, total_passed_tests, total_failed_tests
 
 
@@ -175,43 +175,44 @@ def init_activity_matrix_for_ddu(mutated_project_dir, failing_variants, fp_varia
     return A
 
 
-def get_useful_tests_in_FP_variants(mutated_project_dir, failing_variants, fp_variants, stm_info_for_spectrum,
-                                    total_passed_tests, test_checking_method):
-    system_stm_ids = get_all_stm_ids(mutated_project_dir)
-    failed_executions_in_failing_products = get_failings_executions(mutated_project_dir, system_stm_ids,
-                                                                    failing_variants)
-    A = init_activity_matrix_for_ddu(mutated_project_dir, failing_variants, fp_variants)
-    system_ddu = ddu_system_level(A)
-    passing_executions = get_passing_executions(mutated_project_dir, system_stm_ids, fp_variants)
+def get_passing_tests_by_local_suspiciousness(passing_executions, sups_in_variants, stm_info_for_spectrum,
+                                              total_passed_tests):
+
+    score_list = []
+    most_suspicious_stmt = []
+    for stm in sups_in_variants:
+        score_list.append(sups_in_variants[stm])
+    score_list.sort(reverse=True)
+    tscore = score_list[int(len(score_list) * 0.1)]
+
+    for stm in sups_in_variants:
+        if sups_in_variants[stm] > tscore:
+            most_suspicious_stmt.append(stm)
+
     for v in passing_executions:
         for test in passing_executions[v]:
-            ddu_add_this_test = False
-            if test_checking_method == "DDU":
-                new_A = A.copy()
-                var_dir = join_path(get_variants_dir(mutated_project_dir), v)
-                passed_test_path = join_path(join_path(get_test_coverage_dir(var_dir), PASSED_TEST_COVERAGE_FOLDER_NAME), test)
-                new_A = create_activity_matrix_system_level(new_A, passed_test_path)
-                new_ddu = ddu_system_level(new_A)
-                if new_ddu > system_ddu:
-                    A = new_A.copy()
-                    system_ddu = new_ddu
-                    ddu_add_this_test = True
-
-            if (test_checking_method == "EXECUTION_SET" and
-                not has_a_similar_failed_test_by_execution_set(
-                    passing_executions[v][test],
-                    failed_executions_in_failing_products, 0.8)) \
-                    or (test_checking_method == "CONTAIN_SUSP_STM"
-                        and not contain_suspcious_stmts(
-                        passing_executions[v][test], failed_executions_in_failing_products))\
-                    or test_checking_method == "DDU" and ddu_add_this_test:
-
+            flag = False
+            for item in passing_executions[v][test]:
+                if item["id"] in most_suspicious_stmt:
+                    flag = True
+                    break
+            if not flag:
                 for item in passing_executions[v][test]:
                     if int(item["tested"]) == 1:
                         if item["id"] in stm_info_for_spectrum:
                             stm_info_for_spectrum[item["id"]]['passed_test_count'] += 1
                 total_passed_tests += 1
     return stm_info_for_spectrum, total_passed_tests
+
+
+def get_useful_tests_in_FP_variants(mutated_project_dir, fp_variants, sups_in_variants,
+                                    stm_info_for_spectrum,
+                                    total_passed_tests):
+    system_stm_ids = get_all_stm_ids(mutated_project_dir)
+    passing_executions = get_passing_executions(mutated_project_dir, system_stm_ids, fp_variants)
+
+    return get_passing_tests_by_local_suspiciousness(passing_executions, sups_in_variants, stm_info_for_spectrum,
+                                                     total_passed_tests)
 
 
 def contain_suspcious_stmts(path, failed_executions):

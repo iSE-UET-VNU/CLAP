@@ -43,29 +43,32 @@ def read_data_from_coverage_file(data, coverage_file, variant_type):
         logging.info("Exception when parsing %s", coverage_file)
 
 
-def get_num_passing_failing_variants(mutated_project_dir, list_of_stms, spectrum_coverage_prefix):
+def get_num_passing_failing_variants(mutated_project_dir, failing_variants, fp_variants, list_of_stms, spectrum_coverage_prefix):
 
     failing_passing_variants_of_stms = init_num_of_failing_passing_variants(list_of_stms)
     variants_list = get_all_variant_dirs(mutated_project_dir)
     total_fails = 0
     total_passes = 0
     for variant_dir in variants_list:
-        test_coverage_dir = get_test_coverage_dir(variant_dir)
-        spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
-        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
+        if variant_dir.split("/")[-1] not in fp_variants:
+            test_coverage_dir = get_test_coverage_dir(variant_dir)
+            spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
+            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
+            spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+            spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
 
-        if os.path.isfile(spectrum_failed_coverage_file_dir):
-            failing_passing_variants_of_stms = read_data_from_coverage_file(failing_passing_variants_of_stms,
-                                                                    spectrum_failed_coverage_file_dir,
-                                                                    VARIANT_NUM_OF_FAILS)
-            total_fails += 1
-        if not os.path.isfile(spectrum_failed_coverage_file_dir) and os.path.isfile(spectrum_passed_coverage_file_dir):
-            failing_passing_variants_of_stms = read_data_from_coverage_file(failing_passing_variants_of_stms,
-                                                                    spectrum_passed_coverage_file_dir,
-                                                                    VARIANT_NUM_OF_PASSES)
-            total_passes += 1
+            if variant_dir.split("/")[-1] in failing_variants:
+
+                failing_passing_variants_of_stms = read_data_from_coverage_file(failing_passing_variants_of_stms,
+                                                                        spectrum_failed_coverage_file_dir,
+                                                                        VARIANT_NUM_OF_FAILS)
+                total_fails += 1
+            elif os.path.isfile(spectrum_passed_coverage_file_dir):
+                failing_passing_variants_of_stms = read_data_from_coverage_file(failing_passing_variants_of_stms,
+                                                                        spectrum_passed_coverage_file_dir,
+                                                                        VARIANT_NUM_OF_PASSES)
+                total_passes += 1
+    print(total_passes, total_fails)
     return failing_passing_variants_of_stms, total_fails, total_passes
 
 

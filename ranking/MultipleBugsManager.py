@@ -5,6 +5,7 @@ from xlsxwriter import Workbook
 from consistent_testing_manager.FPMatricsCaculation import FALSE_PASSING, LABEL
 from consistent_testing_manager.FileName import variants_testing_label_file
 from ranking import RankingManager
+from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
     ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_set_of_stms
@@ -81,40 +82,40 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
     for stm in ranking_results[SBFL_RANK].keys():
         sheet.write(row, VARCOP_BUGGY_STM_COL, stm)
 
-        # if is_var_bug:
-        #     sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm][RANK])
-        #     sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_RANK][stm][RANK] / all_stms) * 100)
-        # else:
-        #     sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
-        #     sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
-        #     sheet.write(row, IS_VAR_BUG_COL, 0)
+        if is_var_bug:
+            sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_RANK][stm][RANK])
+            sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_RANK][stm][RANK] / all_stms) * 100)
+        else:
+            sheet.write(row, VARCOP_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
+            sheet.write(row, VARCOP_EXAM_COL, (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
+            sheet.write(row, IS_VAR_BUG_COL, 0)
 
-        # sheet.write(row, VARCOP_SPACE_COL, varcop_space)
+        sheet.write(row, VARCOP_SPACE_COL, varcop_space)
 
-        # sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
-        # sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK] / all_stms) * 100)
-        # sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
-        # sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK] / all_stms) * 100)
-        # sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
-        # sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK] / all_stms) * 100)
+        sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
+        sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK] / all_stms) * 100)
+        sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
+        sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK] / all_stms) * 100)
+        sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
+        sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK] / all_stms) * 100)
 
-        # sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
+        sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
 
-        # sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
-        # sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL,
-        #            (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
+        sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
+        sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL,
+                   (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SBFL_RANK_COL, ranking_results[SBFL_RANK][stm][RANK])
         sheet.write(row, SBFL_EXAM_COL, (ranking_results[SBFL_RANK][stm][RANK] / all_stms) * 100)
-        # sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
-        # sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK] / all_stms) * 100)
+        sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
+        sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SPACE_COL, all_space)
 
         row += 1
     return row
 
 
-def suspicious_isolation(mutated_project_dir, filtering_coverage_rate, coverage_version):
-    SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+def suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version):
+    SPCsManager.find_SPCs(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate)
     spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
     SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, coverage_version)
 
@@ -148,7 +149,7 @@ def create_exp_result_folder(result_folder, system_name):
 
 
 def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions,
-                          alpha, classified_file_name, keep_useful_tests, filtering_coverage_rate=0.0, coverage_version=""):
+                          alpha, classy_passing_variant, classified_file_name, keep_useful_tests, filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
 
@@ -199,14 +200,12 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                 label_file = join_path(mutated_project_dir, variants_testing_label_file)
                 failing_variants = get_failing_variants_by_labels(label_file, LABEL)
-                #FP_variants = []
-                FP_variants = get_fp_variants(classified_file_path)
-                print(FP_variants)
-                # not_used_variants = get_not_used_variants_for_classification_by_variant(
-                #    join_path(mutated_project_dir, "consistent_testing_info_normalized.csv"),
-                #    classified_file)
+                if classy_passing_variant:
+                    FP_variants = get_fp_variants(classified_file_path)
+                else:
+                    FP_variants = []
 
-                # suspicious_isolation(mutated_project_dir, filtering_coverage_rate, coverage_version)
+                suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version)
                 search_spaces = get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
@@ -214,6 +213,8 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                 if system_name == "ZipMe":
                     is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base", "Compress"])
+                elif system_name == "BankAccountTP":
+                    is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["BankAccount"])
                 else:
                     is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base"])
 
@@ -226,21 +227,22 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                                                                              normalization_type,
                                                                              coverage_version,
                                                                              filtering_coverage_rate, alpha)
-                # fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
-                #                                                     search_spaces,
-                #                                                     filtering_coverage_rate, spectrum_expressions)
-                fb_ranking_results = {}
+                fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants,
+                                                                    FP_variants,
+                                                                    search_spaces,
+                                                                    filtering_coverage_rate, spectrum_expressions)
+
 
                 for metric in range(0, len(spectrum_expressions)):
                     sheet[metric].write(row_temp, BUG_ID_COL, mutated_project_name)
-                    # row = write_result_to_file(row_temp, sheet[metric],
-                    #                            ranking_results[spectrum_expressions[metric]],
-                    #                            fb_ranking_results[spectrum_expressions[metric]], search_spaces,
-                    #                            is_a_var_bug)
                     row = write_result_to_file(row_temp, sheet[metric],
                                                ranking_results[spectrum_expressions[metric]],
-                                               "", search_spaces,
+                                               fb_ranking_results[spectrum_expressions[metric]], search_spaces,
                                                is_a_var_bug)
+                    # row = write_result_to_file(row_temp, sheet[metric],
+                    #                            ranking_results[spectrum_expressions[metric]],
+                    #                            "", search_spaces,
+                    #                            is_a_var_bug)
             wb.close()
 
 
