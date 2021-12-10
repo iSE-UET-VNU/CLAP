@@ -16,7 +16,7 @@ SBFL_METRICS = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                 GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
 
 if __name__ == "__main__":
-    result_base_folder = "classified_original"
+    result_base_folder = "class, nu ified_original"
     data_base_dir = "/Users/thu-trangnguyen/Documents/Research/SPL"
     system_names = ["BankAccountTP"]
     bug_folders = [ "2Bug"]

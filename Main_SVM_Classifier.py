@@ -180,6 +180,8 @@ def performance_in_each_projects(testing_systems, classified_file):
                         FP_count += 1
                         if line[2] == FALSE_PASSING:
                             FP_correct += 1
+        if TP_count == 0 or FP_count == 0:
+            break
         print("tp_precision", (TP_correct) / (TP_correct + FP_count - FP_correct))
         print("fp_precision", (FP_correct) / (FP_correct + TP_count - TP_correct))
         print("tp_recall", (TP_correct) / (TP_count))
@@ -195,25 +197,24 @@ if __name__ == "__main__":
     #                     "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/1Bug/4wise/",
     #                     "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise/"]
     training_systems = [
+
                         ]
     testing_systems = [
-
-        "/Users/trangnt/Documents/Projects/SPL/BankAccountTP/1Bug/4wise/",
-
-
-        "/Users/trangnt/Documents/Projects/SPL/Elevator/1Bug/4wise/",
-
-
-        "/Users/trangnt/Documents/Projects/SPL/Email/1Bug/4wise/",
-
-
-        "/Users/trangnt/Documents/Projects/SPL/GPL/1Bug/4wise/",
-
-
-        "/Users/trangnt/Documents/Projects/SPL/ZipMe/1Bug/2wise/",
-
-
-        "/Users/trangnt/Documents/Projects/SPL/ExamDB/1Bug/4wise/"]
+        "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/1Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/2Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/3Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/1Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/2Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/3Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/Email/1Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/Email/2Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/Email/3Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/1Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/2Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/3Bug/4wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise/",
+        "/Users/thu-trangnguyen/Documents/Research/SPL/ZipMe/1Bug/2wise/"
+        ]
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(training_systems, testing_systems, 0.8, 0.0)
 
@@ -223,5 +224,5 @@ if __name__ == "__main__":
     print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
     accuray_measure(y_test, y_pred)
 
-    write_classified_result(y_pred, test_samples, 0, classified_all_testing_file)
-    performance_in_each_projects(test_samples, classified_all_testing_file)
+    write_classified_result(y_pred, test_samples, 0, classified_all_file)
+    performance_in_each_projects(test_samples, classified_all_file)

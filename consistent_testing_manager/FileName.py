@@ -5,3 +5,4 @@ consistent_testing_normalized_info_file = "consistent_testing_info_normalized.cs
 classified_all_file = "classified_all.csv"
 classified_all_single_bug_file = "classified_all_1bug.csv"
 classified_all_multiple_bug_file = "classified_all_23bug.csv"
+classified_all_testing_file = "classified_all_testing.csv"
