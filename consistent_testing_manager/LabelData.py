@@ -128,16 +128,31 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
         os.remove(file_name)
 
 
+def contain_slicing_files(mutated_project_path):
+    variants_dir = get_variants_dir(mutated_project_path)
+    variants = list_dir(variants_dir)
+    for v in variants:
+        v_path = join_path(variants_dir, v)
+        slicing_file_path = join_path(v_path, "slice.all_statements.backward_slicing.log")
+        if not os.path.exists(slicing_file_path):
+            return False
+        else:
+            return True
+
 def label_data(system_paths):
     logfile = open("statistics/contain_buggy_features_but_not_buggy_stmts.txt", "w")
     base_features = ["BankAccount", "Base", "ExamDB", "Compress"]
     for system in system_paths:
         for bug in system_paths[system]:
             sys_path = system_paths[system][bug]
+            if not os.path.exists(sys_path):
+                continue
             logfile.write(sys_path + "\n")
             mutated_projects = list_dir(sys_path)
             for mutated_project in mutated_projects:
                 mu_project_path = join_path(sys_path, mutated_project)
+                if not contain_slicing_files(mu_project_path):
+                    continue
                 buggy_stmts = get_multiple_buggy_statements(mutated_project, mu_project_path)
                 buggy_features = get_mutated_features(mu_project_path)
                 config_report_path = get_model_configs_report_path(mu_project_path)
