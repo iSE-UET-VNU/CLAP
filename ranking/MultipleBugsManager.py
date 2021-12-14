@@ -103,7 +103,7 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
 
         sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
         sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL,
-                   (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
+                    (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SBFL_RANK_COL, ranking_results[SBFL_RANK][stm][RANK])
         sheet.write(row, SBFL_EXAM_COL, (ranking_results[SBFL_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
@@ -149,7 +149,8 @@ def create_exp_result_folder(result_folder, system_name):
 
 
 def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions,
-                          alpha, classy_passing_variant, classified_file_name, keep_useful_tests, filtering_coverage_rate=0.0, coverage_version=""):
+                          alpha, classy_passing_variant, classified_file_name, keep_useful_tests,
+                          filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
 
@@ -205,7 +206,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                 else:
                     FP_variants = []
 
-                suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version)
+                # suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version)
                 search_spaces = get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
@@ -227,11 +228,11 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                                                                              normalization_type,
                                                                              coverage_version,
                                                                              filtering_coverage_rate, alpha)
-                fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants,
+                fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
+                                                                    failing_variants,
                                                                     FP_variants,
                                                                     search_spaces,
                                                                     filtering_coverage_rate, spectrum_expressions)
-
 
                 for metric in range(0, len(spectrum_expressions)):
                     sheet[metric].write(row_temp, BUG_ID_COL, mutated_project_name)

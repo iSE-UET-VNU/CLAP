@@ -1,9 +1,7 @@
 import logging
 
-from consistent_testing_manager.FPMatricsCaculation import *
-from FileManager import  *
+from FileManager import *
 import xml.etree.ElementTree as ET
-
 
 
 def coverage_per_test(file_path):
@@ -43,7 +41,7 @@ def coverage_per_test(file_path):
 def create_activity_matrix_variant_level(variant_dir, variant_label):
     A = {}
     coverage_dir = get_test_coverage_dir(variant_dir)
-    if variant_label == FAILING:
+    if variant_label == "F":
         pass_fail_dirs = [join_path(coverage_dir, PASSED_TEST_COVERAGE_FOLDER_NAME),
                           join_path(coverage_dir, FAILED_TEST_COVERAGE_FOLDER_NAME)]
     else:

@@ -4,11 +4,16 @@ import json
 import pandas
 from sklearn import preprocessing
 from FileManager import *
-from consistent_testing_manager.FileName import consistent_testing_info_file, consistent_testing_normalized_info_file
+from consistent_testing_manager.DDU import ddu
+from consistent_testing_manager.FileName import consistent_testing_info_file, consistent_testing_normalized_info_file, \
+    variants_testing_label_file
+from xlsxwriter import Workbook
 
 from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_path, \
-    get_suspicious_space_consistent_version, get_infor_for_sbfl
-from ranking.RankingManager import get_set_of_stms, sbfl_ranking, local_ranking_a_suspicious_list
+    get_suspicious_space_consistent_version, get_infor_for_sbfl, get_passing_executions_in_a_variant, \
+    get_failings_executions, get_passing_executions, get_all_stm_ids
+from ranking.RankingManager import get_set_of_stms, sbfl_ranking, local_ranking_a_suspicious_list, \
+    get_max_susp_each_stmt_in_variants
 from spectrum_manager.Spectrum_Expression import OP2
 
 BACKWARD_SLICING_TYPE = "Backward"
@@ -22,14 +27,18 @@ LABELED_FILE_NAME = "variants_testing_label.csv"
 VARIANT_NAME = 'VARIANT'
 LABEL = 'LABEL'
 CREATED_FP = 'FP created from F'
-DDU = "consistent_testing_manager"
+DDU = "DDU"
 
 executed_susp_stmt_vs_susp_stmt_in_passing_variant = "executed_susp_stmt_vs_susp_stmt_in_passing_variant"
 not_executed_susp_stmt_vs_susp_stmt_in_passing_variant = "not_executed_susp_stmt_vs_susp_stmt_in_passing_variant"
 executed_susp_stmt_vs_susp_stmt_in_a_failed_execution = "executed_susp_stmt_vs_susp_stmt_in_a_failed_execution"
 not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution = "not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution"
-tested_unexpected_behaviors_in_passing_variant = "tested_unexpected_behaviors_in_passing_variant"
-confirmed_successes_in_passing_variant = "check_confirmed_successes_in_passing_variant"
+tested_unexpected_behaviors_in_passing_variant_50 = "tested_unexpected_behaviors_in_passing_variant_50"
+tested_unexpected_behaviors_in_passing_variant_80 = "tested_unexpected_behaviors_in_passing_variant_80"
+tested_unexpected_behaviors_in_passing_variant_100 = "tested_unexpected_behaviors_in_passing_variant_100"
+confirmed_successes_in_passing_variant_50 = "check_confirmed_successes_in_passing_variant_50"
+confirmed_successes_in_passing_variant_80 = "check_confirmed_successes_in_passing_variant_80"
+confirmed_successes_in_passing_variant_100 = "check_confirmed_successes_in_passing_variant_100"
 total_susp_scores_in_system = "susp_scores_in_system"
 total_susp_scores_in_variants = "susp_scores_in_variants"
 
@@ -63,7 +72,6 @@ def write_dict_to_file(file_name, data, fieldnames):
 
 
 def get_labeled_failing_variants(project_dir):
-    print(project_dir)
     failing_variants = get_failing_variants(project_dir)
     variants_and_labels = get_variants_and_labels(project_dir)
     for item in failing_variants:
@@ -93,7 +101,6 @@ def convert_to_dict(passing_variant_stmt):
             stmt_ids[tmp["id"]] = {}
             stmt_ids[tmp["id"]]["tested"] = tmp["tested"]
     return stmt_ids
-
 
 
 def exist_path(path, list_paths, threshold):
@@ -234,7 +241,7 @@ def ranking_suspicious_stmts(project_dir, failing_variants):
     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
 
     stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(
-        project_dir, failing_variants,[],
+        project_dir, failing_variants, [],
         "",
         0.0)
     all_stms_f_products_set = get_set_of_stms(search_spaces)
@@ -392,6 +399,162 @@ def normalization(FIELDS, project_dir):
     x_scaled = min_max_scaler.fit_transform(x)
     data = pandas.DataFrame(x_scaled)
     data.columns = FIELDS[2:]
-    data.insert(loc=0, column= FIELDS[1], value=labels)
-    data.insert(loc=0, column= FIELDS[0], value=variants)
+    data.insert(loc=0, column=FIELDS[1], value=labels)
+    data.insert(loc=0, column=FIELDS[0], value=variants)
     data.to_csv(consistent_testing_info_normalized_file)
+
+
+def calculate_consistent_testing_values_for_features(system_paths, FIELDS):
+    for system in system_paths:
+        for bug in system_paths[system]:
+            sys_path = system_paths[system][bug]
+            mutated_projects = list_dir(sys_path)
+            for project in mutated_projects:
+                project_dir = join_path(sys_path, project)
+                if not os.path.isfile(join_path(project_dir, variants_testing_label_file)):
+                    continue
+                constant_data = {}
+                failing_variants = get_labeled_failing_variants(project_dir)
+                system_stm_ids = get_all_stm_ids(project_dir)
+                failed_executions_in_failing_products = get_failings_executions(project_dir, system_stm_ids,
+                                                                                failing_variants)
+                passed_executions_in_failing_products = get_passing_executions(project_dir, system_stm_ids,
+                                                                               failing_variants)
+                variants_and_labels = get_variants_and_labels(project_dir)
+                passing_variants_stmts = get_stmts_id_in_passing_variants(project_dir, failing_variants)
+                susp_in_passing_variants = {}
+                susp_scores_in_system = ranking_suspicious_stmts(project_dir, failing_variants)
+                susp_scores_in_variants = get_max_susp_each_stmt_in_variants(project_dir, failing_variants)
+                for p_v in passing_variants_stmts:
+                    constant_data[p_v] = {}
+                    susp_in_passing_variants[p_v] = check_suspicious_stmts_in_passing_variants(
+                        failed_executions_in_failing_products, passing_variants_stmts[p_v])
+                    var_dir = join_path(join_path(project_dir, "variants"), p_v)
+                    constant_data[p_v][LABEL] = variants_and_labels[p_v][LABEL]
+                    constant_data[p_v][DDU] = 1 - ddu(var_dir, variants_and_labels[p_v][LABEL])
+                    constant_data[p_v][
+                        executed_susp_stmt_vs_susp_stmt_in_passing_variant] = check_executed_susp_stmt_vs_susp_stmt_in_passing_variant(
+                        susp_in_passing_variants[p_v])
+                    constant_data[p_v][
+                        not_executed_susp_stmt_vs_susp_stmt_in_passing_variant] = check_not_executed_susp_stmt_vs_susp_stmt_in_passing_variant(
+                        susp_in_passing_variants[p_v])
+                    constant_data[p_v][
+                        executed_susp_stmt_vs_susp_stmt_in_a_failed_execution] = check_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution(
+                        failed_executions_in_failing_products, susp_in_passing_variants[p_v])
+                    constant_data[p_v][
+                        not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution] = check_not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution(
+                        failed_executions_in_failing_products, susp_in_passing_variants[p_v])
+
+                    passed_executions_in_passing_product = get_passing_executions_in_a_variant(project_dir,
+                                                                                               system_stm_ids, p_v)
+                    constant_data[p_v][
+                        tested_unexpected_behaviors_in_passing_variant_50] = check_tested_unexpected_behaviors_in_passing_variant(
+                        failed_executions_in_failing_products, passed_executions_in_passing_product,
+                        susp_in_passing_variants[p_v], 0.5)
+                    constant_data[p_v][
+                        tested_unexpected_behaviors_in_passing_variant_80] = check_tested_unexpected_behaviors_in_passing_variant(
+                        failed_executions_in_failing_products, passed_executions_in_passing_product,
+                        susp_in_passing_variants[p_v], 0.8)
+                    constant_data[p_v][
+                        tested_unexpected_behaviors_in_passing_variant_100] = check_tested_unexpected_behaviors_in_passing_variant(
+                        failed_executions_in_failing_products, passed_executions_in_passing_product,
+                        susp_in_passing_variants[p_v], 1.0)
+
+                    constant_data[p_v][
+                        confirmed_successes_in_passing_variant_50] = check_confirmed_successes_in_passing_variant(
+                        failed_executions_in_failing_products, passed_executions_in_failing_products,
+                        passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.5)
+                    constant_data[p_v][
+                        confirmed_successes_in_passing_variant_80] = check_confirmed_successes_in_passing_variant(
+                        failed_executions_in_failing_products, passed_executions_in_failing_products,
+                        passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.8)
+                    constant_data[p_v][
+                        confirmed_successes_in_passing_variant_100] = check_confirmed_successes_in_passing_variant(
+                        failed_executions_in_failing_products, passed_executions_in_failing_products,
+                        passed_executions_in_passing_product, susp_in_passing_variants[p_v], 1.0)
+
+                    constant_data[p_v][total_susp_scores_in_system] = check_total_susp_scores_in_passing_variant(
+                        susp_scores_in_system, passing_variants_stmts[p_v])
+                    constant_data[p_v][total_susp_scores_in_variants] = check_total_susp_scores_in_passing_variant(
+                        susp_scores_in_variants, passing_variants_stmts[p_v])
+
+                    dependencies_similarity = check_dependencies(join_path(project_dir, "variants"), p_v,
+                                                                 failed_executions_in_failing_products)
+                    constant_data[p_v][forward_similarity] = dependencies_similarity["Forward"]
+                    constant_data[p_v][backward_similarity] = dependencies_similarity["Backward"]
+                    constant_data[p_v][both_forward_and_backward_similarity] = dependencies_similarity["Both"]
+                write_dict_to_file(join_path(project_dir, consistent_testing_info_file), constant_data, FIELDS)
+                normalization(FIELDS, project_dir)
+                os.remove(join_path(project_dir, consistent_testing_info_file))
+
+
+def average_feature_by_label(labels, values, target):
+    sum = 0
+    count = 0
+    for i in range(0, len(labels)):
+        if labels[i] == target:
+            count += 1
+            sum += values[i]
+
+    if count == 0:
+        return sum
+    return sum / count
+
+
+def do_features_statistics(system_paths, FIELDS):
+    wb = Workbook("statistics/features.xlsx")
+    system_paths_by_bugs = {"1Bug": [], "2Bug": [], "3Bug": []}
+    for s in system_paths:
+        for bug in system_paths[s]:
+            if bug == "1Bug":
+                system_paths_by_bugs[bug].append(system_paths[s][bug])
+    for bug in system_paths_by_bugs:
+        sheet = wb.add_worksheet(bug)
+        row = 0
+        col = 0
+        sheet.write(row, col, "System")
+        col += 1
+
+        for f in FIELDS[2:]:
+            sheet.write(row, col, f)
+            sheet.write(row + 1, col, TRUE_PASSING)
+            sheet.write(row + 1, col + 1, FALSE_PASSING)
+            col += 2
+        row += 2
+
+        for sys_path in system_paths_by_bugs[bug]:
+            col = 0
+            sheet.write(row, col, sys_path)
+            col += 1
+            average_values = {TRUE_PASSING: {}, FALSE_PASSING: {}}
+            for f in FIELDS[2:]:
+                average_values[TRUE_PASSING][f] = 0
+                average_values[FALSE_PASSING][f] = 0
+
+            mutated_projects = list_dir(sys_path)
+            total_projects = 0
+
+            for project in mutated_projects:
+                project_dir = join_path(sys_path, project)
+                if os.path.isfile(join_path(project_dir, variants_testing_label_file)):
+                    consistent_testing_info_normalized_file = join_path(project_dir,
+                                                                        consistent_testing_normalized_info_file)
+                    data = pandas.read_csv(consistent_testing_info_normalized_file)
+                    for f in FIELDS[2:]:
+                        average_values[TRUE_PASSING][f] += average_feature_by_label(data[LABEL], data[f], TRUE_PASSING)
+                        average_values[FALSE_PASSING][f] += average_feature_by_label(data[LABEL], data[f], FALSE_PASSING)
+
+                    total_projects += 1
+
+            for f in FIELDS[2:]:
+                average_values[TRUE_PASSING][f] /= total_projects
+                average_values[FALSE_PASSING][f] /= total_projects
+
+            col = 1
+            for l in average_values:
+                for item in average_values[l]:
+                    sheet.write(row, col, round(average_values[l][item], 2))
+                    col += 2
+                col = 2
+            row += 1
+    wb.close()

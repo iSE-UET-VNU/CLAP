@@ -1,6 +1,7 @@
 from consistent_testing_manager.FPMatricsCaculation import *
+from consistent_testing_manager.FileName import variants_testing_label_file
 from spectrum_manager.SpectrumReader import get_all_stm_ids, get_failings_executions
-from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements
+from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, get_mutated_features
 import csv
 import xml.etree.ElementTree as ET
 from FileManager import *
@@ -82,7 +83,7 @@ def verify_failing_variants(mutated_project_dir):
                         break
                 if flag: break
             if flag: break
-        if flag == False:
+        if not flag:
             unconverted_to_FP_variants.append("-1")
     return unconverted_to_FP_variants
 
@@ -124,4 +125,68 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
                 writer.writerow({'VARIANT': v, 'LABEL': TRUE_PASSING})
                 num_tp += 1
     if num_failings == 0 or num_tp == 0 or num_fp == 0:
-        print(mutated_project_dir)
+        os.remove(file_name)
+
+
+def label_data(system_paths):
+    logfile = open("statistics/contain_buggy_features_but_not_buggy_stmts.txt", "w")
+    base_features = ["BankAccount", "Base", "ExamDB", "Compress"]
+    for system in system_paths:
+        for bug in system_paths[system]:
+            sys_path = system_paths[system][bug]
+            logfile.write(sys_path + "\n")
+            mutated_projects = list_dir(sys_path)
+            for mutated_project in mutated_projects:
+                mu_project_path = join_path(sys_path, mutated_project)
+                buggy_stmts = get_multiple_buggy_statements(mutated_project, mu_project_path)
+                buggy_features = get_mutated_features(mu_project_path)
+                config_report_path = get_model_configs_report_path(mu_project_path)
+                failing_variants = get_failing_variants(mu_project_path)
+
+                if not base_is_buggy_features(base_features, buggy_features):
+                    passing_variants_contain_buggy_features = passing_product_has_buggy_features(config_report_path,
+                                                                                                 buggy_features)
+
+                    passing_variants_contain_buggy_stmts = passing_product_has_buggy_statements(mu_project_path,
+                                                                                                passing_variants_contain_buggy_features,
+                                                                                                buggy_stmts)
+                    if len(passing_variants_contain_buggy_features) > 0 and len(
+                            passing_variants_contain_buggy_stmts) == 0 and len(failing_variants) != 1:
+                        logfile.write(mutated_project + "\n")
+
+                    if not (len(failing_variants) == 1 and len(passing_variants_contain_buggy_stmts) == 0):
+                        label(mu_project_path, passing_variants_contain_buggy_stmts)
+
+    logfile.close()
+
+
+def do_label_statistics(system_paths):
+    logfile = open("statistics/labels_in_systems.txt", "w")
+    for system in system_paths:
+        for bug in system_paths[system]:
+            sys_path = system_paths[system][bug]
+            logfile.write(sys_path + "\n")
+            mutated_projects = list_dir(sys_path)
+            sum_f = 0
+            sum_tp = 0
+            sum_fp = 0
+            total_cases = 0
+            for mutated_project in mutated_projects:
+                mu_project_path = join_path(sys_path, mutated_project)
+                label_file = join_path(mu_project_path, variants_testing_label_file)
+                if os.path.isfile(label_file):
+                    with open(label_file) as csv_file:
+                        csv_reader = csv.reader(csv_file, delimiter=',')
+                        for row in csv_reader:
+                            if row[1] == FAILING:
+                                sum_f += 1
+                            elif row[1] == FALSE_PASSING:
+                                sum_fp += 1
+                            elif row[1] == TRUE_PASSING:
+                                sum_tp += 1
+                    total_cases += 1
+            logfile.write("total labeled cases: " + str(total_cases) + "\n")
+            logfile.write("num of failing variants: " + str(sum_f / total_cases) + "\n")
+            logfile.write("num of false passing variants: " + str(sum_fp / total_cases) + "\n")
+            logfile.write("num of true passing variants: " + str(sum_tp / total_cases) + "\n")
+    logfile.close()

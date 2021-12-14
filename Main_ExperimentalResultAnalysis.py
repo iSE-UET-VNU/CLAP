@@ -41,19 +41,19 @@ def summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments):
 
 if __name__ == "__main__":
     num_of_bugs = ["1Bug", "2Bug", "3Bug"]
-    prefix = "classified_remove_tests_in_FPs_0.5"
+    prefix = "classified_all_remove_FPs_0.5"
     base_path = join_path("/Users/thu-trangnguyen/Documents/Projects/VarCop/experiment_results/", prefix)
 
-    systems = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL", "ZipMe", "ALL"]
+    systems = [ "ALL"]
 
     bankaccount = ["BankAccountTP/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     elevator = ["Elevator/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     email = ["Email/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     examdb = ["ExamDB/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
-    gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
-    zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
+    gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/1wise/"]
+    zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/2wise/"]
     all = [
-        bankaccount[0], elevator[0], email[0], examdb[0], gpl[0], zipme[0]
+        bankaccount[0], elevator[0], email[0], examdb[0], gpl[0],
     ]
-    experiments = [bankaccount, elevator, email, examdb, gpl, zipme, all]
+    experiments = [ all]
     summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments)

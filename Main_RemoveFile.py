@@ -2,7 +2,7 @@ import os
 
 from FileManager import list_dir, join_path
 from consistent_testing_manager.FileName import classified_all_multiple_bug_file, classified_all_file, \
-    classified_all_single_bug_file, classified_all_testing_file
+    classified_single_bug_file, classified_all_testing_file
 import shutil
 
 
@@ -63,6 +63,6 @@ if __name__ == "__main__":
     systems = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL", "ZipMe"]
     bugs = ["1Bug", "2Bug", "3Bug"]
     kwise = ["1wise", "2wise", "3wise", "4wise"]
-
+    removefile(base_path, systems, bugs, kwise, ["variants_testing_label.csv", "consistent_testing_info.csv", "consistent_testing_info_normalized.csv", "classified_all_23bug.csv"])
     #get_all_mutated_projects(base_path, systems, bugs, kwise)
     remove_folder(base_path, systems, bugs, kwise)
