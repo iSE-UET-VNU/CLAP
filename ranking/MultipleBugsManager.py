@@ -2,18 +2,21 @@ import os
 
 from xlsxwriter import Workbook
 
+from consistent_testing_manager.FPMatricsCaculation import FALSE_PASSING, LABEL
+from consistent_testing_manager.FileName import variants_testing_label_file
 from ranking import RankingManager
 from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
-    ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_executed_stms_of_the_system, get_set_of_stms
-from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, get_mutated_projects_dir, list_dir, get_spc_log_file_path, \
-    get_project_sub_dir_by_folder_name
-from ranking.VarBugManager import is_var_bug, is_var_bug_by_config
+    ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_set_of_stms
+from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, list_dir, get_spc_log_file_path
+from ranking.VarBugManager import is_var_bug_by_config
 from spc import SPCsManager
+from spectrum_manager.SpectrumReader import get_executed_stms_of_the_system
 from suspicious_statements_manager import SlicingManager
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, \
     get_suspicious_statement_varcop, get_suspicious_statement_tc_based
+from csv import reader
 
 BUG_ID_COL = 0
 VARCOP_BUGGY_STM_COL = 1
@@ -76,7 +79,7 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
     all_space = len(get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS]))
     all_stms = len(get_set_of_stms(search_spaces[SS_ALL_STMS]))
 
-    for stm in ranking_results[VARCOP_RANK].keys():
+    for stm in ranking_results[SBFL_RANK].keys():
         sheet.write(row, VARCOP_BUGGY_STM_COL, stm)
 
         if is_var_bug:
@@ -111,8 +114,8 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
     return row
 
 
-def suspicious_isolation(mutated_project_dir, filtering_coverage_rate, coverage_version):
-    SPCsManager.find_SPCs(mutated_project_dir, filtering_coverage_rate)
+def suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version):
+    SPCsManager.find_SPCs(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate)
     spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
     SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, coverage_version)
 
@@ -134,88 +137,114 @@ def get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_
     return search_spaces
 
 
+def create_exp_result_folder(result_folder, system_name):
+    result_folder_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder)
+    if not os.path.exists(result_folder_dir):
+        os.makedirs(result_folder_dir)
+
+    system_result_dir = join_path(result_folder_dir, system_name)
+    if not os.path.exists(system_result_dir):
+        os.makedirs(system_result_dir)
+    return system_result_dir
+
+
 def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions,
-                          filtering_coverage_rate, coverage_version, alpha):
+                          alpha, classy_passing_variant, classified_file_name, keep_useful_tests,
+                          filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
 
     mutated_projects_dir = join_path(system_dir, kwise)
     print(mutated_projects_dir)
-    if os.path.exists(mutated_projects_dir):
-        mutated_projects = list_dir(mutated_projects_dir)
+    if not os.path.exists(mutated_projects_dir):
+        return
 
-        result_folder_dir = join_path(EXPERIMENT_RESULT_FOLDER, result_folder)
-        if not os.path.exists(result_folder_dir):
-            os.makedirs(result_folder_dir)
+    mutated_projects = list_dir(mutated_projects_dir)
+    system_result_dir = create_exp_result_folder(result_folder, system_name)
 
-        system_result_dir = join_path(result_folder_dir, system_name)
-        if not os.path.exists(system_result_dir):
-            os.makedirs(system_result_dir)
+    for normalization_type in normalizations:
+        normalization_result_dir = join_path(system_result_dir, normalization_type)
+        if not os.path.exists(normalization_result_dir):
+            os.makedirs(normalization_result_dir)
 
-        for normalization_type in normalizations:
-            normalization_result_dir = join_path(system_result_dir, normalization_type)
-            if not os.path.exists(normalization_result_dir):
-                os.makedirs(normalization_result_dir)
+        for aggregation_type in aggregations:
+            aggregation_result_dir = join_path(normalization_result_dir, aggregation_type)
+            if not os.path.exists(aggregation_result_dir):
+                os.makedirs(aggregation_result_dir)
 
-            for aggregation_type in aggregations:
-                aggregation_result_dir = join_path(normalization_result_dir, aggregation_type)
-                if not os.path.exists(aggregation_result_dir):
-                    os.makedirs(aggregation_result_dir)
+            kwise_result_dir = join_path(aggregation_result_dir, kwise)
+            if not os.path.exists(kwise_result_dir):
+                os.makedirs(kwise_result_dir)
 
-                kwise_result_dir = join_path(aggregation_result_dir, kwise)
-                if not os.path.exists(kwise_result_dir):
-                    os.makedirs(kwise_result_dir)
+            sheet = []
 
-                sheet = []
+            row = 0
 
-                row = 0
+            experiment_file_name = join_path(kwise_result_dir,
+                                             bug_folder + coverage_version + ".xlsx")
 
-                experiment_file_name = join_path(kwise_result_dir,
-                                                 bug_folder + coverage_version + ".xlsx")
+            wb = Workbook(experiment_file_name)
 
-                wb = Workbook(experiment_file_name)
+            for i in range(0, len(spectrum_expressions)):
+                sheet.append(wb.add_worksheet(spectrum_expressions[i]))
+                write_header_in_result_file(row, sheet[i])
+            row += 1
+            num_of_bugs = 0
 
-                for i in range(0, len(spectrum_expressions)):
-                    sheet.append(wb.add_worksheet(spectrum_expressions[i]))
-                    write_header_in_result_file(row, sheet[i])
-                row += 1
-                num_of_bugs = 0
+            for mutated_project_name in mutated_projects:
+                mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
+                classified_file_path = join_path(mutated_project_dir, classified_file_name)
+                if not os.path.isfile(classified_file_path):
+                    continue
+                print(mutated_project_name)
+                num_of_bugs += 1
 
-                for mutated_project_name in mutated_projects:
-                    print(mutated_project_name)
-                    num_of_bugs += 1
-                    mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
+                label_file = join_path(mutated_project_dir, variants_testing_label_file)
+                failing_variants = get_failing_variants_by_labels(label_file, LABEL)
+                if classy_passing_variant:
+                    FP_variants = get_fp_variants(classified_file_path)
+                else:
+                    FP_variants = []
 
-                    # suspicious_isolation(mutated_project_dir, filtering_coverage_rate, coverage_version)
-                    search_spaces = get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version)
-                    buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
+                # suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version)
+                search_spaces = get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version)
+                buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
-                    row_temp = row
+                row_temp = row
 
-                    if system_name == "ZipMe":
-                        is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base", "Compress"])
-                    else:
-                        is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base"])
+                if system_name == "ZipMe":
+                    is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base", "Compress"])
+                elif system_name == "BankAccountTP":
+                    is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["BankAccount"])
+                else:
+                    is_a_var_bug = is_var_bug_by_config(mutated_project_dir, ["Base"])
 
-                    ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
-                                                                                 mutated_project_dir,
-                                                                                 search_spaces,
-                                                                                 spectrum_expressions,
-                                                                                 aggregation_type,
-                                                                                 normalization_type,
-                                                                                 coverage_version,
-                                                                                 filtering_coverage_rate, alpha)
-                    fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
-                                                                        search_spaces,
-                                                                        filtering_coverage_rate, spectrum_expressions)
+                ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
+                                                                             mutated_project_dir, failing_variants,
+                                                                             FP_variants, keep_useful_tests,
+                                                                             search_spaces,
+                                                                             spectrum_expressions,
+                                                                             aggregation_type,
+                                                                             normalization_type,
+                                                                             coverage_version,
+                                                                             filtering_coverage_rate, alpha)
+                fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
+                                                                    failing_variants,
+                                                                    FP_variants,
+                                                                    search_spaces,
+                                                                    filtering_coverage_rate, spectrum_expressions)
 
-                    for metric in range(0, len(spectrum_expressions)):
-                        sheet[metric].write(row_temp, BUG_ID_COL, mutated_project_name)
-                        row = write_result_to_file(row_temp, sheet[metric],
-                                                   ranking_results[spectrum_expressions[metric]],
-                                                   fb_ranking_results[spectrum_expressions[metric]], search_spaces,
-                                                   is_a_var_bug)
-                wb.close()
+                for metric in range(0, len(spectrum_expressions)):
+                    sheet[metric].write(row_temp, BUG_ID_COL, mutated_project_name)
+                    row = write_result_to_file(row_temp, sheet[metric],
+                                               ranking_results[spectrum_expressions[metric]],
+                                               fb_ranking_results[spectrum_expressions[metric]], search_spaces,
+                                               is_a_var_bug)
+                    # row = write_result_to_file(row_temp, sheet[metric],
+                    #                            ranking_results[spectrum_expressions[metric]],
+                    #                            "", search_spaces,
+                    #                            is_a_var_bug)
+            wb.close()
 
 
 def write_runtime_to_file(system_result_dir, run_time, file_name):
@@ -234,3 +263,49 @@ def write_runtime_to_file(system_result_dir, run_time, file_name):
             col += 1
         row += 1
     wb.close()
+
+
+def get_failing_variants_by_labels(label_file, column):
+    f_variants = []
+    count = 0
+    index = 0
+    with open(label_file, 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        for row in csv_reader:
+            if count == 0:
+                index = row.index(column)
+                count += 1
+            else:
+                if row[index] == "F":
+                    f_variants.append(row[0])
+    return f_variants
+
+
+def get_fp_variants(classified_file):
+    fp_variants = []
+
+    with open(classified_file, 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        for row in csv_reader:
+
+            if row[-1] == FALSE_PASSING:
+                fp_variants.append(row[0])
+    return fp_variants
+
+
+def get_not_used_variants_for_classification_by_variant(normalized_info_file,
+                                                        classified_file):
+    nu_variants = []
+    with open(classified_file, 'r') as c_read_obj:
+        c_csv_reader = reader(c_read_obj)
+        for row in c_csv_reader:
+            if row[-1] == FALSE_PASSING:
+                nu_variants.append(row[0])
+
+    with open(normalized_info_file, 'r') as n_read_obj:
+        n_csv_reader = reader(n_read_obj)
+        for row in n_csv_reader:
+
+            if row[1] not in nu_variants and row[2] == FALSE_PASSING:
+                nu_variants.append(row[1])
+    return nu_variants

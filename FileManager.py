@@ -49,6 +49,9 @@ SPECTRUM_PASSED_COVERAGE_FILE_NAME = "spectrum_passed_coverage.xml"
 FAILED_TEST_COVERAGE_FOLDER_NAME = "failed"
 PASSED_TEST_COVERAGE_FOLDER_NAME = "passed"
 
+BACKWARD_SLICING_FILE = "slice.all_statements.backward_slicing.log"
+FORWARD_SLICING_FILE = "slice.all_statements.forward_slicing.log"
+
 EXPERIMENT_RESULT_FOLDER = os.path.abspath("experiment_results")
 RUNTIME_LOG_FOLDER = os.path.abspath("runtime_logs")
 
@@ -357,9 +360,17 @@ def get_failing_variants(mutated_project_dir):
         test_coverage_dir = get_test_coverage_dir(variant_dir)
         spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME)
         # if variant is a failing variant
-        if (os.path.isfile(spectrum_failed_coverage_file_dir)):
+        if os.path.isfile(spectrum_failed_coverage_file_dir):
             failing_variants.append(variant)
     return failing_variants
+
+
+def get_backward_slicing_file(variant_dir):
+    return join_path(variant_dir, BACKWARD_SLICING_FILE)
+
+
+def get_forward_slicing_file(variant_dir):
+    return join_path(variant_dir, FORWARD_SLICING_FILE)
 
 
 def delete_dir(directory):
