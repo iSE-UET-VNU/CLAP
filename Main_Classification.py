@@ -1,7 +1,9 @@
+from collections import defaultdict
+
 from PassingVariants_Classification import *
 
 if __name__ == "__main__":
-    system_paths = {"BankAccountTP": {}, "ExamDB": {}}
+    system_paths = defaultdict(dict)
     system_paths["BankAccountTP"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/1Bug/4wise/"
     system_paths["BankAccountTP"]["2Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/2Bug/4wise/"
     system_paths["BankAccountTP"]["3Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/3Bug/4wise/"
