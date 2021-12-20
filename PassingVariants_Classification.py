@@ -1,5 +1,9 @@
 import pandas
 from sklearn import svm
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn import metrics
 from xlsxwriter import Workbook
 
@@ -8,22 +12,25 @@ import numpy as np
 from consistent_testing_manager.FileName import *
 from consistent_testing_manager.LabelData import label_data, do_label_statistics
 
-CLASSIFY_FEATURES = [DDU, not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
-                     executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
-                     not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
-                     tested_unexpected_behaviors_in_passing_variant_80,
-                     confirmed_successes_in_passing_variant_80,
+CLASSIFY_FEATURES = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
+                     not_executed_susp_stmt_in_a_failed_execution,
+                     both_forward_and_backward_similarity,
                      total_susp_scores_in_system,
-                     both_forward_and_backward_similarity]
+                     tested_unexpected_behaviors_in_passing_variant_80,
+                     confirmed_successes_in_passing_variant_80]
 
-FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_vs_susp_stmt_in_passing_variant,
-          not_executed_susp_stmt_vs_susp_stmt_in_passing_variant,
-          executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
-          not_executed_susp_stmt_vs_susp_stmt_in_a_failed_execution,
+FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_in_passing_variant,
+          not_executed_susp_stmt_vs_in_passing_variant,
+          executed_susp_stmt_in_a_failed_execution,
+          not_executed_susp_stmt_in_a_failed_execution,
+          tested_unexpected_behaviors_in_passing_variant_20,
           tested_unexpected_behaviors_in_passing_variant_50,
+          tested_unexpected_behaviors_in_passing_variant_70,
           tested_unexpected_behaviors_in_passing_variant_80,
           tested_unexpected_behaviors_in_passing_variant_100,
+          confirmed_successes_in_passing_variant_20,
           confirmed_successes_in_passing_variant_50,
+          confirmed_successes_in_passing_variant_70,
           confirmed_successes_in_passing_variant_80,
           confirmed_successes_in_passing_variant_100,
           total_susp_scores_in_system,
@@ -40,7 +47,7 @@ def labeled_cases_count(system_dir):
     return total_labeled_cases
 
 
-def load_all_data(logfile, training_systems, testing_systems, system_ratio, variant_ratio=0):
+def load_all_data(logfile, training_systems, testing_systems, features, system_ratio, variant_ratio=0):
     all_systems = []
     for s in training_systems:
         all_systems.append(s)
@@ -95,7 +102,7 @@ def load_all_data(logfile, training_systems, testing_systems, system_ratio, vari
                 testing_system += 1
 
     train_result = pandas.concat(train_temp)
-    train_data = train_result[CLASSIFY_FEATURES].to_numpy()
+    train_data = train_result[features].to_numpy()
     train_target = train_result[LABEL].to_numpy()
     training_tp += np.count_nonzero(train_target == TRUE_PASSING)
     training_fp += np.count_nonzero(train_target == FALSE_PASSING)
@@ -103,7 +110,7 @@ def load_all_data(logfile, training_systems, testing_systems, system_ratio, vari
     train_target[train_target == FALSE_PASSING] = 1
 
     test_result = pandas.concat(test_temp)
-    test_data = test_result[CLASSIFY_FEATURES].to_numpy()
+    test_data = test_result[features].to_numpy()
     test_target = test_result[LABEL].to_numpy()
     testing_tp += np.count_nonzero(test_target == TRUE_PASSING)
     testing_fp += np.count_nonzero(test_target == FALSE_PASSING)
@@ -209,17 +216,130 @@ def performance_in_each_projects(testing_systems, classified_file, logfile):
         logfile.write("-------------\n")
 
 
-def classify(logfile, classified_result_file, training_systems, testing_system, system_ratio, variant_ratio=0):
-    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_system,
-                                                                   system_ratio, variant_ratio)
+def classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples):
+    start = time.time()
     clf = svm.SVC(kernel='linear')
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
     overall_performance_measurement(y_test, y_pred, logfile)
-
     write_classified_result(y_pred, test_samples, 0, classified_result_file)
-    performance_in_each_projects(test_samples, classified_result_file, logfile)
+    end = time.time()
+    logfile.write("run_time:" + str(end - start) + "\n")
+    # performance_in_each_projects(test_samples, classified_result_file, logfile)
+
+
+def classify_by_knn(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples):
+    start = time.time()
+    model = KNeighborsClassifier(n_neighbors=3)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
+    overall_performance_measurement(y_test, y_pred, logfile)
+    end = time.time()
+    logfile.write("run_time:" + str(end - start) + "\n")
+
+
+def classify_by_naive_bayes(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples):
+    start = time.time()
+    model = GaussianNB()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
+    overall_performance_measurement(y_test, y_pred, logfile)
+    end = time.time()
+    logfile.write("run_time:" + str(end - start) + "\n")
+
+
+def classify_by_logistic_regression(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples):
+    start = time.time()
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
+    overall_performance_measurement(y_test, y_pred, logfile)
+    end = time.time()
+    logfile.write("run_time:" + str(end - start) + "\n")
+
+
+def classify_by_decisiontree(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples):
+    start = time.time()
+    model = DecisionTreeClassifier(max_depth=10, random_state=101, max_features=None, min_samples_leaf=15)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
+    overall_performance_measurement(y_test, y_pred, logfile)
+    end = time.time()
+    logfile.write("run_time:" + str(end - start) + "\n")
+
+
+def classify_all_cases_turn_off_testing(logfile, training_systems, testing_systems):
+    features = [both_forward_and_backward_similarity,
+                total_susp_scores_in_system,
+                tested_unexpected_behaviors_in_passing_variant_80,
+                confirmed_successes_in_passing_variant_80]
+    logfile.write("turn off features about testing " + " - SVM\n")
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
+                                                                   system_ratio=0.8, variant_ratio=0.0)
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about testing " + " - KNN\n")
+    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about testing " + " - Naive bayes\n")
+    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about testing " + " - Logistic regression\n")
+    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about testing " + " - Decision tree\n")
+    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+
+
+def classify_all_cases_turn_off_programs(logfile, training_systems, testing_systems):
+    features = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
+                not_executed_susp_stmt_in_a_failed_execution,
+                tested_unexpected_behaviors_in_passing_variant_80,
+                confirmed_successes_in_passing_variant_80]
+    logfile.write("turn off features about program " + " - SVM\n")
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
+                                                                   system_ratio=0.8, variant_ratio=0.0)
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about program " + " - KNN\n")
+    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about program " + " - Naive bayes\n")
+    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about program " + " -  Logistic regression\n")
+    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about program " + " -  Decision tree\n")
+    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+
+
+def classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, testing_systems):
+    features = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
+                not_executed_susp_stmt_in_a_failed_execution,
+                both_forward_and_backward_similarity,
+                total_susp_scores_in_system]
+    logfile.write("turn off features about tests and programs    " + " - SVM\n")
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
+                                                                   system_ratio=0.8, variant_ratio=0.0)
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about tests and programs " + " - KNN\n")
+    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about tests and programs " + " - Naive bayes\n")
+    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about tests and programs " + " -  Logistic regression\n")
+    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("turn off features about tests and programs " + " - Decision Tree\n")
+    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
 
 
 def classify_all_cases(system_paths):
@@ -228,8 +348,29 @@ def classify_all_cases(system_paths):
     for s in system_paths:
         for b in system_paths[s]:
             testing_systems.append(system_paths[s][b])
+    training_systems = []
 
-    classify(logfile, classified_all_cases_file, [], testing_systems, 0.8, 0.0)
+    classify_all_cases_turn_off_testing(logfile, training_systems, testing_systems)
+    classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, testing_systems)
+    classify_all_cases_turn_off_programs(logfile, training_systems, testing_systems)
+
+    logfile.write("all features " + " - SVM\n")
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems,
+                                                                   CLASSIFY_FEATURES,
+                                                                   system_ratio=0.8, variant_ratio=0.0)
+    classify_by_svm(logfile, classified_all_cases_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("all features " + " - KNN\n")
+    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("all features " + " - Naive bayes\n")
+    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("all features " + " - Logistic regression\n")
+    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write("all features " + " - Decision tree\n")
+    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
     logfile.close()
 
 
@@ -239,8 +380,11 @@ def classify_single_bug_cases(system_paths):
         if "1Bug" in system_paths[s]:
             testing_systems.append(system_paths[s]["1Bug"])
     logfile = open("statistics/classified_single_bug_cases.log", "w")
-    classify(logfile, classified_single_bug_file, [], testing_systems, 0.8, 0.0)
-    logfile.close()
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems,
+                                                                   CLASSIFY_FEATURES,
+                                                                   system_ratio=0.8, variant_ratio=0.0)
+    classify_by_svm(logfile, classified_single_bug_file, X_train, X_test, y_train, y_test, test_samples)
+    # logfile.close()
 
 
 def classify_by_variants(system_paths):
@@ -250,7 +394,7 @@ def classify_by_variants(system_paths):
         for b in system_paths[s]:
             testing_systems.append(system_paths[s][b])
 
-    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems,
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems, CLASSIFY_FEATURES,
                                                                    0.0, 0.8)
     clf = svm.SVC(kernel='linear')
     clf.fit(X_train, y_train)
@@ -274,7 +418,9 @@ def classify_by_systems(system_paths):
                     training_set.append(system_paths[s2][bug])
 
         logfile.write("---------\n")
-        classify(logfile, classified_by_systems_file, training_set, testing_set, 0.0, 0.0)
+        X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_set, testing_set, CLASSIFY_FEATURES,
+                                                                       0.0, 0.0)
+        classify_by_svm(logfile, classified_by_systems_file,  X_train, X_test, y_train, y_test, test_samples)
     logfile.close()
 
 
@@ -287,5 +433,7 @@ def classify_by_only_a_system(system_paths):
             testing_set.append(system_paths[s][bug])
 
         logfile.write("---------\n")
-        classify(logfile, classified_by_systems_file, [], testing_set, 0.8, 0.0)
+        X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_set, CLASSIFY_FEATURES,
+                                                                       0.8, 0.0)
+        classify_by_svm(logfile, classified_by_systems_file, X_train, X_test, y_train, y_test, test_samples)
     logfile.close()
