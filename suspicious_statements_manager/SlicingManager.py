@@ -18,16 +18,16 @@ ALL_STATEMENTS_SLICING_PLUGIN_NAME = "all-statements-slicing.jar"
 ALL_STATEMENTS_SLICING_PLUGIN_PATH = get_plugin_path(ALL_STATEMENTS_SLICING_PLUGIN_NAME)
 
 
-def do_slice_spc(spc_file_path, filtering_coverage_rate, coverage_version):
+def do_slice_spc(spc_file_path, filtering_coverage_rate, coverage_version, spc_postfix = ""):
     start_time = time.time()
 
     failed_coverage_file_name = get_spectrum_failed_coverage_file_name_with_version(version=coverage_version)
 
-    if (coverage_version != ""):
-        post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
+    if coverage_version != "":
+        slicing_postfix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
     else:
-        post_fix = filtering_coverage_rate
-    slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), post_fix)
+        slicing_postfix = filtering_coverage_rate
+    slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_file_path), str(slicing_postfix) + spc_postfix)
     if is_path_exist(slicing_output_path):
         logger.info(f"Used Old Slicing log file [{slicing_output_path}]")
         return 0

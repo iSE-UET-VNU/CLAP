@@ -1,6 +1,5 @@
 from FileManager import join_path
-from consistent_testing_manager.FileName import classified_all_file, classified_single_bug_file, \
-    classified_all_multiple_bug_file
+from consistent_testing_manager.FileName import *
 from ranking.MultipleBugsManager import multiple_bugs_ranking
 from spectrum_manager.Spectrum_Expression import JACCARD, SORENSEN_DICE, TARANTULA, OCHIAI, OP2, BARINEL, DSTAR, \
     ROGERS_TANIMOTO, \
@@ -17,27 +16,20 @@ SBFL_METRICS = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                 GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
 
 if __name__ == "__main__":
-    result_base_folder = "classified_all_keep_tests_"
-    data_base_dir = "/Users/thu-trangnguyen/Documents/Research/SPL"
-    system_names = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL", "ZipMe"]
-    bug_folders = ["1Bug", "2Bug", "3Bug"]
-    alpha = [0.5]
-    # 0 original all
-    # 0.1 classified all
-    # 0.12 classified 1bug
+    system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/1Bug/4wise"
+    system_name = "BankAccountTP"
+    num_of_bugs = "1Bug"
+    kwise = "4wise"
+    FP_detection = True
+    add_more_tests = True
 
-    kwise_list = [ "1wise", "2wise", "3wise", "4wise"]
-    classy_passing_variant = True
-    keep_useful_tests = True
-
-    for k in alpha:
-        result_folder = result_base_folder + str(k)
-        for system_name in system_names:
-            system_dir = join_path(data_base_dir, system_name)
-            for bug_folder in bug_folders:
-                bug_folder_dir = join_path(system_dir, bug_folder)
-                for kwise in kwise_list:
-                    multiple_bugs_ranking(result_folder, system_name, bug_folder, bug_folder_dir, kwise, SBFL_METRICS,
-                                          k, classy_passing_variant, classified_all_file, keep_useful_tests,
-                                          filtering_coverage_rate=0.1)
-                    # multiple_bugs_ranking(result_folder, system_name, bug_folder, bug_folder_dir, kwise, [TARANTULA], k, classy_passing_variant, classified_all_file, keep_useful_tests)
+    if not FP_detection:
+        result_folder = "original"
+    elif not add_more_tests:
+        result_folder = "remove_FPs"
+    else:
+        result_folder = "add_more_tests"
+    multiple_bugs_ranking(result_folder=result_folder, system_name=system_name, num_of_bugs=num_of_bugs,
+                          system_dir=system_dir, kwise=kwise, spectrum_expressions=SBFL_METRICS,
+                          FP_detection=FP_detection, classified_file_name=classified_all_cases_file,
+                          add_more_tests=add_more_tests)

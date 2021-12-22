@@ -9,17 +9,18 @@ from TestingCoverageManager import statement_coverage_of_variants
 logger = get_logger(__name__)
 
 
-def find_SPCs(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate):
+def find_SPCs(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, spc_postfix=""):
     start_time = time.time()
-    spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-    # if is_path_exist(spc_log_file_path):
-    #     logger.info(f"Used Old SPC log file [{spc_log_file_path}]")
-    #     return spc_log_file_path, 0
+    spc_log_file_path = get_spc_log_file_path(mutated_project_dir, str(filtering_coverage_rate) + spc_postfix)
+    if is_path_exist(spc_log_file_path):
+        logger.info(f"Used Old SPC log file [{spc_log_file_path}]")
+        return spc_log_file_path, 0
 
     config_report_path = get_model_configs_report_path(mutated_project_dir)
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_testing_coverage = statement_coverage_of_variants(mutated_project_dir)
     feature_names, variant_names, passed_configs, failed_configs = load_configs(config_report_path, failing_variants, FP_variants,
+                                                                                add_more_tests,
                                                                                 variants_testing_coverage,
                                                                                 filtering_coverage_rate)
 
@@ -32,7 +33,7 @@ def find_SPCs(mutated_project_dir, failing_variants, FP_variants, filtering_cove
 
 def detect_SPCs(feature_names, passed_configs, failed_configs, variant_names, variants_dir, spc_log_file_path):
     SPC_set = []
-    if (len(passed_configs) == 0 or len(failed_configs) == 0):
+    if len(passed_configs) == 0 or len(failed_configs) == 0:
         spc_file = open(spc_log_file_path, "w")
         spc_file.close()
         return spc_log_file_path
@@ -187,7 +188,7 @@ def find_switched_feature_selections(failed_config, passed_config):
     return switched_feature_selections  # ['1_False', '2_True', '7_True', ...]
 
 
-def load_configs(config_report_path, failing_variants, FP_variants, variants_testing_coverage, filtering_coverage_rate):
+def load_configs(config_report_path, failing_variants, FP_variants, add_more_tests, variants_testing_coverage, filtering_coverage_rate):
     logger.info(f"Loading config report file [{get_file_name_with_parent(config_report_path)}]")
     with open(config_report_path) as f:
         reader = csv.reader(f, delimiter=',')
@@ -208,4 +209,8 @@ def load_configs(config_report_path, failing_variants, FP_variants, variants_tes
             elif current_variant_name in failing_variants:
                 failed_configs.append(current_config)
                 variant_names[tuple(current_config)] = current_variant_name
+            if add_more_tests:
+                if current_variant_name in FP_variants and current_test_result == "__FAILED__":
+                    failed_configs.append(current_config)
+                    variant_names[tuple(current_config)] = current_variant_name
         return feature_names, variant_names, passed_configs, failed_configs

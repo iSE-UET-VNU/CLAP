@@ -139,8 +139,11 @@ def get_all_variant_dirs(project_dir, sort=False):
     return list_dir(variants_dir, full_path=True, sort=sort)
 
 
-def get_spc_log_file_path(project_dir, filtering_coverage_rate):
-    return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(filtering_coverage_rate * 100)))
+def get_spc_log_file_path(project_dir, spc_postfix):
+    try:
+        return join_path(project_dir, SPC_LOG_FILE_NAME.format(int(spc_postfix * 100)))
+    except:
+        return join_path(project_dir, SPC_LOG_FILE_NAME.format(spc_postfix))
 
 
 def get_slicing_log_file_path(project_dir, postfix):

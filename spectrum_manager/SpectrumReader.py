@@ -100,31 +100,48 @@ def similar_path(path1, path2, threshold):
 
 
 def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spectrum_coverage_prefix,
-                       coverage_rate):
+                       coverage_rate, add_more_tests=False):
+    print("add more test:", add_more_tests)
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
     variants_list = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variants_list:
-        if variant_dir.split("/")[-1] not in fp_variants:
-            stm_coverage = 0
-            if coverage_rate > 0:
-                stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
-            test_coverage_dir = get_test_coverage_dir(variant_dir)
-            spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-            spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
-            spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-            spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
+        stm_coverage = 0
+        if coverage_rate > 0:
+            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
+        test_coverage_dir = get_test_coverage_dir(variant_dir)
+        spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
+        spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
+        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+        spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
 
-            # if variant is a passing variant and stm_coverage < coverage_rate
-            if not os.path.isfile(
-                    spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
-                continue
+        # if variant is a passing variant and stm_coverage < coverage_rate
+        if not os.path.isfile(
+                spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
+            continue
+
+        if variant_dir.split("/")[-1] not in fp_variants:
+
             if variant_dir.split("/")[-1] in failing_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
                 stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
                                                                         spectrum_failed_coverage_file_dir,
                                                                         FAILED_TEST_COUNT)
+            if os.path.isfile(spectrum_passed_coverage_file_dir):
+                stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
+                                                                        spectrum_passed_coverage_file_dir,
+                                                                        PASSED_TEST_COUNT)
 
+            ftests, ptests = count_tests_by_labeled_variants(test_coverage_dir, failing_variants,
+                                                             spectrum_coverage_prefix)
+            total_failed_tests += ftests
+            total_passed_tests += ptests
+        elif add_more_tests and variant_dir.split("/")[-1] in fp_variants and os.path.isfile(
+                spectrum_failed_coverage_file_dir):
+
+            stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
+                                                                    spectrum_failed_coverage_file_dir,
+                                                                    FAILED_TEST_COUNT)
             if os.path.isfile(spectrum_passed_coverage_file_dir):
                 stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
                                                                         spectrum_passed_coverage_file_dir,
@@ -139,13 +156,14 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spect
 
 
 def get_infor_for_sbfl_with_FP_detection(mutated_project_dir, failing_variants, fp_variants, sups_in_variants,
+                                         add_more_tests,
                                          keep_useful_tests,
                                          spectrum_coverage_prefix, coverage_rate):
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
                                                                                        failing_variants,
                                                                                        fp_variants,
                                                                                        spectrum_coverage_prefix,
-                                                                                       coverage_rate)
+                                                                                       coverage_rate, add_more_tests)
 
     if keep_useful_tests:
         stm_info_for_spectrum, total_passed_tests = get_useful_tests_in_FP_variants(mutated_project_dir,
@@ -177,7 +195,6 @@ def init_activity_matrix_for_ddu(mutated_project_dir, failing_variants, fp_varia
 
 def get_passing_tests_by_local_suspiciousness(passing_executions, sups_in_variants, stm_info_for_spectrum,
                                               total_passed_tests):
-
     score_list = []
     most_suspicious_stmt = []
     for stm in sups_in_variants:
@@ -323,7 +340,8 @@ def get_executed_stms_by_coverage_files(variant, coverage_files, all_stms_in_sys
     return all_stms_in_system, all_stms_in_failing_product
 
 
-def get_executed_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefix, coverage_rate):
+def get_executed_stms_of_the_system(mutated_project_dir, failing_variants, FP_variants, add_more_tests,
+                                    spectrum_coverage_prefix, coverage_rate):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants_list = list_dir(variants_dir)
     all_stms_in_system = {}
@@ -335,19 +353,34 @@ def get_executed_stms_of_the_system(mutated_project_dir, spectrum_coverage_prefi
         if coverage_rate > 0:
             stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        failed_file = join_path(test_coverage_dir, spectrum_failed_file)
-        spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
-        passed_file = join_path(test_coverage_dir, spectrum_passed_file)
 
-        # if variant is a passing coverage and statement coverage is less than the coverage rate
-        if not os.path.isfile(failed_file) and coverage_rate != 0 and stm_coverage <= coverage_rate:
-            continue
+        if variant not in FP_variants:
+            if variant in failing_variants:
+                failed_file = join_path(test_coverage_dir, spectrum_failed_file)
+            else:
+                failed_file = ""
+            spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+            passed_file = join_path(test_coverage_dir, spectrum_passed_file)
 
-        coverage_files = [failed_file, passed_file]
+            # if variant is a passing coverage and statement coverage is less than the coverage rate
+            if not os.path.isfile(failed_file) and coverage_rate != 0 and stm_coverage <= coverage_rate:
+                continue
 
-        all_stms_in_system, all_stms_in_failing_product = get_executed_stms_by_coverage_files(variant, coverage_files,
-                                                                                              all_stms_in_system,
-                                                                                              all_stms_in_failing_product)
+            coverage_files = [failed_file, passed_file]
+
+            all_stms_in_system, all_stms_in_failing_product = get_executed_stms_by_coverage_files(variant, coverage_files,
+                                                                                                  all_stms_in_system,
+                                                                                                  all_stms_in_failing_product)
+        elif add_more_tests and variant in FP_variants:
+            failed_file = join_path(test_coverage_dir, spectrum_failed_file)
+            if os.path.isfile(failed_file):
+                spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
+                passed_file = join_path(test_coverage_dir, spectrum_passed_file)
+                coverage_files = [failed_file, passed_file]
+
+                all_stms_in_system, all_stms_in_failing_product = get_executed_stms_by_coverage_files(variant, coverage_files,
+                                                                                                  all_stms_in_system,
+                                                                                                  all_stms_in_failing_product)
     return all_stms_in_system, all_stms_in_failing_product
 
 

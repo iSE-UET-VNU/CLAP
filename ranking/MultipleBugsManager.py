@@ -23,21 +23,21 @@ VARCOP_BUGGY_STM_COL = 1
 VARCOP_RANK_COL = 2
 VARCOP_EXAM_COL = 3
 VARCOP_SPACE_COL = 4
-VARCOP_TC_SLICED_RANK_COL = 5
-VARCOP_TC_SLICED_EXAM_COL = 6
-SBFL_TC_SLICED_RANK_COL = 7
-SBFL_TC_SLICED_EXAM_COL = 8
-FB_TC_SLICED_RANK_COL = 9
-FB_TC_SLICED_EXAM_COL = 10
-TC_SLICED_SPACE_COL = 11
-VARCOP_DISABLE_BPC_RANK_COL = 12
-VARCOP_DISABLE_BPC_EXAM_COL = 13
-SBFL_RANK_COL = 14
-SBFL_EXAM_COL = 15
-FB_RANK_COL = 16
-FB_EXAM_COL = 17
-SPACE_COL = 18
-IS_VAR_BUG_COL = 19
+# VARCOP_TC_SLICED_RANK_COL = 5
+# VARCOP_TC_SLICED_EXAM_COL = 6
+# SBFL_TC_SLICED_RANK_COL = 7
+# SBFL_TC_SLICED_EXAM_COL = 8
+# FB_TC_SLICED_RANK_COL = 9
+# FB_TC_SLICED_EXAM_COL = 10
+# TC_SLICED_SPACE_COL = 11
+VARCOP_DISABLE_BPC_RANK_COL = 5
+VARCOP_DISABLE_BPC_EXAM_COL = 6
+SBFL_RANK_COL = 7
+SBFL_EXAM_COL = 8
+FB_RANK_COL = 9
+FB_EXAM_COL = 10
+SPACE_COL = 11
+IS_VAR_BUG_COL = 12
 
 
 def write_header_in_result_file(row, sheet):
@@ -48,16 +48,16 @@ def write_header_in_result_file(row, sheet):
     sheet.write(row, VARCOP_EXAM_COL, VARCOP_EXAM)
     sheet.write(row, VARCOP_SPACE_COL, VARCOP_SPACE)
 
-    sheet.write(row, VARCOP_TC_SLICED_RANK_COL, VARCOP_TC_RANK)
-    sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, VARCOP_TC_EXAM)
-
-    sheet.write(row, SBFL_TC_SLICED_RANK_COL, SBFL_TC_RANK)
-    sheet.write(row, SBFL_TC_SLICED_EXAM_COL, SBFL_TC_EXAM)
-
-    sheet.write(row, FB_TC_SLICED_RANK_COL, FB_TC_RANK)
-    sheet.write(row, FB_TC_SLICED_EXAM_COL, FB_TC_EXAM)
-
-    sheet.write(row, TC_SLICED_SPACE_COL, TC_SPACE)
+    # sheet.write(row, VARCOP_TC_SLICED_RANK_COL, VARCOP_TC_RANK)
+    # sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, VARCOP_TC_EXAM)
+    #
+    # sheet.write(row, SBFL_TC_SLICED_RANK_COL, SBFL_TC_RANK)
+    # sheet.write(row, SBFL_TC_SLICED_EXAM_COL, SBFL_TC_EXAM)
+    #
+    # sheet.write(row, FB_TC_SLICED_RANK_COL, FB_TC_RANK)
+    # sheet.write(row, FB_TC_SLICED_EXAM_COL, FB_TC_EXAM)
+    #
+    # sheet.write(row, TC_SLICED_SPACE_COL, TC_SPACE)
 
     sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, VARCOP_DISABLE_BPC_RANK)
     sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL, VARCOP_DISABLE_BPC_EXAM)
@@ -70,7 +70,7 @@ def write_header_in_result_file(row, sheet):
 
     sheet.write(row, SPACE_COL, SPACE)
 
-    sheet.write(row, IS_VAR_BUG_COL, "IS_VAR_BUG")
+    # sheet.write(row, IS_VAR_BUG_COL, "IS_VAR_BUG")
 
 
 def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces, is_var_bug):
@@ -92,14 +92,14 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
 
         sheet.write(row, VARCOP_SPACE_COL, varcop_space)
 
-        sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
-        sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK] / all_stms) * 100)
-        sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
-        sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK] / all_stms) * 100)
-        sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
-        sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK] / all_stms) * 100)
-
-        sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
+        # sheet.write(row, VARCOP_TC_SLICED_RANK_COL, ranking_results[VARCOP_TC_RANK][stm][RANK])
+        # sheet.write(row, VARCOP_TC_SLICED_EXAM_COL, (ranking_results[VARCOP_TC_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, SBFL_TC_SLICED_RANK_COL, ranking_results[SBFL_TC_RANK][stm][RANK])
+        # sheet.write(row, SBFL_TC_SLICED_EXAM_COL, (ranking_results[SBFL_TC_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, FB_TC_SLICED_RANK_COL, fb_results[FB_TC_RANK][stm][RANK])
+        # sheet.write(row, FB_TC_SLICED_EXAM_COL, (fb_results[FB_TC_RANK][stm][RANK] / all_stms) * 100)
+        #
+        # sheet.write(row, TC_SLICED_SPACE_COL, sliced_space)
 
         sheet.write(row, VARCOP_DISABLE_BPC_RANK_COL, ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK])
         sheet.write(row, VARCOP_DISABLE_BPC_EXAM_COL,
@@ -114,13 +114,14 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
     return row
 
 
-def suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version):
-    SPCsManager.find_SPCs(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate)
-    spc_log_file_path = get_spc_log_file_path(mutated_project_dir, filtering_coverage_rate)
-    SlicingManager.do_slice(spc_log_file_path, filtering_coverage_rate, coverage_version)
+def suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version,
+                         spc_postfix=""):
+    SPCsManager.find_SPCs(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, spc_postfix)
+    spc_log_file_path = get_spc_log_file_path(mutated_project_dir, str(filtering_coverage_rate) + spc_postfix)
+    SlicingManager.do_slice_spc(spc_log_file_path, filtering_coverage_rate, coverage_version, spc_postfix)
 
 
-def get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version):
+def get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version):
     if coverage_version == "":
         stms_isolated_by_varcop = get_suspicious_statement_varcop(mutated_project_dir,
                                                                   filtering_coverage_rate)
@@ -130,7 +131,7 @@ def get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_
 
     tc_sliced_based_isolation = get_suspicious_statement_tc_based(mutated_project_dir)
     all_stms_of_the_system, all_stms_in_failing_products = get_executed_stms_of_the_system(
-        mutated_project_dir, coverage_version, filtering_coverage_rate)
+        mutated_project_dir, failing_variants, FP_variants, add_more_tests, coverage_version, filtering_coverage_rate)
     search_spaces = {SS_VARCOP: stms_isolated_by_varcop, SS_SLICING: tc_sliced_based_isolation,
                      SS_ALL_STMS: all_stms_of_the_system,
                      SS_STMS_IN_F_PRODUCTS: all_stms_in_failing_products}
@@ -148,18 +149,16 @@ def create_exp_result_folder(result_folder, system_name):
     return system_result_dir
 
 
-def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kwise, spectrum_expressions,
-                          alpha, classy_passing_variant, classified_file_name, keep_useful_tests,
+def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, kwise, spectrum_expressions,
+                          FP_detection, classified_file_name, alpha=0.5, add_more_tests = False, keep_useful_tests=False,
                           filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
 
-    mutated_projects_dir = join_path(system_dir, kwise)
-    print(mutated_projects_dir)
-    if not os.path.exists(mutated_projects_dir):
+    if not os.path.exists(system_dir):
         return
 
-    mutated_projects = list_dir(mutated_projects_dir)
+    mutated_projects = list_dir(system_dir)
     system_result_dir = create_exp_result_folder(result_folder, system_name)
 
     for normalization_type in normalizations:
@@ -181,7 +180,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
             row = 0
 
             experiment_file_name = join_path(kwise_result_dir,
-                                             bug_folder + coverage_version + ".xlsx")
+                                             num_of_bugs + coverage_version + ".xlsx")
 
             wb = Workbook(experiment_file_name)
 
@@ -192,7 +191,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
             num_of_bugs = 0
 
             for mutated_project_name in mutated_projects:
-                mutated_project_dir = join_path(mutated_projects_dir, mutated_project_name)
+                mutated_project_dir = join_path(system_dir, mutated_project_name)
                 classified_file_path = join_path(mutated_project_dir, classified_file_name)
                 if not os.path.isfile(classified_file_path):
                     continue
@@ -201,13 +200,19 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                 label_file = join_path(mutated_project_dir, variants_testing_label_file)
                 failing_variants = get_failing_variants_by_labels(label_file, LABEL)
-                if classy_passing_variant:
+                if FP_detection and not add_more_tests:
                     FP_variants = get_fp_variants(classified_file_path)
+                    spc_postfix = "remove_fps"
+                elif FP_detection and add_more_tests:
+                    FP_variants = get_fp_variants(classified_file_path)
+                    spc_postfix = "add_more_tests"
                 else:
                     FP_variants = []
+                    spc_postfix = "original"
 
-                # suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, filtering_coverage_rate, coverage_version)
-                search_spaces = get_suspicious_space(mutated_project_dir, filtering_coverage_rate, coverage_version)
+                suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
+                                     coverage_version, spc_postfix)
+                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
                 row_temp = row
@@ -221,7 +226,7 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
 
                 ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
                                                                              mutated_project_dir, failing_variants,
-                                                                             FP_variants, keep_useful_tests,
+                                                                             FP_variants, add_more_tests, keep_useful_tests,
                                                                              search_spaces,
                                                                              spectrum_expressions,
                                                                              aggregation_type,
@@ -240,10 +245,6 @@ def multiple_bugs_ranking(result_folder, system_name, bug_folder, system_dir, kw
                                                ranking_results[spectrum_expressions[metric]],
                                                fb_ranking_results[spectrum_expressions[metric]], search_spaces,
                                                is_a_var_bug)
-                    # row = write_result_to_file(row_temp, sheet[metric],
-                    #                            ranking_results[spectrum_expressions[metric]],
-                    #                            "", search_spaces,
-                    #                            is_a_var_bug)
             wb.close()
 
 

@@ -92,10 +92,14 @@ def get_all_stms_in_failing_products(all_stms_of_the_system, failing_variants):
     return suspicious_stms_list
 
 
-def product_based_assessment(mutated_project_dir, failing_variants, fp_variants, all_stms_in_failing_products, spectrum_expressions,
+def product_based_assessment(mutated_project_dir, failing_variants, fp_variants, add_more_tests,
+                             all_stms_in_failing_products, spectrum_expressions,
                              spectrum_coverage_prefix):
     list_of_stms = get_set_of_stms(all_stms_in_failing_products)
-    failing_passing_variants_of_stms, total_fails, total_passes = get_num_passing_failing_variants(mutated_project_dir, failing_variants, fp_variants,
+    failing_passing_variants_of_stms, total_fails, total_passes = get_num_passing_failing_variants(mutated_project_dir,
+                                                                                                   failing_variants,
+                                                                                                   fp_variants,
+                                                                                                   add_more_tests,
                                                                                                    list_of_stms,
                                                                                                    spectrum_coverage_prefix)
     variant_level_suspiciousness = {}
@@ -142,13 +146,13 @@ def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
     return data
 
 
-def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, keep_useful_tests,
+def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, add_more_tests,
+         keep_useful_tests,
          spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate):
-
     sups_in_variants = get_max_susp_each_stmt_in_variants(mutated_project_dir, failing_variants)
     stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_with_FP_detection(
-        mutated_project_dir, failing_variants, fp_variants, sups_in_variants, keep_useful_tests,
+        mutated_project_dir, failing_variants, fp_variants, sups_in_variants, add_more_tests, keep_useful_tests,
         spectrum_coverage_prefix,
         coverage_rate)
     # traditional SBFL
@@ -225,7 +229,8 @@ def varcop(buggy_statements, local_scores, variant_level_suspiciousness, search_
                                                                            full_ranked_list)
 
 
-def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants, fp_variants, keep_useful_tests,
+def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants, fp_variants, add_more_tests,
+                          keep_useful_tests,
                           search_spaces,
                           spectrum_expressions,
                           aggregation_type, normalized_type, spectrum_coverage_prefix="", coverage_rate=0.0, alpha=0):
@@ -235,18 +240,20 @@ def ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variant
     global all_buggy_positions
     all_buggy_positions = {}
 
-    variant_level_suspiciousness = product_based_assessment(mutated_project_dir, failing_variants, fp_variants, search_spaces[SS_ALL_STMS],
+    variant_level_suspiciousness = product_based_assessment(mutated_project_dir, failing_variants, fp_variants,
+                                                            add_more_tests, search_spaces[SS_ALL_STMS],
                                                             spectrum_expressions, spectrum_coverage_prefix)
 
     local_suspiciousness_of_all_the_system = local_ranking_a_suspicious_list(mutated_project_dir,
                                                                              search_spaces[SS_STMS_IN_F_PRODUCTS],
                                                                              spectrum_expressions,
                                                                              spectrum_coverage_prefix)
-    sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, keep_useful_tests,
+    sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants, fp_variants, add_more_tests,
+         keep_useful_tests,
          spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate)
     varcop(buggy_statements, local_suspiciousness_of_all_the_system, variant_level_suspiciousness, search_spaces,
-          spectrum_expressions, aggregation_type, normalized_type, alpha)
+           spectrum_expressions, aggregation_type, normalized_type, alpha)
 
     varcop_ranking_time = time.time() - start_time
     return all_buggy_positions, varcop_ranking_time
@@ -574,7 +581,7 @@ def read_statement_infor_from_coverage_file(statement_infor, coverage_file, kind
 
 def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests, spectrum_expression):
     score = spectrum_expression + "_score"
-    #print("-----")
+    # print("-----")
     for id in statement_infor.keys():
         statement_infor[id][score] = suspicious_score_by_sbfl_metric(spectrum_expression,
                                                                      statement_infor[id][FAILED_TEST_COUNT],
