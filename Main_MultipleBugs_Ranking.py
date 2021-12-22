@@ -16,11 +16,19 @@ SBFL_METRICS = [TARANTULA, OCHIAI, OP2, BARINEL, DSTAR,
                 GOODMAN, HARMONIC_MEAN, KULCZYNSKI2]
 
 if __name__ == "__main__":
+    #system_dir is the path of folder which contains mutated projects
     system_dir = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/1Bug/4wise"
+
+    #the corresponding system name, num of bug and kwise
     system_name = "BankAccountTP"
     num_of_bugs = "1Bug"
     kwise = "4wise"
+
+    #FP_detection can be True or False
     FP_detection = True
+
+    #add_more_tests can be True or False
+    # if FP_detection is False, don't need to care about the value of add_more_tests
     add_more_tests = True
 
     if not FP_detection:
