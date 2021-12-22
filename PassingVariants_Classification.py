@@ -211,19 +211,20 @@ def performance_in_each_projects(testing_systems, classified_file, logfile):
         logfile.write("tp_precision: " + str(TP_correct / (TP_correct + FP_count - FP_correct)) + "\n")
         logfile.write("fp_precision: " + str(FP_correct / (FP_correct + TP_count - TP_correct)) + "\n")
         logfile.write("tp_recall: " + str(TP_correct / TP_count) + "\n")
-        logfile.write("fp_recall: " + str(FP_correct / (FP_count)) + "\n")
+        logfile.write("fp_recall: " + str(FP_correct / FP_count) + "\n")
         logfile.write("accuracy: " + str((TP_correct + FP_correct) / (TP_count + FP_count)) + "\n")
         logfile.write("-------------\n")
 
 
-def classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples):
+def classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant):
     start = time.time()
     clf = svm.SVC(kernel='linear')
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
     overall_performance_measurement(y_test, y_pred, logfile)
-    write_classified_result(y_pred, test_samples, 0, classified_result_file)
+    if not classified_by_variant:
+        write_classified_result(y_pred, test_samples, 0, classified_result_file)
     end = time.time()
     logfile.write("run_time:" + str(end - start) + "\n")
     # performance_in_each_projects(test_samples, classified_result_file, logfile)
@@ -273,27 +274,32 @@ def classify_by_decisiontree(logfile, classified_result_file, X_train, X_test, y
     logfile.write("run_time:" + str(end - start) + "\n")
 
 
+def classify_by_different_classifiers(logfile, mode, classified_result_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant = False):
+    logfile.write(mode + " - SVM\n")
+    classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant)
+    logfile.write("-----------------\n")
+    logfile.write(mode + " - KNN\n")
+    classify_by_knn(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write(mode + " - Naive bayes\n")
+    classify_by_naive_bayes(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write(mode + " - Logistic regression\n")
+    classify_by_logistic_regression(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.write("-----------------\n")
+    logfile.write(mode + " - Decision tree\n")
+    classify_by_decisiontree(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples)
+
+
 def classify_all_cases_turn_off_testing(logfile, training_systems, testing_systems):
     features = [both_forward_and_backward_similarity,
                 total_susp_scores_in_system,
                 tested_unexpected_behaviors_in_passing_variant_80,
                 confirmed_successes_in_passing_variant_80]
-    logfile.write("turn off features about testing " + " - SVM\n")
+
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about testing " + " - KNN\n")
-    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about testing " + " - Naive bayes\n")
-    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about testing " + " - Logistic regression\n")
-    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about testing " + " - Decision tree\n")
-    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "turn off testing features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
 
 
 def classify_all_cases_turn_off_programs(logfile, training_systems, testing_systems):
@@ -301,22 +307,10 @@ def classify_all_cases_turn_off_programs(logfile, training_systems, testing_syst
                 not_executed_susp_stmt_in_a_failed_execution,
                 tested_unexpected_behaviors_in_passing_variant_80,
                 confirmed_successes_in_passing_variant_80]
-    logfile.write("turn off features about program " + " - SVM\n")
+
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about program " + " - KNN\n")
-    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about program " + " - Naive bayes\n")
-    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about program " + " -  Logistic regression\n")
-    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about program " + " -  Decision tree\n")
-    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "turn off programs features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
 
 
 def classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, testing_systems):
@@ -324,22 +318,9 @@ def classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, te
                 not_executed_susp_stmt_in_a_failed_execution,
                 both_forward_and_backward_similarity,
                 total_susp_scores_in_system]
-    logfile.write("turn off features about tests and programs    " + " - SVM\n")
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about tests and programs " + " - KNN\n")
-    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about tests and programs " + " - Naive bayes\n")
-    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about tests and programs " + " -  Logistic regression\n")
-    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("turn off features about tests and programs " + " - Decision Tree\n")
-    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "turn off testing and program features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
 
 
 def classify_all_cases(system_paths):
@@ -354,23 +335,11 @@ def classify_all_cases(system_paths):
     classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, testing_systems)
     classify_all_cases_turn_off_programs(logfile, training_systems, testing_systems)
 
-    logfile.write("all features " + " - SVM\n")
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems,
                                                                    CLASSIFY_FEATURES,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_svm(logfile, classified_all_cases_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("all features " + " - KNN\n")
-    classify_by_knn(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("all features " + " - Naive bayes\n")
-    classify_by_naive_bayes(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("all features " + " - Logistic regression\n")
-    classify_by_logistic_regression(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
-    logfile.write("-----------------\n")
-    logfile.write("all features " + " - Decision tree\n")
-    classify_by_decisiontree(logfile, classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "all features", classified_all_cases_file, X_train, X_test, y_train, y_test,
+                                      test_samples)
     logfile.close()
 
 
@@ -383,8 +352,8 @@ def classify_single_bug_cases(system_paths):
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems,
                                                                    CLASSIFY_FEATURES,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_svm(logfile, classified_single_bug_file, X_train, X_test, y_train, y_test, test_samples)
-    # logfile.close()
+    classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    logfile.close()
 
 
 def classify_by_variants(system_paths):
@@ -396,11 +365,7 @@ def classify_by_variants(system_paths):
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems, CLASSIFY_FEATURES,
                                                                    0.0, 0.8)
-    clf = svm.SVC(kernel='linear')
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
-    logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
-    overall_performance_measurement(y_test, y_pred, logfile)
+    classify_by_different_classifiers(logfile, "all features",  classified_testing_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant= True)
     logfile.close()
 
 
@@ -418,9 +383,11 @@ def classify_by_systems(system_paths):
                     training_set.append(system_paths[s2][bug])
 
         logfile.write("---------\n")
-        X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_set, testing_set, CLASSIFY_FEATURES,
+        X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_set, testing_set,
+                                                                       CLASSIFY_FEATURES,
                                                                        0.0, 0.0)
-        classify_by_svm(logfile, classified_by_systems_file,  X_train, X_test, y_train, y_test, test_samples)
+        classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train, y_test,
+                                          test_samples)
     logfile.close()
 
 
@@ -435,5 +402,6 @@ def classify_by_only_a_system(system_paths):
         logfile.write("---------\n")
         X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_set, CLASSIFY_FEATURES,
                                                                        0.8, 0.0)
-        classify_by_svm(logfile, classified_by_systems_file, X_train, X_test, y_train, y_test, test_samples)
+        classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train, y_test,
+                                          test_samples)
     logfile.close()
