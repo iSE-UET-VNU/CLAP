@@ -147,7 +147,7 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spect
                                                                         spectrum_passed_coverage_file_dir,
                                                                         PASSED_TEST_COUNT)
 
-            ftests, ptests = count_tests_by_labeled_variants(test_coverage_dir, failing_variants,
+            ftests, ptests = count_tests_by_labeled_variants(test_coverage_dir, [variant_dir.split("/")[-1]],
                                                              spectrum_coverage_prefix)
             total_failed_tests += ftests
             total_passed_tests += ptests
