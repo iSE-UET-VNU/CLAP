@@ -235,7 +235,7 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
                                                                              filtering_coverage_rate, alpha)
                 fb_ranking_results = features_ranking_multiple_bugs(buggy_statements, mutated_project_dir,
                                                                     failing_variants,
-                                                                    FP_variants,
+                                                                    FP_variants, add_more_tests,
                                                                     search_spaces,
                                                                     filtering_coverage_rate, spectrum_expressions)
 

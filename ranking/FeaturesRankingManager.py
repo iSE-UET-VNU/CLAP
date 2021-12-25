@@ -14,32 +14,30 @@ from TestingCoverageManager import statement_coverage_of_variants
 
 
 def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants,
-                                   FP_variants, search_spaces, filter_coverage_rate, spectrum_expressions,
+                                   FP_variants, add_more_tests, search_spaces, filter_coverage_rate, spectrum_expressions,
                                    spectrum_coverage_prefix=""):
 
     statements_sets = {SS_STMS_IN_F_PRODUCTS: get_set_of_stms(search_spaces[SS_STMS_IN_F_PRODUCTS]),
                        SS_SLICING: get_set_of_stms(search_spaces[SS_SLICING])}
     total_variants = 0
-    variants_testing_coverage = {}
 
     features_info = {SS_STMS_IN_F_PRODUCTS: {}, SS_SLICING: {}}
 
     variants_dir = get_variants_dir(mutated_project_dir)
+    total_passes = 0
+    total_fails = 0
     for variant in list_dir(variants_dir):
-        if variant in failing_variants or (variant not in FP_variants):
-            total_variants += 1
-            variant_dir = get_variant_dir(mutated_project_dir, variant)
-            features_info = get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_info, statements_sets,
-                                                           spectrum_coverage_prefix)
-    print(total_variants)
-    total_passes = total_variants - len(failing_variants)
-    total_fails = len(failing_variants)
+        variant_dir = get_variant_dir(mutated_project_dir, variant)
+        features_info, a_pass, a_fail = get_coverage_infor_of_variants(variant, variant_dir, failing_variants,  FP_variants, add_more_tests,features_info, statements_sets,
+                                                       spectrum_coverage_prefix)
+        total_passes += a_pass
+        total_fails += a_fail
 
     # there are no passing variants with test coverage > threshold
-    if (total_passes == 0):
+    if total_passes == 0:
         return -2, -2, -2
     # there are no failing variants
-    if (total_fails == 0):
+    if total_fails == 0:
         return -2, -2, -2
     feature_based_rank = {}
     for spectrum_expression in spectrum_expressions:
@@ -53,7 +51,7 @@ def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, failin
             feature_based_rank[spectrum_expression][FB_RANK][stm][EXAM] = (stm_rank/ len(statements_sets[SS_STMS_IN_F_PRODUCTS])) * 100
 
         for stm in buggy_statements:
-            if(stm in statements_sets[SS_SLICING]):
+            if stm in statements_sets[SS_SLICING]:
                 feature_rank, stm_rank = search_rank_worst_case(stm, features_info[SS_STMS_IN_F_PRODUCTS], features_info[SS_SLICING], spectrum_expression)
                 feature_based_rank[spectrum_expression][FB_TC_RANK][stm] = {}
                 feature_based_rank[spectrum_expression][FB_TC_RANK][stm][RANK] = stm_rank
@@ -75,7 +73,7 @@ def features_suspiciousness_calculation(features_info, total_passes, total_fails
     return features_info
 
 
-def get_coverage_infor_of_variants(variant, variant_dir, failing_variants, features_coverage_info, search_spaces,
+def get_coverage_infor_of_variants(variant, variant_dir, failing_variants,  FP_variants, add_more_tests,features_coverage_info, search_spaces,
                                    spectrum_coverage_prefix):
     test_coverage_dir = get_test_coverage_dir(variant_dir)
 
@@ -84,26 +82,35 @@ def get_coverage_infor_of_variants(variant, variant_dir, failing_variants, featu
 
     spectrum_passed_file = get_spectrum_passed_coverage_file_name_with_version(spectrum_coverage_prefix)
     spectrum_passed_coverage_file_dir = join_path(test_coverage_dir, spectrum_passed_file)
+    a_pass = 0
+    a_fail = 0
 
     if variant in failing_variants:
 
         if os.path.isfile(spectrum_failed_coverage_file_dir):
             features_coverage_info = read_coverage_info(variant, features_coverage_info, search_spaces,
                                                         spectrum_failed_coverage_file_dir, VARIANTS_FAILED)
+            a_fail += 1
 
         if os.path.isfile(spectrum_passed_coverage_file_dir):
             features_coverage_info = read_coverage_info(variant, features_coverage_info,search_spaces,
                                                         spectrum_passed_coverage_file_dir, VARIANTS_FAILED)
-    else:
+    if add_more_tests and variant in FP_variants and os.path.isfile(spectrum_failed_coverage_file_dir):
         if os.path.isfile(spectrum_failed_coverage_file_dir):
             features_coverage_info = read_coverage_info(variant, features_coverage_info, search_spaces,
-                                                        spectrum_failed_coverage_file_dir, VARIANTS_PASSED)
+                                                        spectrum_failed_coverage_file_dir, VARIANTS_FAILED)
+            a_fail += 1
 
+        if os.path.isfile(spectrum_passed_coverage_file_dir):
+            features_coverage_info = read_coverage_info(variant, features_coverage_info,search_spaces,
+                                                        spectrum_passed_coverage_file_dir, VARIANTS_FAILED)
+    if variant not in failing_variants and variant not in FP_variants:
         if os.path.isfile(spectrum_passed_coverage_file_dir):
             features_coverage_info = read_coverage_info(variant, features_coverage_info, search_spaces,
                                                         spectrum_passed_coverage_file_dir, VARIANTS_PASSED)
+            a_pass += 1
 
-    return features_coverage_info
+    return features_coverage_info, a_pass, a_fail
 
 
 def read_coverage_info(variant, coverage_info, search_spaces, coverage_file, kind_of_test_count):
