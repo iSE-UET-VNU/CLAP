@@ -317,6 +317,7 @@ def get_executed_stms_of_the_system_consistent_testing_version(mutated_project_d
 
 
 def get_executed_stms_by_coverage_files(variant, coverage_files, all_stms_in_system, all_stms_in_failing_product):
+    all_stms_in_system[variant] = {}
     for c_file in coverage_files:
         if os.path.isfile(c_file):
             data = {}
@@ -331,9 +332,10 @@ def get_executed_stms_by_coverage_files(variant, coverage_files, all_stms_in_sys
                             id = line.get('featureClass') + "." + line.get('featureLineNum')
                             if id not in data:
                                 data[id] = {'num_interactions': 0}
+                            if id not in all_stms_in_system[variant]:
+                                all_stms_in_system[variant][id] = {'num_interactions': 0}
             except:
                 logging.info("Exception when parsing %s", c_file)
-            all_stms_in_system[variant] = data
             if coverage_files.index(c_file) == 0:
                 all_stms_in_failing_product[variant] = data
 

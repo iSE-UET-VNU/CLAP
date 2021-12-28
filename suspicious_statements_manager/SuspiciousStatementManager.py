@@ -8,10 +8,12 @@ from FileManager import join_path, get_slicing_log_file_path, get_variants_dir, 
     get_test_coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME, get_file_name
 
 
-def get_suspicious_statement_varcop(mutated_project_dir, postfix):
-    slicing_info_file_path = get_slicing_log_file_path(mutated_project_dir, postfix)
+def get_suspicious_statement_varcop(mutated_project_dir, slicing_info_file_path):
+    print(slicing_info_file_path)
     failing_coverage_data = read_coverage_file(mutated_project_dir)
     if isfile(slicing_info_file_path):
+        print("slicing_path")
+        print(slicing_info_file_path)
         slicing_info_file = open(slicing_info_file_path, "r")
         slicing_info_content = slicing_info_file.readline()
 
