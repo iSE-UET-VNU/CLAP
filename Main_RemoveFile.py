@@ -1,68 +1,49 @@
 import os
+from collections import defaultdict
 
-from FileManager import list_dir, join_path
-from consistent_testing_manager.FileName import classified_all_multiple_bug_file, classified_all_file, \
-    classified_single_bug_file, classified_all_testing_file
+from FileManager import *
 import shutil
 
 
-def removefile(base_path, systems, bugs, kwise, file_names):
-    for sys in systems:
-        system_path = join_path(base_path, sys)
-        for b in bugs:
-            bugs_path = join_path(system_path, b)
-            for k in kwise:
-                kwise_path = join_path(bugs_path, k)
-                if os.path.isdir(kwise_path):
-                    mutated_projects_list = list_dir(kwise_path)
-                    for mutated_project in mutated_projects_list:
-                        mu_project_path = join_path(kwise_path, mutated_project)
-
-                        for file in file_names:
-                            file_path = join_path(mu_project_path, file)
-                            print(file_path)
-                            if os.path.isfile(file_path):
-                                os.remove(file_path)
-
-
-def get_all_mutated_projects(base_path, systems, bugs, kwise):
-    f = open("all_cases.txt", "w")
-    for sys in systems:
-        system_path = join_path(base_path, sys)
-        for b in bugs:
-            bugs_path = join_path(system_path, b)
-            for k in kwise:
-                kwise_path = join_path(bugs_path, k)
-                if os.path.isdir(kwise_path):
-                    mutated_projects_list = list_dir(kwise_path)
-                    for mutated_project in mutated_projects_list:
-                        f.write(sys + "/" + b + "/" + k + "/" + mutated_project + "\n")
-    f.close()
-
-
-def remove_folder(base_path, systems, bugs, kwise):
-    f = open("all_cases.txt", "r")
-    contents = f.readlines()
-    for sys in systems:
-        system_path = join_path(base_path, sys)
-        for b in bugs:
-            bugs_path = join_path(system_path, b)
-            for k in kwise:
-                kwise_path = join_path(bugs_path, k)
-                if os.path.isdir(kwise_path):
-                    mutated_projects_list = list_dir(kwise_path)
-                    for mutated_project in mutated_projects_list:
-                        if (sys + "/" + b + "/" + k + "/" + mutated_project + "\n") not in contents:
-                            try:
-                                shutil.rmtree(join_path(kwise_path, mutated_project))
-                            except OSError as e:
-                                print("Error: %s - %s." % (e.filename, e.strerror))
+def delete_files_in_a_folder(folder_path):
+   items_list = os.listdir(folder_path)
+   for item in items_list:
+       item_path = join_path(folder_path, item)
+       if os.path.isfile(item_path):
+           os.remove(item_path)
+       elif os.path.isdir(item_path):
+           delete_files_in_a_folder(item_path)
 
 if __name__ == "__main__":
-    base_path = "/Users/thu-trangnguyen/Documents/Research/SPL"
-    systems = ["BankAccountTP", "Elevator", "Email", "ExamDB", "GPL", "ZipMe"]
-    bugs = ["1Bug", "2Bug", "3Bug"]
-    kwise = ["1wise", "2wise", "3wise", "4wise"]
-    removefile(base_path, systems, bugs, kwise, ["variants_testing_label.csv", "consistent_testing_info.csv", "consistent_testing_info_normalized.csv", "classified_all_23bug.csv"])
-    #get_all_mutated_projects(base_path, systems, bugs, kwise)
-    remove_folder(base_path, systems, bugs, kwise)
+    system_paths = defaultdict(dict)
+    system_paths["BankAccountTP"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/1Bug/4wise/"
+    system_paths["BankAccountTP"]["2Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/2Bug/4wise/"
+    system_paths["BankAccountTP"]["3Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/BankAccountTP/3Bug/4wise/"
+    system_paths["Elevator"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/1Bug/4wise/"
+    system_paths["Elevator"]["2Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/2Bug/4wise/"
+    system_paths["Elevator"]["3Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/Elevator/3Bug/4wise/"
+    system_paths["Email"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/Email/1Bug/4wise/"
+    system_paths["Email"]["2Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/Email/2Bug/4wise/"
+    system_paths["Email"]["3Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/Email/3Bug/4wise/"
+    system_paths["ExamDB"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/1Bug/4wise/"
+    system_paths["ExamDB"]["2Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/2Bug/4wise/"
+    system_paths["ExamDB"]["3Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/ExamDB/3Bug/4wise/"
+    system_paths["GPL"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/GPL/1Bug/1wise/"
+    system_paths["ZipMe"]["1Bug"] = "/Users/thu-trangnguyen/Documents/Research/SPL/ZipMe/1Bug/2wise/"
+    for system in system_paths:
+        for bug in system_paths[system]:
+            path = system_paths[system][bug]
+            mutated_projects = os.listdir(path)
+            for project in mutated_projects:
+                if ".DS" not in project:
+                    project_path = join_path(path, project)
+                    variants_dir = get_variants_dir(project_path)
+                    variants = os.listdir(variants_dir)
+                    delete_files_in_a_folder(join_path(project_path, "features"))
+                    for va in variants:
+                        if ".DS" not in va:
+                            var_path = join_path(variants_dir, va)
+                            delete_files_in_a_folder(join_path(var_path, "build"))
+                            delete_files_in_a_folder(join_path(var_path, "test"))
+                           
+

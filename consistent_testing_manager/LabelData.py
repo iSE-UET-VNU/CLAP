@@ -126,8 +126,6 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
                 num_tp += 1
     if num_failings == 0 or num_tp == 0 or num_fp == 0:
         os.remove(file_name)
-        print("removing...", mutated_project_dir)
-        shutil.rmtree(mutated_project_dir)
 
 
 def contain_slicing_files(mutated_project_path):
@@ -174,9 +172,7 @@ def label_data(system_paths):
 
                     if not (len(failing_variants) == 1 and len(passing_variants_contain_buggy_stmts) == 0):
                         label(mu_project_path, passing_variants_contain_buggy_stmts)
-                    else:
-                        print("removing...", mu_project_path)
-                        shutil.rmtree(mu_project_path)
+
 
     logfile.close()
 
