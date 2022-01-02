@@ -2,10 +2,11 @@ import pandas
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import metrics
 from xlsxwriter import Workbook
+import matplotlib.pyplot as plt
 
 from consistent_testing_manager.FPMatricsCaculation import *
 import numpy as np
@@ -13,11 +14,10 @@ from consistent_testing_manager.FileName import *
 from consistent_testing_manager.LabelData import label_data, do_label_statistics
 
 CLASSIFY_FEATURES = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
-                     not_executed_susp_stmt_in_a_failed_execution,
                      both_forward_and_backward_similarity,
                      total_susp_scores_in_system,
-                     tested_unexpected_behaviors_in_passing_variant_80,
-                     confirmed_successes_in_passing_variant_80]
+                     tested_unexpected_behaviors_in_passing_variant_90,
+                     confirmed_successes_in_passing_variant_90]
 
 FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_in_passing_variant,
           not_executed_susp_stmt_vs_in_passing_variant,
@@ -26,12 +26,12 @@ FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_in_passing_variant,
           tested_unexpected_behaviors_in_passing_variant_20,
           tested_unexpected_behaviors_in_passing_variant_50,
           tested_unexpected_behaviors_in_passing_variant_70,
-          tested_unexpected_behaviors_in_passing_variant_80,
+          tested_unexpected_behaviors_in_passing_variant_90,
           tested_unexpected_behaviors_in_passing_variant_100,
           confirmed_successes_in_passing_variant_20,
           confirmed_successes_in_passing_variant_50,
           confirmed_successes_in_passing_variant_70,
-          confirmed_successes_in_passing_variant_80,
+          confirmed_successes_in_passing_variant_90,
           confirmed_successes_in_passing_variant_100,
           total_susp_scores_in_system,
           total_susp_scores_in_variants, forward_similarity, backward_similarity, both_forward_and_backward_similarity]
@@ -216,7 +216,8 @@ def performance_in_each_projects(testing_systems, classified_file, logfile):
         logfile.write("-------------\n")
 
 
-def classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant):
+def classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples,
+                    classified_by_variant):
     start = time.time()
     clf = svm.SVC(kernel='linear')
     clf.fit(X_train, y_train)
@@ -274,9 +275,11 @@ def classify_by_decisiontree(logfile, classified_result_file, X_train, X_test, y
     logfile.write("run_time:" + str(end - start) + "\n")
 
 
-def classify_by_different_classifiers(logfile, mode, classified_result_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant = False):
+def classify_by_different_classifiers(logfile, mode, classified_result_file, X_train, X_test, y_train, y_test,
+                                      test_samples, classified_by_variant=False):
     logfile.write(mode + " - SVM\n")
-    classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant)
+    classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples,
+                    classified_by_variant)
     logfile.write("-----------------\n")
     logfile.write(mode + " - KNN\n")
     classify_by_knn(logfile, classified_result_file, X_train, X_test, y_train, y_test, test_samples)
@@ -294,33 +297,72 @@ def classify_by_different_classifiers(logfile, mode, classified_result_file, X_t
 def classify_all_cases_turn_off_testing(logfile, training_systems, testing_systems):
     features = [both_forward_and_backward_similarity,
                 total_susp_scores_in_system,
-                tested_unexpected_behaviors_in_passing_variant_80,
-                confirmed_successes_in_passing_variant_80]
+                tested_unexpected_behaviors_in_passing_variant_90,
+                confirmed_successes_in_passing_variant_90]
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_different_classifiers(logfile, "turn off testing features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "turn off testing features", classified_testing_file, X_train, X_test,
+                                      y_train, y_test, test_samples)
 
 
 def classify_all_cases_turn_off_programs(logfile, training_systems, testing_systems):
     features = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
-                not_executed_susp_stmt_in_a_failed_execution,
-                tested_unexpected_behaviors_in_passing_variant_80,
-                confirmed_successes_in_passing_variant_80]
+                tested_unexpected_behaviors_in_passing_variant_90,
+                confirmed_successes_in_passing_variant_90]
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_different_classifiers(logfile, "turn off programs features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "turn off programs features", classified_testing_file, X_train, X_test,
+                                      y_train, y_test, test_samples)
 
 
 def classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, testing_systems):
     features = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
-                not_executed_susp_stmt_in_a_failed_execution,
                 both_forward_and_backward_similarity,
                 total_susp_scores_in_system]
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_different_classifiers(logfile, "turn off testing and program features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "turn off testing and program features", classified_testing_file,
+                                      X_train, X_test, y_train, y_test, test_samples)
+
+
+def draw_plot(system_paths, y_title, feature):
+    logfile = open("statistics/drawing.log", "w")
+    testing_systems = []
+    for s in system_paths:
+        for b in system_paths[s]:
+            testing_systems.append(system_paths[s][b])
+    training_systems = []
+    X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems,
+                                                                   feature,
+                                                                   system_ratio=0.5, variant_ratio=0.0)
+
+    tp_data = []
+    fp_data = []
+    for i in range(0, len(y_train)):
+        if y_train[i] == 1:
+            fp_data.append(X_train[i][0])
+        else:
+            tp_data.append(X_train[i][0])
+
+    if len(tp_data) > len(fp_data):
+        data = {'TP_product': tp_data[0:len(fp_data)], "FP_product": fp_data}
+    else:
+        data = {'TP_product': tp_data, "FP_product": fp_data[:len(tp_data)]}
+
+    data["Product_ID"] = list(range(1, len(data["TP_product"]) + 1))
+    ddf = pandas.DataFrame(data)
+
+    ax = ddf.plot.scatter(x='Product_ID', y='TP_product', c='blue', marker='o', label = 'TP product')
+    ax = ddf.plot.scatter(ax=ax, x='Product_ID', y='FP_product', c='red', marker='x', label = 'FP product')
+    plt.axhline(y=0.1, color='black', linestyle='-')
+    plt.ylabel(y_title)
+    plt.legend(loc='upper right')
+    plt.show()
+    #plt.savefig("plots.pdf")
+
+    logfile.close()
 
 
 def classify_all_cases(system_paths):
@@ -338,7 +380,8 @@ def classify_all_cases(system_paths):
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems,
                                                                    CLASSIFY_FEATURES,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_different_classifiers(logfile, "all features", classified_all_cases_file, X_train, X_test, y_train, y_test,
+    classify_by_different_classifiers(logfile, "all features", classified_all_cases_file, X_train, X_test, y_train,
+                                      y_test,
                                       test_samples)
     logfile.close()
 
@@ -352,7 +395,8 @@ def classify_single_bug_cases(system_paths):
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems,
                                                                    CLASSIFY_FEATURES,
                                                                    system_ratio=0.8, variant_ratio=0.0)
-    classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train, y_test, test_samples)
+    classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train,
+                                      y_test, test_samples)
     logfile.close()
 
 
@@ -365,7 +409,8 @@ def classify_by_variants(system_paths):
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_systems, CLASSIFY_FEATURES,
                                                                    0.0, 0.8)
-    classify_by_different_classifiers(logfile, "all features",  classified_testing_file, X_train, X_test, y_train, y_test, test_samples, classified_by_variant= True)
+    classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train,
+                                      y_test, test_samples, classified_by_variant=True)
     logfile.close()
 
 
@@ -386,7 +431,8 @@ def classify_by_systems(system_paths):
         X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_set, testing_set,
                                                                        CLASSIFY_FEATURES,
                                                                        0.0, 0.0)
-        classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train, y_test,
+        classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train,
+                                          y_test,
                                           test_samples)
     logfile.close()
 
@@ -402,6 +448,7 @@ def classify_by_only_a_system(system_paths):
         logfile.write("---------\n")
         X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, [], testing_set, CLASSIFY_FEATURES,
                                                                        0.8, 0.0)
-        classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train, y_test,
+        classify_by_different_classifiers(logfile, "all features", classified_testing_file, X_train, X_test, y_train,
+                                          y_test,
                                           test_samples)
     logfile.close()

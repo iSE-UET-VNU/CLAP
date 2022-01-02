@@ -132,16 +132,17 @@ def normalize_score_for_get_max_susp_in_variants(scores_list):
 
 def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
-    suspicious_scores = local_ranking_a_suspicious_list(project_dir, search_spaces, [OP2], "")
+    suspicious_scores = local_ranking_a_suspicious_list(project_dir, search_spaces, [TARANTULA], "")
     data = {}
-    for v in suspicious_scores[OP2]:
-        normalized_data = normalize_score_for_get_max_susp_in_variants(suspicious_scores[OP2][v])
+    for v in suspicious_scores[TARANTULA]:
+        normalized_data = normalize_score_for_get_max_susp_in_variants(suspicious_scores[TARANTULA][v])
         for stmt in normalized_data:
             if stmt not in data:
                 data[stmt] = normalized_data[stmt]
-
-            elif normalized_data[stmt] > data[stmt]:
-                data[stmt] = normalized_data[stmt]
+            else:
+                data[stmt] += normalized_data[stmt]
+            # elif normalized_data[stmt] > data[stmt]:
+            #     data[stmt] = normalized_data[stmt]
 
     return data
 
@@ -150,6 +151,7 @@ def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants,
          keep_useful_tests,
          spectrum_expressions, spectrum_coverage_prefix,
          coverage_rate):
+
     sups_in_variants = get_max_susp_each_stmt_in_variants(mutated_project_dir, failing_variants)
     stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl_with_FP_detection(
         mutated_project_dir, failing_variants, fp_variants, sups_in_variants, add_more_tests, keep_useful_tests,
@@ -161,7 +163,6 @@ def sbfl(buggy_statements, mutated_project_dir, search_spaces, failing_variants,
     full_ranked_list = sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests,
                                     all_stms_f_products_set,
                                     spectrum_expressions)
-
     isolated_ranked_list = sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests,
                                         sliced_stms_set, spectrum_expressions)
     for metric in spectrum_expressions:
@@ -588,7 +589,8 @@ def spectrum_calculation(statement_infor, total_failed_tests, total_passed_tests
                                                                      statement_infor[id][PASSED_TEST_COUNT],
                                                                      total_failed_tests,
                                                                      total_passed_tests)
-        # if id in buggy or id == "Base.Actions.28":
+        # if id in buggy:
+        #
         #     print(id, "  ", statement_infor[id][FAILED_TEST_COUNT],
         #           statement_infor[id][PASSED_TEST_COUNT],
         #           total_failed_tests,

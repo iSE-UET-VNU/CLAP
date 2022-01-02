@@ -139,6 +139,7 @@ def contain_slicing_files(mutated_project_path):
         else:
             return True
 
+
 def label_data(system_paths):
     logfile = open("statistics/contain_buggy_features_but_not_buggy_stmts.txt", "w")
     base_features = ["BankAccount", "Base", "ExamDB", "Compress"]

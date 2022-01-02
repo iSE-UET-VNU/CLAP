@@ -22,9 +22,12 @@ def get_all_stm_ids(project_dir):
     return system_stm_ids
 
 
-def get_stm_ids_per_variant(variant_dir):
+def get_stm_ids_per_variant(variant_dir, fp_variant = False):
     coverage_dir = get_test_coverage_dir(variant_dir)
-    spectrum_dirs = [join_path(coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME),
+    if fp_variant:
+        spectrum_dirs = [join_path(coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)]
+    else:
+        spectrum_dirs = [join_path(coverage_dir, SPECTRUM_FAILED_COVERAGE_FILE_NAME),
                      join_path(coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)]
     data = {}
     for cfile in spectrum_dirs:
@@ -44,6 +47,9 @@ def get_stm_ids_per_variant(variant_dir):
                                 data[key]['id'] = id
                                 data[key]['tested'] = 0
                                 if int(line.get('count')) != 0:
+                                    data[key]['tested'] = 1
+                            else:
+                                if data[key]['tested'] == 0 and int(line.get('count')) != 0:
                                     data[key]['tested'] = 1
             except:
                 logging.info("Exception when parsing %s", cfile)
@@ -101,7 +107,7 @@ def similar_path(path1, path2, threshold):
 
 def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spectrum_coverage_prefix,
                        coverage_rate, add_more_tests=False):
-    print("add more test:", add_more_tests)
+
     total_failed_tests = 0
     total_passed_tests = 0
     stm_info_for_spectrum = {}
@@ -127,6 +133,7 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spect
                 stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
                                                                         spectrum_failed_coverage_file_dir,
                                                                         FAILED_TEST_COUNT)
+
             if os.path.isfile(spectrum_passed_coverage_file_dir):
                 stm_info_for_spectrum = read_coverage_info_for_spectrum(stm_info_for_spectrum,
                                                                         spectrum_passed_coverage_file_dir,
@@ -159,6 +166,7 @@ def get_infor_for_sbfl_with_FP_detection(mutated_project_dir, failing_variants, 
                                          add_more_tests,
                                          keep_useful_tests,
                                          spectrum_coverage_prefix, coverage_rate):
+
     stm_info_for_spectrum, total_passed_tests, total_failed_tests = get_infor_for_sbfl(mutated_project_dir,
                                                                                        failing_variants,
                                                                                        fp_variants,

@@ -16,7 +16,7 @@ from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_pat
     get_failings_executions, get_passing_executions, get_all_stm_ids
 from ranking.RankingManager import get_set_of_stms, sbfl_ranking, local_ranking_a_suspicious_list, \
     get_max_susp_each_stmt_in_variants
-from spectrum_manager.Spectrum_Expression import OP2
+from spectrum_manager.Spectrum_Expression import OP2, TARANTULA, OCHIAI
 
 BACKWARD_SLICING_TYPE = "Backward"
 FORWARD_SLICING_TYPE = "Forward"
@@ -39,12 +39,12 @@ not_executed_susp_stmt_in_a_failed_execution = "not_executed_susp_stmt_in_a_fail
 tested_unexpected_behaviors_in_passing_variant_20 = "tested_unexpected_behaviors_in_passing_variant_20"
 tested_unexpected_behaviors_in_passing_variant_50 = "tested_unexpected_behaviors_in_passing_variant_50"
 tested_unexpected_behaviors_in_passing_variant_70 = "tested_unexpected_behaviors_in_passing_variant_70"
-tested_unexpected_behaviors_in_passing_variant_80 = "tested_unexpected_behaviors_in_passing_variant_80"
+tested_unexpected_behaviors_in_passing_variant_90 = "tested_unexpected_behaviors_in_passing_variant_90"
 tested_unexpected_behaviors_in_passing_variant_100 = "tested_unexpected_behaviors_in_passing_variant_100"
 confirmed_successes_in_passing_variant_20 = "check_confirmed_successes_in_passing_variant_20"
 confirmed_successes_in_passing_variant_50 = "check_confirmed_successes_in_passing_variant_50"
 confirmed_successes_in_passing_variant_70 = "check_confirmed_successes_in_passing_variant_70"
-confirmed_successes_in_passing_variant_80 = "check_confirmed_successes_in_passing_variant_80"
+confirmed_successes_in_passing_variant_90 = "check_confirmed_successes_in_passing_variant_90"
 confirmed_successes_in_passing_variant_100 = "check_confirmed_successes_in_passing_variant_100"
 total_susp_scores_in_system = "susp_scores_in_system"
 total_susp_scores_in_variants = "susp_scores_in_variants"
@@ -94,7 +94,7 @@ def get_stmts_id_in_passing_variants(project_dir, failing_variants):
     for variant in variants_list:
         if variant not in failing_variants:
             variant_dir = join_path(variants_dir, variant)
-            variant_stmts = get_stm_ids_per_variant(variant_dir)
+            variant_stmts = get_stm_ids_per_variant(variant_dir, fp_variant=True)
             passing_variants_stmts[variant] = variant_stmts
     return passing_variants_stmts
 
@@ -103,7 +103,6 @@ def convert_to_dict(passing_variant_stmt):
     stmt_ids = {}
     for item in passing_variant_stmt:
         tmp = passing_variant_stmt[item]
-
         if tmp["id"] not in stmt_ids:
             stmt_ids[tmp["id"]] = {}
             stmt_ids[tmp["id"]]["tested"] = tmp["tested"]
@@ -124,12 +123,12 @@ def exist_path(path, list_paths, threshold):
     return False
 
 
-def check_suspicious_stmts_in_passing_variants(failing_exections, passing_variant_stmt):
+def check_suspicious_stmts_in_passing_variants(failing_executions, passing_variant_stmt):
     passing_variant_stmt_dict = convert_to_dict(passing_variant_stmt)
     suspicious_in_passing_variant = {}
-    for variant_name in failing_exections:
-        for test in failing_exections[variant_name]:
-            execution = failing_exections[variant_name][test]
+    for variant_name in failing_executions:
+        for test in failing_executions[variant_name]:
+            execution = failing_executions[variant_name][test]
             D1 = []
             D2 = []
             for item in execution:
@@ -167,13 +166,12 @@ def check_susp_stmt_vs_stmt_in_a_failed_execution(failed_executions, susp_in_pas
         test_id = item.split("__")[1]
         set1 = convert_execution_to_set(failed_executions[var_name][test_id])
         set2 = set(susp_in_passing_variant[item]["Executed"])
-        total_executed += len(set2) / len(set1)
+        set3 = set(susp_in_passing_variant[item]["Not Executed"])
 
-        set2 = set(susp_in_passing_variant[item]["Not Executed"])
-        total_not_executed += len(set2) / len(set1)
-    total_executed = total_executed / len(susp_in_passing_variant)
-    total_not_executed = total_not_executed / len(susp_in_passing_variant)
-    return 1 - total_executed, total_not_executed
+        total_executed = min(total_executed, len(set2) / len(set1))
+        total_not_executed = max(total_not_executed, len(set3)/len(set1))
+
+    return total_executed, total_not_executed
 
 
 def jaccard_similarity(set1, set2):
@@ -241,17 +239,21 @@ def check_confirmed_successes_in_passing_variant(failed_executions_in_failing_pr
 
 def ranking_suspicious_stmts(project_dir, failing_variants):
     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
-
+    variants = list_dir(get_variants_dir(project_dir))
+    fp_variants= []
+    for v in variants:
+        if v not in failing_variants:
+            fp_variants.append(v)
     stm_info_for_sbfl, total_passed_tests, total_failed_tests = get_infor_for_sbfl(
-        project_dir, failing_variants, [],
-        "",
-        0.0)
+        project_dir, failing_variants=failing_variants, fp_variants=fp_variants,
+        spectrum_coverage_prefix="",
+        coverage_rate=0.0)
     all_stms_f_products_set = get_set_of_stms(search_spaces)
     full_ranked_list = sbfl_ranking(stm_info_for_sbfl, total_failed_tests, total_passed_tests,
                                     all_stms_f_products_set,
-                                    [OP2])
+                                    [OCHIAI])
     op2_ranked_list = {}
-    for (stmt, score, v) in full_ranked_list[OP2]:
+    for (stmt, score, v) in full_ranked_list[OCHIAI]:
         op2_ranked_list[stmt] = score
     return op2_ranked_list
 
@@ -326,8 +328,8 @@ def aggreate_similarity_by_avg(similarity):
 
     if len(similarity) == 0:
         return {"Forward": 0, "Backward": 0, "Both": 0}
-    return {"Forward": fw / len(similarity), "Backward": bw / len(similarity), "Both": both / len(similarity)}
-
+    #return {"Forward": fw / len(similarity), "Backward": bw / len(similarity), "Both": both / len(similarity)}
+    return {"Forward": fw, "Backward": bw, "Both": both}
 
 def concat_slicies(forward_slicies, backward_slicies):
     both_slicies = defaultdict(dict)
@@ -452,9 +454,9 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
                 failed_executions_in_failing_products, passed_executions_in_passing_product,
                 susp_in_passing_variants[p_v], 0.7)
             constant_data[p_v][
-                tested_unexpected_behaviors_in_passing_variant_80] = check_tested_unexpected_behaviors_in_passing_variant(
+                tested_unexpected_behaviors_in_passing_variant_90] = check_tested_unexpected_behaviors_in_passing_variant(
                 failed_executions_in_failing_products, passed_executions_in_passing_product,
-                susp_in_passing_variants[p_v], 0.8)
+                susp_in_passing_variants[p_v], 0.9)
             constant_data[p_v][
                 tested_unexpected_behaviors_in_passing_variant_100] = check_tested_unexpected_behaviors_in_passing_variant(
                 failed_executions_in_failing_products, passed_executions_in_passing_product,
@@ -473,9 +475,9 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
                 failed_executions_in_failing_products, passed_executions_in_failing_products,
                 passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.7)
             constant_data[p_v][
-                confirmed_successes_in_passing_variant_80] = check_confirmed_successes_in_passing_variant(
+                confirmed_successes_in_passing_variant_90] = check_confirmed_successes_in_passing_variant(
                 failed_executions_in_failing_products, passed_executions_in_failing_products,
-                passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.8)
+                passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.9)
             constant_data[p_v][
                 confirmed_successes_in_passing_variant_100] = check_confirmed_successes_in_passing_variant(
                 failed_executions_in_failing_products, passed_executions_in_failing_products,
@@ -487,7 +489,7 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
                 susp_scores_in_variants, passing_variants_stmts[p_v])
 
             dependencies_similarity = check_dependencies(join_path(project_dir, "variants"), p_v,
-                                                         failed_executions_in_failing_products)
+                                                        failed_executions_in_failing_products)
             constant_data[p_v][forward_similarity] = dependencies_similarity["Forward"]
             constant_data[p_v][backward_similarity] = dependencies_similarity["Backward"]
             constant_data[p_v][both_forward_and_backward_similarity] = dependencies_similarity["Both"]
@@ -496,9 +498,10 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
         os.remove(join_path(project_dir, consistent_testing_info_file))
         end = time.time()
         total_time += (end - start)
-        logfile.write(project + ": " + str(end-start) + "\n")
-    logfile.write("average runtime: " + str(total_time/len(mutated_projects)) + "\n")
+        logfile.write(project + ": " + str(end - start) + "\n")
+    logfile.write("average runtime: " + str(total_time / len(mutated_projects)) + "\n")
     logfile.write("------------------\n")
+
 
 def average_feature_by_label(labels, values, target):
     sum = 0
@@ -511,6 +514,8 @@ def average_feature_by_label(labels, values, target):
     if count == 0:
         return sum
     return sum / count
+
+
 
 
 def do_features_statistics(system_paths, FIELDS):
