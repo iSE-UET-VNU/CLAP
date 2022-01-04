@@ -327,6 +327,78 @@ def classify_all_cases_turn_off_tests_and_programs(logfile, training_systems, te
                                       X_train, X_test, y_train, y_test, test_samples)
 
 
+def chart_drawing(statistic_data):
+    new_data = {"TP": {}, "FP": {}}
+    new_data["TP"]["[0-0.1)"] = statistic_data[0.0]["TP"]
+    new_data["FP"]["[0-0.1)"] = statistic_data[0.0]["FP"]
+
+    new_data["TP"]["[0.1-0.2)"] = statistic_data[0.1]["TP"]
+    new_data["FP"]["[0.1-0.2)"] = statistic_data[0.1]["FP"]
+
+    new_data["TP"]["[0.2-0.3)"] = statistic_data[0.2]["TP"]
+    new_data["FP"]["[0.2-0.3)"] = statistic_data[0.2]["FP"]
+
+    new_data["TP"]["[0.3-0.4)"] = statistic_data[0.3]["TP"]
+    new_data["FP"]["[0.3-0.4)"] = statistic_data[0.3]["FP"]
+
+    new_data["TP"]["[0.4-0.5)"] = statistic_data[0.4]["TP"]
+    new_data["FP"]["[0.4-0.5)"] = statistic_data[0.4]["FP"]
+
+    new_data["TP"]["[0.5-0.6)"] = statistic_data[0.5]["TP"]
+    new_data["FP"]["[0.5-0.6)"] = statistic_data[0.5]["FP"]
+
+    new_data["TP"]["[0.6-0.7)"] = statistic_data[0.6]["TP"]
+    new_data["FP"]["[0.6-0.7)"] = statistic_data[0.6]["FP"]
+
+    new_data["TP"]["[0.7-0.8)"] = statistic_data[0.7]["TP"]
+    new_data["FP"]["[0.7-0.8)"] = statistic_data[0.7]["FP"]
+
+    new_data["TP"]["[0.8-0.9)"] = statistic_data[0.8]["TP"]
+    new_data["FP"]["[0.8-0.9)"] = statistic_data[0.8]["FP"]
+
+    new_data["TP"]["[0.9-1.0]"] = statistic_data[0.9]["TP"] + statistic_data[1.0]["TP"]
+    new_data["FP"]["[0.9-1.0]"] = statistic_data[0.9]["FP"] + statistic_data[1.0]["FP"]
+    df = pandas.DataFrame.from_dict(new_data)
+    df.to_csv("data.csv")
+
+
+def statistic_data_for_papers(system_paths):
+    values = set()
+    data = {}
+    for item in FIELDS[2:]:
+        data[item] = {0.0: {"TP": 0, "FP": 0},
+                      0.1: {"TP": 0, "FP": 0},
+                      0.2: {"TP": 0, "FP": 0},
+                      0.3: {"TP": 0, "FP": 0},
+                      0.4: {"TP": 0, "FP": 0},
+                      0.5: {"TP": 0, "FP": 0},
+                      0.6: {"TP": 0, "FP": 0},
+                      0.7: {"TP": 0, "FP": 0},
+                      0.8: {"TP": 0, "FP": 0},
+                      0.9: {"TP": 0, "FP": 0},
+                      1.0: {"TP": 0, "FP": 0}}
+    for s in system_paths:
+        for b in system_paths[s]:
+            mutated_projects = os.listdir(system_paths[s][b])
+            total_projects = labeled_cases_count(system_paths[s][b])
+            count = 0
+            for project in mutated_projects:
+                print(project)
+                project_dir = join_path(system_paths[s][b], project)
+                if ".DS" not in project and os.path.isfile(join_path(project_dir, variants_testing_label_file)):
+                    count += 1
+                    feature_file = join_path(project_dir, consistent_testing_normalized_info_file)
+                    df = pandas.read_csv(feature_file)
+                    for item in FIELDS[2:3]:
+                        for i in range(0, len(df[item])):
+                            v = df[item][i].round(1)
+                            data[item][v][df[LABEL][i]] += 1
+                    if count > 0.8 * total_projects:
+                        break
+    print(values)
+    return data
+
+
 def draw_plot(system_paths, y_title, feature):
     logfile = open("statistics/drawing.log", "w")
     testing_systems = []
@@ -354,13 +426,13 @@ def draw_plot(system_paths, y_title, feature):
     data["Product_ID"] = list(range(1, len(data["TP_product"]) + 1))
     ddf = pandas.DataFrame(data)
 
-    ax = ddf.plot.scatter(x='Product_ID', y='TP_product', c='blue', marker='o', label = 'TP product')
-    ax = ddf.plot.scatter(ax=ax, x='Product_ID', y='FP_product', c='red', marker='x', label = 'FP product')
+    ax = ddf.plot.scatter(x='Product_ID', y='TP_product', c='blue', marker='o', label='TP product')
+    ax = ddf.plot.scatter(ax=ax, x='Product_ID', y='FP_product', c='red', marker='x', label='FP product')
     plt.axhline(y=0.1, color='black', linestyle='-')
     plt.ylabel(y_title)
     plt.legend(loc='upper right')
     plt.show()
-    #plt.savefig("plots.pdf")
+    # plt.savefig("plots.pdf")
 
     logfile.close()
 
