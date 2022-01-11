@@ -16,8 +16,8 @@ from consistent_testing_manager.LabelData import label_data, do_label_statistics
 CLASSIFY_FEATURES = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
                      both_forward_and_backward_similarity,
                      total_susp_scores_in_system,
-                     tested_unexpected_behaviors_in_passing_variant_90,
-                     confirmed_successes_in_passing_variant_90]
+                     tested_unexpected_behaviors_in_passing_variant_80,
+                     confirmed_successes_in_passing_variant_80]
 
 FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_in_passing_variant,
           not_executed_susp_stmt_vs_in_passing_variant,
@@ -26,12 +26,12 @@ FIELDS = [VARIANT_NAME, LABEL, DDU, executed_susp_stmt_in_passing_variant,
           tested_unexpected_behaviors_in_passing_variant_20,
           tested_unexpected_behaviors_in_passing_variant_50,
           tested_unexpected_behaviors_in_passing_variant_70,
-          tested_unexpected_behaviors_in_passing_variant_90,
+          tested_unexpected_behaviors_in_passing_variant_80,
           tested_unexpected_behaviors_in_passing_variant_100,
           confirmed_successes_in_passing_variant_20,
           confirmed_successes_in_passing_variant_50,
           confirmed_successes_in_passing_variant_70,
-          confirmed_successes_in_passing_variant_90,
+          confirmed_successes_in_passing_variant_80,
           confirmed_successes_in_passing_variant_100,
           total_susp_scores_in_system,
           total_susp_scores_in_variants, forward_similarity, backward_similarity, both_forward_and_backward_similarity]
@@ -221,13 +221,14 @@ def classify_by_svm(logfile, classified_result_file, X_train, X_test, y_train, y
     start = time.time()
     clf = svm.SVC(kernel='linear')
     clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
-    logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
-    overall_performance_measurement(y_test, y_pred, logfile)
-    if not classified_by_variant:
-        write_classified_result(y_pred, test_samples, 0, classified_result_file)
-    end = time.time()
-    logfile.write("run_time:" + str(end - start) + "\n")
+    y_pred = clf.predict_proba(X_test)
+    print(y_pred)
+    # logfile.write("Accuracy: " + str(metrics.accuracy_score(y_test, y_pred)) + "\n")
+    # overall_performance_measurement(y_test, y_pred, logfile)
+    # if not classified_by_variant:
+    #     write_classified_result(y_pred, test_samples, 0, classified_result_file)
+    # end = time.time()
+    # logfile.write("run_time:" + str(end - start) + "\n")
     # performance_in_each_projects(test_samples, classified_result_file, logfile)
 
 
@@ -297,8 +298,8 @@ def classify_by_different_classifiers(logfile, mode, classified_result_file, X_t
 def classify_all_cases_turn_off_testing(logfile, training_systems, testing_systems):
     features = [both_forward_and_backward_similarity,
                 total_susp_scores_in_system,
-                tested_unexpected_behaviors_in_passing_variant_90,
-                confirmed_successes_in_passing_variant_90]
+                tested_unexpected_behaviors_in_passing_variant_80,
+                confirmed_successes_in_passing_variant_80]
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
@@ -308,8 +309,8 @@ def classify_all_cases_turn_off_testing(logfile, training_systems, testing_syste
 
 def classify_all_cases_turn_off_programs(logfile, training_systems, testing_systems):
     features = [DDU, not_executed_susp_stmt_vs_in_passing_variant,
-                tested_unexpected_behaviors_in_passing_variant_90,
-                confirmed_successes_in_passing_variant_90]
+                tested_unexpected_behaviors_in_passing_variant_80,
+                confirmed_successes_in_passing_variant_80]
 
     X_train, X_test, y_train, y_test, test_samples = load_all_data(logfile, training_systems, testing_systems, features,
                                                                    system_ratio=0.8, variant_ratio=0.0)
