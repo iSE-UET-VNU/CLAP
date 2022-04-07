@@ -41,19 +41,19 @@ def summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments):
 
 if __name__ == "__main__":
     num_of_bugs = ["1Bug", "2Bug", "3Bug"]
-    prefix = "classified_all_remove_FPs_0.5"
-    base_path = join_path("/Users/thu-trangnguyen/Documents/Projects/VarCop/experiment_results/", prefix)
+    prefix = "original"
+    base_path = join_path("/home/huent/Documents/Project/CLAP/experiment_results", prefix)
 
     systems = [ "ALL"]
 
     bankaccount = ["BankAccountTP/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     elevator = ["Elevator/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     email = ["Email/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
-    examdb = ["ExamDB/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
+    #examdb = ["ExamDB/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/4wise/"]
     gpl = ["GPL/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/1wise/"]
     zipme = ["ZipMe/ENABLE_NORMALIZATION/AGGREGATION_ARITHMETIC_MEAN/2wise/"]
     all = [
-        bankaccount[0], elevator[0], email[0], examdb[0], gpl[0],
+        bankaccount[0], elevator[0], email[0], gpl[0],
     ]
     experiments = [ all]
     summary_multiple_bugs(num_of_bugs, base_path, prefix, experiments)

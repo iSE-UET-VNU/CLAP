@@ -143,7 +143,6 @@ def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
                 data[stmt] += normalized_data[stmt]
             # elif normalized_data[stmt] > data[stmt]:
             #     data[stmt] = normalized_data[stmt]
-
     return data
 
 

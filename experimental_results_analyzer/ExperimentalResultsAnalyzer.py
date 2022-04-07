@@ -52,7 +52,7 @@ def write_all_bugs_to_a_file(summary_file_dir, file_lists, num_of_bugs, base_pat
             file_path = join_path(base_path, file_name)
             print(file_path)
             if os.path.exists(file_path):
-                excel_data_df = pandas.read_excel(file_path, sheet_name=None)
+                excel_data_df = pandas.read_excel(file_path, sheet_name=None, engine='openpyxl')
                 num_of_file += 1
                 if num_of_file > 1:
                     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:
@@ -160,7 +160,7 @@ def num_of_element(data_list):
 
 
 def calculate_average_in_a_file(experimental_file_dir, row, sheet):
-    excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None)
+    excel_data_df = pandas.read_excel(experimental_file_dir, sheet_name=None, engine='openpyxl')
     comparison_data = init_comparison_data()
 
     for spectrum_expression_type in SPECTRUM_EXPRESSIONS_LIST:

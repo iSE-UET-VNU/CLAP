@@ -92,12 +92,12 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants = list_dir(variants_dir)
     failing_variants = get_failing_variants(mutated_project_dir)
-    unconverted_to_FP_variants = verify_failing_variants(mutated_project_dir)
-    for item in unconverted_to_FP_variants:
-        if item == "-1":
-            print(mutated_project_dir)
-            return
-    file_name = join_path(mutated_project_dir, LABELED_FILE_NAME)
+    # unconverted_to_FP_variants = verify_failing_variants(mutated_project_dir)
+    # for item in unconverted_to_FP_variants:
+    #     if item == "-1":
+    #         print(mutated_project_dir)
+    #         return
+    file_name = join_path(mutated_project_dir, LABELED_FILE_NAME_NEW)
     num_failings = 0
     num_fp = 0
     num_tp = 0
@@ -107,17 +107,17 @@ def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
         writer.writeheader()
         for v in variants:
             if v in failing_variants:
-                v_index = failing_variants.index(v)
-                if v_index % 2 == 0:
-                    writer.writerow({'VARIANT': v, 'LABEL': FAILING})
-                    num_failings += 1
-                else:
-                    if v not in unconverted_to_FP_variants:
-                        writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
-                        num_fp += 1
-                    else:
-                        writer.writerow({'VARIANT': v, 'LABEL': FAILING})
-                        num_failings += 1
+                # v_index = failing_variants.index(v)
+                # if v_index % 2 == 0:
+                #     writer.writerow({'VARIANT': v, 'LABEL': FAILING})
+                #     num_failings += 1
+                # else:
+                #     if v not in unconverted_to_FP_variants:
+                #         writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
+                #         num_fp += 1
+                #     else:
+                writer.writerow({'VARIANT': v, 'LABEL': FAILING})
+                num_failings += 1
             elif v in passing_variants_contain_buggy_stmts:
                 writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
                 num_fp += 1
@@ -173,7 +173,6 @@ def label_data(system_paths):
                     if not (len(failing_variants) == 1 and len(passing_variants_contain_buggy_stmts) == 0):
                         label(mu_project_path, passing_variants_contain_buggy_stmts)
 
-
     logfile.close()
 
 
@@ -203,7 +202,8 @@ def do_label_statistics(system_paths):
                                 sum_tp += 1
                     total_cases += 1
             logfile.write("total labeled cases: " + str(total_cases) + "\n")
-            logfile.write("num of failing variants: " + str(sum_f / total_cases) + "\n")
-            logfile.write("num of false passing variants: " + str(sum_fp / total_cases) + "\n")
-            logfile.write("num of true passing variants: " + str(sum_tp / total_cases) + "\n")
+            # if total_cases != 0:
+            logfile.write("num of failing variants: " + str(sum_f) + "\n")
+            logfile.write("num of false passing variants: " + str(sum_fp) + "\n")
+            logfile.write("num of true passing variants: " + str(sum_tp) + "\n")
     logfile.close()

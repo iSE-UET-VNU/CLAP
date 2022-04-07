@@ -26,6 +26,7 @@ TRUE_PASSING = "TP"
 FALSE_PASSING = "FP"
 FAILING = "F"
 LABELED_FILE_NAME = "variants_testing_label.csv"
+LABELED_FILE_NAME_NEW = "variants_testing_label_no_more_FPs.csv"
 
 VARIANT_NAME = 'VARIANT'
 LABEL = 'LABEL'
@@ -34,7 +35,6 @@ DDU = "DDU"
 
 executed_susp_stmt_in_passing_variant = "executed_susp_stmt_in_passing_variant"
 not_executed_susp_stmt_vs_in_passing_variant = "not_executed_susp_stmt_vs_in_passing_variant"
-executed_susp_stmt_in_a_failed_execution = "executed_susp_stmt_in_a_failed_execution"
 not_executed_susp_stmt_in_a_failed_execution = "not_executed_susp_stmt_in_a_failed_execution"
 tested_unexpected_behaviors_in_passing_variant_20 = "tested_unexpected_behaviors_in_passing_variant_20"
 tested_unexpected_behaviors_in_passing_variant_50 = "tested_unexpected_behaviors_in_passing_variant_50"
@@ -47,10 +47,6 @@ confirmed_successes_in_passing_variant_70 = "check_confirmed_successes_in_passin
 confirmed_successes_in_passing_variant_80 = "check_confirmed_successes_in_passing_variant_80"
 confirmed_successes_in_passing_variant_100 = "check_confirmed_successes_in_passing_variant_100"
 total_susp_scores_in_system = "susp_scores_in_system"
-total_susp_scores_in_variants = "susp_scores_in_variants"
-
-forward_similarity = "forward_similarity"
-backward_similarity = "backward_similarity"
 both_forward_and_backward_similarity = "both_forward_and_backward_similarity"
 
 
@@ -158,22 +154,6 @@ def check_executed_susp_stmt_vs_susp_stmt_in_passing_variant(susp_in_passing_var
         not_executed_suspcious_stmt) / total_suspicious_stmts
 
 
-def check_susp_stmt_vs_stmt_in_a_failed_execution(failed_executions, susp_in_passing_variant):
-    total_executed = 0
-    total_not_executed = 0
-    for item in susp_in_passing_variant:
-        var_name = item.split("__")[0]
-        test_id = item.split("__")[1]
-        set1 = convert_execution_to_set(failed_executions[var_name][test_id])
-        set2 = set(susp_in_passing_variant[item]["Executed"])
-        set3 = set(susp_in_passing_variant[item]["Not Executed"])
-
-        total_executed = min(total_executed, len(set2) / len(set1))
-        total_not_executed = max(total_not_executed, len(set3) / len(set1))
-
-    return total_executed, total_not_executed
-
-
 def jaccard_similarity(set1, set2):
     interaction = len(set1.intersection(set2))
     union = len(set1) + len(set2) - interaction
@@ -256,34 +236,6 @@ def ranking_suspicious_stmts(project_dir, failing_variants):
     for (stmt, score, v) in full_ranked_list[OCHIAI]:
         op2_ranked_list[stmt] = score
     return op2_ranked_list
-
-
-# def normalize_score(scores_list):
-#     min = 10000
-#     max = -10000
-#     for (stmt, score, v) in scores_list:
-#         if score > max:
-#             max = score
-#         if score < min:
-#             min = score
-#     data = {}
-#     for (stmt, score, v) in scores_list:
-#         data[stmt] = (score - min) * (1 / (max - min))
-#     return data
-#
-#
-# def get_max_susp_each_stmt_in_variants(project_dir, failing_variants):
-#     search_spaces = get_suspicious_space_consistent_version(project_dir, failing_variants, 0.0, "")
-#     suspicious_scores = local_ranking_a_suspicious_list(project_dir, search_spaces, [OP2], "")
-#     data = {}
-#     for v in suspicious_scores[OP2]:
-#         normalized_data = normalize_score(suspicious_scores[OP2][v])
-#         for stmt in normalized_data:
-#             if stmt not in data:
-#                 data[stmt] = normalized_data[stmt]
-#             elif normalized_data[stmt] > data[stmt]:
-#                 data[stmt] = normalized_data[stmt]
-#     return data
 
 
 def check_total_susp_scores_in_passing_variant(susp_scores, passing_variant_stmt):
@@ -422,7 +374,6 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
         passing_variants_stmts = get_stmts_id_in_passing_variants(project_dir, failing_variants)
         susp_in_passing_variants = {}
         susp_scores_in_system = ranking_suspicious_stmts(project_dir, failing_variants)
-        susp_scores_in_variants = get_max_susp_each_stmt_in_variants(project_dir, failing_variants)
         for p_v in passing_variants_stmts:
             constant_data[p_v] = {}
             susp_in_passing_variants[p_v] = check_suspicious_stmts_in_passing_variants(
@@ -437,13 +388,6 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
                 executed_susp_stmt_in_passing_variant] = executed_susp_stmts
             constant_data[p_v][
                 not_executed_susp_stmt_vs_in_passing_variant] = not_executed_susp_stmts
-
-            tmp1, tmp2 = check_susp_stmt_vs_stmt_in_a_failed_execution(
-                failed_executions_in_failing_products, susp_in_passing_variants[p_v])
-            constant_data[p_v][
-                executed_susp_stmt_in_a_failed_execution] = tmp1
-            constant_data[p_v][
-                not_executed_susp_stmt_in_a_failed_execution] = tmp2
 
             passed_executions_in_passing_product = get_passing_executions_in_a_variant(project_dir,
                                                                                        system_stm_ids, p_v)
@@ -491,13 +435,10 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
 
             constant_data[p_v][total_susp_scores_in_system] = check_total_susp_scores_in_passing_variant(
                 susp_scores_in_system, passing_variants_stmts[p_v])
-            constant_data[p_v][total_susp_scores_in_variants] = check_total_susp_scores_in_passing_variant(
-                susp_scores_in_variants, passing_variants_stmts[p_v])
 
             dependencies_similarity = check_dependencies(join_path(project_dir, "variants"), p_v,
                                                          failed_executions_in_failing_products)
-            constant_data[p_v][forward_similarity] = dependencies_similarity["Forward"]
-            constant_data[p_v][backward_similarity] = dependencies_similarity["Backward"]
+
             constant_data[p_v][both_forward_and_backward_similarity] = dependencies_similarity["Both"]
         write_dict_to_file(join_path(project_dir, consistent_testing_info_file), constant_data, FIELDS)
         normalization(FIELDS, project_dir)

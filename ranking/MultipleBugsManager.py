@@ -9,7 +9,8 @@ from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
 from ranking.RankingManager import VARCOP_RANK, SBFL_RANK, \
     ranking_multiple_bugs, VARCOP_SPACE, SPACE, get_set_of_stms
-from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, list_dir, get_spc_log_file_path
+from FileManager import join_path, EXPERIMENT_RESULT_FOLDER, list_dir, get_spc_log_file_path, get_slicing_log_file_path, \
+    get_outer_dir
 from ranking.VarBugManager import is_var_bug_by_config
 from spc import SPCsManager
 from spectrum_manager.SpectrumReader import get_executed_stms_of_the_system
@@ -114,20 +115,31 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
     return row
 
 
-def suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version,
+def suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
+                         coverage_version,
                          spc_postfix=""):
-    SPCsManager.find_SPCs(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, spc_postfix)
+    SPCsManager.find_SPCs(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
+                          spc_postfix)
     spc_log_file_path = get_spc_log_file_path(mutated_project_dir, str(filtering_coverage_rate) + spc_postfix)
     SlicingManager.do_slice_spc(spc_log_file_path, filtering_coverage_rate, coverage_version, spc_postfix)
 
 
-def get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version):
-    if coverage_version == "":
-        stms_isolated_by_varcop = get_suspicious_statement_varcop(mutated_project_dir,
-                                                                  filtering_coverage_rate)
+def get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
+                         coverage_version, spc_postfix=""):
+    spc_log_file_path = get_spc_log_file_path(mutated_project_dir, str(filtering_coverage_rate) + spc_postfix)
+    if coverage_version != "":
+        slicing_postfix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
     else:
-        post_fix = str(filtering_coverage_rate) + "_" + coverage_version + "_"
-        stms_isolated_by_varcop = get_suspicious_statement_varcop(mutated_project_dir, post_fix)
+        slicing_postfix = filtering_coverage_rate
+
+    slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_log_file_path),
+                                                    str(slicing_postfix) + spc_postfix)
+    print("slicing output path: ", slicing_output_path)
+    if not os.path.isfile(slicing_output_path):
+        slicing_output_path = join_path(mutated_project_dir, "slicing_0.log")
+        print("here")
+    stms_isolated_by_varcop = get_suspicious_statement_varcop(mutated_project_dir,
+                                                              slicing_output_path)
 
     tc_sliced_based_isolation = get_suspicious_statement_tc_based(mutated_project_dir)
     all_stms_of_the_system, all_stms_in_failing_products = get_executed_stms_of_the_system(
@@ -150,7 +162,7 @@ def create_exp_result_folder(result_folder, system_name):
 
 
 def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, kwise, spectrum_expressions,
-                          FP_detection, classified_file_name, alpha=0.5, add_more_tests = False, keep_useful_tests=False,
+                          FP_detection, classified_file_name, alpha=0.5, add_more_tests=False, keep_useful_tests=False,
                           filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
@@ -210,9 +222,11 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
                     FP_variants = []
                     spc_postfix = "original"
 
-                suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
+                suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests,
+                                     filtering_coverage_rate,
                                      coverage_version, spc_postfix)
-                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version)
+                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests,
+                                                     filtering_coverage_rate, coverage_version, spc_postfix)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
                 row_temp = row
@@ -226,7 +240,8 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
 
                 ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
                                                                              mutated_project_dir, failing_variants,
-                                                                             FP_variants, add_more_tests, keep_useful_tests,
+                                                                             FP_variants, add_more_tests,
+                                                                             keep_useful_tests,
                                                                              search_spaces,
                                                                              spectrum_expressions,
                                                                              aggregation_type,
