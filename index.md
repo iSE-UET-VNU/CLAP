@@ -1,37 +1,4 @@
-## Welcome to GitHub Pages
+#Detecting False-passing Products and Mitigating their Impact on Variability Fault Localization in Software Product Lines
 
-You can use the [editor on GitHub](https://github.com/ttrangnguyen/CLAP/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ttrangnguyen/CLAP/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+In a Software Product Line (SPL) system, variability bugs can cause failures in certain products (buggy products), not in the others. In practice, variability bugs are not always exposed, and buggy products can still pass all the tests due to their ineffective test suites (so-called false-passing products). The misleading indications by those false-passing products’ test results can negatively impact variability fault localization performance. In this paper, we introduce CLAP, a novel approach to detect false-passing products in SPL systems failed by variability bugs. Our key idea is to collect failure indications in failing products based on their implementation and test quality. For a passing product, we evaluate these indications, and the stronger indications, the more likely the product is false-passing. The possibility of being false-passing of the product is evaluated based on if it is implemented by a large number of the statements which are highly suspicious in the failing products, and if its test suite is in lower quality compared to the failing products’ test suites. We conducted several experiments to evaluate our false-passing product detection approach on a large benchmark of 14,191 false-passing products and 22,555 true-passing products in 823 buggy versions of the existing SPL systems. The experimental results show that CLAP can effectively detect false-passing and true-passing products with the average accuracy of +90%. Especially, the precision of false-passing product detection by CLAP is up to 96%. This means, among 10 products predicted as false-passing products, more than 9 products are precisely detected. Furthermore, we propose two simple and effective methods to mitigate the negative impact of false-passing products on variability fault localization. These methods can improve the performance of the state-of-the-art variability fault localization techniques by up to 34%.
