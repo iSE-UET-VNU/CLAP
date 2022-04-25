@@ -3,7 +3,7 @@ import os
 from xlsxwriter import Workbook
 
 from consistent_testing_manager.FPMatricsCaculation import FALSE_PASSING, LABEL
-from consistent_testing_manager.FileName import variants_testing_label_file
+from consistent_testing_manager.FileName import label_for_testing
 from ranking import RankingManager
 from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
@@ -107,8 +107,8 @@ def write_result_to_file(row, sheet, ranking_results, fb_results, search_spaces,
                     (ranking_results[VARCOP_DISABLE_BPC_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SBFL_RANK_COL, ranking_results[SBFL_RANK][stm][RANK])
         sheet.write(row, SBFL_EXAM_COL, (ranking_results[SBFL_RANK][stm][RANK] / all_stms) * 100)
-        sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
-        sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK] / all_stms) * 100)
+        # sheet.write(row, FB_RANK_COL, fb_results[FB_RANK][stm][RANK])
+        # sheet.write(row, FB_EXAM_COL, (fb_results[FB_RANK][stm][RANK] / all_stms) * 100)
         sheet.write(row, SPACE_COL, all_space)
 
         row += 1
@@ -134,10 +134,8 @@ def get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add
 
     slicing_output_path = get_slicing_log_file_path(get_outer_dir(spc_log_file_path),
                                                     str(slicing_postfix) + spc_postfix)
-    print("slicing output path: ", slicing_output_path)
     if not os.path.isfile(slicing_output_path):
         slicing_output_path = join_path(mutated_project_dir, "slicing_0.log")
-        print("here")
     stms_isolated_by_varcop = get_suspicious_statement_varcop(mutated_project_dir,
                                                               slicing_output_path)
 
@@ -162,7 +160,7 @@ def create_exp_result_folder(result_folder, system_name):
 
 
 def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, kwise, spectrum_expressions,
-                          FP_detection, classified_file_name, alpha=0.5, add_more_tests=False, keep_useful_tests=False,
+                          FP_detection, classified_file_name, alpha=0.5, add_more_tests = False, keep_useful_tests=False,
                           filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
@@ -205,12 +203,14 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
             for mutated_project_name in mutated_projects:
                 mutated_project_dir = join_path(system_dir, mutated_project_name)
                 classified_file_path = join_path(mutated_project_dir, classified_file_name)
-                if not os.path.isfile(classified_file_path):
+                label_file = join_path(mutated_project_dir, label_for_testing)
+                if not os.path.isfile(classified_file_path) or not os.path.isfile(label_file):
                     continue
+
                 print(mutated_project_name)
                 num_of_bugs += 1
 
-                label_file = join_path(mutated_project_dir, variants_testing_label_file)
+
                 failing_variants = get_failing_variants_by_labels(label_file, LABEL)
                 if FP_detection and not add_more_tests:
                     FP_variants = get_fp_variants(classified_file_path)
@@ -222,11 +222,9 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
                     FP_variants = []
                     spc_postfix = "original"
 
-                suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests,
-                                     filtering_coverage_rate,
-                                     coverage_version, spc_postfix)
-                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests,
-                                                     filtering_coverage_rate, coverage_version, spc_postfix)
+                # suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
+                #                      coverage_version, spc_postfix)
+                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version, spc_postfix)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
                 row_temp = row
@@ -240,8 +238,7 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
 
                 ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
                                                                              mutated_project_dir, failing_variants,
-                                                                             FP_variants, add_more_tests,
-                                                                             keep_useful_tests,
+                                                                             FP_variants, add_more_tests, keep_useful_tests,
                                                                              search_spaces,
                                                                              spectrum_expressions,
                                                                              aggregation_type,
@@ -258,7 +255,7 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
                     sheet[metric].write(row_temp, BUG_ID_COL, mutated_project_name)
                     row = write_result_to_file(row_temp, sheet[metric],
                                                ranking_results[spectrum_expressions[metric]],
-                                               fb_ranking_results[spectrum_expressions[metric]], search_spaces,
+                                               "", search_spaces,
                                                is_a_var_bug)
             wb.close()
 

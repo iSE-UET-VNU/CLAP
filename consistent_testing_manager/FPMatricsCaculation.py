@@ -7,8 +7,7 @@ import pandas
 from sklearn import preprocessing
 from FileManager import *
 from consistent_testing_manager.DDU import ddu
-from consistent_testing_manager.FileName import consistent_testing_info_file, consistent_testing_normalized_info_file, \
-    variants_testing_label_file
+from consistent_testing_manager.FileName import *
 from xlsxwriter import Workbook
 
 from spectrum_manager.SpectrumReader import get_stm_ids_per_variant, similar_path, \
@@ -25,8 +24,8 @@ BOTH_FB_SLICING_TYPE = "Both"
 TRUE_PASSING = "TP"
 FALSE_PASSING = "FP"
 FAILING = "F"
-LABELED_FILE_NAME = "variants_testing_label.csv"
-LABELED_FILE_NAME_NEW = "variants_testing_label_no_more_FPs.csv"
+# LABELED_FILE_NAME = "variants_testing_label.csv"
+# LABELED_FILE_NAME_NEW = "variants_testing_label_no_more_FPs.csv"
 
 VARIANT_NAME = 'VARIANT'
 LABEL = 'LABEL'
@@ -36,23 +35,23 @@ DDU = "DDU"
 executed_susp_stmt_in_passing_variant = "executed_susp_stmt_in_passing_variant"
 not_executed_susp_stmt_vs_in_passing_variant = "not_executed_susp_stmt_vs_in_passing_variant"
 not_executed_susp_stmt_in_a_failed_execution = "not_executed_susp_stmt_in_a_failed_execution"
-tested_unexpected_behaviors_in_passing_variant_20 = "tested_unexpected_behaviors_in_passing_variant_20"
-tested_unexpected_behaviors_in_passing_variant_50 = "tested_unexpected_behaviors_in_passing_variant_50"
-tested_unexpected_behaviors_in_passing_variant_70 = "tested_unexpected_behaviors_in_passing_variant_70"
+# tested_unexpected_behaviors_in_passing_variant_20 = "tested_unexpected_behaviors_in_passing_variant_20"
+# tested_unexpected_behaviors_in_passing_variant_50 = "tested_unexpected_behaviors_in_passing_variant_50"
+# tested_unexpected_behaviors_in_passing_variant_70 = "tested_unexpected_behaviors_in_passing_variant_70"
 tested_unexpected_behaviors_in_passing_variant_80 = "tested_unexpected_behaviors_in_passing_variant_80"
-tested_unexpected_behaviors_in_passing_variant_100 = "tested_unexpected_behaviors_in_passing_variant_100"
-confirmed_successes_in_passing_variant_20 = "check_confirmed_successes_in_passing_variant_20"
-confirmed_successes_in_passing_variant_50 = "check_confirmed_successes_in_passing_variant_50"
-confirmed_successes_in_passing_variant_70 = "check_confirmed_successes_in_passing_variant_70"
+# tested_unexpected_behaviors_in_passing_variant_100 = "tested_unexpected_behaviors_in_passing_variant_100"
+# confirmed_successes_in_passing_variant_20 = "check_confirmed_successes_in_passing_variant_20"
+# confirmed_successes_in_passing_variant_50 = "check_confirmed_successes_in_passing_variant_50"
+# confirmed_successes_in_passing_variant_70 = "check_confirmed_successes_in_passing_variant_70"
 confirmed_successes_in_passing_variant_80 = "check_confirmed_successes_in_passing_variant_80"
-confirmed_successes_in_passing_variant_100 = "check_confirmed_successes_in_passing_variant_100"
+# confirmed_successes_in_passing_variant_100 = "check_confirmed_successes_in_passing_variant_100"
 total_susp_scores_in_system = "susp_scores_in_system"
 both_forward_and_backward_similarity = "both_forward_and_backward_similarity"
 
 
-def get_variants_and_labels(mutated_project_dir):
+def get_variants_and_labels(mutated_project_dir, label_file):
     variants = {}
-    label_file = join_path(mutated_project_dir, LABELED_FILE_NAME)
+    label_file = join_path(mutated_project_dir, label_file)
     with open(label_file, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -74,9 +73,9 @@ def write_dict_to_file(file_name, data, fieldnames):
             writer.writerow(tmp)
 
 
-def get_labeled_failing_variants(project_dir):
+def get_labeled_failing_variants(project_dir, label_file):
     failing_variants = get_failing_variants(project_dir)
-    variants_and_labels = get_variants_and_labels(project_dir)
+    variants_and_labels = get_variants_and_labels(project_dir, label_file)
     for item in failing_variants:
         if variants_and_labels[item][LABEL] != FAILING:
             failing_variants.remove(item)
@@ -335,9 +334,9 @@ def check_dependencies(variants_folder_dir, passing_variant, failed_executions_i
     return aggreate_similarity_by_avg(similarities)
 
 
-def normalization(FIELDS, project_dir):
-    consistent_testing_info_file_path = join_path(project_dir, consistent_testing_info_file)
-    consistent_testing_info_normalized_file = join_path(project_dir, consistent_testing_normalized_info_file)
+def normalization(FIELDS, project_dir, attribute_file, attribute_normalized_file):
+    consistent_testing_info_file_path = join_path(project_dir, attribute_file)
+    consistent_testing_info_normalized_file = join_path(project_dir, attribute_normalized_file)
     data = pandas.read_csv(consistent_testing_info_file_path)
     variants = data[FIELDS[0]]
     labels = data[FIELDS[1]]
@@ -351,30 +350,28 @@ def normalization(FIELDS, project_dir):
     data.to_csv(consistent_testing_info_normalized_file)
 
 
-def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
+def calculate_consistent_testing_values_for_features(project_dir, label_file, attribute_file, attribute_normalized_file, FIELDS):
     logfile = open("statistics/feature_calculation_times.log", "a")
-    logfile.write(sys_path)
-    mutated_projects = list_dir(sys_path)
-    total_time = 0
-    for project in mutated_projects:
-        start = time.time()
-        project_dir = join_path(sys_path, project)
-        print(project_dir)
-        if not os.path.isfile(join_path(project_dir, variants_testing_label_file)):
-            continue
-        constant_data = {}
-        failing_variants = get_labeled_failing_variants(project_dir)
-        system_stm_ids = get_all_stm_ids(project_dir)
-        failed_executions_in_failing_products = get_failings_executions(project_dir, system_stm_ids,
-                                                                        failing_variants)
+    logfile.write(project_dir)
 
-        passed_executions_in_failing_products = get_passing_executions(project_dir, system_stm_ids,
-                                                                       failing_variants)
-        variants_and_labels = get_variants_and_labels(project_dir)
-        passing_variants_stmts = get_stmts_id_in_passing_variants(project_dir, failing_variants)
-        susp_in_passing_variants = {}
-        susp_scores_in_system = ranking_suspicious_stmts(project_dir, failing_variants)
-        for p_v in passing_variants_stmts:
+    total_time = 0
+    start = time.time()
+
+    if not os.path.isfile(join_path(project_dir, label_file)):
+        return
+    constant_data = {}
+    failing_variants = get_labeled_failing_variants(project_dir, label_file)
+    system_stm_ids = get_all_stm_ids(project_dir)
+    failed_executions_in_failing_products = get_failings_executions(project_dir, system_stm_ids,
+                                                                    failing_variants)
+
+    passed_executions_in_failing_products = get_passing_executions(project_dir, system_stm_ids,
+                                                                   failing_variants)
+    variants_and_labels = get_variants_and_labels(project_dir, label_file)
+    passing_variants_stmts = get_stmts_id_in_passing_variants(project_dir, failing_variants)
+    susp_in_passing_variants = {}
+    susp_scores_in_system = ranking_suspicious_stmts(project_dir, failing_variants)
+    for p_v in passing_variants_stmts:
             constant_data[p_v] = {}
             susp_in_passing_variants[p_v] = check_suspicious_stmts_in_passing_variants(
                 failed_executions_in_failing_products, passing_variants_stmts[p_v])
@@ -391,47 +388,19 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
 
             passed_executions_in_passing_product = get_passing_executions_in_a_variant(project_dir,
                                                                                        system_stm_ids, p_v)
-            constant_data[p_v][
-                tested_unexpected_behaviors_in_passing_variant_20] = check_tested_unexpected_behaviors_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_passing_product,
-                susp_in_passing_variants[p_v], 0.2)
-            constant_data[p_v][
-                tested_unexpected_behaviors_in_passing_variant_50] = check_tested_unexpected_behaviors_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_passing_product,
-                susp_in_passing_variants[p_v], 0.5)
-            constant_data[p_v][
-                tested_unexpected_behaviors_in_passing_variant_70] = check_tested_unexpected_behaviors_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_passing_product,
-                susp_in_passing_variants[p_v], 0.7)
+
+
             constant_data[p_v][
                 tested_unexpected_behaviors_in_passing_variant_80] = check_tested_unexpected_behaviors_in_passing_variant(
                 failed_executions_in_failing_products, passed_executions_in_passing_product,
                 susp_in_passing_variants[p_v], 0.8)
-            constant_data[p_v][
-                tested_unexpected_behaviors_in_passing_variant_100] = check_tested_unexpected_behaviors_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_passing_product,
-                susp_in_passing_variants[p_v], 1.0)
 
-            constant_data[p_v][
-                confirmed_successes_in_passing_variant_20] = check_confirmed_successes_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_failing_products,
-                passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.2)
-            constant_data[p_v][
-                confirmed_successes_in_passing_variant_50] = check_confirmed_successes_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_failing_products,
-                passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.5)
-            constant_data[p_v][
-                confirmed_successes_in_passing_variant_70] = check_confirmed_successes_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_failing_products,
-                passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.7)
+
             constant_data[p_v][
                 confirmed_successes_in_passing_variant_80] = check_confirmed_successes_in_passing_variant(
                 failed_executions_in_failing_products, passed_executions_in_failing_products,
                 passed_executions_in_passing_product, susp_in_passing_variants[p_v], 0.8)
-            constant_data[p_v][
-                confirmed_successes_in_passing_variant_100] = check_confirmed_successes_in_passing_variant(
-                failed_executions_in_failing_products, passed_executions_in_failing_products,
-                passed_executions_in_passing_product, susp_in_passing_variants[p_v], 1.0)
+
 
             constant_data[p_v][total_susp_scores_in_system] = check_total_susp_scores_in_passing_variant(
                 susp_scores_in_system, passing_variants_stmts[p_v])
@@ -440,13 +409,13 @@ def calculate_consistent_testing_values_for_features(sys_path, FIELDS):
                                                          failed_executions_in_failing_products)
 
             constant_data[p_v][both_forward_and_backward_similarity] = dependencies_similarity["Both"]
-        write_dict_to_file(join_path(project_dir, consistent_testing_info_file), constant_data, FIELDS)
-        normalization(FIELDS, project_dir)
-        # os.remove(join_path(project_dir, consistent_testing_info_file))
-        end = time.time()
-        total_time += (end - start)
-        logfile.write(project + ": " + str(end - start) + "\n")
-    logfile.write("average runtime: " + str(total_time / len(mutated_projects)) + "\n")
+    write_dict_to_file(join_path(project_dir, attribute_file), constant_data, FIELDS)
+    normalization(FIELDS, project_dir, attribute_file, attribute_normalized_file)
+    # os.remove(join_path(project_dir, consistent_testing_info_file))
+    end = time.time()
+    total_time += (end - start)
+    logfile.write(project_dir + ": " + str(end - start) + "\n")
+    #logfile.write("average runtime: " + str(total_time / len(mutated_projects)) + "\n")
     logfile.write("------------------\n")
 
 
@@ -463,61 +432,61 @@ def average_feature_by_label(labels, values, target):
     return sum / count
 
 
-def do_features_statistics(system_paths, FIELDS):
-    wb = Workbook("statistics/features.xlsx")
-    system_paths_by_bugs = {"1Bug": [], "2Bug": [], "3Bug": []}
-    for s in system_paths:
-        for bug in system_paths[s]:
-            if bug == "1Bug":
-                system_paths_by_bugs[bug].append(system_paths[s][bug])
-    for bug in system_paths_by_bugs:
-        sheet = wb.add_worksheet(bug)
-        row = 0
-        col = 0
-        sheet.write(row, col, "System")
-        col += 1
-
-        for f in FIELDS[2:]:
-            sheet.write(row, col, f)
-            sheet.write(row + 1, col, TRUE_PASSING)
-            sheet.write(row + 1, col + 1, FALSE_PASSING)
-            col += 2
-        row += 2
-
-        for sys_path in system_paths_by_bugs[bug]:
-            col = 0
-            sheet.write(row, col, sys_path)
-            col += 1
-            average_values = {TRUE_PASSING: {}, FALSE_PASSING: {}}
-            for f in FIELDS[2:]:
-                average_values[TRUE_PASSING][f] = 0
-                average_values[FALSE_PASSING][f] = 0
-
-            mutated_projects = list_dir(sys_path)
-            total_projects = 0
-
-            for project in mutated_projects:
-                project_dir = join_path(sys_path, project)
-                if os.path.isfile(join_path(project_dir, variants_testing_label_file)):
-                    consistent_testing_info_normalized_file = join_path(project_dir,
-                                                                        consistent_testing_normalized_info_file)
-                    data = pandas.read_csv(consistent_testing_info_normalized_file)
-                    for f in FIELDS[2:]:
-                        average_values[TRUE_PASSING][f] += average_feature_by_label(data[LABEL], data[f], TRUE_PASSING)
-                        average_values[FALSE_PASSING][f] += average_feature_by_label(data[LABEL], data[f],
-                                                                                     FALSE_PASSING)
-
-                    total_projects += 1
-
-            for f in FIELDS[2:]:
-                average_values[TRUE_PASSING][f] /= total_projects
-                average_values[FALSE_PASSING][f] /= total_projects
-
-            col = 1
-            for l in average_values:
-                for item in average_values[l]:
-                    sheet.write(row, col, round(average_values[l][item], 2))
-                    col += 2
-                col = 2
-            row += 1
-    wb.close()
+# def do_features_statistics(system_paths, FIELDS):
+#     wb = Workbook("statistics/features.xlsx")
+#     system_paths_by_bugs = {"1Bug": [], "2Bug": [], "3Bug": []}
+#     for s in system_paths:
+#         for bug in system_paths[s]:
+#             if bug == "1Bug":
+#                 system_paths_by_bugs[bug].append(system_paths[s][bug])
+#     for bug in system_paths_by_bugs:
+#         sheet = wb.add_worksheet(bug)
+#         row = 0
+#         col = 0
+#         sheet.write(row, col, "System")
+#         col += 1
+#
+#         for f in FIELDS[2:]:
+#             sheet.write(row, col, f)
+#             sheet.write(row + 1, col, TRUE_PASSING)
+#             sheet.write(row + 1, col + 1, FALSE_PASSING)
+#             col += 2
+#         row += 2
+#
+#         for sys_path in system_paths_by_bugs[bug]:
+#             col = 0
+#             sheet.write(row, col, sys_path)
+#             col += 1
+#             average_values = {TRUE_PASSING: {}, FALSE_PASSING: {}}
+#             for f in FIELDS[2:]:
+#                 average_values[TRUE_PASSING][f] = 0
+#                 average_values[FALSE_PASSING][f] = 0
+#
+#             mutated_projects = list_dir(sys_path)
+#             total_projects = 0
+#
+#             for project in mutated_projects:
+#                 project_dir = join_path(sys_path, project)
+#                 if os.path.isfile(join_path(project_dir, variants_testing_label_file)):
+#                     consistent_testing_info_normalized_file = join_path(project_dir,
+#                                                                         consistent_testing_normalized_info_file)
+#                     data = pandas.read_csv(consistent_testing_info_normalized_file)
+#                     for f in FIELDS[2:]:
+#                         average_values[TRUE_PASSING][f] += average_feature_by_label(data[LABEL], data[f], TRUE_PASSING)
+#                         average_values[FALSE_PASSING][f] += average_feature_by_label(data[LABEL], data[f],
+#                                                                                      FALSE_PASSING)
+#
+#                     total_projects += 1
+#
+#             for f in FIELDS[2:]:
+#                 average_values[TRUE_PASSING][f] /= total_projects
+#                 average_values[FALSE_PASSING][f] /= total_projects
+#
+#             col = 1
+#             for l in average_values:
+#                 for item in average_values[l]:
+#                     sheet.write(row, col, round(average_values[l][item], 2))
+#                     col += 2
+#                 col = 2
+#             row += 1
+#     wb.close()
