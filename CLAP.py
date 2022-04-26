@@ -24,7 +24,7 @@ if __name__ == "__main__":
     system_paths["ZipMe"]["2Bug"] = "/home/huent/Documents/SPL/ZipMe-2Bug"
     system_paths["ZipMe"]["3Bug"] = "/home/huent/Documents/SPL/ZipMe-3Bug"
 
-    version_based_classifications(system_paths)
+    version_based_classification(system_paths)
     system_based_classification(system_paths)
     product_based_classification(system_paths)
     within_system_classification(system_paths)

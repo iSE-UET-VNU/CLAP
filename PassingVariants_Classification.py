@@ -279,7 +279,7 @@ def load_data_for_version_based_one_classifier(logfile, attributes, all_versions
                                           y_test)
 
 
-def version_based_classifications(system_paths):
+def version_based_classification(system_paths):
     logfile = open("statistics/version_based.log", "w")
     all_versions = []
     for s in system_paths:
