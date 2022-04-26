@@ -28,4 +28,4 @@ if __name__ == "__main__":
     system_based_classification(system_paths)
     product_based_classification(system_paths)
     within_system_classification(system_paths)
-    intrinsic_analysis(system_paths, system_name="ZipMe")
+    intrinsic_analysis(system_paths, system_name="BankAccountTP")
