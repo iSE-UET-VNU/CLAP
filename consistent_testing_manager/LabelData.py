@@ -1,5 +1,8 @@
+import os.path
+
+from PassingVariants_Classification import only_one_failed_tests
 from consistent_testing_manager.FPMatricsCaculation import *
-from consistent_testing_manager.FileName import label_for_training, label_for_testing
+from consistent_testing_manager.FileName import *
 from spectrum_manager.SpectrumReader import get_all_stm_ids, get_failings_executions
 from suspicious_statements_manager.SuspiciousStatementManager import get_multiple_buggy_statements, get_mutated_features
 import csv
@@ -88,37 +91,22 @@ def verify_failing_variants(mutated_project_dir):
     return unconverted_to_FP_variants
 
 
-def label_training_data(mutated_project_name, mutated_project_dir):
-    if not contain_slicing_files(mutated_project_dir):
-        return
-    base_features = ["BankAccount", "Base", "ExamDB", "Compress"]
-    buggy_stmts = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
-    buggy_features = get_mutated_features(mutated_project_dir)
-    config_report_path = get_model_configs_report_path(mutated_project_dir)
-
-    if not base_is_buggy_features(base_features, buggy_features):
-        passing_variants_contain_buggy_features = passing_product_has_buggy_features(config_report_path,
-                                                                                     buggy_features)
-
-        passing_variants_contain_buggy_stmts = passing_product_has_buggy_statements(mutated_project_dir,
-                                                                                    passing_variants_contain_buggy_features,
-                                                                                    buggy_stmts)
+def label(mutated_project_dir, passing_variants_contain_buggy_stmts):
     variants_dir = get_variants_dir(mutated_project_dir)
     variants = list_dir(variants_dir)
     failing_variants = get_failing_variants(mutated_project_dir)
     unconverted_to_FP_variants = verify_failing_variants(mutated_project_dir)
-    # if len(failing_variants) == 1 or not len(passing_variants_contain_buggy_stmts) == 0:
-    #     return
-    # for item in unconverted_to_FP_variants:
-    #     if item == "-1":
-    #         print(mutated_project_dir)
-    #         return
-    file_name = join_path(mutated_project_dir, label_for_training)
+    for item in unconverted_to_FP_variants:
+        if item == "-1":
+            print(mutated_project_dir)
+            return
+    file_name = join_path(mutated_project_dir, variant_labels)
     num_failings = 0
     num_fp = 0
     num_tp = 0
+    print(mutated_project_dir)
     with open(file_name, 'w', newline='') as csvfile:
-        fieldnames = ['VARIANT', 'LABEL', 'FP created from F']
+        fieldnames = ['VARIANT', 'LABEL', 'FP transformed from F']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for v in variants:
@@ -129,53 +117,11 @@ def label_training_data(mutated_project_name, mutated_project_dir):
                     num_failings += 1
                 else:
                     if v not in unconverted_to_FP_variants:
-                        writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP created from F': '1'})
+                        writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING, 'FP transformed from F': '1'})
                         num_fp += 1
                     else:
                         writer.writerow({'VARIANT': v, 'LABEL': FAILING})
                         num_failings += 1
-            elif v in passing_variants_contain_buggy_stmts:
-                writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
-                num_fp += 1
-            else:
-                writer.writerow({'VARIANT': v, 'LABEL': TRUE_PASSING})
-                num_tp += 1
-    if num_failings == 0 or num_tp == 0 or num_fp == 0:
-        os.remove(file_name)
-
-
-def label_testing_data(mutated_project_name, mutated_project_dir):
-    if not contain_slicing_files(mutated_project_dir):
-        return
-    base_features = ["BankAccount", "Base", "ExamDB", "Compress"]
-    buggy_stmts = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
-    buggy_features = get_mutated_features(mutated_project_dir)
-    config_report_path = get_model_configs_report_path(mutated_project_dir)
-
-    if not base_is_buggy_features(base_features, buggy_features):
-        passing_variants_contain_buggy_features = passing_product_has_buggy_features(config_report_path,
-                                                                                     buggy_features)
-
-        passing_variants_contain_buggy_stmts = passing_product_has_buggy_statements(mutated_project_dir,
-                                                                                    passing_variants_contain_buggy_features,
-                                                                                    buggy_stmts)
-    variants_dir = get_variants_dir(mutated_project_dir)
-    variants = list_dir(variants_dir)
-    failing_variants = get_failing_variants(mutated_project_dir)
-    # if len(failing_variants) == 1 or not len(passing_variants_contain_buggy_stmts) == 0:
-    #     return
-    file_name = join_path(mutated_project_dir, label_for_testing)
-    num_failings = 0
-    num_fp = 0
-    num_tp = 0
-    with open(file_name, 'w', newline='') as csvfile:
-        fieldnames = ['VARIANT', 'LABEL', 'FP created from F']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        for v in variants:
-            if v in failing_variants:
-                writer.writerow({'VARIANT': v, 'LABEL': FAILING})
-                num_failings += 1
             elif v in passing_variants_contain_buggy_stmts:
                 writer.writerow({'VARIANT': v, 'LABEL': FALSE_PASSING})
                 num_fp += 1
@@ -199,25 +145,33 @@ def contain_slicing_files(mutated_project_path):
 
 
 def label_data(system_paths):
-    logfile = open("statistics/contain_buggy_features_but_not_buggy_stmts.txt", "w")
     base_features = ["BankAccount", "Base", "ExamDB", "Compress"]
     for system in system_paths:
         for bug in system_paths[system]:
             sys_path = system_paths[system][bug]
             if not os.path.exists(sys_path):
                 continue
-            logfile.write(sys_path + "\n")
             mutated_projects = list_dir(sys_path)
-
             for mutated_project in mutated_projects:
                 mu_project_path = join_path(sys_path, mutated_project)
                 if not contain_slicing_files(mu_project_path):
                     continue
 
-                label_training_data(mutated_project, mu_project_path)
-                label_testing_data(mutated_project, mu_project_path)
-    logfile.close()
+                buggy_stmts = get_multiple_buggy_statements(mutated_project, mu_project_path)
+                buggy_features = get_mutated_features(mu_project_path)
+                config_report_path = get_model_configs_report_path(mu_project_path)
+                failing_variants = get_failing_variants(mu_project_path)
 
+                if not base_is_buggy_features(base_features, buggy_features):
+                    passing_variants_contain_buggy_features = passing_product_has_buggy_features(config_report_path,
+                                                                                                 buggy_features)
+
+                    passing_variants_contain_buggy_stmts = passing_product_has_buggy_statements(mu_project_path,
+                                                                                                passing_variants_contain_buggy_features,
+                                                                                                buggy_stmts)
+
+                    if not (len(failing_variants) == 1 and len(passing_variants_contain_buggy_stmts) == 0):
+                        label(mu_project_path, passing_variants_contain_buggy_stmts)
 
 
 def do_label_statistics(system_paths):
@@ -233,8 +187,8 @@ def do_label_statistics(system_paths):
             total_cases = 0
             for mutated_project in mutated_projects:
                 mu_project_path = join_path(sys_path, mutated_project)
-                label_file = join_path(mu_project_path, label_for_training)
-                if os.path.isfile(label_file):
+                label_file = join_path(mu_project_path, variant_labels)
+                if os.path.isfile(label_file) and not only_one_failed_tests(mu_project_path):
                     with open(label_file) as csv_file:
                         csv_reader = csv.reader(csv_file, delimiter=',')
                         for row in csv_reader:
@@ -246,8 +200,7 @@ def do_label_statistics(system_paths):
                                 sum_tp += 1
                     total_cases += 1
             logfile.write("total labeled cases: " + str(total_cases) + "\n")
-            # if total_cases != 0:
-            logfile.write("num of failing variants: " + str(sum_f) + "\n")
-            logfile.write("num of false passing variants: " + str(sum_fp) + "\n")
-            logfile.write("num of true passing variants: " + str(sum_tp) + "\n")
+            logfile.write("num of failing variants: " + str(sum_f / total_cases) + "\n")
+            logfile.write("num of false passing variants: " + str(sum_fp / total_cases) + "\n")
+            logfile.write("num of true passing variants: " + str(sum_tp / total_cases) + "\n")
     logfile.close()

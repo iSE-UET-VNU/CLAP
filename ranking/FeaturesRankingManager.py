@@ -10,7 +10,6 @@ from ranking.RankingManager import get_set_of_stms
 
 from spectrum_manager.Spectrum_Expression import *
 from ranking.Keywords import *
-from TestingCoverageManager import statement_coverage_of_variants
 
 
 def features_ranking_multiple_bugs(buggy_statements, mutated_project_dir, failing_variants,

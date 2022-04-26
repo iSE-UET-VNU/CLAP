@@ -1,11 +1,12 @@
 import csv
+import logging
+import os
 import time
 
 from FileManager import get_model_configs_report_path, get_variants_dir, join_path, get_src_dir, get_spc_log_file_path, \
-    get_file_name_with_parent, is_path_exist
+    get_file_name_with_parent, is_path_exist, list_dir, get_test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME
 from Helpers import get_logger, powerset
-from TestingCoverageManager import statement_coverage_of_variants
-
+import xml.etree.ElementTree as ET
 logger = get_logger(__name__)
 
 
@@ -214,3 +215,42 @@ def load_configs(config_report_path, failing_variants, FP_variants, add_more_tes
                     failed_configs.append(current_config)
                     variant_names[tuple(current_config)] = current_variant_name
         return feature_names, variant_names, passed_configs, failed_configs
+
+
+def statement_coverage(variant_dir, spectrum_coverage_prefix):
+    global NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME
+    NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME = spectrum_coverage_prefix + SPECTRUM_PASSED_COVERAGE_FILE_NAME
+
+    test_coverage_dir = get_test_coverage_dir(variant_dir)
+    spectrum_passed_coverage_file = join_path(test_coverage_dir, NEW_SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+    if not os.path.isfile(spectrum_passed_coverage_file):
+        spectrum_passed_coverage_file = join_path(test_coverage_dir, SPECTRUM_PASSED_COVERAGE_FILE_NAME)
+    num_of_stm = 0
+    untested_stm = 0
+    if os.path.isfile(spectrum_passed_coverage_file):
+        try:
+            tree = ET.parse(spectrum_passed_coverage_file)
+            root = tree.getroot()
+            project = root.find("project")
+            for package in project:
+                for file in package:
+                    for line in file:
+                        num_of_stm += 1
+                        if (int(line.get("count")) == 0):
+                            untested_stm += 1
+        except:
+            logging.info("Exception when parsing %s", spectrum_passed_coverage_file)
+    else:
+        logging.info("spectrum passed coveraged file does not exist in %s", variant_dir)
+
+    coverage_rate = (num_of_stm - untested_stm) / num_of_stm
+    return coverage_rate
+
+def statement_coverage_of_variants(project_dir, spectrum_coverage_prefix=""):
+    stm_coverage_variants = {}
+    variants_dir = get_variants_dir(project_dir)
+    for variant in list_dir(variants_dir):
+        variant_dir = join_path(variants_dir, variant)
+        testing_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
+        stm_coverage_variants[variant] = testing_coverage
+    return stm_coverage_variants

@@ -8,7 +8,7 @@ from FileManager import join_path, list_dir, get_failed_test_coverage_dir, get_v
     FAILED_TEST_COVERAGE_FOLDER_NAME
 import xml.etree.ElementTree as ET
 
-from TestingCoverageManager import statement_coverage
+# from TestingCoverageManager import statement_coverage
 from consistent_testing_manager.DDU import create_activity_matrix_system_level, ddu_system_level
 from ranking.Keywords import FAILED_TEST_COUNT, PASSED_TEST_COUNT
 
@@ -113,9 +113,6 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spect
     stm_info_for_spectrum = {}
     variants_list = get_all_variant_dirs(mutated_project_dir)
     for variant_dir in variants_list:
-        stm_coverage = 0
-        if coverage_rate > 0:
-            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
         spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
         spectrum_failed_coverage_file_dir = join_path(test_coverage_dir, spectrum_failed_file)
@@ -124,7 +121,7 @@ def get_infor_for_sbfl(mutated_project_dir, failing_variants, fp_variants, spect
 
         # if variant is a passing variant and stm_coverage < coverage_rate
         if not os.path.isfile(
-                spectrum_failed_coverage_file_dir) and coverage_rate != 0 and stm_coverage <= coverage_rate:
+                spectrum_failed_coverage_file_dir) and coverage_rate != 0:
             continue
 
         if variant_dir.split("/")[-1] not in fp_variants:
@@ -300,11 +297,8 @@ def get_executed_stms_of_the_system_consistent_testing_version(mutated_project_d
     all_stms_in_system = {}
     all_stms_in_failing_product = {}
     for variant in variants_list:
-        stm_coverage = 0
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
-        if coverage_rate > 0:
-            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
         if variant in failing_variants:
             failed_file = join_path(test_coverage_dir, spectrum_failed_file)
@@ -314,7 +308,7 @@ def get_executed_stms_of_the_system_consistent_testing_version(mutated_project_d
         passed_file = join_path(test_coverage_dir, spectrum_passed_file)
 
         # if variant is a passing coverage and statement coverage is less than the coverage rate
-        if not os.path.isfile(failed_file) and coverage_rate != 0 and stm_coverage <= coverage_rate:
+        if not os.path.isfile(failed_file) and coverage_rate != 0:
             continue
 
         coverage_files = [failed_file, passed_file]
@@ -355,11 +349,8 @@ def get_executed_stms_of_the_system(mutated_project_dir, failing_variants, FP_va
     all_stms_in_system = {}
     all_stms_in_failing_product = {}
     for variant in variants_list:
-        stm_coverage = 0
         variant_dir = get_variant_dir(mutated_project_dir, variant)
         test_coverage_dir = get_test_coverage_dir(variant_dir)
-        if coverage_rate > 0:
-            stm_coverage = statement_coverage(variant_dir, spectrum_coverage_prefix)
         spectrum_failed_file = get_spectrum_failed_coverage_file_name_with_version(spectrum_coverage_prefix)
 
         if variant not in FP_variants:
@@ -371,7 +362,7 @@ def get_executed_stms_of_the_system(mutated_project_dir, failing_variants, FP_va
             passed_file = join_path(test_coverage_dir, spectrum_passed_file)
 
             # if variant is a passing coverage and statement coverage is less than the coverage rate
-            if not os.path.isfile(failed_file) and coverage_rate != 0 and stm_coverage <= coverage_rate:
+            if not os.path.isfile(failed_file) and coverage_rate != 0:
                 continue
 
             coverage_files = [failed_file, passed_file]

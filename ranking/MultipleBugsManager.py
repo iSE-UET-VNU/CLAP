@@ -3,7 +3,7 @@ import os
 from xlsxwriter import Workbook
 
 from consistent_testing_manager.FPMatricsCaculation import FALSE_PASSING, LABEL
-from consistent_testing_manager.FileName import label_for_testing
+from consistent_testing_manager.FileName import *
 from ranking import RankingManager
 from ranking.FeaturesRankingManager import features_ranking_multiple_bugs
 from ranking.Keywords import *
@@ -203,7 +203,7 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
             for mutated_project_name in mutated_projects:
                 mutated_project_dir = join_path(system_dir, mutated_project_name)
                 classified_file_path = join_path(mutated_project_dir, classified_file_name)
-                label_file = join_path(mutated_project_dir, label_for_testing)
+                label_file = join_path(mutated_project_dir, variant_labels)
                 if not os.path.isfile(classified_file_path) or not os.path.isfile(label_file):
                     continue
 
