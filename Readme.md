@@ -1,20 +1,10 @@
-Chuẩn bị dữ liệu cho bài toán Configuration-dependent bugs localization
+The main function to execute CLAP is in the file CLAP.py. 
+In order to execute CLAP, you need to specify paths to folders containing buggy SPL systems. In this work, to conduct different experiments, we clearly separate buggy versions of each system.
 
-Note:
-- Sampling bằng SPLCATool
-- Generate Mutants bằng Mujava
-Nên cần lưu ý về việc config của SPLCATool và Mujava trước khi chạy
-
-- Configurations cần được generate theo đúng thứ tự của features
-- feature_order.txt là files gồm tất cả các features được liệt kê theo đúng thứ tự quy định của model
-
-- model.m là file model ở dạng guiclsl 
-
-Run:
-```shell script
-$ export ANT_HOME=InputPreparation/plugins/apache-ant-1.10.7/
-```
-
-```shell script
-$ python Main_MakeDataset.py
-```
+Each invoked function is corresponding to a designed experiment.
+Specifically:
+1. system_based_classification: CLAP is trained with the products in buggy versions of five systems, and the products in the buggy versions of the remaining system used for testing.
+2. version_based_classification: All the buggy versions in the six systems are shuffled and then these buggy versions are split into training and testing set by the ratio 8:2.
+3. product_based_classification: All the products in all the buggy versions of the six systems are shuffled and then these products are split into a training and testing by ratio 8:2.
+4. within_system_classification: The buggy versions of a systems are split into a training and testing set by the ratio 8:2.
+5. intrinsic_analysis: This experiment studies the impact of the proposed attributes on CLAP's performance: product implementation, test adequacy, and test effectiveness. This experiment builds different variants of CLAP, which use attributes only in one of these aspects to detect false-passing products, and measure their performance.
