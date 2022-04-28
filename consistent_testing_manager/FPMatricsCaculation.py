@@ -135,7 +135,7 @@ def check_executed_susp_stmt_vs_susp_stmt_in_passing_variant(susp_in_passing_var
 
     total_suspicious_stmts = len(executed_suspicious_stmt) + len(not_executed_suspcious_stmt)
     if total_suspicious_stmts == 0:
-        return 0, 0
+        return 0
     return len(not_executed_suspcious_stmt)/total_suspicious_stmts
 
 
