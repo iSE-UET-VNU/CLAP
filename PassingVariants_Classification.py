@@ -19,10 +19,10 @@ from consistent_testing_manager.FileName import *
 from ranking.MultipleBugsManager import get_failing_variants_by_labels
 
 CLASSIFY_ATTRIBUTES = [DDU, code_coverage,
-                       bug_involving_statements,
-                       buggy_statement_containing_possibility,
                        incorrectness_verifiability,
-                       correctness_reflectability]
+                       correctness_reflectability,
+                       buggy_statement_containing_possibility,
+                       bug_involving_statements]
 
 FIELDS = [VARIANT_NAME, LABEL, DDU,
           code_coverage,
@@ -56,7 +56,7 @@ def only_one_failed_tests(project_dir):
     return True
 
 
-def load_data_for_system_based_classification(training_systems, testing_systems):
+def load_data_for_system_based_classification(training_systems, testing_systems, attributes):
     all_systems = []
     for s in training_systems:
         all_systems.append(s)
@@ -71,7 +71,7 @@ def load_data_for_system_based_classification(training_systems, testing_systems)
         mutated_projects = list_dir(system)
         for project in mutated_projects:
             project_dir = join_path(system, project)
-            attribute_file_path = join_path(project_dir,attribute_file)
+            attribute_file_path = join_path(project_dir, attribute_file)
             if not os.path.isfile(attribute_file_path):
                 continue
             df = pandas.read_csv(attribute_file_path)
@@ -81,13 +81,13 @@ def load_data_for_system_based_classification(training_systems, testing_systems)
                 test_temp.append(df)
                 test_sample[system].append(project)
     train_result = pandas.concat(train_temp)
-    train_data = train_result[CLASSIFY_ATTRIBUTES].to_numpy()
+    train_data = train_result[attributes].to_numpy()
     train_target = train_result[LABEL].to_numpy()
     train_target[train_target == TRUE_PASSING] = 0
     train_target[train_target == FALSE_PASSING] = 1
 
     test_result = pandas.concat(test_temp)
-    test_data = test_result[CLASSIFY_ATTRIBUTES].to_numpy()
+    test_data = test_result[attributes].to_numpy()
     test_target = test_result[LABEL].to_numpy()
     test_target[test_target == TRUE_PASSING] = 0
     test_target[test_target == FALSE_PASSING] = 1
@@ -211,21 +211,25 @@ def classify_by_different_classifiers(logfile, classified_result_file, X_train, 
 
 
 def load_data_for_version_based_classification(logfile, attributes, all_versions):
-    kfold = KFold(n_splits=5)
+    kfold = KFold(n_splits=5, shuffle=True)
     fold_index = 0
     for train_index, test_index in kfold.split(all_versions):
         logfile.write("fold: " + str(fold_index) + "\n")
         fold_index += 1
         train_temp = []
         test_temp = []
+        train_count = 0
+        test_count = 0
         for i in range(0, len(all_versions)):
             attribute_file_path = join_path(all_versions[i], attribute_file)
-            if not os.path.isfile(attribute_file_path):
+            if not os.path.isfile(attribute_file_path) and only_one_failed_tests(all_versions[i]):
                 continue
             df = pandas.read_csv(attribute_file_path)
             if i in train_index:
                 train_temp.append(df)
+                train_count += 1
             else:
+                test_count += 1
                 test_temp.append(df)
 
         train_result = pandas.concat(train_temp)
@@ -240,6 +244,8 @@ def load_data_for_version_based_classification(logfile, attributes, all_versions
         test_target[test_target == TRUE_PASSING] = 0
         test_target[test_target == FALSE_PASSING] = 1
         X_train, X_test, y_train, y_test = train_data, test_data, train_target.astype('int'), test_target.astype('int')
+        logfile.write("training: " + str(train_count))
+        logfile.write("testing: " + str(test_count))
         classify_by_different_classifiers(logfile, classified_testing_file, X_train, X_test, y_train,
                                           y_test)
 
@@ -276,7 +282,7 @@ def load_data_for_version_based_one_classifier(logfile, attributes, all_versions
         test_target[test_target == FALSE_PASSING] = 1
         X_train, X_test, y_train, y_test = train_data, test_data, train_target.astype('int'), test_target.astype('int')
         classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
-                                          y_test)
+                        y_test)
 
 
 def version_based_classification(system_paths):
@@ -328,7 +334,7 @@ def product_based_classification(system_paths):
         X_train, X_test = data[train_index], data[test_index]
         y_train, y_test = target[train_index], target[test_index]
         classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
-                                          y_test)
+                        y_test)
         fold_index += 1
     logfile.close()
 
@@ -347,10 +353,11 @@ def system_based_classification(system_paths):
                 else:
                     training_set.append(system_paths[s2][bug])
         X_train, X_test, y_train, y_test, test_samples = load_data_for_system_based_classification(training_set,
-                                                                                                   testing_set)
+                                                                                                   testing_set,
+                                                                                                   CLASSIFY_ATTRIBUTES)
         classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
-                                          y_test,
-                                          test_samples)
+                        y_test,
+                        test_samples)
     logfile.close()
 
 
@@ -373,34 +380,49 @@ def within_system_classification(system_paths):
     logfile.close()
 
 
-def intrinsic_analysis(system_paths, system_name=""):
+def intrinsic_analysis(system_paths, system_name):
     logfile = open("statistics/intrinsic_analysis.log", "w")
-    all_versions = []
+    training_set = []
+    testing_set = []
     for s in system_paths:
-        if s == system_name or system_name == "":
-            for b in system_paths[s]:
-                mutated_projects = list_dir(system_paths[s][b])
-                for project in mutated_projects:
-                    project_dir = join_path(system_paths[s][b], project)
-                    attribute_file_path = join_path(project_dir, attribute_file)
-                    if not os.path.isfile(attribute_file_path):
-                        continue
-                    all_versions.append(project_dir)
+        for b in system_paths[s]:
+            if s != system_name:
+                training_set.append(system_paths[s][b])
+            else:
+                testing_set.append(system_paths[s][b])
 
     logfile.write("enable only product implementation attributes\n")
     logfile.write("-------------------\n")
-    load_data_for_version_based_one_classifier(logfile,
-                                               [buggy_statement_containing_possibility, bug_involving_statements], all_versions)
+    X_train, X_test, y_train, y_test, test_samples = load_data_for_system_based_classification(training_set,
+                                                                                               testing_set, [
+                                                                                                   buggy_statement_containing_possibility,
+                                                                                                   bug_involving_statements])
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
+                    y_test,
+                    test_samples)
     logfile.write("enable only test adequacy attributes\n")
     logfile.write("-------------------\n")
-    load_data_for_version_based_one_classifier(logfile,
-                                               [code_coverage, DDU], all_versions)
+    X_train, X_test, y_train, y_test, test_samples = load_data_for_system_based_classification(training_set,
+                                                                                               testing_set,
+                                                                                               [DDU, code_coverage])
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
+                    y_test,
+                    test_samples)
     logfile.write("enable only test effectiveness attributes\n")
     logfile.write("-------------------\n")
-    load_data_for_version_based_one_classifier(logfile,
-                                               [incorrectness_verifiability, correctness_reflectability], all_versions)
+    X_train, X_test, y_train, y_test, test_samples = load_data_for_system_based_classification(training_set,
+                                                                                               testing_set, [
+                                                                                                   incorrectness_verifiability,
+                                                                                                   correctness_reflectability])
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
+                    y_test,
+                    test_samples)
     logfile.write("enable all attributes\n")
     logfile.write("-------------------\n")
-    load_data_for_version_based_one_classifier(logfile,
-                                               CLASSIFY_ATTRIBUTES, all_versions)
+    X_train, X_test, y_train, y_test, test_samples = load_data_for_system_based_classification(training_set,
+                                                                                               testing_set,
+                                                                                               CLASSIFY_ATTRIBUTES)
+    classify_by_svm(logfile, classified_testing_file, X_train, X_test, y_train,
+                    y_test,
+                    test_samples)
     logfile.close()

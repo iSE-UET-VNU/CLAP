@@ -250,14 +250,6 @@ def contain_suspcious_stmts(path, failed_executions):
     return False
 
 
-def has_a_similar_failed_test_by_execution_set(path, failed_executions, threshold):
-    for v in failed_executions:
-        for t in failed_executions[v]:
-            if similar_path(path, failed_executions[v][t], threshold):
-                return True
-    return False
-
-
 def get_passing_executions(project_dir, system_stm_ids, variants):
     passed_test_executions = {}
     for variant in variants:

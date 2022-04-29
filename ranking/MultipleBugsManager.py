@@ -160,7 +160,7 @@ def create_exp_result_folder(result_folder, system_name):
 
 
 def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, kwise, spectrum_expressions,
-                          FP_detection, classified_file_name, alpha=0.5, add_more_tests = False, keep_useful_tests=False,
+                          FP_detection, classified_file_name, alpha=0.5, add_more_tests=False, keep_useful_tests=False,
                           filtering_coverage_rate=0.0, coverage_version=""):
     aggregations = [RankingManager.AGGREGATION_ARITHMETIC_MEAN]
     normalizations = [RankingManager.NORMALIZATION_ALPHA_BETA]
@@ -210,7 +210,6 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
                 print(mutated_project_name)
                 num_of_bugs += 1
 
-
                 failing_variants = get_failing_variants_by_labels(label_file, LABEL)
                 if FP_detection and not add_more_tests:
                     FP_variants = get_fp_variants(classified_file_path)
@@ -224,7 +223,8 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
 
                 # suspicious_isolation(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate,
                 #                      coverage_version, spc_postfix)
-                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests, filtering_coverage_rate, coverage_version, spc_postfix)
+                search_spaces = get_suspicious_space(mutated_project_dir, failing_variants, FP_variants, add_more_tests,
+                                                     filtering_coverage_rate, coverage_version, spc_postfix)
                 buggy_statements = get_multiple_buggy_statements(mutated_project_name, mutated_project_dir)
 
                 row_temp = row
@@ -238,7 +238,8 @@ def multiple_bugs_ranking(result_folder, system_name, system_dir, num_of_bugs, k
 
                 ranking_results, varcop_ranking_time = ranking_multiple_bugs(buggy_statements,
                                                                              mutated_project_dir, failing_variants,
-                                                                             FP_variants, add_more_tests, keep_useful_tests,
+                                                                             FP_variants, add_more_tests,
+                                                                             keep_useful_tests,
                                                                              search_spaces,
                                                                              spectrum_expressions,
                                                                              aggregation_type,
